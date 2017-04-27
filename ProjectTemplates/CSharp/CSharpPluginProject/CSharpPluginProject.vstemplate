@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>CRM/365 Plug-in Project</Name>
+    <Description>Dynamics CRM/365 Plug-in Project</Description>
+    <Icon>icon.png</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <SortOrder>1000</SortOrder>
+    <TemplateID>5d282679-4eda-46bc-a6ea-91a7f64899b8</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CSharpPluginProject</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="CrmPluginProject.csproj" File="CrmPluginProject.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>TemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>TemplateWizards.VersionWizard</FullClassName>
+  </WizardExtension>
+  <WizardData>
+    <CRMProjectType>Plug-in</CRMProjectType>
+    <NeedsClient>False</NeedsClient>
+    <IsUnitTest>False</IsUnitTest>
+    <IsUnitTestItem>False</IsUnitTestItem>
+  </WizardData>
+</VSTemplate>

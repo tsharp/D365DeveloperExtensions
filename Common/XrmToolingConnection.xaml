@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Common.XrmToolingConnection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="200">
+    <Expander x:Name="Expander"  HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" ExpandDirection="Right" 
+              IsExpanded="True">
+        <Expander.Header>
+            <TextBlock Text="Connections">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="-90"/>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+        </Expander.Header>
+        <StackPanel>
+            <!--<Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">Project</Label>
+            <ComboBox x:Name="ProjectsDdl" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="Projects_SelectionChanged"></ComboBox>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">CRM Organization</Label>
+            <ComboBox x:Name="Connections" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" 
+                      SelectionChanged="Connections_SelectionChanged"/>-->
+            <StackPanel Orientation="Horizontal">
+                <!--<Button x:Name="AddConnection" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="AddConnection_Click" Background="White">
+                    <Image Source="Resources/plus-24.png" Width="24" Height="24" ToolTip="Add Connection"></Image>
+                </Button>
+                <Button x:Name="ModifyConnection" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="ModifyConnection_Click" IsEnabled="False" Background="White">
+                    <Image Source="Resources/settings-24.png" Width="24" Height="24" ToolTip="Modify Connection"></Image>
+                </Button>
+                <Button x:Name="Delete" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="Delete_Click" IsEnabled="False" Background="White">
+                    <Image Source="Resources/minus-24.png" Width="24" Height="24" ToolTip="Delete Connection"></Image>
+                </Button>-->
+                <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  IsEnabled="True" Background="White" Click="Connect_OnClick">
+                    <Image Source="Images/connect_24.png" Width="24" Height="24" ToolTip="Connect To CRM"></Image>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Expander>
+</UserControl>
