@@ -30,8 +30,8 @@ namespace CrmDeveloperExtensions2017
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
     [Guid(PackageGuids.GuidCrmDeveloperExtensionsPkgString)]
-    [ProvideAutoLoad("f1536ef8-92ec-443c-9ed7-fdadf150da82")]
-    //[ProvideAutoLoad("10534154-102D-46E2-ABA8-A6BFA25BA0BE")]
+    //[ProvideAutoLoad("f1536ef8-92ec-443c-9ed7-fdadf150da82")]
+    [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
     public sealed class CrmDeveloperExtensions2017Package : Package
     {
         protected override void Initialize()

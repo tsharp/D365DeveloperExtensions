@@ -19,7 +19,7 @@
   </TemplateContent>
   <WizardExtension>
     <Assembly>TemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
-    <FullClassName>TemplateWizards.VersionWizard</FullClassName>
+    <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
   </WizardExtension>
   <WizardData>
     <CRMProjectType>Plug-in</CRMProjectType>

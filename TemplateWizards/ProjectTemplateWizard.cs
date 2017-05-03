@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Common;
 using EnvDTE;
 using Microsoft.VisualStudio.TemplateWizard;
@@ -11,7 +12,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 
 namespace TemplateWizards
 {
-    public class VersionWizard : IWizard
+    public class ProjectTemplateWizard : IWizard
     {
         [DllImport("mscoree.dll")]
         internal static extern int StrongNameFreeBuffer(IntPtr pbMemory);
@@ -26,15 +27,14 @@ namespace TemplateWizards
         {
             _dte = (DTE)automationObject;
 
-            //var xamlDialog = new SdkVersionPicker
-            //{
-            //    HasMinimizeButton = false,
-            //    HasMaximizeButton = false
-            //};
-            //xamlDialog.ShowModal();
+            var sdkVersionPicker = new SdkVersionPicker
+            {
+                HasMinimizeButton = false,
+                HasMaximizeButton = false,
+                ResizeMode = ResizeMode.NoResize
+            };
+            sdkVersionPicker.ShowModal();
 
-            var l = new XrmToolingLogin();
-            l.ShowDialog();
 
         }
 
