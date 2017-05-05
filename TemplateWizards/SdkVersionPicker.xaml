@@ -6,15 +6,37 @@
              xmlns:resx="clr-namespace:TemplateWizards.Resources"
              xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Title="{x:Static resx:Resource.SdkVersionPickerTitle}"
-             d:DesignHeight="300" d:DesignWidth="300" ResizeMode="NoResize">
-    <Grid>
-        <ListView Name="SdkVersions" HorizontalAlignment="Left" Height="269" VerticalAlignment="Top" Width="218" Margin="27,1,0,0">
+             Height="300" Width="250">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Common;component/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Width="250" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="36" />
+        </Grid.RowDefinitions>
+        <ListView Name="SdkVersions" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" SelectionMode="Single" Grid.Row="0" SelectionChanged="SdkVersions_OnSelectionChanged">
             <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
+                <GridView x:Name="SdkVersionsGrid" AllowsColumnReorder="False">
+                    <GridViewColumn></GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
 
+        <ToolBarTray VerticalAlignment="Bottom" Grid.Row="1">
+            <ToolBar Height="36">
+                <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="Cancel" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
+                    <TextBlock>Cancel</TextBlock>
+                    <!--<Image Source="{Binding Mode=OneWay, Source={StaticResource Cancel24}}" Height="24" Width="24"></Image>-->
+                </Button>
+                <Button x:Name="OK" Padding="2,2,2,2" Click="OK_OnClick" ToolTip="Ok" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
+                    <TextBlock>OK</TextBlock>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
     </Grid>
 </platformUi:DialogWindow>

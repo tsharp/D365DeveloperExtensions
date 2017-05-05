@@ -23,8 +23,11 @@
   </WizardExtension>
   <WizardData>
     <CRMProjectType>Plug-in</CRMProjectType>
-    <NeedsClient>False</NeedsClient>
-    <IsUnitTest>False</IsUnitTest>
-    <IsUnitTestItem>False</IsUnitTestItem>
+    <NeedsCore>true</NeedsCore>
+    <NeedsWorkflow>false</NeedsWorkflow>
+    <NeedsClient>false</NeedsClient>
+    <IsUnitTest>false</IsUnitTest>
+    <IsUnitTestItem>false</IsUnitTestItem>
+    <SignAssembly>true</SignAssembly>
   </WizardData>
 </VSTemplate>
