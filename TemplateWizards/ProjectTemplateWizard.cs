@@ -71,7 +71,6 @@ namespace TemplateWizards
                     _clientPackage = sdkVersionPicker.ClientPackage;
                 }
 
-
             }
             catch (WizardBackoutException)
             {
@@ -127,6 +126,9 @@ namespace TemplateWizards
                 case "Workflow":
                     HandleCrmAssemblyProjects(project, installer);
                     break;
+                case "WebResource":
+                    HandleWebResourceProjects(project);
+                    break;
                     //case "TypeScript":
                     //    HandleTypeScriptProject(project, installer);
                     //    break;
@@ -134,6 +136,14 @@ namespace TemplateWizards
                     //    HandleSolutionPackagerProject(project);
                     //    break;
             }
+        }
+
+        private void HandleWebResourceProjects(Project project)
+        {
+            //Turn off Build option in build configurations
+            SolutionConfigurations solutionConfigurations = _dte.Solution.SolutionBuild.SolutionConfigurations;
+            string folderProjectFileName = ProjectWorker.GetFolderProjectFileName(project.FullName);
+            SolutionWorker.SetBuildConfigurationOff(solutionConfigurations, folderProjectFileName);
         }
 
         private void HandleCrmAssemblyProjects(Project project, IVsPackageInstaller installer)
@@ -161,7 +171,7 @@ namespace TemplateWizards
                 if (_signAssembly)
                     Signing.GenerateKey(_dte, project, _destDirectory);
 
-                if (_isUnitTest) 
+                if (_isUnitTest)
                     return;
 
                 //InstallPackage(installer, project, "Moq", "4.5.28");
@@ -173,7 +183,7 @@ namespace TemplateWizards
                 //else
                 //    AddSetting(project, "CRMTestType", "UNIT");
 
-                ProjectWorker.ExcludeFolder(project, "performance"););
+                ProjectWorker.ExcludeFolder(project, "performance");
             }
             catch (Exception ex)
             {

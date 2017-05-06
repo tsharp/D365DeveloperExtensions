@@ -103,6 +103,20 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowProject\CSharpWorkflowProject.csproj">
+      <Project>{657F7CD2-9A6D-440D-AA39-A629E5190021}</Project>
+      <Name>CSharpWorkflowProject</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\WebResourceProject\WebResourceProject.csproj">
+      <Project>{7CE66502-12F6-4768-8EAF-EBCFD6288456}</Project>
+      <Name>WebResourceProject</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\TemplateWizards\TemplateWizards.csproj">
       <Project>{7CC35EFB-7335-4AE1-8A54-317D071F9F12}</Project>
       <Name>TemplateWizards</Name>

@@ -1,0 +1,30 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>WebResourceProject</Name>
+    <Description>&lt;No description available&gt;</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>WebResourceProject</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="WebResourceProject.csproj" File="WebResourceProject.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      <Folder Name="css" TargetFolderName="css" />
+      <Folder Name="images" TargetFolderName="images" />
+      <ProjectItem ReplaceParameters="true" TargetFileName="ProjectTemplate.csproj">ProjectTemplate.csproj</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="ProjectTemplate2.ico">ProjectTemplate2.ico</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ProjectTemplate2.vstemplate">ProjectTemplate2.vstemplate</ProjectItem>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <Folder Name="scripts" TargetFolderName="scripts" />
+    </Project>
+  </TemplateContent>
+</VSTemplate>

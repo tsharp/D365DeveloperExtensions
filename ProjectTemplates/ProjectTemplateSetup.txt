@@ -4,4 +4,9 @@
 4. Add <OutputSubPath>Crm DevEx</OutputSubPath> under <VSTemplate Include="CSharpPluginProject.vstemplate">
 
 
+    <VSTemplate Include="CSharpPluginProject.vstemplate">
+      <SubType>Designer</SubType>
+      <OutputSubPath>Crm DevEx</OutputSubPath>
+    </VSTemplate>
+	
 http://www.dotnetfunda.com/articles/show/1899/creating-a-new-category-for-custom-templates-with-a-new-entry-to-insta

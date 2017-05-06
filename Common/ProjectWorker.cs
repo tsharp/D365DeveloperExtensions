@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,21 @@ namespace Common
                 if (String.Equals(project.ProjectItems.Item(i).Name, folderName, StringComparison.CurrentCultureIgnoreCase))
                     project.ProjectItems.Item(i).Remove();
             }
+        }
+
+        public static string GetFolderProjectFileName(string projectFullName)
+        {
+            string path = Path.GetDirectoryName(projectFullName);
+            if (path != null)
+            {
+                var dirName = new DirectoryInfo(path).Name;
+                var fileName = new FileInfo(projectFullName).Name;
+                string folderProjectFileName = dirName + "\\" + fileName;
+
+                return folderProjectFileName;
+            }
+
+            return null;
         }
     }
 }

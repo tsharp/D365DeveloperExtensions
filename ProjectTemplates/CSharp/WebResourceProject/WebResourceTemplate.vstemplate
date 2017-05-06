@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Plug-in Project</Name>
-    <Description>Dynamics CRM/365 Plug-in Project</Description>
+    <Name>CRM/365 Web Resource Project</Name>
+    <Description>Dynamics CRM/365 Web Resource Project</Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
-    <TemplateID>5d282679-4eda-46bc-a6ea-91a7f64899b8</TemplateID>
+    <TemplateID>851c467a-8cd9-4da1-b533-21aabe46e07a</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>CSharpPluginProject</DefaultName>
+    <DefaultName>WebResourceProject</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
@@ -22,12 +22,12 @@
     <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
   </WizardExtension>
   <WizardData>
-    <CRMProjectType>Plug-in</CRMProjectType>
-    <NeedsCore>true</NeedsCore>
+    <CRMProjectType>WebResource</CRMProjectType>
+    <NeedsCore>false</NeedsCore>
     <NeedsWorkflow>false</NeedsWorkflow>
     <NeedsClient>false</NeedsClient>
     <IsUnitTest>false</IsUnitTest>
     <IsUnitTestItem>false</IsUnitTestItem>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </WizardData>
 </VSTemplate>

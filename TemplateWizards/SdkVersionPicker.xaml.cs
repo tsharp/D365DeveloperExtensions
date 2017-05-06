@@ -73,9 +73,9 @@ namespace TemplateWizards
 
         private void OK_OnClick(object sender, RoutedEventArgs e)
         {
-            PackageValue next = (PackageValue)NuGetProcessor.GetNextPackage(Package, GetWorkflow, GetClient);
+            Package = (PackageValue)NuGetProcessor.GetNextPackage(Package, GetWorkflow, GetClient);
 
-            switch (next)
+            switch (Package)
             {
                 case PackageValue.Workflow:
                     GetPackage("Microsoft.CrmSdk.Workflow");

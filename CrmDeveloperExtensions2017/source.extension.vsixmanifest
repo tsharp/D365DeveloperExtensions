@@ -20,6 +20,8 @@
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Common" Path="|Common|" AssemblyName="|Common;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="TemplateWizards" Path="|TemplateWizards|" AssemblyName="|TemplateWizards;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="WebResourceDeployer" Path="|WebResourceDeployer|" AssemblyName="|WebResourceDeployer;AssemblyName|" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpWorkflowProject" d:TargetPath="|CSharpWorkflowProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="WebResourceProject" d:TargetPath="|WebResourceProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
   </Assets>
   <Prerequisites>
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
