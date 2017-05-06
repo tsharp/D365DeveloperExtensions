@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectTemplates", "Project
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPluginProject", "ProjectTemplates\CSharp\CSharpPluginProject\CSharpPluginProject.csproj", "{E982F569-FFA3-49A8-A47D-09CE6C546FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1FCFDED4-CC12-4275-ADDF-7E62B70743CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions.Core", "CrmDeveloperExtensions.Core\CrmDeveloperExtensions.Core.csproj", "{1FCFDED4-CC12-4275-ADDF-7E62B70743CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetRetriever", "NuGetRetriever\NuGetRetriever.csproj", "{BD5ABC7E-6459-4CFB-82BD-39643599A285}"
 EndProject

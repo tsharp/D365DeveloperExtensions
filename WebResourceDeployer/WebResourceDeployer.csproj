@@ -70,9 +70,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\CrmDeveloperExtensions.Core\CrmDeveloperExtensions.Core.csproj">
       <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
-      <Name>Common</Name>
+      <Name>CrmDeveloperExtensions.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using EnvDTE;
 using Microsoft.VisualStudio;
 
-namespace Common
+namespace CrmDeveloperExtensions.Core
 {
     public static class ProjectWorker
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Models
+namespace CrmDeveloperExtensions.Core.Models
 {
     public class NuGetPackage
     {

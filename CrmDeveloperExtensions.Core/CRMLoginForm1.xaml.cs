@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace WpfApplication2
+namespace CrmDeveloperExtensions.Core
 {
     /// <summary>
     /// Interaction logic for CRMLoginForm1.xaml

@@ -60,9 +60,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\..\CrmDeveloperExtensions.Core\CrmDeveloperExtensions.Core.csproj">
       <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
-      <Name>Common</Name>
+      <Name>CrmDeveloperExtensions.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\TemplateWizards\TemplateWizards.csproj">
       <Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>

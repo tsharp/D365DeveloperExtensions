@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Common.Models;
+using CrmDeveloperExtensions.Core.Models;
 
 namespace NuGetRetriever.Tests
 {

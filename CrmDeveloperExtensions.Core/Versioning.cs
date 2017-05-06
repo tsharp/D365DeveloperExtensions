@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Common
+namespace CrmDeveloperExtensions.Core
 {
     public static class Versioning
     {

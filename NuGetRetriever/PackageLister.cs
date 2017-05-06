@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NuGet;
-using Common.Models;
+using CrmDeveloperExtensions.Core.Models;
 
 namespace NuGetRetriever
 {

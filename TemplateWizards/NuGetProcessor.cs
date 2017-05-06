@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using Common.Models;
+using CrmDeveloperExtensions.Core.Models;
 using EnvDTE;
 using NuGet.VisualStudio;
 using TemplateWizards.Enums;
@@ -27,7 +27,7 @@ namespace TemplateWizards
 
         public static string DetermineClientType(string coreVersion)
         {
-            Version version = Common.Versioning.StringToVersion(coreVersion);
+            Version version = CrmDeveloperExtensions.Core.Versioning.StringToVersion(coreVersion);
             int result = version.CompareTo(new Version(6, 1, 0));
             return result >= 0 ? "Microsoft.CrmSdk.XrmTooling.CoreAssembly" 
                                : "Microsoft.CrmSdk.Extensions";

@@ -7,8 +7,8 @@
     <ProjectGuid>{1FCFDED4-CC12-4275-ADDF-7E62B70743CB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common</RootNamespace>
-    <AssemblyName>Common</AssemblyName>
+    <RootNamespace>CrmDeveloperExtensions.Core</RootNamespace>
+    <AssemblyName>CrmDeveloperExtensions.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
