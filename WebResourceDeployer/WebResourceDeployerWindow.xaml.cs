@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CrmDeveloperExtensions.Core.Connection;
 
 namespace WebResourceDeployer
 {
@@ -23,6 +24,11 @@ namespace WebResourceDeployer
         public WebResourceDeployerWindow()
         {
             InitializeComponent();
+        }
+
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        {
+           //MessageBox.Show(CrmDeveloperExtensions.Core.Crm.Test.DoWhoAmI(e.ServiceClient));
         }
     }
 }

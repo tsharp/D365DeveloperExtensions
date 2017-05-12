@@ -90,7 +90,7 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error occurred running wizard:\n\n{0}", ex));
+                MessageBox.Show($"Error occurred running wizard:\n\n{ex}");
                 throw new WizardCancelledException("Internal error", ex);
             }
         }
@@ -156,14 +156,13 @@ namespace TemplateWizards
                 if (Versioning.StringToVersion(_coreVersion).Major < 7)
                     project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
 
-
                 //Install all the NuGet packages
                 project = (Project)((Array)(_dte.ActiveSolutionProjects)).GetValue(0);
-                NuGetProcessor.InstallPackage(installer, project, "Microsoft.CrmSdk.CoreAssemblies", _coreVersion);
+                NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
                 if (_needsWorkflow)
-                    NuGetProcessor.InstallPackage(installer, project, "Microsoft.CrmSdk.Workflow", _coreVersion);
+                    NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
                 if (_needsClient)
-                    NuGetProcessor.InstallPackage(installer, project, _clientPackage, _clientVersion);
+                    NuGetProcessor.InstallPackage(_dte, installer, project, _clientPackage, _clientVersion);
 
 
                 ProjectWorker.ExcludeFolder(project, "bin");

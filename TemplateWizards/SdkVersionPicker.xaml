@@ -10,7 +10,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CrmDeveloperExtensions.Core;component/ResourceDictionary.xaml" />
+                <!--<ResourceDictionary Source="/CrmDeveloperExtensions.Core;component/ResourceDictionary.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -29,12 +29,12 @@
 
         <ToolBarTray VerticalAlignment="Bottom" Grid.Row="1">
             <ToolBar Height="36">
-                <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="Cancel" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
-                    <TextBlock>Cancel</TextBlock>
+                <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
+                    <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}"></TextBlock>
                     <!--<Image Source="{Binding Mode=OneWay, Source={StaticResource Cancel24}}" Height="24" Width="24"></Image>-->
                 </Button>
-                <Button x:Name="OK" Padding="2,2,2,2" Click="OK_OnClick" ToolTip="Ok" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
-                    <TextBlock>OK</TextBlock>
+                <Button x:Name="Ok" Padding="2,2,2,2" Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
+                    <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
                 </Button>
             </ToolBar>
         </ToolBarTray>

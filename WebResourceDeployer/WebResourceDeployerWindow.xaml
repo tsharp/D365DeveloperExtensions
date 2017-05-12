@@ -13,11 +13,12 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <core:XrmToolingConnection Grid.Column="0" Name="ConnPane"></core:XrmToolingConnection>
+        <core:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected"></core:XrmToolingConnection>
         <Grid Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
             </StackPanel>
             <DataGrid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"></DataGrid>
+            <TextBox HorizontalAlignment="Left" Height="23" Margin="477,172,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         </Grid>
     </Grid>
 </UserControl>

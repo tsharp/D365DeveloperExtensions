@@ -117,46 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DefaultKeyName" xml:space="preserve">
-    <value>MyKey.snk</value>
+  <data name="OutputLoggerMessageTypeError" xml:space="preserve">
+    <value>Error</value>
   </data>
-  <data name="GeneratingKeyFailureMessage" xml:space="preserve">
-    <value>Error Processing Template: Error Generating Key</value>
+  <data name="OutputLoggerMessageTypeInfo" xml:space="preserve">
+    <value>Info</value>
   </data>
-  <data name="GeneratingKeyStatusBarMessage" xml:space="preserve">
-    <value>Generating Key...</value>
+  <data name="OutputLoggerMessageTypeWarning" xml:space="preserve">
+    <value>Warning</value>
   </data>
-  <data name="NuGetPackageInstallFailureMessage" xml:space="preserve">
-    <value>Error Processing Template: Error Installing NuGet Package</value>
-  </data>
-  <data name="NuGetPackageInstallingStatusBarMessage" xml:space="preserve">
-    <value>Installing NuGet Package</value>
-  </data>
-  <data name="SdkAssemblyCore" xml:space="preserve">
-    <value>Microsoft.CrmSdk.CoreAssemblies</value>
-  </data>
-  <data name="SdkAssemblyExtensions" xml:space="preserve">
-    <value>Microsoft.CrmSdk.Extensions</value>
-  </data>
-  <data name="SdkAssemblyWorkflow" xml:space="preserve">
-    <value>Microsoft.CrmSdk.Workflow</value>
-  </data>
-  <data name="SdkAssemblyXrmTooling" xml:space="preserve">
-    <value>Microsoft.CrmSdk.XrmTooling.CoreAssembly</value>
-  </data>
-  <data name="SdkVersionPickerCancelButtonText" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="SdkVersionPickerCancelTooltipText" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="SdkVersionPickerOKButtonText" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="SdkVersionPickerOKTooltipText" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="SdkVersionPickerTitle" xml:space="preserve">
+  <data name="OutputLoggerWindowTitle" xml:space="preserve">
     <value>Crm DevEx</value>
+  </data>
+  <data name="StatusBarMessageConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="UserOptionsCategory" xml:space="preserve">
+    <value>Crm DevEx</value>
+  </data>
+  <data name="UserOptionsLoggingPage" xml:space="preserve">
+    <value>Logging</value>
+  </data>
+  <data name="UserOptionsLoggingPageCategory" xml:space="preserve">
+    <value>Logging Options</value>
   </data>
 </root>

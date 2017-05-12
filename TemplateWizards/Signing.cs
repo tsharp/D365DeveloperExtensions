@@ -27,9 +27,9 @@ namespace TemplateWizards
                     return;
 
                 //Generate new key
-                dte.StatusBar.Text = "Generating key...";
+                CrmDeveloperExtensions.Core.StatusBar.SetStatusBarValue(dte, Resources.Resource.GeneratingKeyStatusBarMessage);
 
-                string keyFilePath = Path.Combine(destDirectory, "MyKey.snk");
+                string keyFilePath = Path.Combine(destDirectory, Resources.Resource.DefaultKeyName);
                 IntPtr buffer = IntPtr.Zero;
 
                 try
@@ -38,7 +38,7 @@ namespace TemplateWizards
                     if (0 != StrongNameKeyGen(IntPtr.Zero, 0, out buffer, out buffSize))
                         Marshal.ThrowExceptionForHR(StrongNameErrorInfo());
                     if (buffer == IntPtr.Zero)
-                        throw new InvalidOperationException("StrongNameKeyGen Failed");
+                        throw new InvalidOperationException();
 
                     var keyBuffer = new byte[buffSize];
                     Marshal.Copy(buffer, keyBuffer, 0, (int)buffSize);
@@ -61,12 +61,12 @@ namespace TemplateWizards
                 //}
 
                 project.Properties.Item("SignAssembly").Value = "true";
-                project.Properties.Item("AssemblyOriginatorKeyFile").Value = "MyKey.snk";
+                project.Properties.Item("AssemblyOriginatorKeyFile").Value = Resources.Resource.DefaultKeyName;
                 project.ProjectItems.AddFromFile(keyFilePath);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Processing Template: Error Generating Key: " + ex.Message);
+                MessageBox.Show(Resources.Resource.GeneratingKeyFailureMessage + ":  " + ex.Message);
             }
             finally
             {

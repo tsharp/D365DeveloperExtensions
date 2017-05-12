@@ -29,7 +29,7 @@ namespace TemplateWizards
             GetWorkflow = getWorkflow;
             GetClient = getClient;
 
-            GetPackage("Microsoft.CrmSdk.CoreAssemblies");
+            GetPackage(Resource.SdkAssemblyCore);
         }
 
         private void GetPackage(string nuGetPackage)
@@ -71,14 +71,14 @@ namespace TemplateWizards
             }
         }
 
-        private void OK_OnClick(object sender, RoutedEventArgs e)
+        private void Ok_OnClick(object sender, RoutedEventArgs e)
         {
             Package = (PackageValue)NuGetProcessor.GetNextPackage(Package, GetWorkflow, GetClient);
 
             switch (Package)
             {
                 case PackageValue.Workflow:
-                    GetPackage("Microsoft.CrmSdk.Workflow");
+                    GetPackage(Resource.SdkAssemblyWorkflow);
                     break;
                 case PackageValue.Client:
                     ClientPackage = NuGetProcessor.DetermineClientType(CoreVersion);

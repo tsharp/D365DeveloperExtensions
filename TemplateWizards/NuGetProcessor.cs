@@ -12,16 +12,22 @@ namespace TemplateWizards
 {
     public static class NuGetProcessor
     {
-        public static void InstallPackage(IVsPackageInstaller installer, Project project, string package, string version)
+        public static void InstallPackage(DTE dte, IVsPackageInstaller installer, Project project, string package, string version)
         {
             try
             {
                 string nuGetSource = "https://www.nuget.org/api/v2/";
+                CrmDeveloperExtensions.Core.StatusBar.SetStatusBarValue(dte,
+                    Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
                 installer.InstallPackage(nuGetSource, project, package, version, false);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Processing Template: Error Installing NuGet Package: " + ex.Message);
+                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+            }
+            finally
+            {
+                CrmDeveloperExtensions.Core.StatusBar.ClearStatusBarValue(dte);
             }
         }
 
@@ -29,8 +35,8 @@ namespace TemplateWizards
         {
             Version version = CrmDeveloperExtensions.Core.Versioning.StringToVersion(coreVersion);
             int result = version.CompareTo(new Version(6, 1, 0));
-            return result >= 0 ? "Microsoft.CrmSdk.XrmTooling.CoreAssembly" 
-                               : "Microsoft.CrmSdk.Extensions";
+            return result >= 0 ? Resources.Resource.SdkAssemblyXrmTooling
+                               : Resources.Resource.SdkAssemblyExtensions;
         }
 
         public static int GetNextPackage(PackageValue package, bool getWorkflow, bool getClient)

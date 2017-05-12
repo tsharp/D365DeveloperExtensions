@@ -16,9 +16,9 @@
             </TextBlock>
         </Expander.Header>
         <StackPanel>
-            <!--<Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">Project</Label>
-            <ComboBox x:Name="ProjectsDdl" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="Projects_SelectionChanged"></ComboBox>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">CRM Organization</Label>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}">Project</Label>
+            <ComboBox x:Name="ProjectsDdl" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="ProjectsDdl_OnSelectionChanged"></ComboBox>
+            <!--<Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">CRM Organization</Label>
             <ComboBox x:Name="Connections" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" 
                       SelectionChanged="Connections_SelectionChanged"/>-->
             <StackPanel Orientation="Horizontal">

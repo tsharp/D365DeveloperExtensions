@@ -20,32 +20,33 @@ namespace CrmDeveloperExtensions.Core
     /// <summary>
     /// Interaction logic for CRMLoginForm1.xaml
     /// </summary>
-    public partial class CRMLoginForm1 : Window
+    public partial class CrmLoginForm : Window
     {
         #region Vars
         /// <summary>
         /// Microsoft.Xrm.Tooling.Connector services
         /// </summary>
-        private CrmServiceClient CrmSvc = null;
+        private CrmServiceClient _crmSvc;
         /// <summary>
         /// Bool flag to determine if there is a connection 
         /// </summary>
-        private bool bIsConnectedComplete = false;
+        private bool _bIsConnectedComplete;
         /// <summary>
         /// CRM Connection Manager component. 
         /// </summary>
-        private CrmConnectionManager mgr = null;
+        private CrmConnectionManager _mgr;
         /// <summary>
         ///  This is used to allow the UI to reset w/out closing 
         /// </summary>
-        private bool resetUiFlag = false;
+        private bool _resetUiFlag;
         #endregion
 
         #region Properties
         /// <summary>
         /// CRM Connection Manager 
         /// </summary>
-        public CrmConnectionManager CrmConnectionMgr { get { return mgr; } }
+        public CrmConnectionManager CrmConnectionMgr => _mgr;
+
         #endregion
 
         #region Event
@@ -56,7 +57,7 @@ namespace CrmDeveloperExtensions.Core
         #endregion
 
 
-        public CRMLoginForm1()
+        public CrmLoginForm()
         {
             InitializeComponent();
             //// Should be used for testing only.
@@ -81,19 +82,19 @@ namespace CrmDeveloperExtensions.Core
 			 */
 
             // Set off flag. 
-            bIsConnectedComplete = false;
+            _bIsConnectedComplete = false;
 
             // Init the CRM Connection manager.. 
-            mgr = new CrmConnectionManager();
+            _mgr = new CrmConnectionManager();
             // Pass a reference to the current UI or container control,  this is used to synchronize UI threads In the login control
-            mgr.ParentControl = CrmLoginCtrl;
+            _mgr.ParentControl = CrmLoginCtrl;
             // if you are using an unmanaged client, excel for example, and need to store the config in the users local directory
             // set this option to true. 
-            mgr.UseUserLocalDirectoryForConfigStore = true;
+            _mgr.UseUserLocalDirectoryForConfigStore = true;
             // if you are using an unmanaged client,  you need to provide the name of an exe to use to create app config key's for. 
             //mgr.HostApplicatioNameOveride = "MyExecName.exe";
             // CrmLoginCtrl is the Login control,  this sets the CrmConnection Manager into it. 
-            CrmLoginCtrl.SetGlobalStoreAccess(mgr);
+            CrmLoginCtrl.SetGlobalStoreAccess(_mgr);
             // There are several modes to the login control UI
             CrmLoginCtrl.SetControlMode(ServerLoginConfigCtrlMode.FullLoginPanel);
             // this wires an event that is raised when the login button is pressed. 
@@ -105,7 +106,7 @@ namespace CrmDeveloperExtensions.Core
             // this wires an event that is raised when the user clicks the cancel button. 
             CrmLoginCtrl.UserCancelClicked += new EventHandler(CrmLoginCtrl_UserCancelClicked);
             // Check to see if its possible to do an Auto Login 
-            if (!mgr.RequireUserLogin())
+            if (!_mgr.RequireUserLogin())
             {
                 if (MessageBox.Show("Credentials already saved in configuration\nChoose Yes to Auto Login or No to Reset Credentials", "Auto Login", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
@@ -113,10 +114,10 @@ namespace CrmDeveloperExtensions.Core
                     CrmLoginCtrl.IsEnabled = false;
                     // When running an auto login,  you need to wire and listen to the events from the connection manager.
                     // Run Auto User Login process, Wire events. 
-                    mgr.ServerConnectionStatusUpdate += new EventHandler<ServerConnectStatusEventArgs>(mgr_ServerConnectionStatusUpdate);
-                    mgr.ConnectionCheckComplete += new EventHandler<ServerConnectStatusEventArgs>(mgr_ConnectionCheckComplete);
+                    _mgr.ServerConnectionStatusUpdate += new EventHandler<ServerConnectStatusEventArgs>(mgr_ServerConnectionStatusUpdate);
+                    _mgr.ConnectionCheckComplete += new EventHandler<ServerConnectStatusEventArgs>(mgr_ConnectionCheckComplete);
                     // Start the connection process. 
-                    mgr.ConnectToServerCheck();
+                    _mgr.ConnectToServerCheck();
 
                     // Show the message grid. 
                     CrmLoginCtrl.ShowMessageGrid();
@@ -136,7 +137,7 @@ namespace CrmDeveloperExtensions.Core
             // The Status event will contain information about the current login process,  if Connected is false, then there is not yet a connection. 
             // Set the updated status of the loading process. 
             Dispatcher.Invoke(DispatcherPriority.Normal,
-                               new System.Action(() =>
+                               new Action(() =>
                                {
                                    this.Title = string.IsNullOrWhiteSpace(e.StatusMessage) ? e.ErrorMessage : e.StatusMessage;
                                }
@@ -164,26 +165,25 @@ namespace CrmDeveloperExtensions.Core
                 else
                     MessageBox.Show("Unable to Login to CRM using cached credentials", "Login Failure");
 
-                resetUiFlag = true;
+                _resetUiFlag = true;
                 CrmLoginCtrl.GoBackToLogin();
                 // Bad Login Get back on the UI. 
                 Dispatcher.Invoke(DispatcherPriority.Normal,
-                       new System.Action(() =>
+                       new Action(() =>
                        {
                            this.Title = "Failed to Login with cached credentials.";
                            MessageBox.Show(this.Title, "Notification from ConnectionManager", MessageBoxButton.OK, MessageBoxImage.Error);
                            CrmLoginCtrl.IsEnabled = true;
                        }
                         ));
-                resetUiFlag = false;
+                _resetUiFlag = false;
             }
             else
             {
                 // Good Login Get back on the UI 
-                if (e.Connected && !bIsConnectedComplete)
+                if (e.Connected && !_bIsConnectedComplete)
                     ProcessSuccess();
             }
-
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace CrmDeveloperExtensions.Core
         /// <param name="e"></param>
         private void CrmLoginCtrl_ConnectionCheckBegining(object sender, EventArgs e)
         {
-            bIsConnectedComplete = false;
+            _bIsConnectedComplete = false;
             Dispatcher.Invoke(DispatcherPriority.Normal,
-                               new System.Action(() =>
+                               new Action(() =>
                                {
                                    this.Title = "Starting Login Process. ";
                                    CrmLoginCtrl.IsEnabled = true;
@@ -211,7 +211,7 @@ namespace CrmDeveloperExtensions.Core
         private void CrmLoginCtrl_ConnectionStatusEvent(object sender, ConnectStatusEventArgs e)
         {
             //Here we are using the bIsConnectedComplete bool to check to make sure we only process this call once. 
-            if (e.ConnectSucceeded && !bIsConnectedComplete)
+            if (e.ConnectSucceeded && !_bIsConnectedComplete)
                 ProcessSuccess();
 
         }
@@ -233,7 +233,7 @@ namespace CrmDeveloperExtensions.Core
         /// <param name="e"></param>
         private void CrmLoginCtrl_UserCancelClicked(object sender, EventArgs e)
         {
-            if (!resetUiFlag)
+            if (!_resetUiFlag)
                 this.Close();
         }
 
@@ -244,23 +244,23 @@ namespace CrmDeveloperExtensions.Core
         /// </summary>
         private void ProcessSuccess()
         {
-            resetUiFlag = true;
-            bIsConnectedComplete = true;
-            CrmSvc = mgr.CrmSvc;
+            _resetUiFlag = true;
+            _bIsConnectedComplete = true;
+            _crmSvc = _mgr.CrmSvc;
             CrmLoginCtrl.GoBackToLogin();
             Dispatcher.Invoke(DispatcherPriority.Normal,
-               new System.Action(() =>
-               {
-                   this.Title = "Notification from Parent";
-                   CrmLoginCtrl.IsEnabled = true;
-               }
+               new Action(() =>
+                   {
+                       this.Title = "Notification from Parent";
+                       CrmLoginCtrl.IsEnabled = true;
+                   }
                 ));
 
             // Notify Caller that we are done with success. 
             if (ConnectionToCrmCompleted != null)
                 ConnectionToCrmCompleted(this, null);
 
-            resetUiFlag = false;
+            _resetUiFlag = false;
         }
 
     }

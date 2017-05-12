@@ -11,7 +11,7 @@ namespace WebResourceDeployer
             Caption = Resources.Resource.ToolWindowTitle;
             BitmapResourceID = 301;
             BitmapIndex = 1;
-            Content = new WebResourceDeployerWindow();
-        }
+            Content = new WebResourceDeployerWindow(); 
+        }  
     }
 }

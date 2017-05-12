@@ -61,6 +61,123 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MyKey.snk.
+        /// </summary>
+        public static string DefaultKeyName {
+            get {
+                return ResourceManager.GetString("DefaultKeyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Processing Template: Error Generating Key.
+        /// </summary>
+        public static string GeneratingKeyFailureMessage {
+            get {
+                return ResourceManager.GetString("GeneratingKeyFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating Key....
+        /// </summary>
+        public static string GeneratingKeyStatusBarMessage {
+            get {
+                return ResourceManager.GetString("GeneratingKeyStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Processing Template: Error Installing NuGet Package.
+        /// </summary>
+        public static string NuGetPackageInstallFailureMessage {
+            get {
+                return ResourceManager.GetString("NuGetPackageInstallFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing NuGet Package.
+        /// </summary>
+        public static string NuGetPackageInstallingStatusBarMessage {
+            get {
+                return ResourceManager.GetString("NuGetPackageInstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft.CrmSdk.CoreAssemblies.
+        /// </summary>
+        public static string SdkAssemblyCore {
+            get {
+                return ResourceManager.GetString("SdkAssemblyCore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft.CrmSdk.Extensions.
+        /// </summary>
+        public static string SdkAssemblyExtensions {
+            get {
+                return ResourceManager.GetString("SdkAssemblyExtensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft.CrmSdk.Workflow.
+        /// </summary>
+        public static string SdkAssemblyWorkflow {
+            get {
+                return ResourceManager.GetString("SdkAssemblyWorkflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft.CrmSdk.XrmTooling.CoreAssembly.
+        /// </summary>
+        public static string SdkAssemblyXrmTooling {
+            get {
+                return ResourceManager.GetString("SdkAssemblyXrmTooling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string SdkVersionPickerCancelButtonText {
+            get {
+                return ResourceManager.GetString("SdkVersionPickerCancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string SdkVersionPickerCancelTooltipText {
+            get {
+                return ResourceManager.GetString("SdkVersionPickerCancelTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string SdkVersionPickerOKButtonText {
+            get {
+                return ResourceManager.GetString("SdkVersionPickerOKButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string SdkVersionPickerOKTooltipText {
+            get {
+                return ResourceManager.GetString("SdkVersionPickerOKTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm DevEx.
         /// </summary>
         public static string SdkVersionPickerTitle {
