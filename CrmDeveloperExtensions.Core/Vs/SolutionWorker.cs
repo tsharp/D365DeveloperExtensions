@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 
-namespace CrmDeveloperExtensions.Core
+namespace CrmDeveloperExtensions.Core.Vs
 {
     public static class SolutionWorker
     {

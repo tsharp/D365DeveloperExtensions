@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace CrmDeveloperExtensions.Core.Models
 {
-    public class CrmDexExConfig
+    public class CrmDevExConfigOrgMap
     {
-        public List<CrmDevExConfigOrgMap> CrmDevExConfigOrgMaps { get; set; }
+        public Guid OrganizationId { get; set; }
+        public List<CrmDexExConfigWebResource> WebResources { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿using EnvDTE;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.PlatformUI.OleComponentSupport;
 using Microsoft.VisualStudio.Shell;
@@ -27,9 +30,6 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsSolutionEvents.OnAfterCloseSolution(object pUnkReserved)
         {
-
-            //ToolWindowPane window = (ToolWindowPane)SharedGlobals.GetGlobal("WebResourceDeployerWindow")
-
             return VSConstants.S_OK;
         }
 
@@ -57,22 +57,14 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
-
-            //ToolWindowPane window = (ToolWindowPane)SharedGlobals.GetGlobal("WebResourceDeployerWindow", _dte);
-            //window.Dispose();
-
-            //IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            //windowFrame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
-            //windowFrame = null;
-            //window = null;
-           
-            //foreach (Window window in _dte.Windows)
-            //{
-            //    if (window.Type == vsWindowType.vsWindowTypeToolWindow)
-            //    {
-            //        window.Close();
-            //    }
-            //}
+            //TODO: make sure this is one of our windows
+            foreach (Window window in _dte.Windows)
+            {
+                if (window.Type == vsWindowType.vsWindowTypeToolWindow)
+                {
+                    window.Close();
+                }
+            }
 
             return VSConstants.S_OK;
         }

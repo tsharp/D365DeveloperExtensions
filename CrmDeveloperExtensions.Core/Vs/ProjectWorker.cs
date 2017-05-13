@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EnvDTE;
 using Microsoft.VisualStudio;
 
-namespace CrmDeveloperExtensions.Core
+namespace CrmDeveloperExtensions.Core.Vs
 {
     public static class ProjectWorker
     {
@@ -37,6 +33,12 @@ namespace CrmDeveloperExtensions.Core
             }
 
             return null;
+        }
+
+        public static bool IsProjectLoaded(Project project)
+        {
+            return string.Compare(Constants.vsProjectKindUnmodeled, project.Kind,
+                       StringComparison.OrdinalIgnoreCase) != 0;
         }
     }
 }

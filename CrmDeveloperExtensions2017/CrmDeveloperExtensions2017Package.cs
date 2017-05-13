@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CrmDeveloperExtensions.Core;
+using CrmDeveloperExtensions.Core.Models;
 using CrmDeveloperExtensions.Core.Vs;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -12,6 +15,7 @@ using EnvDTE;
 using NLog;
 using Logger = NLog.Logger;
 using ExLogger = CrmDeveloperExtensions.Core.Logging.ExtensionLogger;
+using EnvDTE80;
 
 namespace CrmDeveloperExtensions2017
 {
@@ -36,7 +40,6 @@ namespace CrmDeveloperExtensions2017
     [InstalledProductRegistration("#110", "#112", "2.0.0.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
-    //[ProvideToolWindow(typeof(WebResourceDeployerHost), MultiInstances = true, Orientation = ToolWindowOrientation.Bottom, Style = VsDockStyle.Linked, Window = "96aa3696-8674-484f-a95e-08355d14a7fb")]
 
     [Guid(PackageGuids.GuidCrmDeveloperExtensionsPkgString)]
     [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
@@ -48,7 +51,6 @@ namespace CrmDeveloperExtensions2017
     {
         private DTE _dte;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-
         private IVsSolution _vsSolution;
 
         protected override void Initialize()
@@ -58,7 +60,7 @@ namespace CrmDeveloperExtensions2017
             _dte = GetGlobalService(typeof(DTE)) as DTE;
 
             ExLogger.LogToFile(_dte, ExtensionLogger, "Initializing extension", LogLevel.Info);
-            
+
             StartupTasks.Run(_dte);
 
             uint solutionEventsCookie;
@@ -77,36 +79,13 @@ namespace CrmDeveloperExtensions2017
 
         private void ShowWebResourceDeployer(object sender, EventArgs e)
         {
-            //bool b = UserOptions.GetOption(_dte, "LoggingEnabled");
-            
-
             ToolWindowPane window = FindToolWindow(typeof(WebResourceDeployerHost), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window.");
-          
+
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
-            
-            //Guid gd = Guid.Empty;
-            //windowFrame.SetFramePos(VSSETFRAMEPOS.SFP_fDockBottom, ref gd, 20, 20,
-            //    200, 200);
-
-            //SharedGlobals.SetGlobal("WebResourceDeployerWindow", window, _dte);
-
-           
-
-            //System.Threading.Thread.Sleep(5000);
-            //windowFrame.CloseFrame((uint) __FRAMECLOSE.FRAMECLOSE_NoSave);
         }
 
-        //public bool LoggingEnabled
-        //{
-        //    get
-        //    {
-
-        //        UserOptionsGrid page = (UserOptionsGrid)GetDialogPage(typeof(UserOptionsGrid));
-        //        return page.LoggingEnabled;
-        //    }
-        //}
     }
 }

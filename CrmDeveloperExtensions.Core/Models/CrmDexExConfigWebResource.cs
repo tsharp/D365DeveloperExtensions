@@ -8,7 +8,7 @@ namespace CrmDeveloperExtensions.Core.Models
 {
     public class CrmDexExConfigWebResource
     {
-        public Guid OrganizationId { get; set; }
         public Guid WebResourceId { get; set; }
+        public uint ItemId { get; set; }
     }
 }

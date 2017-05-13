@@ -17,7 +17,6 @@ namespace CrmDeveloperExtensions2017
         {
             SetupLogging(dte);
 
-            VsSolutionEvents events = new VsSolutionEvents(dte);
         }
 
         private static void SetupLogging(DTE dte)

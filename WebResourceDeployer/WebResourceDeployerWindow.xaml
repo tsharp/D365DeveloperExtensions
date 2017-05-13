@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WebResourceDeployer"
              xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:core="clr-namespace:CrmDeveloperExtensions.Core;assembly=CrmDeveloperExtensions.Core"
+             xmlns:connection="clr-namespace:CrmDeveloperExtensions.Core.Connection;assembly=CrmDeveloperExtensions.Core"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="1100">
     <Grid>
@@ -13,12 +13,54 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <core:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected"></core:XrmToolingConnection>
+        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected"></connection:XrmToolingConnection>
         <Grid Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button x:Name="Info" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Info_OnClick" Background="White">
+                    <Image Source="/CommonResources;component/Resources/info-24.png" Width="24" Height="24" ToolTip="Information"></Image>
+                </Button>
+                <TextBlock Text="Solution" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Height="22" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+                <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" SelectionChanged="SolutionList_OnSelectionChanged" 
+                          DisplayMemberPath="Name" IsEnabled="False" Width="200">
+                </ComboBox>
+                <TextBlock Text="Filter" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Height="22" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+                <ComboBox x:Name="WebResourceType" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" SelectionChanged="WebResourceType_SelectionChanged" 
+                          IsEnabled="False" Width="113">
+                    <ComboBoxItem Content="" Tag=""/>
+                    <ComboBoxItem Content="Webpage (HTML)" Tag="1"/>
+                    <ComboBoxItem Content="Style Sheet (CSS)" Tag="2"/>
+                    <ComboBoxItem Content="Script (JScript)" Tag="3"/>
+                    <ComboBoxItem Content="Data (XML)" Tag="4"/>
+                    <ComboBoxItem Content="PNG format" Tag="5"/>
+                    <ComboBoxItem Content="JPG format" Tag="6"/>
+                    <ComboBoxItem Content="GIF format" Tag="7"/>
+                    <ComboBoxItem Content="Silverlight (XAP)" Tag="8"/>
+                    <ComboBoxItem Content="Style Sheet (XSL)" Tag="9"/>
+                    <ComboBoxItem Content="ICO format" Tag="10"/>
+                </ComboBox>
+                <CheckBox x:Name="ShowManaged" Content="Show Managed" Margin="5,5,0,0" VerticalAlignment="Top" Checked="ShowManaged_Checked" Unchecked="ShowManaged_Checked" 
+                          IsEnabled="False" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" />
+                <Button x:Name="Publish" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Publish_Click" IsEnabled="False" Background="White">
+                    <Image Source="/CommonResources;component/Resources/publish-24.png" Width="24" Height="24" ToolTip="Publish To CRM"></Image>
+                </Button>
+                <Button x:Name="AddWebResource" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="AddWebResource_Click" IsEnabled="False" Background="White">
+                    <Image Source="/CommonResources;component/Resources/plus-24.png" Width="24" Height="24" ToolTip="New Web Resource From File"></Image>
+                </Button>
+                <Button x:Name="Customizations" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Customizations_OnClick" IsEnabled="False" Background="White">
+                    <Image Source="/CommonResources;component/Resources/customizations_24.png" Width="24" Height="24" ToolTip="Open CRM Default Solution"></Image>
+                </Button>
+                <Button x:Name="Solutions" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Solutions_OnClick" IsEnabled="False" Background="White">
+                    <Image Source="/CommonResources;component/Resources/solutions_24.png" Width="24" Height="24" ToolTip="Open CRM Solutions Page"></Image>
+                </Button>
+                <TextBlock x:Name="ItemCount" Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" />
             </StackPanel>
-            <DataGrid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"></DataGrid>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="477,172,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+            <DataGrid x:Name="WebResourceGrid" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,36,0,0" VerticalContentAlignment="Stretch" 
+                      VerticalAlignment="Stretch"  CanUserResizeRows="False" EnableRowVirtualization="true" AutoGenerateColumns="False" CanUserAddRows="False" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                      RowHeight="24" IsEnabled="False" CanUserDeleteRows="False" RowBackground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"
+                      Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" HeadersVisibility="Column" EnableColumnVirtualization="True" 
+                      MaxWidth="2560" MaxHeight="1600" SelectionChanged="WebResourceGrid_SelectionChanged">
+            </DataGrid>
         </Grid>
     </Grid>
 </UserControl>
+

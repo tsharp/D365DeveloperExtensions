@@ -22,7 +22,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    public class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CrmDeveloperExtensions.Core.Resources.Resource", typeof(Resource).Assembly);
@@ -51,7 +51,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,18 @@ namespace CrmDeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CrmDevEx.json.
+        /// </summary>
+        public static string ConfigFileName {
+            get {
+                return ResourceManager.GetString("ConfigFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
-        internal static string OutputLoggerMessageTypeError {
+        public static string OutputLoggerMessageTypeError {
             get {
                 return ResourceManager.GetString("OutputLoggerMessageTypeError", resourceCulture);
             }
@@ -72,7 +81,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Info.
         /// </summary>
-        internal static string OutputLoggerMessageTypeInfo {
+        public static string OutputLoggerMessageTypeInfo {
             get {
                 return ResourceManager.GetString("OutputLoggerMessageTypeInfo", resourceCulture);
             }
@@ -81,7 +90,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Warning.
         /// </summary>
-        internal static string OutputLoggerMessageTypeWarning {
+        public static string OutputLoggerMessageTypeWarning {
             get {
                 return ResourceManager.GetString("OutputLoggerMessageTypeWarning", resourceCulture);
             }
@@ -90,7 +99,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Crm DevEx.
         /// </summary>
-        internal static string OutputLoggerWindowTitle {
+        public static string OutputLoggerWindowTitle {
             get {
                 return ResourceManager.GetString("OutputLoggerWindowTitle", resourceCulture);
             }
@@ -99,7 +108,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Connecting....
         /// </summary>
-        internal static string StatusBarMessageConnecting {
+        public static string StatusBarMessageConnecting {
             get {
                 return ResourceManager.GetString("StatusBarMessageConnecting", resourceCulture);
             }
@@ -108,7 +117,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Crm DevEx.
         /// </summary>
-        internal static string UserOptionsCategory {
+        public static string UserOptionsCategory {
             get {
                 return ResourceManager.GetString("UserOptionsCategory", resourceCulture);
             }
@@ -117,7 +126,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Logging.
         /// </summary>
-        internal static string UserOptionsLoggingPage {
+        public static string UserOptionsLoggingPage {
             get {
                 return ResourceManager.GetString("UserOptionsLoggingPage", resourceCulture);
             }
@@ -126,7 +135,7 @@ namespace CrmDeveloperExtensions.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Logging Options.
         /// </summary>
-        internal static string UserOptionsLoggingPageCategory {
+        public static string UserOptionsLoggingPageCategory {
             get {
                 return ResourceManager.GetString("UserOptionsLoggingPageCategory", resourceCulture);
             }

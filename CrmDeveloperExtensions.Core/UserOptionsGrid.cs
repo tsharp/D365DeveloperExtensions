@@ -56,7 +56,7 @@ namespace CrmDeveloperExtensions.Core
             var props = dte.Properties[Resources.Resource.UserOptionsCategory,
                 Resources.Resource.UserOptionsLoggingPage];
 
-            return props.Item(propertyName).Value;
+            return props.Item(propertyName).Value.ToString();
         }
     }
 }

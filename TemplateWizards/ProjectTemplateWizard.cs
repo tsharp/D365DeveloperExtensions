@@ -9,6 +9,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using CrmDeveloperExtensions.Core;
+using CrmDeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;

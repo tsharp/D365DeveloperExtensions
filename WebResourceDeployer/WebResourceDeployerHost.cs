@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace WebResourceDeployer
 {
-    [Guid("96aa3696-8674-484f-a95e-08355d14a7fb")]
+    [Guid("A3479AE0-5F4F-4A14-96F4-46F39000023A")] //Also located in XrmToolingConnection.xaml.cs 
     public sealed class WebResourceDeployerHost : ToolWindowPane
     {
         public WebResourceDeployerHost() : base(null)
@@ -11,7 +11,7 @@ namespace WebResourceDeployer
             Caption = Resources.Resource.ToolWindowTitle;
             BitmapResourceID = 301;
             BitmapIndex = 1;
-            Content = new WebResourceDeployerWindow(); 
-        }  
+            Content = new WebResourceDeployerWindow();
+        }
     }
 }
