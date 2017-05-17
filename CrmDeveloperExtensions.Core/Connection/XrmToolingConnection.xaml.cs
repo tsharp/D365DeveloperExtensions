@@ -11,7 +11,10 @@ using CrmDeveloperExtensions.Core.Models;
 using CrmDeveloperExtensions.Core.Vs;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Xrm.Tooling.Connector;
 using Window = EnvDTE.Window;
 
 namespace CrmDeveloperExtensions.Core.Connection
@@ -21,6 +24,10 @@ namespace CrmDeveloperExtensions.Core.Connection
         private readonly DTE _dte;
         private readonly Solution _solution;
         private ObservableCollection<Project> _projects;
+        private bool _projectEventsRegistered;
+        private IVsSolution _vsSolution;
+
+        public CrmServiceClient CrmService;
 
         public ObservableCollection<Project> Projects
         {
@@ -53,8 +60,12 @@ namespace CrmDeveloperExtensions.Core.Connection
             if (_solution == null)
                 return;
 
-            var events = _dte.Events;
+            uint solutionEventsCookie;
+            IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
+            _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
+            _vsSolution.AdviseSolutionEvents(vsSolutionEvents, out solutionEventsCookie);
 
+            var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
 
@@ -86,9 +97,11 @@ namespace CrmDeveloperExtensions.Core.Connection
             if (!crmDevExWindows.Contains(gotFocus.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty)))
                 return;
 
-            //if (crmDevExWindows.Count(c => String.Equals(c, gotFocus.ObjectKind, 
-            //    StringComparison.CurrentCultureIgnoreCase)) < 1)
-            //    return;
+            if (!_projectEventsRegistered)
+            {
+                RegisterProjectEvents();
+                _projectEventsRegistered = true;
+            }
 
             GetProjectsForList();
 
@@ -102,6 +115,20 @@ namespace CrmDeveloperExtensions.Core.Connection
             //{
             //    SolutionProjectAdded(project);
             //}
+        }
+
+        private void RegisterProjectEvents()
+        {
+            //Manually register the OnAfterOpenProject event on the existing projects as they are already opened by the time the event would normally be registered
+            foreach (Project project in _projects)
+            {
+                IVsHierarchy projectHierarchy;
+                if (_vsSolution.GetProjectOfUniqueName(project.UniqueName, out projectHierarchy) != VSConstants.S_OK)
+                    continue;
+
+                IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
+                vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
+            }
         }
 
         private void SolutionEventsOnOpened()
@@ -168,6 +195,11 @@ namespace CrmDeveloperExtensions.Core.Connection
             handler?.Invoke(this, e);
         }
 
+        public void ProjectItemAdded()
+        {
+            MessageBox.Show("Added");
+        }
+
         private void GetProjectsForList()
         {
             IList<Project> projects = SolutionWorker.GetProjects();
@@ -213,6 +245,8 @@ namespace CrmDeveloperExtensions.Core.Connection
                 return;
 
             CrmLoginForm loginForm = (CrmLoginForm)sender;
+            CrmService = loginForm.CrmConnectionMgr.CrmSvc;
+
             OnConnected(new ConnectEventArgs
             {
                 ServiceClient = loginForm.CrmConnectionMgr.CrmSvc

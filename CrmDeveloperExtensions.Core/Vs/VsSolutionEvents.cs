@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using CrmDeveloperExtensions.Core.Connection;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.PlatformUI.OleComponentSupport;
@@ -12,15 +13,17 @@ namespace CrmDeveloperExtensions.Core.Vs
     public sealed class VsSolutionEvents : IVsSolutionEvents
     {
         private DTE _dte;
+        private XrmToolingConnection _xrmConnection;
 
-        //IVsHierarchyEvents _vsHierarchyEvents;
-        //uint _cookie;
+        IVsHierarchyEvents _vsHierarchyEvents;
+        uint _cookie;
         //private readonly WebResourceList _webResouceList;
 
         //public VsSolutionEvents(WebResourceList webResouceList)
-        public VsSolutionEvents(DTE dte)
+        public VsSolutionEvents(DTE dte, XrmToolingConnection xrmConnection)
         {
             _dte = dte;
+            _xrmConnection = xrmConnection;
             //_webResouceList = webResouceList;
         }
 
@@ -40,8 +43,10 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
-            //_vsHierarchyEvents = new VsHierarchyEvents(pHierarchy, _webResouceList);
-            //pHierarchy.AdviseHierarchyEvents(_vsHierarchyEvents, out _cookie);
+            _vsHierarchyEvents = new VsHierarchyEvents(pHierarchy, _xrmConnection);
+            pHierarchy.AdviseHierarchyEvents(_vsHierarchyEvents, out _cookie);
+            //TODO: do these need to be disposed of?
+
             return VSConstants.S_OK;
         }
 

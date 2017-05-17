@@ -104,6 +104,7 @@
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Workflow.Activities" />
     <Reference Include="System.Workflow.ComponentModel" />
     <Reference Include="System.Workflow.Runtime" />
@@ -125,7 +126,7 @@
     <Compile Include="Connection\ProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\ProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\ProjectAddedEventArgs.cs" />
-    <Compile Include="Crm\Test.cs" />
+    <Compile Include="Crm\Connection.cs" />
     <Compile Include="Enums\OutputLoggerMessageType.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Logging\ExtensionLogger.cs" />

@@ -121,6 +121,12 @@
     <value>CrmDevEx.json</value>
     <comment>Do not localize</comment>
   </data>
+  <data name="FileLoggingDisabled" xml:space="preserve">
+    <value>Logging Disabled</value>
+  </data>
+  <data name="FileLoggingEnabled" xml:space="preserve">
+    <value>Logging Enabled</value>
+  </data>
   <data name="OutputLoggerMessageTypeError" xml:space="preserve">
     <value>Error</value>
   </data>

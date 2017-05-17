@@ -28,7 +28,7 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-           //MessageBox.Show(CrmDeveloperExtensions.Core.Crm.Test.DoWhoAmI(e.ServiceClient));
+           
         }
     }
 }

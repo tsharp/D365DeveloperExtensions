@@ -34,7 +34,6 @@ namespace CrmDeveloperExtensions.Core.Config
                 }
 
                 return config;
-
             }
             catch
             {
@@ -68,7 +67,7 @@ namespace CrmDeveloperExtensions.Core.Config
             {
                 File.WriteAllText($"{directory.FullName}\\{ConfigFileName}", text);
             }
-            catch (Exception e)
+            catch
             {
                 MessageBox.Show("Error writing config file");
             }

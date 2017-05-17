@@ -70,6 +70,24 @@ namespace CrmDeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logging Disabled.
+        /// </summary>
+        public static string FileLoggingDisabled {
+            get {
+                return ResourceManager.GetString("FileLoggingDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging Enabled.
+        /// </summary>
+        public static string FileLoggingEnabled {
+            get {
+                return ResourceManager.GetString("FileLoggingEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string OutputLoggerMessageTypeError {

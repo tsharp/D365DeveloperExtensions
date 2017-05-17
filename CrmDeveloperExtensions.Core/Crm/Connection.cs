@@ -8,7 +8,7 @@ using Microsoft.Xrm.Tooling.Connector;
 
 namespace CrmDeveloperExtensions.Core.Crm
 {
-    public static class Test
+    public static class Connection
     {
         public static string DoWhoAmI(CrmServiceClient service)
         {

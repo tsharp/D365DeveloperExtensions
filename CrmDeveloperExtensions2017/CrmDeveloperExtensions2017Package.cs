@@ -51,7 +51,6 @@ namespace CrmDeveloperExtensions2017
     {
         private DTE _dte;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-        private IVsSolution _vsSolution;
 
         protected override void Initialize()
         {
@@ -63,10 +62,6 @@ namespace CrmDeveloperExtensions2017
 
             StartupTasks.Run(_dte);
 
-            uint solutionEventsCookie;
-            IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte);
-            _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            _vsSolution.AdviseSolutionEvents(vsSolutionEvents, out solutionEventsCookie);
 
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (mcs == null) return;
@@ -76,6 +71,7 @@ namespace CrmDeveloperExtensions2017
             OleMenuCommand wrdWindowItem = new OleMenuCommand(ShowWebResourceDeployer, wrdWindowCommandId);
             mcs.AddCommand(wrdWindowItem);
         }
+        
 
         private void ShowWebResourceDeployer(object sender, EventArgs e)
         {
@@ -86,6 +82,5 @@ namespace CrmDeveloperExtensions2017
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -10,32 +11,37 @@ namespace CrmDeveloperExtensions.Core.Logging
 {
     public class ExtensionLogger
     {
-        public ExtensionLogger()
+        public ExtensionLogger(DTE dte)
         {
-            CreateConfig();
+            CreateConfig(dte);
         }
 
-        private static void CreateConfig()
+        private static void CreateConfig(DTE dte)
         {
             var config = new LoggingConfiguration();
-            //TODO: User Option for log path
             var fileTarget = new FileTarget
             {
                 CreateDirs = true,
-                FileName = "c:\\logs\\CrmDevExLog_" + DateTime.Now.ToString("MMddyyyy") + ".log"
+                FileName = GetLogFilePath(dte)
             };
             config.AddTarget("file", fileTarget);
 
-            //LoggingRule rule = new LoggingRule("*", fileTarget);
             config.AddRule(LogLevel.Info, LogLevel.Fatal, fileTarget);
 
             LogManager.Configuration = config;
         }
 
         public static void LogToFile(DTE dte, Logger logger, string message, LogLevel logLevel)
-        {         
+        {
             if (UserOptionsGrid.GetLoggingOptionBoolean(dte, "LoggingEnabled"))
                 logger.Log(logLevel, message);
+        }
+
+        private static string GetLogFilePath(DTE dte)
+        {
+            string logFilePath = UserOptionsGrid.GetLoggingOptionString(dte, "LogFilePath");
+
+            return Path.Combine(logFilePath, "CrmDevExLog_" + DateTime.Now.ToString("MMddyyyy") + ".log");
         }
     }
 }

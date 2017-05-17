@@ -21,10 +21,7 @@ namespace CrmDeveloperExtensions2017
 
         private static void SetupLogging(DTE dte)
         {
-            ExtensionLogger exLogger = new ExtensionLogger();
-       
-            //NLog.ExtensionLogger logger = new NLog.ExtensionLogger();
-            //SharedGlobals.SetGlobal("logger", logger, dte);      
+            ExtensionLogger exLogger = new ExtensionLogger(dte);
         }
     }
 }
