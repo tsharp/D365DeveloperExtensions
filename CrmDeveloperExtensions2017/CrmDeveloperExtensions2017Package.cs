@@ -46,6 +46,7 @@ namespace CrmDeveloperExtensions2017
 
     //User Settings - Logging Section
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Logging", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Web Browser", 0, 0, true)]
 
     public sealed class CrmDeveloperExtensions2017Package : Package
     {
@@ -61,7 +62,6 @@ namespace CrmDeveloperExtensions2017
             ExLogger.LogToFile(_dte, ExtensionLogger, "Initializing extension", LogLevel.Info);
 
             StartupTasks.Run(_dte);
-
 
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (mcs == null) return;

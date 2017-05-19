@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using CrmDeveloperExtensions.Core.Connection;
+using CrmDeveloperExtensions.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.PlatformUI.OleComponentSupport;
@@ -67,9 +68,12 @@ namespace CrmDeveloperExtensions.Core.Vs
             {
                 if (window.Type == vsWindowType.vsWindowTypeToolWindow)
                 {
+                    OutputLogger.DeleteOutputWindow();
                     window.Close();
                 }
             }
+
+            OutputLogger.DeleteOutputWindow();
 
             return VSConstants.S_OK;
         }

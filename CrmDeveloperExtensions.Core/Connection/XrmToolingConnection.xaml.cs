@@ -43,9 +43,11 @@ namespace CrmDeveloperExtensions.Core.Connection
         }
 
         public event EventHandler<ConnectEventArgs> Connected;
-        public event EventHandler<ProjectAddedEventArgs> ProjectAdded;
-        public event EventHandler<ProjectRemovedEventArgs> ProjectRemoved;
-        public event EventHandler<ProjectRenamedEventArgs> ProjectRenamed;
+        public event EventHandler SolutionBeforeClosing;
+        public event EventHandler<SolutionProjectAddedEventArgs> SolutionProjectAdded;
+        public event EventHandler<SolutionProjectRemovedEventArgs> SolutionProjectRemoved;
+        public event EventHandler<SolutionProjectRenamedEventArgs> SolutionProjectRenamed;
+        public event EventHandler<ProjectItemRenamedEventArgs> ProjectItemRenamed;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public XrmToolingConnection()
@@ -68,6 +70,10 @@ namespace CrmDeveloperExtensions.Core.Connection
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
+
+            var events2 = (Events2)_dte.Events;
+            var projectItemsEvents = events2.ProjectItemsEvents;
+            projectItemsEvents.ItemRenamed += ProjectItemsEventsOnItemRenamed;
 
             var solutionEvents = events.SolutionEvents;
             solutionEvents.ProjectAdded += SolutionEventsOnProjectAdded;
@@ -138,7 +144,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         private void SolutionEventsOnProjectRemoved(Project project)
         {
             _projects.Remove(project);
-            OnProjectRemoved(new ProjectRemovedEventArgs
+            OnSolutionProjectRemoved(new SolutionProjectRemovedEventArgs
             {
                 Project = project
             });
@@ -152,7 +158,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             }
 
             _projects.Add(project);
-            OnProjectAdded(new ProjectAddedEventArgs
+            OnSolutionProjectAdded(new SolutionProjectAddedEventArgs
             {
                 Project = project
             });
@@ -164,7 +170,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             SolutionProjectsList.ItemsSource = _projects;
             SolutionProjectsList.SelectedItem = selectedProject;
 
-            OnProjectRenamed(new ProjectRenamedEventArgs
+            OnSolutionProjectRenamed(new SolutionProjectRenamedEventArgs
             {
                 Project = project,
                 OldName = oldName
@@ -173,31 +179,47 @@ namespace CrmDeveloperExtensions.Core.Connection
         private void SolutionEventsOnBeforeClosing()
         {
             ResetForm();
+
+            SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
         }
         protected virtual void OnConnected(ConnectEventArgs e)
         {
             var handler = Connected;
             handler?.Invoke(this, e);
         }
-        protected virtual void OnProjectAdded(ProjectAddedEventArgs e)
+        protected virtual void OnSolutionProjectAdded(SolutionProjectAddedEventArgs e)
         {
-            var handler = ProjectAdded;
+            var handler = SolutionProjectAdded;
             handler?.Invoke(this, e);
         }
-        protected virtual void OnProjectRemoved(ProjectRemovedEventArgs e)
+        protected virtual void OnSolutionProjectRemoved(SolutionProjectRemovedEventArgs e)
         {
-            var handler = ProjectRemoved;
+            var handler = SolutionProjectRemoved;
             handler?.Invoke(this, e);
         }
-        protected virtual void OnProjectRenamed(ProjectRenamedEventArgs e)
+        protected virtual void OnSolutionProjectRenamed(SolutionProjectRenamedEventArgs e)
         {
-            var handler = ProjectRenamed;
+            var handler = SolutionProjectRenamed;
+            handler?.Invoke(this, e);
+        }
+        protected virtual void OnProjectItemRenamed(ProjectItemRenamedEventArgs e)
+        {
+            var handler = ProjectItemRenamed;
             handler?.Invoke(this, e);
         }
 
         public void ProjectItemAdded()
         {
             MessageBox.Show("Added");
+        }
+
+        private void ProjectItemsEventsOnItemRenamed(ProjectItem projectItem, string oldName)
+        {
+            OnProjectItemRenamed(new ProjectItemRenamedEventArgs
+            {
+                ProjectItem = projectItem,
+                OldName = oldName
+            });
         }
 
         private void GetProjectsForList()
@@ -225,8 +247,8 @@ namespace CrmDeveloperExtensions.Core.Connection
 
                 if (ctrl.CrmConnectionMgr?.CrmSvc != null && ctrl.CrmConnectionMgr.CrmSvc.IsReady)
                 {
-                    MessageBox.Show("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
-                                    " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, "Connection Status");
+                    //MessageBox.Show("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
+                    //                " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, "Connection Status");
                 }
                 else
                 {
@@ -247,14 +269,14 @@ namespace CrmDeveloperExtensions.Core.Connection
             CrmLoginForm loginForm = (CrmLoginForm)sender;
             CrmService = loginForm.CrmConnectionMgr.CrmSvc;
 
-            OnConnected(new ConnectEventArgs
-            {
-                ServiceClient = loginForm.CrmConnectionMgr.CrmSvc
-            });
-
             Dispatcher.Invoke(() =>
             {
                 ((CrmLoginForm)sender).Close();
+            });
+
+            OnConnected(new ConnectEventArgs
+            {
+                ServiceClient = loginForm.CrmConnectionMgr.CrmSvc
             });
         }
 

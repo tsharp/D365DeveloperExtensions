@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
+using CrmDeveloperExtensions.Core.Logging;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Tooling.CrmConnectControl;
+using Window = System.Windows.Window;
 
 namespace CrmDeveloperExtensions.Core.Connection
 {
@@ -55,6 +61,8 @@ namespace CrmDeveloperExtensions.Core.Connection
             //    MessageBox.Show("CertError");
             //    return true;
             //};
+
+            EnableXrmToolingLogging();
         }
 
         /// <summary>
@@ -128,9 +136,8 @@ namespace CrmDeveloperExtensions.Core.Connection
             Dispatcher.Invoke(DispatcherPriority.Normal,
                                new Action(() =>
                                {
-                                   this.Title = string.IsNullOrWhiteSpace(e.StatusMessage) ? e.ErrorMessage : e.StatusMessage;
-                               }
-                                   ));
+                                   Title = string.IsNullOrWhiteSpace(e.StatusMessage) ? e.ErrorMessage : e.StatusMessage;
+                               }));
 
         }
 
@@ -252,6 +259,16 @@ namespace CrmDeveloperExtensions.Core.Connection
             _resetUiFlag = false;
         }
 
+        private void EnableXrmToolingLogging()
+        {
+            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (!UserOptionsGrid.GetLoggingOptionBoolean(dte, "ExtensionLoggingEnabled"))
+                return;
+
+            TraceControlSettings.TraceLevel = SourceLevels.All;
+            string logPath = XrmToolingLogging.GetLogFilePath(dte);
+            TraceControlSettings.AddTraceListener(new TextWriterTraceListener(logPath));
+        }
     }
 
     #region system.diagnostics settings for this control

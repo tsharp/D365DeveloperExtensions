@@ -121,11 +121,11 @@
     <value>CrmDevEx.json</value>
     <comment>Do not localize</comment>
   </data>
-  <data name="FileLoggingDisabled" xml:space="preserve">
-    <value>Logging Disabled</value>
+  <data name="ExtensionLoggingDisabled" xml:space="preserve">
+    <value>Extension Logging Disabled</value>
   </data>
-  <data name="FileLoggingEnabled" xml:space="preserve">
-    <value>Logging Enabled</value>
+  <data name="ExtensionLoggingEnabled" xml:space="preserve">
+    <value>Extension Logging Enabled</value>
   </data>
   <data name="OutputLoggerMessageTypeError" xml:space="preserve">
     <value>Error</value>
@@ -150,5 +150,17 @@
   </data>
   <data name="UserOptionsLoggingPageCategory" xml:space="preserve">
     <value>Logging Options</value>
+  </data>
+  <data name="UserOptionsWebBrowserPage" xml:space="preserve">
+    <value>Web Browser</value>
+  </data>
+  <data name="UserOptionsWebBrowserPageCategory" xml:space="preserve">
+    <value>Web Browser Options</value>
+  </data>
+  <data name="XrmToolingLoggingDisabled" xml:space="preserve">
+    <value>Xrm.Tooling Logging Disabled</value>
+  </data>
+  <data name="XrmToolingLoggingEnabled" xml:space="preserve">
+    <value>Xrm.Tooling Logging Enabled</value>
   </data>
 </root>

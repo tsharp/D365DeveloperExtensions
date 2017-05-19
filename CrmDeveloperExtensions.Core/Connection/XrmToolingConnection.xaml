@@ -32,8 +32,8 @@
                 <Button x:Name="Delete" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="Delete_Click" IsEnabled="False" Background="White">
                     <Image Source="Resources/minus-24.png" Width="24" Height="24" ToolTip="Delete Connection"></Image>
                 </Button>-->
-                <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  IsEnabled="True" Background="White" Click="Connect_OnClick">
-                    <Image Source="../Images/connect_24.png" Width="24" Height="24" ToolTip="Connect To CRM"></Image>
+                <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  IsEnabled="True" Padding="2,2,2,2" Background="White" Click="Connect_OnClick">
+                    <Image Source="../Images/connect_16.png" Width="16" Height="16" ToolTip="Connect To CRM/D365"></Image>
                 </Button>
             </StackPanel>
         </StackPanel>

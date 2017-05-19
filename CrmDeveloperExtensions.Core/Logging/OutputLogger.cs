@@ -29,7 +29,7 @@ namespace CrmDeveloperExtensions.Core.Logging
             outWindow.GetPane(ref _windowsId, out _customPane);
         }
 
-        private static void DeleteOutputWindow()
+        public static void DeleteOutputWindow()
         {
             IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
 

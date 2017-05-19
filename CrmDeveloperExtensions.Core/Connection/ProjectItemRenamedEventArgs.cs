@@ -7,8 +7,9 @@ using EnvDTE;
 
 namespace CrmDeveloperExtensions.Core.Connection
 {
-    public class ProjectRemovedEventArgs
+    public class ProjectItemRenamedEventArgs
     {
-        public Project Project { get; set; }
+        public ProjectItem ProjectItem { get; set; }
+        public string OldName { get; set; }
     }
 }

@@ -123,13 +123,16 @@
     <Compile Include="Connection\CrmLoginForm.xaml.cs">
       <DependentUpon>CrmLoginForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Connection\ProjectRenamedEventArgs.cs" />
-    <Compile Include="Connection\ProjectRemovedEventArgs.cs" />
-    <Compile Include="Connection\ProjectAddedEventArgs.cs" />
+    <Compile Include="Connection\ProjectItemRenamedEventArgs.cs" />
+    <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
+    <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
+    <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
     <Compile Include="Crm\Connection.cs" />
+    <Compile Include="Crm\Solution.cs" />
     <Compile Include="Enums\OutputLoggerMessageType.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Logging\ExtensionLogger.cs" />
+    <Compile Include="Logging\XrmToolingLogging.cs" />
     <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
     <Compile Include="Models\CrmDexExConfig.cs" />
     <Compile Include="Models\CrmDexExConfigWebResource.cs" />
@@ -155,6 +158,7 @@
     <Compile Include="Connection\XrmToolingConnection.xaml.cs">
       <DependentUpon>XrmToolingConnection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WebBrowser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Connection\CrmLoginForm.xaml">
@@ -175,17 +179,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\connect_24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\cancel_24.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\connect_16.png" />
+    <Resource Include="Images\customizations_16.png" />
+    <Resource Include="Images\new_16.png" />
+    <Resource Include="Images\publish_16.png" />
+    <Resource Include="Images\solutions_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\compare_16.png" />
+    <Resource Include="Images\download_16.png" />
+    <Resource Include="Images\open_16.png" />
+    <Resource Include="Images\remove_16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

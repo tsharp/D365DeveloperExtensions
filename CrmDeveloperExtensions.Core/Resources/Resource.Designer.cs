@@ -70,20 +70,20 @@ namespace CrmDeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging Disabled.
+        ///   Looks up a localized string similar to Extension Logging Disabled.
         /// </summary>
-        public static string FileLoggingDisabled {
+        public static string ExtensionLoggingDisabled {
             get {
-                return ResourceManager.GetString("FileLoggingDisabled", resourceCulture);
+                return ResourceManager.GetString("ExtensionLoggingDisabled", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging Enabled.
+        ///   Looks up a localized string similar to Extension Logging Enabled.
         /// </summary>
-        public static string FileLoggingEnabled {
+        public static string ExtensionLoggingEnabled {
             get {
-                return ResourceManager.GetString("FileLoggingEnabled", resourceCulture);
+                return ResourceManager.GetString("ExtensionLoggingEnabled", resourceCulture);
             }
         }
         
@@ -156,6 +156,42 @@ namespace CrmDeveloperExtensions.Core.Resources {
         public static string UserOptionsLoggingPageCategory {
             get {
                 return ResourceManager.GetString("UserOptionsLoggingPageCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Browser.
+        /// </summary>
+        public static string UserOptionsWebBrowserPage {
+            get {
+                return ResourceManager.GetString("UserOptionsWebBrowserPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Browser Options.
+        /// </summary>
+        public static string UserOptionsWebBrowserPageCategory {
+            get {
+                return ResourceManager.GetString("UserOptionsWebBrowserPageCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xrm.Tooling Logging Disabled.
+        /// </summary>
+        public static string XrmToolingLoggingDisabled {
+            get {
+                return ResourceManager.GetString("XrmToolingLoggingDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xrm.Tooling Logging Enabled.
+        /// </summary>
+        public static string XrmToolingLoggingEnabled {
+            get {
+                return ResourceManager.GetString("XrmToolingLoggingEnabled", resourceCulture);
             }
         }
     }

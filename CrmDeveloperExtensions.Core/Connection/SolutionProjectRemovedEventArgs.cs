@@ -7,7 +7,7 @@ using EnvDTE;
 
 namespace CrmDeveloperExtensions.Core.Connection
 {
-    public class ProjectAddedEventArgs
+    public class SolutionProjectRemovedEventArgs
     {
         public Project Project { get; set; }
     }

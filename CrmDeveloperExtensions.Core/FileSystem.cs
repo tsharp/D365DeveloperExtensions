@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 
 namespace CrmDeveloperExtensions.Core
 {
@@ -20,6 +21,28 @@ namespace CrmDeveloperExtensions.Core
                 throw new Exception("Unable to get directory from string");
 
             return directory;
+        }
+
+        public static string WriteTempFile(string name, byte[] content)
+        {
+            try
+            {
+                var tempFolder = Path.GetTempPath();
+                string fileName = Path.GetFileName(name);
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = Guid.NewGuid().ToString();
+                var tempFile = Path.Combine(tempFolder, fileName);
+                if (File.Exists(tempFile))
+                    File.Delete(tempFile);
+                File.WriteAllBytes(tempFile, content);
+
+                return tempFile;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error writing temp file");
+                throw;
+            }
         }
     }
 }
