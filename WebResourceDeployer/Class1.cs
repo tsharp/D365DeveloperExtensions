@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
@@ -14,8 +16,9 @@ namespace WebResourceDeployer
 {
     public static class Class1
     {
-        public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources)
+        public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName)
         {
+            ObservableCollection<MenuItem> projectFolders = CrmDeveloperExtensions.Core.Vs.ProjectWorker.GetProjectFoldersForMenu(projectName);
             List<WebResourceItem> webResourceItems = new List<WebResourceItem>();
 
             foreach (Entity webResource in webResources.Entities)
@@ -30,7 +33,7 @@ namespace WebResourceDeployer
                     AllowCompare = false,
                     TypeName = Crm.WebResources.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
-                    //ProjectFolders = projectFolders,
+                    ProjectFolders = projectFolders,
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
 
@@ -38,7 +41,7 @@ namespace WebResourceDeployer
                 bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out displayName);
                 if (hasDisplayName)
                     webResourceItem.DisplayName = webResource.GetAttributeValue<AliasedValue>("webresource.displayname").Value.ToString();
-                
+
                 //webResourceItem.PropertyChanged += WebResourceItem.WebResourceItem_PropertyChanged;
                 webResourceItems.Add(webResourceItem);
             }

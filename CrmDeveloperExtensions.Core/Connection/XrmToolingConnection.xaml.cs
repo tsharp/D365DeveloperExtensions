@@ -25,7 +25,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         private readonly Solution _solution;
         private ObservableCollection<Project> _projects;
         private bool _projectEventsRegistered;
-        private IVsSolution _vsSolution;
+        private readonly IVsSolution _vsSolution;
 
         public CrmServiceClient CrmService;
 
@@ -41,6 +41,8 @@ namespace CrmDeveloperExtensions.Core.Connection
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Projects"));
             }
         }
+
+        public Project SelectedProject;
 
         public event EventHandler<ConnectEventArgs> Connected;
         public event EventHandler SolutionBeforeClosing;
@@ -227,8 +229,8 @@ namespace CrmDeveloperExtensions.Core.Connection
             IList<Project> projects = SolutionWorker.GetProjects();
             foreach (Project project in projects)
             {
-                if (!ProjectWorker.IsProjectLoaded(project))
-                    _projects.Add(project);
+                //if (!ProjectWorker.IsProjectLoaded(project))
+                _projects.Add(project);
             }
 
             SolutionProjectsList.ItemsSource = _projects;
@@ -282,7 +284,8 @@ namespace CrmDeveloperExtensions.Core.Connection
 
         private void SolutionProjectsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            ComboBox solutionProjectsList = (ComboBox) sender;
+            SelectedProject = (Project)solutionProjectsList.SelectedItem;
         }
 
         private void SolutionProjectsList_Initialized(object sender, EventArgs e)

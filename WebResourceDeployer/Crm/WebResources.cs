@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Drawing.Imaging;
+using System.IO;
 using System.ServiceModel;
+using System.Text;
 using CrmDeveloperExtensions.Core.Enums;
 using CrmDeveloperExtensions.Core.Logging;
 using Microsoft.Xrm.Sdk;
@@ -156,6 +159,57 @@ namespace WebResourceDeployer.Crm
         public static byte[] DecodeWebResource(string value)
         {
             return Convert.FromBase64String(value);
+        }
+
+        public static string EncodeString(string value)
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string EncodedImage(string filePath, string extension)
+        {
+            string encodedImage;
+
+            if (extension.ToUpper() == ".ICO")
+            {
+                System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    icon?.Save(ms);
+                    byte[] imageBytes = ms.ToArray();
+                    encodedImage = Convert.ToBase64String(imageBytes);
+                }
+
+                return encodedImage;
+            }
+
+            System.Drawing.Image image = System.Drawing.Image.FromFile(filePath, true);
+
+            ImageFormat format = null;
+            switch (extension.ToUpper())
+            {
+                case ".GIF":
+                    format = ImageFormat.Gif;
+                    break;
+                case ".JPG":
+                    format = ImageFormat.Jpeg;
+                    break;
+                case ".PNG":
+                    format = ImageFormat.Png;
+                    break;
+            }
+
+            if (format == null)
+                return null;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, format);
+                byte[] imageBytes = ms.ToArray();
+                encodedImage = Convert.ToBase64String(imageBytes);
+            }
+            return encodedImage;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -108,11 +109,15 @@ namespace WebResourceDeployer
         {
             //await GetWebResources();
             await GetCrmData();
+
+            ProjectFileList.ItemsSource = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+
+            SolutionList.IsEnabled = true;
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            FilterWebResources();
         }
 
         private void WebResourceType_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -180,12 +185,52 @@ namespace WebResourceDeployer
 
         private void PublishSelectAll_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            CheckBox publishAll = (CheckBox)sender;
+            bool? isChecked = publishAll.IsChecked;
+
+            if (isChecked != null && isChecked.Value)
+                UpdateAllPublishChecks(true);
+            else
+                UpdateAllPublishChecks(false);
+        }
+
+        private void UpdateAllPublishChecks(bool publish)
+        {
+            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            foreach (WebResourceItem webResourceItem in webResources)
+            {
+                if (webResourceItem.AllowPublish)
+                    webResourceItem.Publish = publish;
+            }
         }
 
         private void BoundFile_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            Grid grid = (Grid)sender;
+            TextBlock textBlock = (TextBlock)grid.Children[0];
+
+            Guid webResourceId = new Guid(textBlock.Tag.ToString());
+            FileId.Content = webResourceId;
+
+            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            WebResourceItem webResourceItem = webResources.FirstOrDefault(w => w.WebResourceId == webResourceId);
+            ProjectFileList.SelectedIndex = -1;
+            if (webResourceItem != null)
+            {
+                foreach (ComboBoxItem comboBoxItem in ProjectFileList.Items)
+                {
+                    if (comboBoxItem.Content.ToString() != webResourceItem.BoundFile) continue;
+
+                    ProjectFileList.SelectedItem = comboBoxItem;
+                    break;
+                }
+            }
+
+            ProjectFileList.Width = WebResourceGrid.Columns[5].ActualWidth - 2;
+            FilePopup.PlacementTarget = textBlock;
+            FilePopup.Placement = PlacementMode.Relative;
+            FilePopup.IsOpen = true;
+            ProjectFileList.IsDropDownOpen = true;
         }
 
         private void GetWebResource_OnClick(object sender, RoutedEventArgs e)
@@ -263,7 +308,18 @@ namespace WebResourceDeployer
 
         private void ProjectFileList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (ProjectFileList.SelectedIndex == -1) return;
+
+            WebResourceItem webResourceItem =
+                ((List<WebResourceItem>)WebResourceGrid.ItemsSource)
+                .FirstOrDefault(w => w.WebResourceId == new Guid(FileId.Content.ToString()));
+
+            ComboBoxItem item = (ComboBoxItem)ProjectFileList.SelectedItem;
+
+            if (webResourceItem != null && webResourceItem.BoundFile != item.Content.ToString())
+                webResourceItem.BoundFile = item.Content.ToString();
+
+            FilePopup.IsOpen = false;
         }
 
         private async Task GetCrmData()
@@ -330,7 +386,7 @@ namespace WebResourceDeployer
 
             CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
 
-            List<WebResourceItem> webResourceItems = Class1.CreateWebResourceItemView(results);
+            List<WebResourceItem> webResourceItems = Class1.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name);
             webResourceItems.ForEach(w => w.PropertyChanged += WebResourceItem_PropertyChanged);
 
             webResourceItems = webResourceItems.OrderBy(w => w.Name).ToList();
