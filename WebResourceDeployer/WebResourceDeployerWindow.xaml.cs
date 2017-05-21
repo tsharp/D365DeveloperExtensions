@@ -128,7 +128,10 @@ namespace WebResourceDeployer
 
         private void AddWebResource_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            ObservableCollection<ComboBoxItem> projectsFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+            Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
+            NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, projectsFiles, solutionId);
+            bool? result = newWebResource.ShowModal();
         }
 
         private void Publish_OnClick(object sender, RoutedEventArgs e)
@@ -138,7 +141,7 @@ namespace WebResourceDeployer
 
         private void ShowManaged_OnChecked(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            FilterWebResources();
         }
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
@@ -427,7 +430,7 @@ namespace WebResourceDeployer
 
         private async Task<bool> GetSolutions()
         {
-            EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService));
+            EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService, true));
             if (results == null)
                 return false;
 

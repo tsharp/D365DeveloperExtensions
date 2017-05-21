@@ -9,7 +9,7 @@ namespace WebResourceDeployer.Crm
 {
     public static class Solution
     {
-        public static EntityCollection RetrieveSolutionsFromCrm(CrmServiceClient client)
+        public static EntityCollection RetrieveSolutionsFromCrm(CrmServiceClient client, bool getManaged)
         {
             try
             {
@@ -51,6 +51,18 @@ namespace WebResourceDeployer.Crm
                         }
                     }
                 };
+
+                if (!getManaged)
+                {
+                    ConditionExpression noManaged = new ConditionExpression
+                    {
+                        AttributeName = "ismanaged",
+                        Operator = ConditionOperator.Equal,
+                        Values = { false }
+                    };
+
+                    query.Criteria.Conditions.Add(noManaged);
+                }
 
                 EntityCollection solutions = client.RetrieveMultiple(query);
 

@@ -85,6 +85,9 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="Crm\WebResource.cs" />
+    <Compile Include="NewWebResource.xaml.cs">
+      <DependentUpon>NewWebResource.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\CrmSolution.cs" />
     <Compile Include="ViewModels\WebResourceItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +102,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="NewWebResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WebResourceDeployerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

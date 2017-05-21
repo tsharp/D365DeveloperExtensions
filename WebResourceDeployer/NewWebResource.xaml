@@ -1,0 +1,49 @@
+﻿<platformUi:DialogWindow x:Class="WebResourceDeployer.NewWebResource"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WebResourceDeployer"
+             xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             mc:Ignorable="d" 
+             Title="New Web Resource" Height="300" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300" />
+        </Grid.RowDefinitions>
+
+        <Label x:Name="SolutionsLabel" Content="Solution" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top" Foreground="Red"/>
+        <ComboBox x:Name="Solutions" Margin="95,4,10,0" VerticalAlignment="Top" DisplayMemberPath="Name" SelectionChanged="Solutions_OnSelectionChanged" />
+        <Label x:Name="FilesLabel" Content="File" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.5,0" Foreground="Red"/>
+        <ComboBox x:Name="Files" Margin="95,45,10,0" VerticalAlignment="Top" SelectedValuePath="Content" SelectionChanged="Files_OnSelectionChanged" IsEnabled="False" />
+        <Label x:Name="NameLabel" Content="Name" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Foreground="Red"/>
+        <TextBox x:Name="Name" Height="23" Margin="131,76,10,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextChanged="Name_OnTextChanged" IsEnabled="False" MaxLength="200"/>
+        <Label Content="Display Name" HorizontalAlignment="Left" Margin="10,107,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="DisplayName" Height="23" Margin="95,107,10,0" TextWrapping="NoWrap" VerticalAlignment="Top" IsEnabled="False" MaxLength="249" />
+        <Label x:Name="TypeLabel" Content="Type" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.632,-0.192" Foreground="Red"/>
+        <ComboBox x:Name="Type" Margin="95,138,10,0" VerticalAlignment="Top" SelectedValuePath="Content" SelectionChanged="Type_OnSelectionChanged" IsEnabled="False">
+            <ComboBoxItem Content="Webpage (HTML)" Tag="1"/>
+            <ComboBoxItem Content="Style Sheet (CSS)" Tag="2"/>
+            <ComboBoxItem Content="Script (JScript)" Tag="3"/>
+            <ComboBoxItem Content="Data (XML)" Tag="4"/>
+            <ComboBoxItem Content="PNG format" Tag="5"/>
+            <ComboBoxItem Content="JPG format" Tag="6"/>
+            <ComboBoxItem Content="GIF format" Tag="7"/>
+            <ComboBoxItem Content="Silverlight (XAP)" Tag="8"/>
+            <ComboBoxItem Content="Style Sheet (XSL)" Tag="9"/>
+            <ComboBoxItem Content="ICO format" Tag="10"/>
+        </ComboBox>
+        <Label x:Name="DescriptionLabel" Content="Description" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.632,-0.192" />
+        <TextBox x:Name="Description" Height="46" Margin="95,178,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" IsEnabled="False" MaxLength="2000" />
+
+        <Button Grid.Row="0"  x:Name="Create" Content="Create" Margin="10,237,10,0" VerticalAlignment="Top" Click="Create_OnClick" />
+
+        <Grid x:Name="LockOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ZIndex="10" Background="{DynamicResource SlateGray}" Visibility="Hidden">
+            <Label x:Name="LockMessage" Content="Working..." VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"></Label>
+        </Grid>
+        <TextBlock x:Name="Prefix" HorizontalAlignment="Left" Margin="62,76,0,0" Text="new_" VerticalAlignment="Top" Height="23" Width="64" TextAlignment="Right" />
+    </Grid>
+    <Window.Resources>
+        <SolidColorBrush x:Key="SlateGray" Color="SlateGray" Opacity="0.5" />
+    </Window.Resources>
+</platformUi:DialogWindow>
