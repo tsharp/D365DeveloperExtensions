@@ -36,12 +36,12 @@
                     <ComboBoxItem Content="Style Sheet (XSL)" Tag="9"/>
                     <ComboBoxItem Content="ICO format" Tag="10"/>
                 </ComboBox>
-                <CheckBox x:Name="ShowManaged" Content="Show Managed" Margin="5,5,0,0" VerticalAlignment="Top" Checked="ShowManaged_OnCheckeded_Checked" Unchecked="ShowManaged_OnCheckeded_Checked" 
+                <CheckBox x:Name="ShowManaged" Content="Show Managed" Margin="5,5,0,0" VerticalAlignment="Top" Checked="ShowManaged_OnChecked" Unchecked="ShowManaged_OnChecked" 
                           IsEnabled="False" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" />
-                <Button x:Name="Publish" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Publish_OnClicksh_Click" IsEnabled="False" Background="White">
+                <Button x:Name="Publish" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Publish_OnClick" IsEnabled="False" Background="White">
                     <Image Source="/CrmDeveloperExtensions.Core;component/images/publish_16.png" Width="16" Height="16" ToolTip="Publish To CRM"></Image>
                 </Button>
-                <Button x:Name="AddWebResource" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="AddWebResource_OnClicksource_Click" IsEnabled="False" Background="White">
+                <Button x:Name="AddWebResource" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="AddWebResource_OnClick" IsEnabled="False" Background="White">
                     <Image Source="/CrmDeveloperExtensions.Core;component/images/new_16.png" Width="16" Height="16" ToolTip="New Web Resource From File"></Image>
                 </Button>
                 <Button x:Name="Customizations" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Customizations_OnClick" IsEnabled="False" Background="White">

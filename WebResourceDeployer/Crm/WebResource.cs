@@ -8,10 +8,11 @@ using CrmDeveloperExtensions.Core.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Crm
 {
-    public static class WebResources
+    public static class WebResource
     {
         public static EntityCollection RetrieveWebResourcesFromCrm(CrmServiceClient client)
         {
@@ -91,6 +92,27 @@ namespace WebResourceDeployer.Crm
             }
         }
 
+        public static Entity RetrieveWebResourceFromCrm(CrmServiceClient client, Guid webResourceId)
+        {
+            try
+            {
+                Entity webResource = client.Retrieve("webresource", webResourceId,
+                    new ColumnSet("content", "name", "webresourcetype"));
+
+                return webResource;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return null;
+            }
+        }
+
         public static Entity RetrieveWebResourceContentFromCrm(CrmServiceClient client, Guid webResourceId)
         {
             try
@@ -156,6 +178,15 @@ namespace WebResourceDeployer.Crm
             }
         }
 
+        public static string GetWebResourceContent(Entity webResource)
+        {
+            object contentObj;
+            bool hasContent = webResource.Attributes.TryGetValue("content", out contentObj);
+            var content = hasContent ? contentObj.ToString() : String.Empty;
+
+            return content;
+        }
+
         public static byte[] DecodeWebResource(string value)
         {
             return Convert.FromBase64String(value);
@@ -210,6 +241,40 @@ namespace WebResourceDeployer.Crm
                 encodedImage = Convert.ToBase64String(imageBytes);
             }
             return encodedImage;
+        }
+
+
+        public static string ConvertWebResourceNameToPath(string webResourceName, string folder, string projectFullName)
+        {
+            string[] name = webResourceName.Split('/');
+            folder = folder.Replace("/", "\\");
+            var path = Path.GetDirectoryName(projectFullName) +
+                       ((folder != "\\") ? folder : String.Empty) +
+                       "\\" + name[name.Length - 1];
+
+            return path;
+        }
+
+        public static string AddMissingExtension(string name, int webResourceType)
+        {
+            if (!string.IsNullOrEmpty(Path.GetExtension(name)))
+                return name;
+
+            string ext =
+                GetWebResourceTypeNameByNumber(webResourceType.ToString()).ToLower();
+            name += "." + ext;
+
+            return name;
+        }
+
+        public static string GetExistingFolderFromBoundFile(WebResourceItem webResourceItem, string folder)
+        {
+            var directoryName = System.IO.Path.GetDirectoryName(webResourceItem.BoundFile);
+            if (directoryName != null)
+                folder = directoryName.Replace("\\", "/");
+            if (folder == "/")
+                folder = String.Empty;
+            return folder;
         }
     }
 }

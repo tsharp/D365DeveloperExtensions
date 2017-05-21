@@ -128,7 +128,6 @@ namespace CrmDeveloperExtensions.Core.Vs
                 {
                     Header = projectFolder
                 };
-                //item.Click += DownloadWebResourceToFolder;
 
                 projectMenuItems.Add(item);
             }

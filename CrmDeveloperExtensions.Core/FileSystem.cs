@@ -44,5 +44,18 @@ namespace CrmDeveloperExtensions.Core
                 throw;
             }
         }
+
+        public static void WriteFileToDisk(string path, byte[] content)
+        {
+            try
+            {
+                File.WriteAllBytes(path, content);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error writing file");
+                throw;
+            }
+        }
     }
 }

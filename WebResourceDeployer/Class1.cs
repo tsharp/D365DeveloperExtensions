@@ -11,14 +11,14 @@ using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
+using Menu = System.Web.UI.WebControls.Menu;
 
 namespace WebResourceDeployer
 {
     public static class Class1
     {
-        public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName)
+        public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
         {
-            ObservableCollection<MenuItem> projectFolders = CrmDeveloperExtensions.Core.Vs.ProjectWorker.GetProjectFoldersForMenu(projectName);
             List<WebResourceItem> webResourceItems = new List<WebResourceItem>();
 
             foreach (Entity webResource in webResources.Entities)
@@ -31,7 +31,7 @@ namespace WebResourceDeployer
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
                     AllowPublish = false,
                     AllowCompare = false,
-                    TypeName = Crm.WebResources.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
+                    TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
                     ProjectFolders = projectFolders,
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id

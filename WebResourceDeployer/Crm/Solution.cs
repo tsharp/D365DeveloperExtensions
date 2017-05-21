@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using CrmDeveloperExtensions.Core.Enums;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
-using NLog;
 
-namespace CrmDeveloperExtensions.Core.Crm
+namespace WebResourceDeployer.Crm
 {
     public static class Solution
     {
@@ -63,13 +58,13 @@ namespace CrmDeveloperExtensions.Core.Crm
             }
             catch (FaultException<OrganizationServiceFault> crmEx)
             {
-                Logging.OutputLogger.WriteToOutputWindow(
+                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Solutions From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
                 return null;
             }
             catch (Exception ex)
             {
-                Logging.OutputLogger.WriteToOutputWindow(
+                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Solutions From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return null;
             }
