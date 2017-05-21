@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows;
 using CrmDeveloperExtensions.Core.Enums;
 using CrmDeveloperExtensions.Core.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Crm
@@ -149,6 +154,71 @@ namespace WebResourceDeployer.Crm
             }
         }
 
+        public static Entity CreateWebResourceEntity(int type, string prefix, string name, string displayName, string description, string filePath)
+        {
+            Entity webResource = new Entity("webresource")
+            {
+                ["name"] = prefix + name,
+                ["webresourcetype"] = new OptionSetValue(type),
+                ["description"] = description
+            };
+            if (!string.IsNullOrEmpty(displayName))
+                webResource["displayname"] = displayName;
+
+            if (type == 8)
+                webResource["silverlightversion"] = "4.0";
+
+            string extension = Path.GetExtension(filePath);
+
+            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG" };
+            string content;
+            //TypeScript
+            if (extension != null && extension.ToUpper() == ".TS" && !string.IsNullOrEmpty(filePath))
+            {
+                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
+                webResource["content"] = EncodeString(content);
+            }
+            //Images
+            else if (extension != null && imageExs.Any(s => extension.ToUpper().EndsWith(s)))
+            {
+                content = EncodedImage(filePath, extension);
+                webResource["content"] = content;
+            }
+            //Everything else
+            else
+            {
+                if (filePath == null)
+                    return webResource;
+
+                content = File.ReadAllText(filePath);
+                webResource["content"] = EncodeString(content);
+            }
+
+            return webResource;
+        }
+
+        public static Guid CreateWebResourceInCrm(CrmServiceClient client, Entity webResource)
+        {
+            try
+            {
+                Guid id = client.Create(webResource);
+
+                OutputLogger.WriteToOutputWindow("New Web Resource Created: " + id, MessageType.Info);
+
+                return id;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow("Error Creating Web Resource: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return Guid.Empty;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow("Error Creating Web Resource: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return Guid.Empty;
+            }
+        }
+
         public static string GetWebResourceTypeNameByNumber(string type)
         {
             switch (type)
@@ -243,7 +313,6 @@ namespace WebResourceDeployer.Crm
             return encodedImage;
         }
 
-
         public static string ConvertWebResourceNameToPath(string webResourceName, string folder, string projectFullName)
         {
             string[] name = webResourceName.Split('/');
@@ -269,12 +338,26 @@ namespace WebResourceDeployer.Crm
 
         public static string GetExistingFolderFromBoundFile(WebResourceItem webResourceItem, string folder)
         {
-            var directoryName = System.IO.Path.GetDirectoryName(webResourceItem.BoundFile);
+            var directoryName = Path.GetDirectoryName(webResourceItem.BoundFile);
             if (directoryName != null)
                 folder = directoryName.Replace("\\", "/");
             if (folder == "/")
                 folder = String.Empty;
             return folder;
+        }
+
+        public static bool ValidateName(string name)
+        {
+            name = name.Trim();
+
+            Regex r = new Regex("^[a-zA-Z0-9_.\\/]*$");
+            if (!r.IsMatch(name))
+                return false;
+
+            if (name.Contains("//"))
+                return false;
+
+            return true;
         }
     }
 }

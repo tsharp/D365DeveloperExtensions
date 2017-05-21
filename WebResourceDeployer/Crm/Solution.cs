@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ServiceModel;
 using CrmDeveloperExtensions.Core.Enums;
+using CrmDeveloperExtensions.Core.Logging;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
@@ -79,6 +81,37 @@ namespace WebResourceDeployer.Crm
                 CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Solutions From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return null;
+            }
+        }
+
+        public static bool AddWebResourceToSolution(CrmServiceClient client, string uniqueName, Guid webResourceId)
+        {
+            try
+            {
+                AddSolutionComponentRequest scRequest = new AddSolutionComponentRequest
+                {
+                    ComponentType = 61,
+                    SolutionUniqueName = uniqueName,
+                    ComponentId = webResourceId
+                };
+                AddSolutionComponentResponse response =
+                    (AddSolutionComponentResponse)client.Execute(scRequest);
+
+                OutputLogger.WriteToOutputWindow("New Web Resource Added To Solution: " + response.id, MessageType.Info);
+
+                return true;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                    "Error adding web resource to solution: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                    "Error adding web resource to solution: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return false;
             }
         }
     }
