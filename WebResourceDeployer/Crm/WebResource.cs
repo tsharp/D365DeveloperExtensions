@@ -9,7 +9,9 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using CrmDeveloperExtensions.Core.Enums;
 using CrmDeveloperExtensions.Core.Logging;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using NLog;
@@ -154,7 +156,7 @@ namespace WebResourceDeployer.Crm
             }
         }
 
-        public static Entity CreateWebResourceEntity(int type, string prefix, string name, string displayName, string description, string filePath)
+        public static Entity CreateNewWebResourceEntity(int type, string prefix, string name, string displayName, string description, string filePath)
         {
             Entity webResource = new Entity("webresource")
             {
@@ -217,6 +219,163 @@ namespace WebResourceDeployer.Crm
                 OutputLogger.WriteToOutputWindow("Error Creating Web Resource: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return Guid.Empty;
             }
+        }
+
+        public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string projectFullName)
+        {
+            Entity webResource = new Entity("webresource") { Id = webResourceId };
+
+            string filePath = Path.GetDirectoryName(projectFullName) + boundFile.Replace("/", "\\");
+
+            string extension = Path.GetExtension(filePath);
+
+            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG" };
+            string content;
+            //TypeScript
+            if ((extension.ToUpper() == ".TS"))
+            {
+                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
+                webResource["content"] = EncodeString(content);
+            }
+            //Images
+            else if (imageExs.Any(s => extension.ToUpper().EndsWith(s)))
+            {
+                content = EncodedImage(filePath, extension);
+                webResource["content"] = content;
+            }
+            //Everything else
+            else
+            {
+                content = File.ReadAllText(filePath);
+                webResource["content"] = EncodeString(content);
+            }
+
+            return webResource;
+        }
+
+        public static bool UpdateAndPublishSingle(CrmServiceClient client, List<Entity> webResources)
+        {
+            //CRM 2011 < UR12
+            try
+            {
+                OrganizationRequestCollection requests = CreateUpdateRequests(webResources);
+
+                foreach (OrganizationRequest request in requests)
+                {
+                    client.Execute(request);
+                    OutputLogger.WriteToOutputWindow("Uploaded Web Resource", MessageType.Info);
+                }
+
+                string publishXml = CreatePublishXml(webResources);
+                PublishXmlRequest publishRequest = CreatePublishRequest(publishXml);
+
+                client.Execute(publishRequest);
+
+                OutputLogger.WriteToOutputWindow("Published Web Resource(s)", MessageType.Info);
+
+                return true;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
+                                                 crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
+                                                 ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return false;
+            }
+        }
+
+        public static bool UpdateAndPublishMultiple(CrmServiceClient client, List<Entity> webResources)
+        {
+            //CRM 2011 UR12+
+            try
+            {
+                ExecuteMultipleRequest emRequest = new ExecuteMultipleRequest
+                {
+                    Requests = new OrganizationRequestCollection(),
+                    Settings = new ExecuteMultipleSettings
+                    {
+                        ContinueOnError = false,
+                        ReturnResponses = true
+                    }
+                };
+
+                emRequest.Requests = CreateUpdateRequests(webResources);
+
+                string publishXml = CreatePublishXml(webResources);
+
+                emRequest.Requests.Add(CreatePublishRequest(publishXml));
+
+                bool wasError = false;
+                ExecuteMultipleResponse emResponse = (ExecuteMultipleResponse)client.Execute(emRequest);
+
+                foreach (var responseItem in emResponse.Responses)
+                {
+                    if (responseItem.Fault == null) continue;
+
+                    OutputLogger.WriteToOutputWindow(
+                        "Error Updating And Publishing Web Resource(s) To CRM: " + responseItem.Fault.Message +
+                        Environment.NewLine + responseItem.Fault.TraceText, MessageType.Error);
+                    wasError = true;
+                }
+
+                if (wasError)
+                    return false;
+
+                OutputLogger.WriteToOutputWindow("Updated And Published Web Resource(s)", MessageType.Info);
+
+                return true;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
+                                            crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
+                                            ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return false;
+            }
+        }
+
+        private static PublishXmlRequest CreatePublishRequest(string publishXml)
+        {
+            PublishXmlRequest pubRequest = new PublishXmlRequest { ParameterXml = publishXml };
+            return pubRequest;
+        }
+
+        private static OrganizationRequestCollection CreateUpdateRequests(List<Entity> webResources)
+        {
+            OrganizationRequestCollection requests = new OrganizationRequestCollection();
+
+            foreach (Entity webResource in webResources)
+            {
+                UpdateRequest request = new UpdateRequest { Target = webResource };
+                requests.Add(request);
+            }
+
+            return requests;
+        }
+
+        private static string CreatePublishXml(List<Entity> webResources)
+        {
+            StringBuilder publishXml = new StringBuilder();
+            publishXml.Append("<importexportxml><webresources>");
+
+            foreach (Entity webResource in webResources)
+            {
+                publishXml.Append($"<webresource>{webResource.Id}</webresource>");
+            }
+
+            publishXml.Append("</webresources></importexportxml>");
+
+            return publishXml.ToString();
         }
 
         public static string GetWebResourceTypeNameByNumber(string type)

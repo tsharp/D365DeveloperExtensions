@@ -132,11 +132,126 @@ namespace WebResourceDeployer
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
             NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, projectsFiles, solutionId);
             bool? result = newWebResource.ShowModal();
+
+            if (result != true) return;
+
+            ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
+            WebResourceItem defaultItem = Class1.WebResourceItemFromNew(newWebResource, newWebResource.NewSolutionId, projectFolders);
+            defaultItem.PropertyChanged += WebResourceItem_PropertyChanged;
+            //Needs to be after setting the property changed event
+            defaultItem.BoundFile = newWebResource.NewBoundFile;
+
+            foreach (MenuItem menuItem in defaultItem.ProjectFolders)
+            {
+                menuItem.CommandParameter = defaultItem.WebResourceId;
+            }
+
+            List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            items.Add(defaultItem);
+
+            if (newWebResource.NewSolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
+            {
+                WebResourceItem solutionItem = Class1.WebResourceItemFromNew(newWebResource, CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId, projectFolders);
+                solutionItem.PropertyChanged += WebResourceItem_PropertyChanged;
+                //Needs to be after setting the property changed event
+                solutionItem.BoundFile = newWebResource.NewBoundFile;
+
+                foreach (MenuItem menuItem in solutionItem.ProjectFolders)
+                {
+                    menuItem.CommandParameter = solutionItem.WebResourceId;
+                }
+
+                items.Add(solutionItem);
+            }
+
+            WebResourceGrid.ItemsSource = items.OrderBy(w => w.Name).ToList();
+
+            var filter = WebResourceType.SelectedValue;
+            var showManaged = ShowManaged.IsChecked;
+
+            FilterWebResources();
+
+            WebResourceType.SelectedValue = filter;
+            ShowManaged.IsChecked = showManaged;
+
+            WebResourceGrid.ScrollIntoView(defaultItem);
         }
 
         private void Publish_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            List<WebResourceItem> selectedItems = new List<WebResourceItem>();
+            Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
+
+            //Check for unsaved & missing files
+            ObservableCollection<ComboBoxItem> projectFiles = (ObservableCollection<ComboBoxItem>)ProjectFileList.ItemsSource;
+            List<ProjectItem> dirtyItems = new List<ProjectItem>();
+            foreach (var selectedItem in items.Where(w => w.Publish && w.SolutionId == solutionId))
+            {
+                selectedItems.Add(selectedItem);
+
+                ComboBoxItem item = projectFiles.FirstOrDefault(c => c.Content.ToString() == selectedItem.BoundFile);
+
+                if (item == null) continue;
+
+                ProjectItem projectItem = (ProjectItem)item.Tag;
+                if (!projectItem.IsDirty) continue;
+
+                string filePath = System.IO.Path.GetDirectoryName(ConnPane.SelectedProject.FullName) +
+                                  selectedItem.BoundFile.Replace("/", "\\");
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show($"Could not find file: {selectedItem.BoundFile}");
+                    return;
+                }
+
+                dirtyItems.Add(projectItem);
+            }
+
+            if (dirtyItems.Count > 0)
+            {
+                var result = MessageBox.Show("Save item(s) and publish?", "Unsaved Item(s)", MessageBoxButton.YesNo);
+                if (result != MessageBoxResult.Yes) return;
+
+                foreach (var projectItem in dirtyItems)
+                    projectItem.Save();
+            }
+
+            //Build TypeScript project
+            if (selectedItems.Any(p => p.BoundFile.ToUpper().EndsWith("TS")))
+            {
+                SolutionBuild solutionBuild = _dte.Solution.SolutionBuild;
+                solutionBuild.BuildProject(_dte.Solution.SolutionBuild.ActiveConfiguration.Name, ConnPane.SelectedProject.UniqueName, true);
+            }
+
+            UpdateWebResources(selectedItems);
+        }
+
+        private async void UpdateWebResources(List<WebResourceItem> items)
+        {
+            ShowMessage("Updating & Publishing...", vsStatusAnimation.vsStatusAnimationDeploy);
+
+            List<Entity> webResources = new List<Entity>();
+            foreach (WebResourceItem webResourceItem in items)
+            {
+                Entity webResource = Crm.WebResource.CreateUpdateWebResourceEntity(webResourceItem.WebResourceId,
+                    webResourceItem.BoundFile, ConnPane.SelectedProject.FullName);
+                webResources.Add(webResource);
+            }
+
+            bool success;
+            //Check if < CRM 2011 UR12 (ExecuteMutliple)
+            Version version = ConnPane.CrmService.ConnectedOrgVersion;
+            if (version.Major == 5 && version.Revision < 3200)
+                success = await Task.Run(() => Crm.WebResource.UpdateAndPublishSingle(ConnPane.CrmService, webResources));
+            else
+                success = await Task.Run(() => Crm.WebResource.UpdateAndPublishMultiple(ConnPane.CrmService, webResources));
+
+            HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+
+            if (success) return;
+
+            MessageBox.Show("Error Updating And Publishing Web Resources. See the Output Window for additional details.");
         }
 
         private void ShowManaged_OnChecked(object sender, RoutedEventArgs e)
@@ -386,6 +501,8 @@ namespace WebResourceDeployer
             FilterWebResources();
 
             CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow($"Deleted Web Resource {webResourceId}", MessageType.Info);
+
+            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
         }
 
         private void ProjectFileList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -446,7 +563,7 @@ namespace WebResourceDeployer
 
         private ObservableCollection<MenuItem> GetProjectFolders()
         {
-            ObservableCollection<MenuItem> projectFolders = CrmDeveloperExtensions.Core.Vs.ProjectWorker.GetProjectFoldersForMenu(ConnPane.SelectedProject.Name);
+            ObservableCollection<MenuItem> projectFolders = ProjectWorker.GetProjectFoldersForMenu(ConnPane.SelectedProject.Name);
             foreach (MenuItem projectFolder in projectFolders)
             {
                 projectFolder.Click += DownloadWebResourceToFolder;
@@ -543,8 +660,7 @@ namespace WebResourceDeployer
             string type = selectedItem?.Tag.ToString() ?? String.Empty;
             bool showManaged = ShowManaged.IsChecked != null && ShowManaged.IsChecked.Value;
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ??
-                new Guid("FD140AAF-4DF4-11DD-BD17-0019B9312238"); //Default Solution
-
+                CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId;
 
             //Clear publish flags
             if (!string.IsNullOrEmpty(type))
@@ -598,12 +714,13 @@ namespace WebResourceDeployer
                 ));
         }
 
-        private void HideMessage(vsStatusAnimation animation)
+        private void HideMessage(vsStatusAnimation? animation = null)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(() =>
                     {
-                        CrmDeveloperExtensions.Core.StatusBar.ClearStatusBarValue(_dte, animation);
+                        if (animation != null)
+                            CrmDeveloperExtensions.Core.StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
                         LockOverlay.Visibility = Visibility.Hidden;
                     }
                 ));

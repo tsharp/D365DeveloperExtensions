@@ -72,13 +72,13 @@ namespace WebResourceDeployer.Crm
             }
             catch (FaultException<OrganizationServiceFault> crmEx)
             {
-                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Solutions From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
                 return null;
             }
             catch (Exception ex)
             {
-                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Solutions From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return null;
             }
@@ -103,13 +103,13 @@ namespace WebResourceDeployer.Crm
             }
             catch (FaultException<OrganizationServiceFault> crmEx)
             {
-                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                OutputLogger.WriteToOutputWindow(
                     "Error adding web resource to solution: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
                 return false;
             }
             catch (Exception ex)
             {
-                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow(
+                OutputLogger.WriteToOutputWindow(
                     "Error adding web resource to solution: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return false;
             }

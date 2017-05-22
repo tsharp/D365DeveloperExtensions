@@ -42,7 +42,6 @@ namespace WebResourceDeployer
                 if (hasDisplayName)
                     webResourceItem.DisplayName = webResource.GetAttributeValue<AliasedValue>("webresource.displayname").Value.ToString();
 
-                //webResourceItem.PropertyChanged += WebResourceItem.WebResourceItem_PropertyChanged;
                 webResourceItems.Add(webResourceItem);
             }
 
@@ -74,12 +73,38 @@ namespace WebResourceDeployer
         private static List<CrmSolution> SortSolutions(List<CrmSolution> solutions)
         {
             //Default on top
-            var i = solutions.FindIndex(s => s.SolutionId == new Guid("FD140AAF-4DF4-11DD-BD17-0019B9312238"));
+            var i = solutions.FindIndex(s => s.SolutionId == CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId);
             var item = solutions[i];
             solutions.RemoveAt(i);
             solutions.Insert(0, item);
 
             return solutions;
+        }
+
+        public static WebResourceItem WebResourceItemFromNew(NewWebResource newWebResource, Guid solutionId, ObservableCollection<MenuItem> projectFolders)
+        {
+            WebResourceItem webResourceItem = new WebResourceItem
+            {
+                Publish = false,
+                WebResourceId = newWebResource.NewId,
+                Name = newWebResource.NewName,
+                DisplayName = newWebResource.NewDisplayName,
+                IsManaged = false,
+                AllowPublish = true,
+                AllowCompare = SetAllowCompare(newWebResource.NewType),
+                TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
+                Type = newWebResource.NewType,
+                ProjectFolders = projectFolders,
+                SolutionId = solutionId
+            };
+
+            return webResourceItem;
+        }
+
+        public static bool SetAllowCompare(int type)
+        {
+            int[] noCompare = { 5, 6, 7, 8, 10 };
+            return !noCompare.Contains(type);
         }
     }
 }

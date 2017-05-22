@@ -67,7 +67,7 @@ namespace WebResourceDeployer
             ShowMessage("Creating...");
 
             Entity webResource =
-                Crm.WebResource.CreateWebResourceEntity(type, prefix, name, displayName, description, filePath);
+                Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath);
 
             Guid webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
             if (webResourceId == Guid.Empty)
@@ -78,7 +78,7 @@ namespace WebResourceDeployer
             }
 
             CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
-            if (solution.SolutionId != new Guid("FD140AAF-4DF4-11DD-BD17-0019B9312238"))
+            if (solution.SolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
             {
                 bool addedToSolution = await Task.Run(() => Crm.Solution.AddWebResourceToSolution(_client, solution.UniqueName, webResourceId));
                 if (!addedToSolution)

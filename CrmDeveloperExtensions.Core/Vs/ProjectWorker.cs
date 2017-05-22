@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using System.Windows.Controls;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace CrmDeveloperExtensions.Core.Vs
 {
@@ -32,16 +32,14 @@ namespace CrmDeveloperExtensions.Core.Vs
         public static string GetFolderProjectFileName(string projectFullName)
         {
             string path = Path.GetDirectoryName(projectFullName);
-            if (path != null)
-            {
-                var dirName = new DirectoryInfo(path).Name;
-                var fileName = new FileInfo(projectFullName).Name;
-                string folderProjectFileName = dirName + "\\" + fileName;
+            if (path == null)
+                return null;
 
-                return folderProjectFileName;
-            }
+            var dirName = new DirectoryInfo(path).Name;
+            var fileName = new FileInfo(projectFullName).Name;
+            string folderProjectFileName = dirName + "\\" + fileName;
 
-            return null;
+            return folderProjectFileName;
         }
 
         public static bool IsProjectLoaded(Project project)
@@ -65,10 +63,14 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         private static IList<Project> GetProjects()
         {
+            List<Project> list = new List<Project>();
+
             DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (dte == null)
+                return list;
 
             Projects projects = dte.Solution.Projects;
-            List<Project> list = new List<Project>();
+            
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
