@@ -13,19 +13,18 @@ namespace CrmDeveloperExtensions.Core.Vs
 {
     public sealed class VsSolutionEvents : IVsSolutionEvents
     {
-        private DTE _dte;
-        private XrmToolingConnection _xrmConnection;
-
+        private readonly DTE _dte;
+        private readonly XrmToolingConnection _xrmToolingConnection;
         IVsHierarchyEvents _vsHierarchyEvents;
         uint _cookie;
         //private readonly WebResourceList _webResouceList;
 
         //public VsSolutionEvents(WebResourceList webResouceList)
-        public VsSolutionEvents(DTE dte, XrmToolingConnection xrmConnection)
+        public VsSolutionEvents(DTE dte, XrmToolingConnection xrmToolingConnection)
         {
             _dte = dte;
-            _xrmConnection = xrmConnection;
             //_webResouceList = webResouceList;
+            _xrmToolingConnection = xrmToolingConnection;
         }
 
         public VsSolutionEvents()
@@ -44,7 +43,7 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
-            _vsHierarchyEvents = new VsHierarchyEvents(pHierarchy, _xrmConnection);
+            _vsHierarchyEvents = new VsHierarchyEvents(pHierarchy, _xrmToolingConnection);
             pHierarchy.AdviseHierarchyEvents(_vsHierarchyEvents, out _cookie);
             //TODO: do these need to be disposed of?
 

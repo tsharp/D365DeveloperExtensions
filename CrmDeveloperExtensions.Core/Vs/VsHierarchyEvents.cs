@@ -9,19 +9,13 @@ namespace CrmDeveloperExtensions.Core.Vs
 {
     public sealed class VsHierarchyEvents : IVsHierarchyEvents
     {
-        //private readonly IVsHierarchy _hierarchy;
-        //private readonly WebResourceList _webResourceList;
+        private readonly IVsHierarchy _hierarchy;
+        private readonly XrmToolingConnection _xrmToolingConnection;
 
-        private XrmToolingConnection _xrmConnection;
-
-
-        //public VsHierarchyEvents(IVsHierarchy hierarchy, WebResourceList webResourcelist)
-        public VsHierarchyEvents(IVsHierarchy hierarchy, XrmToolingConnection xrmConnection)
+        public VsHierarchyEvents(IVsHierarchy hierarchy, XrmToolingConnection xrmToolingConnection)
         {
-            _xrmConnection = xrmConnection;
-
-            //_hierarchy = hierarchy;
-            //_webResourceList = webResourcelist;
+            _hierarchy = hierarchy;
+            _xrmToolingConnection = xrmToolingConnection;
         }
 
         int IVsHierarchyEvents.OnInvalidateIcon(IntPtr hicon)
@@ -37,27 +31,28 @@ namespace CrmDeveloperExtensions.Core.Vs
         int IVsHierarchyEvents.OnItemAdded(uint itemidParent, uint itemidSiblingPrev, uint itemidAdded)
         {
             //_xrmConnection.ProjectItemAdded();
-         
-            //object itemExtObject;
-            //if (hierarchy.GetProperty(itemidAdded, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
-            //{
-            //    var projectItem = itemExtObject as ProjectItem;
-            //    if (projectItem != null)
-            //        _webResourceList.ProjectItemAdded(projectItem, itemidAdded);
-            //}
+
+            object itemExtObject;
+            if (_hierarchy.GetProperty(itemidAdded, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
+            {
+                var projectItem = itemExtObject as ProjectItem;
+                if (projectItem != null)
+                    _xrmToolingConnection.ProjectItemMoveAdded(projectItem);
+            }
 
             return VSConstants.S_OK;
         }
 
         int IVsHierarchyEvents.OnItemDeleted(uint itemid)
         {
-            //object itemExtObject;
-            //if (_hierarchy.GetProperty(itemid, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
-            //{
-            //    var projectItem = itemExtObject as ProjectItem;
-            //    if (projectItem != null)
-            //        _webResourceList.ProjectItemRemoved(projectItem, itemid);
-            //}
+            object itemExtObject;
+            if (_hierarchy.GetProperty(itemid, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
+            {
+                var projectItem = itemExtObject as ProjectItem;
+                if (projectItem != null)
+                    _xrmToolingConnection.ProjectItemMoveDeleted(projectItem);
+            }
+
             return VSConstants.S_OK;
         }
 

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,10 +24,12 @@ namespace CrmDeveloperExtensions.Core.Connection
         private ObservableCollection<Project> _projects;
         private bool _projectEventsRegistered;
         private readonly IVsSolution _vsSolution;
+        private readonly IVsSolutionEvents _vsSolutionEvents;
+        private ProjectItem _movedProjectItem;
+        private string _movedProjectItemOldName;
 
         public CrmServiceClient CrmService;
         public Guid OrganizationId;
-
         public ObservableCollection<Project> Projects
         {
             get => _projects;
@@ -39,7 +42,6 @@ namespace CrmDeveloperExtensions.Core.Connection
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Projects"));
             }
         }
-
         public Project SelectedProject;
 
         public event EventHandler<ConnectEventArgs> Connected;
@@ -50,6 +52,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         public event EventHandler<ProjectItemRemovedEventArgs> ProjectItemRemoved;
         public event EventHandler<ProjectItemAddedEventArgs> ProjectItemAdded;
         public event EventHandler<ProjectItemRenamedEventArgs> ProjectItemRenamed;
+        public event EventHandler<ProjectItemMovedEventArgs> ProjectItemMoved;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public XrmToolingConnection()
@@ -65,9 +68,9 @@ namespace CrmDeveloperExtensions.Core.Connection
                 return;
 
             uint solutionEventsCookie;
-            IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
+            _vsSolutionEvents = new VsSolutionEvents(_dte, this);
             _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            _vsSolution.AdviseSolutionEvents(vsSolutionEvents, out solutionEventsCookie);
+            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out solutionEventsCookie);
 
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
@@ -107,13 +110,13 @@ namespace CrmDeveloperExtensions.Core.Connection
             if (!crmDevExWindows.Contains(gotFocus.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty)))
                 return;
 
+            GetProjectsForList();
+
             if (!_projectEventsRegistered)
             {
                 RegisterProjectEvents();
                 _projectEventsRegistered = true;
             }
-
-            GetProjectsForList();
 
             //if (!gotFocus.Caption.StartsWith("CRM DevEx")) return;
 
@@ -136,9 +139,41 @@ namespace CrmDeveloperExtensions.Core.Connection
                 if (_vsSolution.GetProjectOfUniqueName(project.UniqueName, out projectHierarchy) != VSConstants.S_OK)
                     continue;
 
-                IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
-                vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
+                //IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
+                _vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
+
+                //uint cookie;
+                //IVsHierarchyEvents vsHierarchyEvents = new VsHierarchyEvents(projectHierarchy, this);
+                //projectHierarchy.AdviseHierarchyEvents(vsHierarchyEvents, out cookie);
             }
+        }
+
+        public void ProjectItemMoveDeleted(ProjectItem projectItem)
+        {
+            _movedProjectItem = projectItem;
+
+            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+
+            _movedProjectItemOldName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+        }
+
+        public void ProjectItemMoveAdded(ProjectItem projectItem)
+        {
+            if (SelectedProject == null)
+                return;
+
+            if (_movedProjectItem == null)
+                return;
+
+            uint movedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, _movedProjectItem);
+            uint addedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, projectItem);
+
+            if (movedProjectId != addedProjectId)
+                return;
+
+            ProjectItemEventsOnItemMoved(projectItem, _movedProjectItemOldName);
+            _movedProjectItem = null;
         }
 
         private void SolutionEventsOnOpened()
@@ -156,10 +191,8 @@ namespace CrmDeveloperExtensions.Core.Connection
         private void SolutionEventsOnProjectAdded(Project project)
         {
             foreach (Project listProject in _projects)
-            {
                 if (listProject.Name == project.Name)
                     return;
-            }
 
             _projects.Add(project);
             OnSolutionProjectAdded(new SolutionProjectAddedEventArgs
@@ -173,7 +206,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             SolutionProjectsList.ItemsSource = null;
             SolutionProjectsList.ItemsSource = _projects;
             SolutionProjectsList.SelectedItem = selectedProject;
-
+            //TODO: - update mapping
             OnSolutionProjectRenamed(new SolutionProjectRenamedEventArgs
             {
                 Project = project,
@@ -221,6 +254,11 @@ namespace CrmDeveloperExtensions.Core.Connection
             var handler = ProjectItemRenamed;
             handler?.Invoke(this, e);
         }
+        protected virtual void OnProjectItemMoved(ProjectItemMovedEventArgs e)
+        {
+            var handler = ProjectItemMoved;
+            handler?.Invoke(this, e);
+        }
 
         private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
@@ -244,6 +282,15 @@ namespace CrmDeveloperExtensions.Core.Connection
             {
                 ProjectItem = projectItem,
                 OldName = oldName
+            });
+        }
+
+        private void ProjectItemEventsOnItemMoved(ProjectItem postMoveProjectItem, string preMoveName)
+        {
+            OnProjectItemMoved(new ProjectItemMovedEventArgs
+            {
+                PreMoveName = preMoveName,
+                PostMoveProjectItem = postMoveProjectItem
             });
         }
 

@@ -83,11 +83,12 @@ namespace WebResourceDeployer
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
 
-            //Fix for Tablet/Touchscreen left-right menu
+            #region Fix for Tablet/Touchscreen left-right menu
             _menuDropAlignmentField = typeof(SystemParameters).GetField("_menuDropAlignment", BindingFlags.NonPublic | BindingFlags.Static);
             System.Diagnostics.Debug.Assert(_menuDropAlignmentField != null);
             EnsureStandardPopupAlignment();
             SystemParameters.StaticPropertyChanged += SystemParameters_StaticPropertyChanged;
+            #endregion
         }
 
         #region Fix for Tablet/Touchscreen left-right menu
@@ -307,8 +308,7 @@ namespace WebResourceDeployer
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
                 string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
-                var oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
+                string oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
 
                 foreach (WebResourceItem webResourceItem in _webResourceItems.Where(w => w.BoundFile != null &&
                 w.BoundFile.Equals(oldItemName, StringComparison.InvariantCultureIgnoreCase)))
@@ -394,6 +394,44 @@ namespace WebResourceDeployer
                 List<ComboBoxItem> projectFilesToRemove = ProjectFiles.Where(p => p.Content.ToString().StartsWith(itemName)).ToList();
                 foreach (ComboBoxItem comboBoxItem in projectFilesToRemove)
                     ProjectFiles.Remove(comboBoxItem);
+            }
+        }
+
+        private void ConnPane_OnProjectItemMoved(object sender, ProjectItemMovedEventArgs e)
+        {
+            ProjectItem postMoveProjectItem = e.PostMoveProjectItem;
+            string oldItemName = e.PreMoveName;
+            var projectPath = Path.GetDirectoryName(postMoveProjectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+            Guid itemType = new Guid(postMoveProjectItem.Kind);
+
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
+            {
+                string newItemName = LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1]);
+
+                foreach (WebResourceItem webResourceItem in _webResourceItems.Where(w => w.BoundFile != null &&
+                    w.BoundFile.Equals(oldItemName, StringComparison.InvariantCultureIgnoreCase)))
+                    webResourceItem.BoundFile = newItemName;
+
+                ComboBoxItem projectFileToRename = ProjectFiles.FirstOrDefault(p => p.Content.ToString().Equals(oldItemName, StringComparison.InvariantCultureIgnoreCase));
+                if (projectFileToRename != null)
+                    projectFileToRename.Content = newItemName;
+            }
+
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
+            {
+                var newItemPath = LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1])
+                    .TrimEnd(Path.DirectorySeparatorChar);
+
+                int index = newItemPath.LastIndexOf(postMoveProjectItem.Name, StringComparison.Ordinal);
+                if (index == -1) return;
+
+                foreach (WebResourceItem webResourceItem in _webResourceItems.Where(w => w.BoundFile != null && w.BoundFile.StartsWith(oldItemName)))
+                    webResourceItem.BoundFile = webResourceItem.BoundFile.Replace(oldItemName, newItemPath);
+
+                IEnumerable<ComboBoxItem> projectFilesToRename = ProjectFiles.Where(p => p.Content.ToString().StartsWith(oldItemName));
+                foreach (ComboBoxItem comboBoxItem in projectFilesToRename)
+                    comboBoxItem.Content = comboBoxItem.Content.ToString().Replace(oldItemName, newItemPath);
             }
         }
 
