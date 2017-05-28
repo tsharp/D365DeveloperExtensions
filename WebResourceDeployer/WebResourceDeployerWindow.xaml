@@ -173,7 +173,8 @@
             </Grid>
             <Popup x:Name="FilePopup"  StaysOpen="False">
                 <StackPanel>
-                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center" ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center" 
+                              ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
                     <Label x:Name="FileId" Visibility="Collapsed"></Label>
                 </StackPanel>
             </Popup>
