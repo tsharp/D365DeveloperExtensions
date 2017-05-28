@@ -61,7 +61,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             //    MessageBox.Show("CertError");
             //    return true;
             //};
-
+            
             EnableXrmToolingLogging();
         }
 
@@ -167,8 +167,8 @@ namespace CrmDeveloperExtensions.Core.Connection
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                        new Action(() =>
                        {
-                           this.Title = "Failed to Login with cached credentials.";
-                           MessageBox.Show(this.Title, "Notification from ConnectionManager", MessageBoxButton.OK, MessageBoxImage.Error);
+                           Title = "Failed to Login with cached credentials.";
+                           MessageBox.Show(Title, "Notification from ConnectionManager", MessageBoxButton.OK, MessageBoxImage.Error);
                            CrmLoginCtrl.IsEnabled = true;
                        }
                         ));
@@ -247,14 +247,13 @@ namespace CrmDeveloperExtensions.Core.Connection
             Dispatcher.Invoke(DispatcherPriority.Normal,
                new Action(() =>
                    {
-                       this.Title = "Notification from Parent";
+                       Title = "Notification from Parent";
                        CrmLoginCtrl.IsEnabled = true;
                    }
                 ));
 
             // Notify Caller that we are done with success. 
-            if (ConnectionToCrmCompleted != null)
-                ConnectionToCrmCompleted(this, null);
+            ConnectionToCrmCompleted?.Invoke(this, null);
 
             _resetUiFlag = false;
         }

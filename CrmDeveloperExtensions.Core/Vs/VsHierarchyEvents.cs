@@ -36,8 +36,8 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsHierarchyEvents.OnItemAdded(uint itemidParent, uint itemidSiblingPrev, uint itemidAdded)
         {
-            _xrmConnection.ProjectItemAdded();
-            
+            //_xrmConnection.ProjectItemAdded();
+         
             //object itemExtObject;
             //if (hierarchy.GetProperty(itemidAdded, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
             //{

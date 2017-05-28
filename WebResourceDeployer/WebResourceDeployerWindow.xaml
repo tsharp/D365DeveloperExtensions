@@ -13,7 +13,8 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" 
-                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed"></connection:XrmToolingConnection>
+                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" 
+                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved"></connection:XrmToolingConnection>
         <Grid Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <TextBlock Text="Solution" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Height="22" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
@@ -172,7 +173,7 @@
             </Grid>
             <Popup x:Name="FilePopup"  StaysOpen="False">
                 <StackPanel>
-                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center"></ComboBox>
+                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center" ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
                     <Label x:Name="FileId" Visibility="Collapsed"></Label>
                 </StackPanel>
             </Popup>

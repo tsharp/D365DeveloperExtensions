@@ -9,11 +9,12 @@ namespace CrmDeveloperExtensions.Core.Tests
     public class ConfigFileTests
     {
         private static string _testFilepath;
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
             DirectoryInfo currentFolder = new DirectoryInfo(Environment.CurrentDirectory);
-            _testFilepath = currentFolder.Parent.Parent.FullName + "\\TestConfigFiles";
+            if (currentFolder.Parent?.Parent != null)
+                _testFilepath = currentFolder.Parent.Parent.FullName + "\\TestConfigFiles";
         }
 
         [TestMethod]
@@ -39,11 +40,11 @@ namespace CrmDeveloperExtensions.Core.Tests
         [TestMethod]
         public void CreateConfigFile()
         {
-            Config.ConfigFile.CreateConfigFile(Guid.Empty, _testFilepath);
+            CrmDexExConfig config1 = Config.ConfigFile.CreateConfigFile(Guid.Empty, "TestProject", _testFilepath);
 
-            CrmDexExConfig config = Config.ConfigFile.GetConfigFile(_testFilepath);
+            CrmDexExConfig config2 = Config.ConfigFile.GetConfigFile(_testFilepath);
 
-            Assert.IsNotNull(config);
+            Assert.AreEqual(config1.CrmDevExConfigOrgMaps[0].OrganizationId, config2.CrmDevExConfigOrgMaps[0].OrganizationId);
         }
     }
 }

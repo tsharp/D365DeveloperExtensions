@@ -123,6 +123,8 @@
     <Compile Include="Connection\CrmLoginForm.xaml.cs">
       <DependentUpon>CrmLoginForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Connection\ProjectItemRemovedEventArgs.cs" />
+    <Compile Include="Connection\ProjectItemAddedEventArgs.cs" />
     <Compile Include="Connection\ProjectItemRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />

@@ -5,30 +5,28 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using CrmDeveloperExtensions.Core.Connection;
 using CrmDeveloperExtensions.Core.Enums;
+using CrmDeveloperExtensions.Core.Logging;
 using CrmDeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using NLog;
-using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
+using static CrmDeveloperExtensions.Core.FileSystem;
 using Task = System.Threading.Tasks.Task;
 
 namespace WebResourceDeployer
@@ -36,7 +34,7 @@ namespace WebResourceDeployer
     /// <summary>
     /// Interaction logic for WebResourceDeployerWindow.xaml
     /// </summary>
-    public partial class WebResourceDeployerWindow : UserControl
+    public partial class WebResourceDeployerWindow : UserControl, INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
@@ -50,10 +48,29 @@ namespace WebResourceDeployer
         private const string WindowType = "WebResourceDeployer";
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
 
+        private ObservableCollection<WebResourceItem> _items;
+        private ObservableCollection<ComboBoxItem> _projectFiles;
+
+        public ObservableCollection<ComboBoxItem> ProjectFiles
+        {
+            get => _projectFiles;
+            set
+            {
+                _projectFiles = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public WebResourceDeployerWindow()
         {
             InitializeComponent();
-
+            DataContext = this;
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
@@ -62,20 +79,9 @@ namespace WebResourceDeployer
             if (_solution == null)
                 return;
 
-            //var events = _dte.Events;
-            //var windowEvents = events.WindowEvents;
-            //windowEvents.WindowActivated += WindowEventsOnWindowActivated;
-            //var solutionEvents = events.SolutionEvents;
-            //solutionEvents.BeforeClosing += SolutionBeforeClosing;
-            //solutionEvents.SolutionProjectRemoved += SolutionProjectRemoved;
-
-            //var events2 = (Events2)_dte.Events;
-            //var projectItemsEvents = events2.ProjectItemsEvents;
-            //projectItemsEvents.ItemRenamed += ProjectItemRenamed;
-
-            //IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(this);
-            //_vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            //_vsSolution.AdviseSolutionEvents(vsSolutionEvents, out solutionEventsCookie);
+            var events = _dte.Events;
+            var windowEvents = events.WindowEvents;
+            windowEvents.WindowActivated += WindowEventsOnWindowActivated;
 
             //Fix for Tablet/Touchscreen left-right menu
             _menuDropAlignmentField = typeof(SystemParameters).GetField("_menuDropAlignment", BindingFlags.NonPublic | BindingFlags.Static);
@@ -104,16 +110,26 @@ namespace WebResourceDeployer
                 ResetForm();
                 return;
             }
+
+            //if (!_projectEventsRegistered)
+            //{
+            //    RegisterProjectEvents();
+            //    _projectEventsRegistered = true;
+            //}
         }
 
         private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-            //await GetWebResources();
+            _items = new ObservableCollection<WebResourceItem>();
+            ProjectFiles = new ObservableCollection<ComboBoxItem>();
+            ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+
             await GetCrmData();
 
-            ProjectFileList.ItemsSource = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
-
             SolutionList.IsEnabled = true;
+
+            if (!CrmDeveloperExtensions.Core.Config.ConfigFile.ConfigFileExists(_dte.Solution.FullName))
+                CrmDeveloperExtensions.Core.Config.ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -142,12 +158,9 @@ namespace WebResourceDeployer
             defaultItem.BoundFile = newWebResource.NewBoundFile;
 
             foreach (MenuItem menuItem in defaultItem.ProjectFolders)
-            {
                 menuItem.CommandParameter = defaultItem.WebResourceId;
-            }
 
-            List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-            items.Add(defaultItem);
+            _items.Add(defaultItem);
 
             if (newWebResource.NewSolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
             {
@@ -157,14 +170,12 @@ namespace WebResourceDeployer
                 solutionItem.BoundFile = newWebResource.NewBoundFile;
 
                 foreach (MenuItem menuItem in solutionItem.ProjectFolders)
-                {
                     menuItem.CommandParameter = solutionItem.WebResourceId;
-                }
 
-                items.Add(solutionItem);
+                _items.Add(solutionItem);
             }
 
-            WebResourceGrid.ItemsSource = items.OrderBy(w => w.Name).ToList();
+            WebResourceGrid.ItemsSource = _items.OrderBy(w => w.Name).ToList();
 
             var filter = WebResourceType.SelectedValue;
             var showManaged = ShowManaged.IsChecked;
@@ -179,26 +190,22 @@ namespace WebResourceDeployer
 
         private void Publish_OnClick(object sender, RoutedEventArgs e)
         {
-            List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
             List<WebResourceItem> selectedItems = new List<WebResourceItem>();
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
 
             //Check for unsaved & missing files
-            ObservableCollection<ComboBoxItem> projectFiles = (ObservableCollection<ComboBoxItem>)ProjectFileList.ItemsSource;
             List<ProjectItem> dirtyItems = new List<ProjectItem>();
-            foreach (var selectedItem in items.Where(w => w.Publish && w.SolutionId == solutionId))
+            foreach (var selectedItem in _items.Where(w => w.Publish && w.SolutionId == solutionId))
             {
                 selectedItems.Add(selectedItem);
 
-                ComboBoxItem item = projectFiles.FirstOrDefault(c => c.Content.ToString() == selectedItem.BoundFile);
-
+                ComboBoxItem item = ProjectFiles.FirstOrDefault(c => c.Content.ToString() == selectedItem.BoundFile);
                 if (item == null) continue;
 
                 ProjectItem projectItem = (ProjectItem)item.Tag;
                 if (!projectItem.IsDirty) continue;
 
-                string filePath = System.IO.Path.GetDirectoryName(ConnPane.SelectedProject.FullName) +
-                                  selectedItem.BoundFile.Replace("/", "\\");
+                string filePath = Path.GetDirectoryName(ConnPane.SelectedProject.FullName) + selectedItem.BoundFile.Replace("/", "\\");
                 if (!File.Exists(filePath))
                 {
                     MessageBox.Show($"Could not find file: {selectedItem.BoundFile}");
@@ -262,7 +269,7 @@ namespace WebResourceDeployer
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
             CrmDeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
-                "tools/solution/edit.aspx?id=%7bfd140aaf-4df4-11dd-bd17-0019b9312238%7d");
+                $"tools/solution/edit.aspx?id=%7b{CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Solutions_OnClick(object sender, RoutedEventArgs e)
@@ -289,12 +296,62 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
         {
-            throw new NotImplementedException();
+            ProjectItem projectItem = e.ProjectItem;
+            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+            string oldName = e.OldName;
+            Guid itemType = new Guid(projectItem.Kind);
+
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
+            {
+                string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+
+                if (projectItem.Name == null) return;
+
+                var oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
+
+                foreach (WebResourceItem webResourceItem in _items.Where(w => w.BoundFile != null && w.BoundFile.Equals(oldItemName, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    if (webResourceItem.BoundFile != oldItemName) continue;
+
+                    webResourceItem.BoundFile = newItemName;
+                }
+
+                ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+            }
+
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
+            {
+                var newItemPath = LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
+                    .TrimEnd(Path.DirectorySeparatorChar);
+
+                int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
+                if (index == -1) return;
+
+                var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
+
+                foreach (WebResourceItem webResourceItem in _items.Where(w => w.BoundFile != null && w.BoundFile.StartsWith(oldItemPath)))
+                    webResourceItem.BoundFile = webResourceItem.BoundFile.Replace(oldItemPath, newItemPath);
+
+                ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+
+            }
+        }
+
+        private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
+        {
+            //Add to web resource item - project file list
+        }
+
+        private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
+        {
+            //Remove mappings
+            //Remove from web resource item - project file list
         }
 
         private void ResetForm()
         {
-            WebResourceGrid.ItemsSource = null;
+            _items = new ObservableCollection<WebResourceItem>();
             Publish.IsEnabled = false;
             Customizations.IsEnabled = false;
             Solutions.IsEnabled = false;
@@ -315,12 +372,9 @@ namespace WebResourceDeployer
 
         private void UpdateAllPublishChecks(bool publish)
         {
-            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-            foreach (WebResourceItem webResourceItem in webResources)
-            {
+            foreach (WebResourceItem webResourceItem in _items)
                 if (webResourceItem.AllowPublish)
                     webResourceItem.Publish = publish;
-            }
         }
 
         private void BoundFile_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -331,8 +385,7 @@ namespace WebResourceDeployer
             Guid webResourceId = new Guid(textBlock.Tag.ToString());
             FileId.Content = webResourceId;
 
-            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-            WebResourceItem webResourceItem = webResources.FirstOrDefault(w => w.WebResourceId == webResourceId);
+            WebResourceItem webResourceItem = _items.FirstOrDefault(w => w.WebResourceId == webResourceId);
             ProjectFileList.SelectedIndex = -1;
             if (webResourceItem != null)
             {
@@ -356,8 +409,7 @@ namespace WebResourceDeployer
         {
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
             WebResourceItem webResourceItem =
-                ((List<WebResourceItem>)WebResourceGrid.ItemsSource)
-                .FirstOrDefault(w => w.WebResourceId == webResourceId);
+                _items.FirstOrDefault(w => w.WebResourceId == webResourceId);
 
             string folder = String.Empty;
             if (!string.IsNullOrEmpty(webResourceItem?.BoundFile))
@@ -383,7 +435,7 @@ namespace WebResourceDeployer
 
                 Entity webResource = await Task.Run(() => Crm.WebResource.RetrieveWebResourceFromCrm(client, webResourceId));
 
-                CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow("Downloaded Web Resource: " + webResource.Id, MessageType.Info);
+                OutputLogger.WriteToOutputWindow("Downloaded Web Resource: " + webResource.Id, MessageType.Info);
 
                 string name = webResource.GetAttributeValue<string>("name");
                 name = Crm.WebResource.AddMissingExtension(name, webResource.GetAttributeValue<OptionSetValue>("webresourcetype").Value);
@@ -404,18 +456,17 @@ namespace WebResourceDeployer
                 string content = Crm.WebResource.GetWebResourceContent(webResource);
                 byte[] decodedContent = Crm.WebResource.DecodeWebResource(content);
 
-                CrmDeveloperExtensions.Core.FileSystem.WriteFileToDisk(path, decodedContent);
+                WriteFileToDisk(path, decodedContent);
 
                 ProjectItem projectItem = ConnPane.SelectedProject.ProjectItems.AddFromFile(path);
 
                 var fullname = projectItem.FileNames[1];
-                var projectPath = System.IO.Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+                var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
                 if (projectPath == null) return;
 
                 var boundName = fullname.Replace(projectPath, String.Empty).Replace("\\", "/");
 
-                List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-                foreach (WebResourceItem item in items.Where(w => w.WebResourceId == webResourceId))
+                foreach (WebResourceItem item in _items.Where(w => w.WebResourceId == webResourceId))
                 {
                     item.BoundFile = boundName;
                     item.AllowCompare = SetAllowCompare(item.Type);
@@ -454,11 +505,11 @@ namespace WebResourceDeployer
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
             Entity webResource = await Task.Run(() => Crm.WebResource.RetrieveWebResourceContentFromCrm(ConnPane.CrmService, webResourceId));
 
-            CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow($"Retrieved Web Resource {webResourceId} For Compare", MessageType.Info);
+            OutputLogger.WriteToOutputWindow($"Retrieved Web Resource {webResourceId} For Compare", MessageType.Info);
 
             HideMessage(vsStatusAnimation.vsStatusAnimationSync);
 
-            string tempFile = CrmDeveloperExtensions.Core.FileSystem.WriteTempFile(webResource.GetAttributeValue<string>("name"),
+            string tempFile = WriteTempFile(webResource.GetAttributeValue<string>("name"),
                     Crm.WebResource.DecodeWebResource(webResource.GetAttributeValue<string>("content")));
 
             //string projectName = ConnPane.SelectedProject.Name;
@@ -491,16 +542,17 @@ namespace WebResourceDeployer
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
             await Task.Run(() => Crm.WebResource.DeleteWebResourcetFromCrm(ConnPane.CrmService, webResourceId));
 
-            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-            if (webResources == null) return;
+            //List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            //if (webResources == null) return;
 
-            webResources.RemoveAll(w => w.WebResourceId == webResourceId);
-            //webResources = HandleMappings(webResources);
-            WebResourceGrid.ItemsSource = webResources;
+            foreach (WebResourceItem webResourceItem in _items.Where(w => w.WebResourceId == webResourceId))
+                _items.Remove(webResourceItem);
+            ////webResources = HandleMappings(webResources);
+            //WebResourceGrid.ItemsSource = webResources;
 
             FilterWebResources();
 
-            CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow($"Deleted Web Resource {webResourceId}", MessageType.Info);
+            OutputLogger.WriteToOutputWindow($"Deleted Web Resource {webResourceId}", MessageType.Info);
 
             HideMessage(vsStatusAnimation.vsStatusAnimationSync);
         }
@@ -510,8 +562,7 @@ namespace WebResourceDeployer
             if (ProjectFileList.SelectedIndex == -1) return;
 
             WebResourceItem webResourceItem =
-                ((List<WebResourceItem>)WebResourceGrid.ItemsSource)
-                .FirstOrDefault(w => w.WebResourceId == new Guid(FileId.Content.ToString()));
+                _items.FirstOrDefault(w => w.WebResourceId == new Guid(FileId.Content.ToString()));
 
             ComboBoxItem item = (ComboBoxItem)ProjectFileList.SelectedItem;
 
@@ -539,10 +590,7 @@ namespace WebResourceDeployer
             }
 
             if (!webResourceTask.Result)
-            {
                 MessageBox.Show("Error Retrieving Web Resources. See the Output Window for additional details.");
-                return;
-            }
         }
 
         private async Task<bool> GetSolutions()
@@ -551,7 +599,7 @@ namespace WebResourceDeployer
             if (results == null)
                 return false;
 
-            CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
+            OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
 
             List<CrmSolution> solutions = Class1.CreateCrmSolutionView(results);
 
@@ -578,16 +626,19 @@ namespace WebResourceDeployer
             if (results == null)
                 return false;
 
-            CrmDeveloperExtensions.Core.Logging.OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
+            OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
 
             ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
-            List<WebResourceItem> webResourceItems = Class1.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name, projectFolders);
-            webResourceItems.ForEach(w => w.PropertyChanged += WebResourceItem_PropertyChanged);
 
-            webResourceItems = webResourceItems.OrderBy(w => w.Name).ToList();
+            _items = Class1.CreateWebResourceItemView2(results, ConnPane.SelectedProject.Name, projectFolders);
 
-            //webResourceItems = HandleMappings(wrItems);
-            WebResourceGrid.ItemsSource = webResourceItems;
+            foreach (WebResourceItem webResourceItem in _items)
+                webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
+
+            _items = new ObservableCollection<WebResourceItem>(_items.OrderBy(w => w.Name));
+
+            _items = Mapping.HandleMappings(_dte, ConnPane.SelectedProject, _items, ConnPane.OrganizationId);
+            WebResourceGrid.ItemsSource = _items;
             FilterWebResources();
             WebResourceGrid.IsEnabled = true;
             WebResourceType.IsEnabled = true;
@@ -605,23 +656,19 @@ namespace WebResourceDeployer
             {
                 if (WebResourceGrid.ItemsSource != null)
                 {
-                    List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-                    foreach (WebResourceItem webResourceItem in webResources.Where(w => w.WebResourceId == item.WebResourceId))
+                    foreach (WebResourceItem webResourceItem in _items.Where(w => w.WebResourceId == item.WebResourceId))
                         webResourceItem.BoundFile = item.BoundFile;
                 }
 
-                // AddOrUpdateMapping(item);
+                Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, item, ConnPane.OrganizationId);
             }
 
             if (e.PropertyName == "Publish")
             {
-                List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-                if (webResources == null) return;
-
-                foreach (WebResourceItem webResourceItem in webResources.Where(w => w.WebResourceId == item.WebResourceId))
+                foreach (WebResourceItem webResourceItem in _items.Where(w => w.WebResourceId == item.WebResourceId))
                     webResourceItem.Publish = item.Publish;
 
-                Publish.IsEnabled = webResources.Count(w => w.Publish) > 0;
+                Publish.IsEnabled = _items.Count(w => w.Publish) > 0;
 
                 SetPublishAll();
             }
@@ -629,14 +676,14 @@ namespace WebResourceDeployer
 
         private void SetPublishAll()
         {
-            List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-            if (webResources == null) return;
+            //List<WebResourceItem> webResources = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
+            //if (webResources == null) return;
 
             //Set Publish All
             CheckBox publishAll = FindVisualChildren<CheckBox>(WebResourceGrid).FirstOrDefault(t => t.Name == "PublishSelectAll");
             if (publishAll == null) return;
 
-            publishAll.IsChecked = webResources.Count(w => w.Publish) == webResources.Count(w => w.AllowPublish);
+            publishAll.IsChecked = _items.Count(w => w.Publish) == _items.Count(w => w.AllowPublish);
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
@@ -665,8 +712,7 @@ namespace WebResourceDeployer
             //Clear publish flags
             if (!string.IsNullOrEmpty(type))
             {
-                List<WebResourceItem> items = (List<WebResourceItem>)WebResourceGrid.ItemsSource;
-                foreach (WebResourceItem webResourceItem in items)
+                foreach (WebResourceItem webResourceItem in _items)
                 {
                     if (selectedItem != null && (webResourceItem.Type.ToString() != selectedItem.Tag.ToString() || (webResourceItem.IsManaged && !showManaged)))
                         webResourceItem.Publish = false;
@@ -729,10 +775,7 @@ namespace WebResourceDeployer
         private static bool SetAllowCompare(int type)
         {
             int[] noCompare = { 5, 6, 7, 8, 10 };
-            if (!noCompare.Contains(type))
-                return true;
-
-            return false;
+            return !noCompare.Contains(type);
         }
     }
 }

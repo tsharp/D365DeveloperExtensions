@@ -41,20 +41,30 @@ namespace CrmDeveloperExtensions.Core.Config
             }
         }
 
-        public static void CreateConfigFile(Guid organizationId, string solutionPath)
+        public static CrmDexExConfig CreateConfigFile(Guid organizationId, string projectUniqueName, string solutionPath)
         {
-            CrmDexExConfig config = new CrmDexExConfig
+            CrmDexExConfig crmDexExConfig = new CrmDexExConfig
             {
                 CrmDevExConfigOrgMaps = new List<CrmDevExConfigOrgMap>
                 {
                     new CrmDevExConfigOrgMap
                     {
-                        OrganizationId = organizationId
+                        OrganizationId = organizationId,
+                        ProjectUniqueName = projectUniqueName
                     }
                 }
             };
 
-            string text = JsonConvert.SerializeObject(config, Formatting.Indented);
+            string text = JsonConvert.SerializeObject(crmDexExConfig, Formatting.Indented);
+
+            WriteConfigFile(solutionPath, text);
+
+            return crmDexExConfig;
+        }
+
+        public static void UpdateConfigFile(string solutionPath, CrmDexExConfig crmDexExConfig)
+        {
+            string text = JsonConvert.SerializeObject(crmDexExConfig, Formatting.Indented);
 
             WriteConfigFile(solutionPath, text);
         }

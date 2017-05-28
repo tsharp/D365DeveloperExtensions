@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Controls;
-using CrmDeveloperExtensions.Core.Models;
-using CrmDeveloperExtensions.Core.Vs;
+﻿using CrmDeveloperExtensions.Core.Vs;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Xrm.Tooling.Connector;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using Window = EnvDTE.Window;
 
 namespace CrmDeveloperExtensions.Core.Connection
@@ -28,6 +25,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         private readonly IVsSolution _vsSolution;
 
         public CrmServiceClient CrmService;
+        public Guid OrganizationId;
 
         public ObservableCollection<Project> Projects
         {
@@ -49,6 +47,8 @@ namespace CrmDeveloperExtensions.Core.Connection
         public event EventHandler<SolutionProjectAddedEventArgs> SolutionProjectAdded;
         public event EventHandler<SolutionProjectRemovedEventArgs> SolutionProjectRemoved;
         public event EventHandler<SolutionProjectRenamedEventArgs> SolutionProjectRenamed;
+        public event EventHandler<ProjectItemRemovedEventArgs> ProjectItemRemoved;
+        public event EventHandler<ProjectItemAddedEventArgs> ProjectItemAdded;
         public event EventHandler<ProjectItemRenamedEventArgs> ProjectItemRenamed;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -76,6 +76,8 @@ namespace CrmDeveloperExtensions.Core.Connection
             var events2 = (Events2)_dte.Events;
             var projectItemsEvents = events2.ProjectItemsEvents;
             projectItemsEvents.ItemRenamed += ProjectItemsEventsOnItemRenamed;
+            projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+            projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
 
             var solutionEvents = events.SolutionEvents;
             solutionEvents.ProjectAdded += SolutionEventsOnProjectAdded;
@@ -89,8 +91,8 @@ namespace CrmDeveloperExtensions.Core.Connection
 
         private void WindowEventsOnWindowActivated(Window gotFocus, Window lostFocus)
         {
-            //if (_projects == null)
-            //    _projects = GetProjectsForList();
+            //if (_projects.Count == 0)
+            //    GetProjectsForList();
 
             //No solution loaded
             if (_solution.Count == 0)
@@ -204,15 +206,36 @@ namespace CrmDeveloperExtensions.Core.Connection
             var handler = SolutionProjectRenamed;
             handler?.Invoke(this, e);
         }
+        protected virtual void OnProjectItemRemoved(ProjectItemRemovedEventArgs e)
+        {
+            var handler = ProjectItemRemoved;
+            handler?.Invoke(this, e);
+        }
+        protected virtual void OnProjectItemAdded(ProjectItemAddedEventArgs e)
+        {
+            var handler = ProjectItemAdded;
+            handler?.Invoke(this, e);
+        }
         protected virtual void OnProjectItemRenamed(ProjectItemRenamedEventArgs e)
         {
             var handler = ProjectItemRenamed;
             handler?.Invoke(this, e);
         }
 
-        public void ProjectItemAdded()
+        private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            MessageBox.Show("Added");
+            OnProjectItemRemoved(new ProjectItemRemovedEventArgs
+            {
+                ProjectItem = projectItem
+            });
+        }
+
+        private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
+        {
+            OnProjectItemAdded(new ProjectItemAddedEventArgs
+            {
+                ProjectItem = projectItem
+            });
         }
 
         private void ProjectItemsEventsOnItemRenamed(ProjectItem projectItem, string oldName)
@@ -270,6 +293,7 @@ namespace CrmDeveloperExtensions.Core.Connection
 
             CrmLoginForm loginForm = (CrmLoginForm)sender;
             CrmService = loginForm.CrmConnectionMgr.CrmSvc;
+            OrganizationId = loginForm.CrmConnectionMgr.ConnectedOrgId;
 
             Dispatcher.Invoke(() =>
             {
@@ -284,7 +308,7 @@ namespace CrmDeveloperExtensions.Core.Connection
 
         private void SolutionProjectsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox solutionProjectsList = (ComboBox) sender;
+            ComboBox solutionProjectsList = (ComboBox)sender;
             SelectedProject = (Project)solutionProjectsList.SelectedItem;
         }
 
