@@ -6,7 +6,6 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
 using CrmDeveloperExtensions.Core.Enums;
 using CrmDeveloperExtensions.Core.Logging;
 using Microsoft.Crm.Sdk.Messages;
@@ -14,7 +13,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
-using NLog;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Crm

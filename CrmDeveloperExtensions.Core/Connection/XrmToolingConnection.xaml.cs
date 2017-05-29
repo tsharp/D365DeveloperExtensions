@@ -113,41 +113,27 @@ namespace CrmDeveloperExtensions.Core.Connection
             if (!crmDevExWindows.Contains(gotFocus.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty)))
                 return;
 
-            GetProjectsForList();
+            if (_projects.Count == 0)
+                GetProjectsForList();
 
             if (!_projectEventsRegistered)
             {
                 RegisterProjectEvents();
                 _projectEventsRegistered = true;
             }
-
-            //if (!gotFocus.Caption.StartsWith("CRM DevEx")) return;
-
-            //ProjectsDdl.IsEnabled = true;
-            //AddConnection.IsEnabled = true;
-            //Connections.IsEnabled = true;
-
-            //foreach (var project in GetProjects())
-            //{
-            //    SolutionProjectAdded(project);
-            //}
         }
 
         private void RegisterProjectEvents()
         {
-            //Manually register the OnAfterOpenProject event on the existing projects as they are already opened by the time the event would normally be registered
+            //Manually register the OnAfterOpenProject event on the existing projects 
+            //as they are already opened by the time the event would normally be registered
             foreach (Project project in _projects)
             {
                 IVsHierarchy projectHierarchy;
                 if (_vsSolution.GetProjectOfUniqueName(project.UniqueName, out projectHierarchy) != VSConstants.S_OK)
                     continue;
 
-                //IVsSolutionEvents vsSolutionEvents = new VsSolutionEvents(_dte, this);
                 _vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
-
-                //uint cookie;
-                //IVsHierarchyEvents vsHierarchyEvents = new VsHierarchyEvents(projectHierarchy, this);
-                //projectHierarchy.AdviseHierarchyEvents(vsHierarchyEvents, out cookie);
             }
         }
 
@@ -211,7 +197,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             SolutionProjectsList.ItemsSource = null;
             SolutionProjectsList.ItemsSource = _projects;
             SolutionProjectsList.SelectedItem = selectedProject;
-            //TODO: - rename - adds project to list again
+            OutputLogger.DeleteOutputWindow();
             OnSolutionProjectRenamed(new SolutionProjectRenamedEventArgs
             {
                 Project = project,

@@ -143,7 +143,7 @@ namespace WebResourceDeployer
             if (result != true) return;
 
             ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
-            WebResourceItem defaultItem = Class1.WebResourceItemFromNew(newWebResource, newWebResource.NewSolutionId, projectFolders);
+            WebResourceItem defaultItem = ModelBuilder.WebResourceItemFromNew(newWebResource, newWebResource.NewSolutionId, projectFolders);
             defaultItem.PropertyChanged += WebResourceItem_PropertyChanged;
             //Needs to be after setting the property changed event
             defaultItem.BoundFile = newWebResource.NewBoundFile;
@@ -155,7 +155,7 @@ namespace WebResourceDeployer
 
             if (newWebResource.NewSolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
             {
-                WebResourceItem solutionItem = Class1.WebResourceItemFromNew(newWebResource, CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId, projectFolders);
+                WebResourceItem solutionItem = ModelBuilder.WebResourceItemFromNew(newWebResource, CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId, projectFolders);
                 solutionItem.PropertyChanged += WebResourceItem_PropertyChanged;
                 //Needs to be after setting the property changed event
                 solutionItem.BoundFile = newWebResource.NewBoundFile;
@@ -701,7 +701,7 @@ namespace WebResourceDeployer
 
             OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
 
-            List<CrmSolution> solutions = Class1.CreateCrmSolutionView(results);
+            List<CrmSolution> solutions = ModelBuilder.CreateCrmSolutionView(results);
 
             SolutionList.ItemsSource = solutions;
             SolutionList.SelectedIndex = 0;
@@ -728,7 +728,7 @@ namespace WebResourceDeployer
 
             ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
 
-            _webResourceItems = Class1.CreateWebResourceItemView2(results, ConnPane.SelectedProject.Name, projectFolders);
+            _webResourceItems = ModelBuilder.CreateWebResourceItemView2(results, ConnPane.SelectedProject.Name, projectFolders);
 
             foreach (WebResourceItem webResourceItem in _webResourceItems)
                 webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;

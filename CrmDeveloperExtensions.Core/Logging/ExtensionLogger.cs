@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Runtime.CompilerServices;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell.Interop;
+﻿using EnvDTE;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using System;
+using System.IO;
 
 namespace CrmDeveloperExtensions.Core.Logging
 {

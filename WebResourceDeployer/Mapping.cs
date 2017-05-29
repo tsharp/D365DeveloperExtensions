@@ -13,7 +13,6 @@ namespace WebResourceDeployer
 {
     public static class Mapping
     {
-        //public static List<WebResourceItem> HandleMappings(DTE dte, Project project, List<WebResourceItem> webResourceItems, Guid organizationId)
         public static ObservableCollection<WebResourceItem> HandleMappings(DTE dte, Project project, ObservableCollection<WebResourceItem> webResourceItems, Guid organizationId)
         {
             CrmDexExConfig crmDexExConfig = GetConfigFile(dte.Solution.FullName, project.UniqueName, organizationId);

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Microsoft.VisualStudio;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
+using System;
+using System.Windows;
 
 namespace CrmDeveloperExtensions.Core.Vs
 {
@@ -46,7 +41,6 @@ namespace CrmDeveloperExtensions.Core.Vs
             }
         }
 
-        //Not currently used
         public static uint GetProjectItemId(IVsSolution solutionService, string projectUniqueName, EnvDTE.ProjectItem projectItem)
         {
             IVsHierarchy projectHierarchy;
@@ -77,7 +71,6 @@ namespace CrmDeveloperExtensions.Core.Vs
                 : UInt32.MinValue;
         }
 
-        //Not currently used
         public static EnvDTE.ProjectItem GetProjectItemFromItemId(IVsSolution solutionService, string projectUniqueName, uint projectItemId)
         {
             IVsHierarchy projectHierarchy;

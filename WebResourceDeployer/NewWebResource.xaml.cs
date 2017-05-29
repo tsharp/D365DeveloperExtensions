@@ -17,9 +17,6 @@ using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
 {
-    /// <summary>
-    /// Interaction logic for NewWebResource.xaml
-    /// </summary>
     public partial class NewWebResource
     {
         private readonly CrmServiceClient _client;
@@ -107,14 +104,12 @@ namespace WebResourceDeployer
         {
             ProjectItem projectItem = (ProjectItem)((ComboBoxItem)Files.SelectedItem).Tag;
             string filePath = projectItem.Properties.Item("FullPath").Value.ToString();
-            if (!File.Exists(filePath))
-            {
-                OutputLogger.WriteToOutputWindow("Missing File: " + filePath, MessageType.Error);
-                MessageBox.Show("File does not exist");
-                return null;
-            }
+            if (File.Exists(filePath))
+                return filePath;
 
-            return filePath;
+            OutputLogger.WriteToOutputWindow("Missing File: " + filePath, MessageType.Error);
+            MessageBox.Show("File does not exist");
+            return null;
         }
 
         private bool ValidateForm()
@@ -269,7 +264,7 @@ namespace WebResourceDeployer
 
             EntityCollection results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
 
-            List<CrmSolution> solutions = Class1.CreateCrmSolutionView(results);
+            List<CrmSolution> solutions = ModelBuilder.CreateCrmSolutionView(results);
 
             if (selectedSolutionId != Guid.Empty)
             {

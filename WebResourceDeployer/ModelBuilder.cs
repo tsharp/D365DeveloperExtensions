@@ -1,21 +1,13 @@
-﻿using System;
+﻿using Microsoft.Xrm.Sdk;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using EnvDTE;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
-using Menu = System.Web.UI.WebControls.Menu;
 
 namespace WebResourceDeployer
 {
-    public static class Class1
+    public static class ModelBuilder
     {
         public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
         {

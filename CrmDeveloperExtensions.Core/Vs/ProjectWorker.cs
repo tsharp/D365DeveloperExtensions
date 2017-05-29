@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using Constants = EnvDTE.Constants;
 
 namespace CrmDeveloperExtensions.Core.Vs
 {

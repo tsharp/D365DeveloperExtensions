@@ -34,8 +34,6 @@ namespace CrmDeveloperExtensions.Core.Logging
             IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
 
             outWindow?.DeletePane(_windowsId);
-
-            //TODO: Solution close - destroy the output window
         }
 
         public static void WriteToOutputWindow(string message, Enums.MessageType messageType)
