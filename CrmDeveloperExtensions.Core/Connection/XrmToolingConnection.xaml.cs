@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using CrmDeveloperExtensions.Core.Enums;
+using CrmDeveloperExtensions.Core.Logging;
 using Window = EnvDTE.Window;
 
 namespace CrmDeveloperExtensions.Core.Connection
@@ -27,6 +29,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         private readonly IVsSolutionEvents _vsSolutionEvents;
         private ProjectItem _movedProjectItem;
         private string _movedProjectItemOldName;
+        private bool _autoLogin;
 
         public CrmServiceClient CrmService;
         public Guid OrganizationId;
@@ -183,6 +186,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         private void SolutionEventsOnProjectRemoved(Project project)
         {
             _projects.Remove(project);
+
             OnSolutionProjectRemoved(new SolutionProjectRemovedEventArgs
             {
                 Project = project
@@ -195,6 +199,7 @@ namespace CrmDeveloperExtensions.Core.Connection
                     return;
 
             _projects.Add(project);
+
             OnSolutionProjectAdded(new SolutionProjectAddedEventArgs
             {
                 Project = project
@@ -206,7 +211,7 @@ namespace CrmDeveloperExtensions.Core.Connection
             SolutionProjectsList.ItemsSource = null;
             SolutionProjectsList.ItemsSource = _projects;
             SolutionProjectsList.SelectedItem = selectedProject;
-            //TODO: - update mapping
+            //TODO: - rename - adds project to list again
             OnSolutionProjectRenamed(new SolutionProjectRenamedEventArgs
             {
                 Project = project,
@@ -299,12 +304,14 @@ namespace CrmDeveloperExtensions.Core.Connection
             IList<Project> projects = SolutionWorker.GetProjects();
             foreach (Project project in projects)
             {
-                //if (!ProjectWorker.IsProjectLoaded(project))
                 _projects.Add(project);
             }
 
             SolutionProjectsList.ItemsSource = _projects;
             SolutionProjectsList.DisplayMemberPath = "Name";
+
+            if (_projects.Any())
+                SolutionProjectsList.SelectedIndex = 0;
         }
 
         private void Connect_OnClick(object sender, RoutedEventArgs e)
@@ -313,19 +320,29 @@ namespace CrmDeveloperExtensions.Core.Connection
             {
                 StatusBar.SetStatusBarValue(_dte, Core.Resources.Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
 
-                CrmLoginForm ctrl = new CrmLoginForm();
+                CrmLoginForm ctrl = new CrmLoginForm(_autoLogin);
                 ctrl.ConnectionToCrmCompleted += ConnectionToCrmCompleted;
-                ctrl.ShowDialog();
+                bool? result = ctrl.ShowDialog();
 
-                if (ctrl.CrmConnectionMgr?.CrmSvc != null && ctrl.CrmConnectionMgr.CrmSvc.IsReady)
+                if (result != true)
+                    return;
+
+                if (ctrl.CrmConnectionMgr?.CrmSvc == null || !ctrl.CrmConnectionMgr.CrmSvc.IsReady)
                 {
-                    //MessageBox.Show("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
-                    //                " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, "Connection Status");
+                    if (ctrl.CrmConnectionMgr != null)
+                        OutputLogger.WriteToOutputWindow("Error connecting to CRM: Last error: " +
+                                                         ctrl.CrmConnectionMgr.LastError + Environment.NewLine +
+                                                         "Last exception: " +
+                                                         ctrl.CrmConnectionMgr.LastException.Message +
+                                                         Environment.NewLine +
+                                                         ctrl.CrmConnectionMgr.LastException.StackTrace,
+                            MessageType.Error);
+                    MessageBox.Show("Cannot connect to CRM - see Output window for details", "Connection Status");
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show("Cannot connect; try again!", "Connection Status");
-                }
+
+                OutputLogger.WriteToOutputWindow("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
+                    " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, MessageType.Info);
             }
             finally
             {
@@ -369,6 +386,11 @@ namespace CrmDeveloperExtensions.Core.Connection
         {
             _projects = new ObservableCollection<Project>();
             SolutionProjectsList.ItemsSource = null;
+        }
+
+        private void AutoLogin_Checked(object sender, RoutedEventArgs e)
+        {
+            _autoLogin = AutoLogin.IsChecked.HasValue && AutoLogin.IsChecked.Value;
         }
     }
 }

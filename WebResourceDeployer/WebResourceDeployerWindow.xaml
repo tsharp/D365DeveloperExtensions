@@ -12,7 +12,7 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" 
+        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved"
                                          ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved"></connection:XrmToolingConnection>
         <Grid Column="1" HorizontalAlignment="Stretch">

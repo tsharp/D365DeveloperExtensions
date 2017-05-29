@@ -19,22 +19,12 @@
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}">Project</Label>
             <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="SolutionProjectsList_OnSelectionChanged" 
                       Initialized="SolutionProjectsList_Initialized" />
-            <!--<Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">CRM Organization</Label>
-            <ComboBox x:Name="Connections" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="170" 
-                      SelectionChanged="Connections_SelectionChanged"/>-->
             <StackPanel Orientation="Horizontal">
-                <!--<Button x:Name="AddConnection" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="AddConnection_Click" Background="White">
-                    <Image Source="Resources/plus-24.png" Width="24" Height="24" ToolTip="Add Connection"></Image>
-                </Button>
-                <Button x:Name="ModifyConnection" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="ModifyConnection_Click" IsEnabled="False" Background="White">
-                    <Image Source="Resources/settings-24.png" Width="24" Height="24" ToolTip="Modify Connection"></Image>
-                </Button>
-                <Button x:Name="Delete" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="Delete_Click" IsEnabled="False" Background="White">
-                    <Image Source="Resources/minus-24.png" Width="24" Height="24" ToolTip="Delete Connection"></Image>
-                </Button>-->
                 <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" IsEnabled="False" Padding="2,2,2,2" Background="White" Click="Connect_OnClick">
                     <Image Source="../Images/connect_16.png" Width="16" Height="16" ToolTip="Connect To CRM/D365"></Image>
                 </Button>
+                <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="Auto-login to last connected org?" 
+                          Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked"></CheckBox>
             </StackPanel>
         </StackPanel>
     </Expander>

@@ -12,9 +12,6 @@ using Window = System.Windows.Window;
 
 namespace CrmDeveloperExtensions.Core.Connection
 {
-    /// <summary>
-    /// Interaction logic for CRMLoginForm1.xaml
-    /// </summary>
     public partial class CrmLoginForm : Window
     {
         #region Vars
@@ -34,6 +31,8 @@ namespace CrmDeveloperExtensions.Core.Connection
         ///  This is used to allow the UI to reset w/out closing 
         /// </summary>
         private bool _resetUiFlag;
+
+        private bool _autoLogin;
         #endregion
 
         #region Properties
@@ -52,7 +51,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         #endregion
 
 
-        public CrmLoginForm()
+        public CrmLoginForm(bool autoLogin)
         {
             InitializeComponent();
             //// Should be used for testing only.
@@ -61,15 +60,10 @@ namespace CrmDeveloperExtensions.Core.Connection
             //    MessageBox.Show("CertError");
             //    return true;
             //};
-            
+            _autoLogin = autoLogin;
             EnableXrmToolingLogging();
         }
 
-        /// <summary>
-        /// Raised when the window loads for the first time. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             /*
@@ -95,40 +89,46 @@ namespace CrmDeveloperExtensions.Core.Connection
             // There are several modes to the login control UI
             CrmLoginCtrl.SetControlMode(ServerLoginConfigCtrlMode.FullLoginPanel);
             // this wires an event that is raised when the login button is pressed. 
-            CrmLoginCtrl.ConnectionCheckBegining += new EventHandler(CrmLoginCtrl_ConnectionCheckBegining);
+            CrmLoginCtrl.ConnectionCheckBegining += CrmLoginCtrl_ConnectionCheckBegining;
             // this wires an event that is raised when an error in the connect process occurs. 
-            CrmLoginCtrl.ConnectErrorEvent += new EventHandler<ConnectErrorEventArgs>(CrmLoginCtrl_ConnectErrorEvent);
+            CrmLoginCtrl.ConnectErrorEvent += CrmLoginCtrl_ConnectErrorEvent;
             // this wires an event that is raised when a status event is returned. 
-            CrmLoginCtrl.ConnectionStatusEvent += new EventHandler<ConnectStatusEventArgs>(CrmLoginCtrl_ConnectionStatusEvent);
+            CrmLoginCtrl.ConnectionStatusEvent += CrmLoginCtrl_ConnectionStatusEvent;
             // this wires an event that is raised when the user clicks the cancel button. 
-            CrmLoginCtrl.UserCancelClicked += new EventHandler(CrmLoginCtrl_UserCancelClicked);
+            CrmLoginCtrl.UserCancelClicked += CrmLoginCtrl_UserCancelClicked;
             // Check to see if its possible to do an Auto Login 
-            if (!_mgr.RequireUserLogin())
-            {
-                if (MessageBox.Show("Credentials already saved in configuration\nChoose Yes to Auto Login or No to Reset Credentials", "Auto Login", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    // If RequireUserLogin is false, it means that there has been a successful login here before and the credentials are cached. 
-                    CrmLoginCtrl.IsEnabled = false;
-                    // When running an auto login,  you need to wire and listen to the events from the connection manager.
-                    // Run Auto User Login process, Wire events. 
-                    _mgr.ServerConnectionStatusUpdate += new EventHandler<ServerConnectStatusEventArgs>(mgr_ServerConnectionStatusUpdate);
-                    _mgr.ConnectionCheckComplete += new EventHandler<ServerConnectStatusEventArgs>(mgr_ConnectionCheckComplete);
-                    // Start the connection process. 
-                    _mgr.ConnectToServerCheck();
+            if (_mgr.RequireUserLogin())
+                return;
 
-                    // Show the message grid. 
-                    CrmLoginCtrl.ShowMessageGrid();
-                }
+            MessageBoxResult result = MessageBoxResult.No;
+            if (!_autoLogin)
+            {
+                result = MessageBox.Show(
+                      "Credentials already saved in configuration\nChoose Yes to Auto Login or No to Reset Credentials",
+                      "Auto Login", MessageBoxButton.YesNo, MessageBoxImage.Question);
             }
+
+            if (_autoLogin || result == MessageBoxResult.Yes)
+                DoLogin();
+        }
+
+        private void DoLogin()
+        {
+            // If RequireUserLogin is false, it means that there has been a successful login here before and the credentials are cached. 
+            CrmLoginCtrl.IsEnabled = false;
+            // When running an auto login,  you need to wire and listen to the events from the connection manager.
+            // Run Auto User Login process, Wire events. 
+            _mgr.ServerConnectionStatusUpdate += mgr_ServerConnectionStatusUpdate;
+            _mgr.ConnectionCheckComplete += mgr_ConnectionCheckComplete;
+            // Start the connection process. 
+            _mgr.ConnectToServerCheck();
+
+            // Show the message grid. 
+            CrmLoginCtrl.ShowMessageGrid();
         }
 
         #region Events
 
-        /// <summary>
-        /// Updates from the Auto Login process. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void mgr_ServerConnectionStatusUpdate(object sender, ServerConnectStatusEventArgs e)
         {
             // The Status event will contain information about the current login process,  if Connected is false, then there is not yet a connection. 
@@ -141,11 +141,6 @@ namespace CrmDeveloperExtensions.Core.Connection
 
         }
 
-        /// <summary>
-        /// Complete Event from the Auto Login process
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void mgr_ConnectionCheckComplete(object sender, ServerConnectStatusEventArgs e)
         {
             // The Status event will contain information about the current login process,  if Connected is false, then there is not yet a connection. 
@@ -182,28 +177,18 @@ namespace CrmDeveloperExtensions.Core.Connection
             }
         }
 
-        /// <summary>
-        ///  Login control connect check starting. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CrmLoginCtrl_ConnectionCheckBegining(object sender, EventArgs e)
         {
             _bIsConnectedComplete = false;
             Dispatcher.Invoke(DispatcherPriority.Normal,
                                new Action(() =>
                                {
-                                   this.Title = "Starting Login Process. ";
+                                   Title = "Starting Login Process. ";
                                    CrmLoginCtrl.IsEnabled = true;
                                }
                                    ));
         }
 
-        /// <summary>
-        /// Login control connect check status event. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CrmLoginCtrl_ConnectionStatusEvent(object sender, ConnectStatusEventArgs e)
         {
             //Here we are using the bIsConnectedComplete bool to check to make sure we only process this call once. 
@@ -212,32 +197,19 @@ namespace CrmDeveloperExtensions.Core.Connection
 
         }
 
-        /// <summary>
-        /// Login control Error event. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CrmLoginCtrl_ConnectErrorEvent(object sender, ConnectErrorEventArgs e)
         {
             //MessageBox.Show(e.ErrorMessage, "Error here");
         }
 
-        /// <summary>
-        /// Login Control Cancel event raised. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CrmLoginCtrl_UserCancelClicked(object sender, EventArgs e)
         {
             if (!_resetUiFlag)
-                this.Close();
+                Close();
         }
 
         #endregion
 
-        /// <summary>
-        /// This raises and processes Success
-        /// </summary>
         private void ProcessSuccess()
         {
             _resetUiFlag = true;

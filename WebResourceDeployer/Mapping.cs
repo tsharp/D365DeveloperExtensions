@@ -132,5 +132,23 @@ namespace WebResourceDeployer
 
             return orgMap;
         }
+
+        public static void UpdateProjectName(string solutionPath, string oldProjectUniqueName, string newProjectUniqueName)
+        {
+            CrmDexExConfig crmDexExConfig = ConfigFile.GetConfigFile(solutionPath);
+            if (crmDexExConfig == null)
+                return;
+
+            bool updated = false;
+            foreach (CrmDevExConfigOrgMap crmDevExConfigOrgMap in crmDexExConfig.CrmDevExConfigOrgMaps)
+                if (crmDevExConfigOrgMap.ProjectUniqueName.Equals(oldProjectUniqueName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    crmDevExConfigOrgMap.ProjectUniqueName = newProjectUniqueName;
+                    updated = true;
+                }
+
+            if (updated)
+                ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
+        }
     }
 }
