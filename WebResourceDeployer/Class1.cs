@@ -25,12 +25,9 @@ namespace WebResourceDeployer
             {
                 WebResourceItem webResourceItem = new WebResourceItem
                 {
-                    Publish = false,
                     WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
                     Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
-                    AllowPublish = false,
-                    AllowCompare = false,
                     TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
                     ProjectFolders = projectFolders,
@@ -56,12 +53,9 @@ namespace WebResourceDeployer
             {
                 WebResourceItem webResourceItem = new WebResourceItem
                 {
-                    Publish = false,
                     WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
                     Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
-                    AllowPublish = false,
-                    AllowCompare = false,
                     TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
                     ProjectFolders = projectFolders,
@@ -116,13 +110,9 @@ namespace WebResourceDeployer
         {
             WebResourceItem webResourceItem = new WebResourceItem
             {
-                Publish = false,
                 WebResourceId = newWebResource.NewId,
                 Name = newWebResource.NewName,
                 DisplayName = newWebResource.NewDisplayName,
-                IsManaged = false,
-                AllowPublish = true,
-                AllowCompare = SetAllowCompare(newWebResource.NewType),
                 TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
                 Type = newWebResource.NewType,
                 ProjectFolders = projectFolders,
@@ -130,12 +120,6 @@ namespace WebResourceDeployer
             };
 
             return webResourceItem;
-        }
-
-        public static bool SetAllowCompare(int type)
-        {
-            int[] noCompare = { 5, 6, 7, 8, 10 };
-            return !noCompare.Contains(type);
         }
     }
 }

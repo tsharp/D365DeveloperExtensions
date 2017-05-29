@@ -1,17 +1,13 @@
-﻿using System;
+﻿using CrmDeveloperExtensions.Core;
+using CrmDeveloperExtensions.Core.Config;
+using CrmDeveloperExtensions.Core.Models;
+using EnvDTE;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using CrmDeveloperExtensions.Core;
-using CrmDeveloperExtensions.Core.Config;
-using CrmDeveloperExtensions.Core.Models;
-using EnvDTE;
 using WebResourceDeployer.ViewModels;
-using Newtonsoft.Json;
 
 namespace WebResourceDeployer
 {

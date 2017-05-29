@@ -2,7 +2,6 @@
 using CrmDeveloperExtensions.Core.Connection;
 using EnvDTE;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace CrmDeveloperExtensions.Core.Vs
@@ -30,15 +29,17 @@ namespace CrmDeveloperExtensions.Core.Vs
 
         int IVsHierarchyEvents.OnItemAdded(uint itemidParent, uint itemidSiblingPrev, uint itemidAdded)
         {
-            //_xrmConnection.ProjectItemAdded();
-
             object itemExtObject;
-            if (_hierarchy.GetProperty(itemidAdded, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
-            {
-                var projectItem = itemExtObject as ProjectItem;
-                if (projectItem != null)
-                    _xrmToolingConnection.ProjectItemMoveAdded(projectItem);
-            }
+            if (_hierarchy.GetProperty(itemidAdded, (int) __VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) != VSConstants.S_OK)
+                return VSConstants.S_OK;
+
+            var projectItem = itemExtObject as ProjectItem;
+            if (projectItem == null)
+                return VSConstants.S_OK;
+
+            Guid type = new Guid(projectItem.Kind);
+            if (type == VSConstants.GUID_ItemType_PhysicalFile || type == VSConstants.GUID_ItemType_PhysicalFolder)
+                _xrmToolingConnection.ProjectItemMoveAdded(projectItem);
 
             return VSConstants.S_OK;
         }
@@ -46,12 +47,16 @@ namespace CrmDeveloperExtensions.Core.Vs
         int IVsHierarchyEvents.OnItemDeleted(uint itemid)
         {
             object itemExtObject;
-            if (_hierarchy.GetProperty(itemid, (int)__VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) == VSConstants.S_OK)
-            {
-                var projectItem = itemExtObject as ProjectItem;
-                if (projectItem != null)
-                    _xrmToolingConnection.ProjectItemMoveDeleted(projectItem);
-            }
+            if (_hierarchy.GetProperty(itemid, (int) __VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) !=VSConstants.S_OK)
+                return VSConstants.S_OK;
+
+            var projectItem = itemExtObject as ProjectItem;
+            if (projectItem == null)
+                return VSConstants.S_OK;
+
+            Guid type = new Guid(projectItem.Kind);
+            if (type == VSConstants.GUID_ItemType_PhysicalFile || type == VSConstants.GUID_ItemType_PhysicalFolder)
+                _xrmToolingConnection.ProjectItemMoveDeleted(projectItem);
 
             return VSConstants.S_OK;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
@@ -38,30 +39,8 @@ namespace WebResourceDeployer.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool _allowCompare;
-        public bool AllowCompare
-        {
-            get => _allowCompare;
-            set
-            {
-                if (_allowCompare == value) return;
-
-                _allowCompare = value;
-                OnPropertyChanged();
-            }
-        }
-        private bool _allowPublish;
-        public bool AllowPublish
-        {
-            get => _allowPublish;
-            set
-            {
-                if (_allowPublish == value) return;
-
-                _allowPublish = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool AllowCompare => SetAllowCompare();
+        public bool AllowPublish => SetAllowPublish();
         private string _boundFile;
         public string BoundFile
         {
@@ -72,6 +51,7 @@ namespace WebResourceDeployer.ViewModels
 
                 _boundFile = value;
                 OnPropertyChanged();
+                OnPropertyChanged("AllowPublish");
             }
         }
         public Guid SolutionId { get; set; }
@@ -80,6 +60,30 @@ namespace WebResourceDeployer.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private bool SetAllowCompare()
+        {
+            if (string.IsNullOrEmpty(BoundFile))
+                return false;
+
+            int[] noCompare = { 5, 6, 7, 8, 10 };
+            return !noCompare.Contains(Type);
+        }
+
+        private bool SetAllowPublish()
+        {
+            if (IsManaged)
+            {
+                Publish = false;
+                return false;
+            }
+            if (string.IsNullOrEmpty(BoundFile))
+            {
+                Publish = false;
+                return false;
+            }
+            return true;
         }
     }
 }

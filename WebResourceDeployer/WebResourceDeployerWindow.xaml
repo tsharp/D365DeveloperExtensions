@@ -69,7 +69,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding Publish, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Publish"
-                                          IsEnabled="{Binding AllowPublish, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"></CheckBox>
+                                          IsEnabled="{Binding AllowPublish, Mode=OneWay}" HorizontalAlignment="Center"></CheckBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -128,7 +128,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
-                                        IsEnabled="{Binding AllowCompare, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="White" BorderThickness="0">
+                                        IsEnabled="{Binding AllowCompare, Mode=OneWay}" Background="White" BorderThickness="0">
                                     <Image Source="/CrmDeveloperExtensions.Core;component/images/compare_16.png" Width="16" Height="16" ToolTip="Compare With CRM"></Image>
                                 </Button>
                             </DataTemplate>

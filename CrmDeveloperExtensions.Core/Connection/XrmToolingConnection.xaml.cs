@@ -344,6 +344,7 @@ namespace CrmDeveloperExtensions.Core.Connection
 
             Dispatcher.Invoke(() =>
             {
+                Expander.IsExpanded = false;
                 ((CrmLoginForm)sender).Close();
             });
 
@@ -357,6 +358,7 @@ namespace CrmDeveloperExtensions.Core.Connection
         {
             ComboBox solutionProjectsList = (ComboBox)sender;
             SelectedProject = (Project)solutionProjectsList.SelectedItem;
+            Connect.IsEnabled = SelectedProject != null;
         }
 
         private void SolutionProjectsList_Initialized(object sender, EventArgs e)
