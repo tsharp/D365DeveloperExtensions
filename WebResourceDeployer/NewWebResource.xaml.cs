@@ -1,6 +1,4 @@
-﻿using CrmDeveloperExtensions.Core.Enums;
-using CrmDeveloperExtensions.Core.Logging;
-using EnvDTE;
+﻿using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -13,6 +11,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -75,7 +76,7 @@ namespace WebResourceDeployer
             }
 
             CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
-            if (solution.SolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
+            if (solution.SolutionId != ExtensionConstants.DefaultSolutionId)
             {
                 bool addedToSolution = await Task.Run(() => Crm.Solution.AddWebResourceToSolution(_client, solution.UniqueName, webResourceId));
                 if (!addedToSolution)

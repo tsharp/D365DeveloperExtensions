@@ -1,12 +1,12 @@
-﻿using CrmDeveloperExtensions.Core;
-using CrmDeveloperExtensions.Core.Config;
-using CrmDeveloperExtensions.Core.Models;
-using EnvDTE;
+﻿using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Config;
+using CrmDeveloperExtensions2.Core.Models;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer

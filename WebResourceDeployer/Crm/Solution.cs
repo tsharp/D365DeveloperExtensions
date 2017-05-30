@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
-using CrmDeveloperExtensions.Core.Enums;
-using CrmDeveloperExtensions.Core.Logging;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;

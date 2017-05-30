@@ -14,10 +14,12 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CrmDeveloperExtensions.Core.Connection;
-using CrmDeveloperExtensions.Core.Enums;
-using CrmDeveloperExtensions.Core.Logging;
-using CrmDeveloperExtensions.Core.Vs;
+using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Config;
+using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -26,8 +28,10 @@ using Microsoft.VisualStudio;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
-using static CrmDeveloperExtensions.Core.FileSystem;
+using static CrmDeveloperExtensions2.Core.FileSystem;
+using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
+using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace WebResourceDeployer
 {
@@ -119,8 +123,8 @@ namespace WebResourceDeployer
 
             SolutionList.IsEnabled = true;
 
-            if (!CrmDeveloperExtensions.Core.Config.ConfigFile.ConfigFileExists(_dte.Solution.FullName))
-                CrmDeveloperExtensions.Core.Config.ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
+            if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
+                ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -153,9 +157,9 @@ namespace WebResourceDeployer
 
             _webResourceItems.Add(defaultItem);
 
-            if (newWebResource.NewSolutionId != CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId)
+            if (newWebResource.NewSolutionId != ExtensionConstants.DefaultSolutionId)
             {
-                WebResourceItem solutionItem = ModelBuilder.WebResourceItemFromNew(newWebResource, CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId, projectFolders);
+                WebResourceItem solutionItem = ModelBuilder.WebResourceItemFromNew(newWebResource, ExtensionConstants.DefaultSolutionId, projectFolders);
                 solutionItem.PropertyChanged += WebResourceItem_PropertyChanged;
                 //Needs to be after setting the property changed event
                 solutionItem.BoundFile = newWebResource.NewBoundFile;
@@ -259,13 +263,13 @@ namespace WebResourceDeployer
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
-            CrmDeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
-                $"tools/solution/edit.aspx?id=%7b{CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId}%7d");
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Solutions_OnClick(object sender, RoutedEventArgs e)
         {
-            CrmDeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
                 "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
         }
 
@@ -600,7 +604,7 @@ namespace WebResourceDeployer
             Uri crmUrl = new Uri(crmFullUri.GetLeftPart(UriPartial.Authority));
             string contentUrl = $"main.aspx?etc=9333&id=%7b{webResourceId}%7d&pagetype=webresourceedit";
 
-            CrmDeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, crmUrl, contentUrl);
+            WebBrowser.OpenCrmPage(_dte, crmUrl, contentUrl);
         }
 
         private async void CompareWebResource_OnClick(object sender, RoutedEventArgs e)
@@ -803,7 +807,7 @@ namespace WebResourceDeployer
             string type = selectedItem?.Tag.ToString() ?? String.Empty;
             bool showManaged = ShowManaged.IsChecked != null && ShowManaged.IsChecked.Value;
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ??
-                CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId;
+                ExtensionConstants.DefaultSolutionId;
 
             //Clear publish flags
             if (!string.IsNullOrEmpty(type))
@@ -849,7 +853,7 @@ namespace WebResourceDeployer
                 new Action(() =>
                     {
                         if (animation != null)
-                            CrmDeveloperExtensions.Core.StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
+                            StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
                         LockMessage.Content = message;
                         LockOverlay.Visibility = Visibility.Visible;
                     }
@@ -862,7 +866,7 @@ namespace WebResourceDeployer
                 new Action(() =>
                     {
                         if (animation != null)
-                            CrmDeveloperExtensions.Core.StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
+                            StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
                         LockOverlay.Visibility = Visibility.Hidden;
                     }
                 ));

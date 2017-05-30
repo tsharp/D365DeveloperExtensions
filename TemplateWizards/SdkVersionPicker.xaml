@@ -10,7 +10,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="/CrmDeveloperExtensions.Core;component/ResourceDictionary.xaml" />-->
+                <!--<ResourceDictionary Source="/CrmDeveloperExtensions2.Core;component/ResourceDictionary.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

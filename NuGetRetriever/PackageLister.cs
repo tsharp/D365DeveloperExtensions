@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrmDeveloperExtensions2.Core.Models;
 using NuGet;
-using CrmDeveloperExtensions.Core.Models;
 
 namespace NuGetRetriever
 {

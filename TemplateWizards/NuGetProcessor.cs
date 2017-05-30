@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using CrmDeveloperExtensions.Core.Models;
+using CrmDeveloperExtensions2.Core;
 using EnvDTE;
 using NuGet.VisualStudio;
 using TemplateWizards.Enums;
+using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 
 namespace TemplateWizards
 {
@@ -17,7 +18,7 @@ namespace TemplateWizards
             try
             {
                 string nuGetSource = "https://www.nuget.org/api/v2/";
-                CrmDeveloperExtensions.Core.StatusBar.SetStatusBarValue(dte,
+                StatusBar.SetStatusBarValue(dte,
                     Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
                 installer.InstallPackage(nuGetSource, project, package, version, false);
             }
@@ -27,13 +28,13 @@ namespace TemplateWizards
             }
             finally
             {
-                CrmDeveloperExtensions.Core.StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue(dte);
             }
         }
 
         public static string DetermineClientType(string coreVersion)
         {
-            Version version = CrmDeveloperExtensions.Core.Versioning.StringToVersion(coreVersion);
+            Version version = Versioning.StringToVersion(coreVersion);
             int result = version.CompareTo(new Version(6, 1, 0));
             return result >= 0 ? Resources.Resource.SdkAssemblyXrmTooling
                                : Resources.Resource.SdkAssemblyExtensions;

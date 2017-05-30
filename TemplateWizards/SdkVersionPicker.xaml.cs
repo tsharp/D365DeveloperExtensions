@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using CrmDeveloperExtensions.Core.Models;
+using CrmDeveloperExtensions2.Core.Models;
 using Microsoft.VisualStudio.PlatformUI;
 using NuGetRetriever;
 using TemplateWizards.Enums;

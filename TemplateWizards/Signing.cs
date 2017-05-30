@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using EnvDTE;
+using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 
 namespace TemplateWizards
 {
@@ -27,7 +28,7 @@ namespace TemplateWizards
                     return;
 
                 //Generate new key
-                CrmDeveloperExtensions.Core.StatusBar.SetStatusBarValue(dte, Resources.Resource.GeneratingKeyStatusBarMessage);
+                StatusBar.SetStatusBarValue(dte, Resources.Resource.GeneratingKeyStatusBarMessage);
 
                 string keyFilePath = Path.Combine(destDirectory, Resources.Resource.DefaultKeyName);
                 IntPtr buffer = IntPtr.Zero;

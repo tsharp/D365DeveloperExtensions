@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:connection="clr-namespace:CrmDeveloperExtensions.Core.Connection;assembly=CrmDeveloperExtensions.Core"
+             xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
     <Grid>
@@ -39,16 +39,16 @@
                 <CheckBox x:Name="ShowManaged" Content="Show Managed" Margin="5,5,0,0" VerticalAlignment="Top" Checked="ShowManaged_OnChecked" Unchecked="ShowManaged_OnChecked" 
                           IsEnabled="False" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" />
                 <Button x:Name="Publish" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Publish_OnClick" IsEnabled="False" Background="White">
-                    <Image Source="/CrmDeveloperExtensions.Core;component/images/publish_16.png" Width="16" Height="16" ToolTip="Publish To CRM"></Image>
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/publish_16.png" Width="16" Height="16" ToolTip="Publish To CRM"></Image>
                 </Button>
                 <Button x:Name="AddWebResource" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="AddWebResource_OnClick" IsEnabled="False" Background="White">
-                    <Image Source="/CrmDeveloperExtensions.Core;component/images/new_16.png" Width="16" Height="16" ToolTip="New Web Resource From File"></Image>
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/new_16.png" Width="16" Height="16" ToolTip="New Web Resource From File"></Image>
                 </Button>
                 <Button x:Name="Customizations" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Customizations_OnClick" IsEnabled="False" Background="White">
-                    <Image Source="/CrmDeveloperExtensions.Core;component/images/customizations_16.png" Width="16" Height="16" ToolTip="Open CRM Default Solution"></Image>
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/customizations_16.png" Width="16" Height="16" ToolTip="Open CRM Default Solution"></Image>
                 </Button>
                 <Button x:Name="Solutions" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Solutions_OnClick" IsEnabled="False" Background="White">
-                    <Image Source="/CrmDeveloperExtensions.Core;component/images/solutions_16.png" Width="16" Height="16" ToolTip="Open CRM Solutions Page"></Image>
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/solutions_16.png" Width="16" Height="16" ToolTip="Open CRM Solutions Page"></Image>
                 </Button>
                 <TextBlock x:Name="ItemCount" Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" />
             </StackPanel>
@@ -101,7 +101,7 @@
                             <DataTemplate>
                                 <Button x:Name="GetWebResource" Click="GetWebResource_OnClick"  CommandParameter="{Binding WebResourceId}" 
                                         ToolTip="Download: Right-click to specify folder" Background="White" BorderThickness="0">
-                                    <Image Source="/CrmDeveloperExtensions.Core;component/images/download_16.png" Width="16" Height="16"></Image>
+                                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/download_16.png" Width="16" Height="16"></Image>
                                     <Button.ContextMenu>
                                         <ContextMenu ItemsSource="{Binding Path=ProjectFolders, UpdateSourceTrigger=PropertyChanged}">
                                             <ContextMenu.ItemContainerStyle>
@@ -119,7 +119,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button x:Name="OpenWebResource" Click="OpenWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Background="White" BorderThickness="0">
-                                    <Image Source="/CrmDeveloperExtensions.Core;component/images/open_16.png" Width="16" Height="16" ToolTip="Open in CRM"></Image>
+                                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/open_16.png" Width="16" Height="16" ToolTip="Open in CRM"></Image>
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -129,7 +129,7 @@
                             <DataTemplate>
                                 <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
                                         IsEnabled="{Binding AllowCompare, Mode=OneWay}" Background="White" BorderThickness="0">
-                                    <Image Source="/CrmDeveloperExtensions.Core;component/images/compare_16.png" Width="16" Height="16" ToolTip="Compare With CRM"></Image>
+                                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/compare_16.png" Width="16" Height="16" ToolTip="Compare With CRM"></Image>
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -139,7 +139,7 @@
                             <DataTemplate>
                                 <Button x:Name="DeleteWebResource" Click="DeleteWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
                                         Background="White" BorderThickness="0">
-                                    <Image Source="/CrmDeveloperExtensions.Core;component/images/remove_16.png" Width="16" Height="16" ToolTip="Delete From CRM"></Image>
+                                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/remove_16.png" Width="16" Height="16" ToolTip="Delete From CRM"></Image>
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
                                             <Style.Triggers>

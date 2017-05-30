@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using CrmDeveloperExtensions2.Core;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -90,7 +91,7 @@ namespace WebResourceDeployer
         private static List<CrmSolution> SortSolutions(List<CrmSolution> solutions)
         {
             //Default on top
-            var i = solutions.FindIndex(s => s.SolutionId == CrmDeveloperExtensions.Core.ExtensionConstants.DefaultSolutionId);
+            var i = solutions.FindIndex(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
             var item = solutions[i];
             solutions.RemoveAt(i);
             solutions.Insert(0, item);
