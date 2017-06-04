@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions2", "CrmDeveloperExtensions2\CrmDeveloperExtensions2.csproj", "{EE23D830-8EB4-4313-9971-53A44900C169}"
 EndProject
@@ -30,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebResourceProject", "ProjectTemplates\CSharp\WebResourceProject\WebResourceProject.csproj", "{7CE66502-12F6-4768-8EAF-EBCFD6288456}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions2.Core.Tests", "UnitTestProjects\CrmDeveloperExtensions2.Core.Tests\CrmDeveloperExtensions2.Core.Tests.csproj", "{40CCA5AF-458A-41C8-9B31-6294261B25E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginDeployer", "PluginDeployer\PluginDeployer.csproj", "{64CA2809-ABE4-47A5-AB20-086578C1B847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,12 @@ Global
 		{40CCA5AF-458A-41C8-9B31-6294261B25E2}.Debug2|Any CPU.Build.0 = Debug|Any CPU
 		{40CCA5AF-458A-41C8-9B31-6294261B25E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40CCA5AF-458A-41C8-9B31-6294261B25E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CA2809-ABE4-47A5-AB20-086578C1B847}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
