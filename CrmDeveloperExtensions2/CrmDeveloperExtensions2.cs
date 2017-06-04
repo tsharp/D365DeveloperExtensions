@@ -26,6 +26,7 @@ namespace CrmDeveloperExtensions2
         public const int ProjectMenuGroup = 0x1020;
         public const int CmdidPluginDeployerWindow = 0x0101;
         public const int CmdidWebResourceDeployerWindow = 0x0102;
+        public const int CmdidSolutionPackagerWindow = 0x0104;
         public const int TopLevelMenu = 0x0100;
         public const int TopLevelMenuGroup = 0x0200;
     }

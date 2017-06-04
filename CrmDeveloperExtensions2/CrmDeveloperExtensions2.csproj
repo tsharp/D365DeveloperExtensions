@@ -104,6 +104,13 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CrmSolutionPackage\CrmSolutionPackage.csproj">
+      <Project>{C9AD3DE3-3F37-4949-8586-E59672F78922}</Project>
+      <Name>CrmSolutionPackage</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginProject\CSharpPluginProject.csproj">
       <Project>{E982F569-FFA3-49A8-A47D-09CE6C546FAB}</Project>
       <Name>CSharpPluginProject</Name>
@@ -124,6 +131,12 @@
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\SolutionPackager\SolutionPackager.csproj">
+      <Project>{61219409-56AD-43DE-83FB-98301E3D785A}</Project>
+      <Name>SolutionPackager</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\TemplateWizards\TemplateWizards.csproj">
       <Project>{7CC35EFB-7335-4AE1-8A54-317D071F9F12}</Project>

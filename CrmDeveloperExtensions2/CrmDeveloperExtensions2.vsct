@@ -93,16 +93,16 @@
         </Strings>
       </Button>
 
-      --><!--Solution Packager--><!--
+      --><!--Solution Packager-->
       <Button guid="GuidCrmDevExCmdSet" id="CmdidSolutionPackagerWindow" priority="0xFFFF" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
-        <Icon guid="GuidSolutionPackageImage" id="Package" />
+        <!--<Icon guid="GuidSolutionPackageImage" id="Package" />-->
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
           <ButtonText>Solution Packager</ButtonText>
         </Strings>
-      </Button>-->
+      </Button>
 
     </Buttons>
     <!--<Bitmaps>
@@ -130,8 +130,8 @@
       <IDSymbol name="ProjectMenuGroup" value="0x1020" />
       <IDSymbol name="CmdidPluginDeployerWindow" value="0x0101" />
       <IDSymbol name="CmdidWebResourceDeployerWindow" value="0x0102" />
-      <!--<IDSymbol name="CmdidReportDeployerWindow" value="0x0103" />
-      <IDSymbol name="CmdidSolutionPackagerWindow" value="0x0104" />-->
+      <!--<IDSymbol name="CmdidReportDeployerWindow" value="0x0103" />-->
+      <IDSymbol name="CmdidSolutionPackagerWindow" value="0x0104" />
       <IDSymbol name="TopLevelMenu" value="0x0100" />
       <IDSymbol name="TopLevelMenuGroup" value="0x0200" />
     </GuidSymbol>

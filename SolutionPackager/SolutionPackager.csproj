@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1FCFDED4-CC12-4275-ADDF-7E62B70743CB}</ProjectGuid>
+    <ProjectGuid>{61219409-56AD-43DE-83FB-98301E3D785A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CrmDeveloperExtensions2.Core</RootNamespace>
-    <AssemblyName>CrmDeveloperExtensions2.Core</AssemblyName>
+    <RootNamespace>SolutionPackager</RootNamespace>
+    <AssemblyName>SolutionPackager</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,10 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0.2\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
@@ -56,13 +52,8 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Settings.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86" />
     <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Validation.15.3.15\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0.2\lib\net452\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
@@ -75,18 +66,7 @@
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.8.2.0.5\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.8.2.0.5\lib\net452\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.Ui.Styles, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.8.2.0.5\lib\net452\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.8.2.0.5\lib\net452\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -107,7 +87,6 @@
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Workflow.Activities" />
     <Reference Include="System.Workflow.ComponentModel" />
     <Reference Include="System.Workflow.Runtime" />
@@ -121,63 +100,24 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ConfigFile.cs" />
-    <Compile Include="Connection\ConnectEventArgs.cs" />
-    <Compile Include="Connection\CrmLoginForm.xaml.cs">
-      <DependentUpon>CrmLoginForm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Connection\ProjectItemMovedEventArgs.cs" />
-    <Compile Include="Connection\ProjectItemRemovedEventArgs.cs" />
-    <Compile Include="Connection\ProjectItemAddedEventArgs.cs" />
-    <Compile Include="Connection\ProjectItemRenamedEventArgs.cs" />
-    <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
-    <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
-    <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
-    <Compile Include="ExtensionConstants.cs" />
-    <Compile Include="Crm\Connection.cs" />
-    <Compile Include="Enums\OutputLoggerMessageType.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="Logging\ExtensionLogger.cs" />
-    <Compile Include="Logging\XrmToolingLogging.cs" />
-    <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
-    <Compile Include="Models\CrmDexExConfig.cs" />
-    <Compile Include="Models\CrmDexExConfigWebResource.cs" />
-    <Compile Include="Models\NuGetPackage.cs" />
-    <Compile Include="Logging\OutputLogger.cs" />
-    <Compile Include="Vs\ProjectItemWorker.cs" />
-    <Compile Include="Vs\ProjectWorker.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Crm\Solution.cs" />
+    <Compile Include="ModelBuilder.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="SharedGlobals.cs" />
-    <Compile Include="Vs\SolutionWorker.cs" />
-    <Compile Include="StatusBar.cs" />
-    <Compile Include="UserOptionsGrid.cs">
-      <SubType>Component</SubType>
+    <Compile Include="SolutionPackagerHost.cs" />
+    <Compile Include="SolutionPackagerWindow.xaml.cs">
+      <DependentUpon>SolutionPackagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Versioning.cs" />
-    <Compile Include="Vs\VsHierarchyEvents.cs" />
-    <Compile Include="Vs\VsSolutionEvents.cs" />
-    <Compile Include="Connection\XrmToolingConnection.xaml.cs">
-      <DependentUpon>XrmToolingConnection.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WebBrowser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\CrmSolution.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Connection\CrmLoginForm.xaml">
+    <Page Include="SolutionPackagerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ResourceDictionary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Connection\XrmToolingConnection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -185,29 +125,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CrmDeveloperExtensions2.Core\CrmDeveloperExtensions2.Core.csproj">
+      <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
+      <Name>CrmDeveloperExtensions2.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\connect_16.png" />
-    <Resource Include="Images\customizations_16.png" />
-    <Resource Include="Images\new_16.png" />
-    <Resource Include="Images\publish_16.png" />
-    <Resource Include="Images\solutions_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\compare_16.png" />
-    <Resource Include="Images\download_16.png" />
-    <Resource Include="Images\open_16.png" />
-    <Resource Include="Images\remove_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\exportsolution_16.png" />
-    <Resource Include="Images\importsolution_16.png" />
-    <Resource Include="Images\package_16.png" />
-    <Resource Include="Images\unpackage_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

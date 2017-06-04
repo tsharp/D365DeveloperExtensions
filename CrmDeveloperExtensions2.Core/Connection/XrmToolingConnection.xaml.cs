@@ -109,7 +109,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            string[] crmDevExWindows = { "A3479AE0-5F4F-4A14-96F4-46F39000023A", "FA0E0759-D337-4C4C-8474-217A6BDC3C06" };
+            string[] crmDevExWindows = { "A3479AE0-5F4F-4A14-96F4-46F39000023A", "FA0E0759-D337-4C4C-8474-217A6BDC3C06", "F8BF1118-57B6-4404-9923-8A98AB710EBA" };
             if (!crmDevExWindows.Contains(gotFocus.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty)))
                 return;
 

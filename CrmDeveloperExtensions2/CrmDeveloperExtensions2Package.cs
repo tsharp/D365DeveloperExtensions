@@ -8,6 +8,7 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using CrmDeveloperExtensions2.Core;
 using PluginDeployer;
+using SolutionPackager;
 using WebResourceDeployer;
 using ExLogger = CrmDeveloperExtensions2.Core.Logging.ExtensionLogger;
 using Logger = NLog.Logger;
@@ -36,6 +37,7 @@ namespace CrmDeveloperExtensions2
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
+    [ProvideToolWindow(typeof(SolutionPackagerHost))]
 
     [Guid(PackageGuids.GuidCrmDeveloperExtensionsPkgString)]
     [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
@@ -71,6 +73,11 @@ namespace CrmDeveloperExtensions2
             CommandID wrdWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidWebResourceDeployerWindow);
             OleMenuCommand wrdWindowItem = new OleMenuCommand(ShowWebResourceDeployer, wrdWindowCommandId);
             mcs.AddCommand(wrdWindowItem);
+
+            //Solution Packager
+            CommandID spWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidSolutionPackagerWindow);
+            OleMenuCommand spWindowItem = new OleMenuCommand(ShowSolutionPackager, spWindowCommandId);
+            mcs.AddCommand(spWindowItem);
         }
 
         private void ShowPluginDeployer(object sender, EventArgs e)
@@ -86,6 +93,16 @@ namespace CrmDeveloperExtensions2
         private void ShowWebResourceDeployer(object sender, EventArgs e)
         {
             ToolWindowPane window = FindToolWindow(typeof(WebResourceDeployerHost), 0, true);
+            if (window?.Frame == null)
+                throw new NotSupportedException("Cannot create tool window.");
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
+        private void ShowSolutionPackager(object sender, EventArgs e)
+        {
+            ToolWindowPane window = FindToolWindow(typeof(SolutionPackagerHost), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window.");
 

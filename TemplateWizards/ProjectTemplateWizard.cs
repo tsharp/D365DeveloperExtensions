@@ -130,13 +130,24 @@ namespace TemplateWizards
                 case "WebResource":
                     HandleWebResourceProjects(project);
                     break;
-                    //case "TypeScript":
-                    //    HandleTypeScriptProject(project, installer);
-                    //    break;
-                    //case "Package":
-                    //    HandleSolutionPackagerProject(project);
-                    //    break;
+                //case "TypeScript":
+                //    HandleTypeScriptProject(project, installer);
+                //    break;
+                case "SolutionPackage":
+                    HandleSolutionPackagerProject(project);
+                    break;
             }
+        }
+
+        private void HandleSolutionPackagerProject(Project project)
+        {
+            foreach (SolutionConfiguration solutionConfiguration in _dte.Solution.SolutionBuild.SolutionConfigurations)
+                foreach (SolutionContext solutionContext in solutionConfiguration.SolutionContexts)
+                    solutionContext.ShouldBuild = false;
+                
+            //Delete bin & obj folders
+            Directory.Delete(Path.GetDirectoryName(project.FullName) + "//bin", true);
+            Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
         }
 
         private void HandleWebResourceProjects(Project project)
