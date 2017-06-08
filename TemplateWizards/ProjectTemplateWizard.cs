@@ -70,6 +70,14 @@ namespace TemplateWizards
                     _workflowVersion = sdkVersionPicker.WorkflowVersion;
                     _clientVersion = sdkVersionPicker.ClientVersion;
                     _clientPackage = sdkVersionPicker.ClientPackage;
+
+                    if (!string.IsNullOrEmpty(_clientVersion))
+                    {
+                        if (Versioning.StringToVersion(_clientVersion).Major >= 8)
+                            replacementsDictionary.Add("$useXrmToolingClientUsing$", "1");
+                        else
+                            replacementsDictionary.Add("$useXrmToolingClientUsing$", "0");
+                    }
                 }
 
             }
@@ -144,7 +152,7 @@ namespace TemplateWizards
             foreach (SolutionConfiguration solutionConfiguration in _dte.Solution.SolutionBuild.SolutionConfigurations)
                 foreach (SolutionContext solutionContext in solutionConfiguration.SolutionContexts)
                     solutionContext.ShouldBuild = false;
-                
+
             //Delete bin & obj folders
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//bin", true);
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);

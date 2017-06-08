@@ -111,6 +111,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpConsole\CSharpConsole.csproj">
+      <Project>{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}</Project>
+      <Name>CSharpConsole</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginProject\CSharpPluginProject.csproj">
       <Project>{E982F569-FFA3-49A8-A47D-09CE6C546FAB}</Project>
       <Name>CSharpPluginProject</Name>

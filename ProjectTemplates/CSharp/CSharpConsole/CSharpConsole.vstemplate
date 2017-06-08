@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>CRM/365 Console Application Project</Name>
+    <Description>Dynamics CRM/365 Console Application Project</Description>
+    <Icon>icon.png</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <SortOrder>1000</SortOrder>
+    <TemplateID>6554c74b-8686-4715-b6a8-416c0fcc7638</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CSharpConsole</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="ProjectTemplate.csproj" File="ProjectTemplate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" OpenInEditor="true" OpenOrder="2" TargetFileName="Program.cs">Program.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" OpenInEditor="true" OpenOrder="1" TargetFileName="App.config">App.config</ProjectItem>
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>TemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
+  </WizardExtension>
+  <WizardData>
+    <CRMProjectType>Console</CRMProjectType>
+    <NeedsCore>true</NeedsCore>
+    <NeedsWorkflow>false</NeedsWorkflow>
+    <NeedsClient>true</NeedsClient>
+    <IsUnitTest>false</IsUnitTest>
+    <IsUnitTestItem>false</IsUnitTestItem>
+    <SignAssembly>false</SignAssembly>
+  </WizardData>
+</VSTemplate>

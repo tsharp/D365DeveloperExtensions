@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core.Models;
 using Microsoft.VisualStudio.PlatformUI;
 using NuGetRetriever;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
 using TemplateWizards.Enums;
 using TemplateWizards.Resources;
 
