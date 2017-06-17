@@ -147,6 +147,10 @@ namespace TemplateWizards
             }
         }
 
+        //TODO:   <package id = "MSTest.TestAdapter" version="1.1.18" targetFramework="net452" />
+        //TODO:   <package id = "MSTest.TestFramework" version="1.1.18" targetFramework="net452" />
+
+
         private void HandleSolutionPackagerProject(Project project)
         {
             foreach (SolutionConfiguration solutionConfiguration in _dte.Solution.SolutionBuild.SolutionConfigurations)

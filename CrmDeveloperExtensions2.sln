@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions2", "CrmDeveloperExtensions2\CrmDeveloperExtensions2.csproj", "{EE23D830-8EB4-4313-9971-53A44900C169}"
 EndProject
@@ -38,6 +38,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmSolutionPackage", "ProjectTemplates\CSharp\CrmSolutionPackage\CrmSolutionPackage.csproj", "{C9AD3DE3-3F37-4949-8586-E59672F78922}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpConsole", "ProjectTemplates\CSharp\CSharpConsole\CSharpConsole.csproj", "{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPluginTestProject", "ProjectTemplates\CSharp\CSharpPluginTestProject\CSharpPluginTestProject.csproj", "{55CB04B5-E053-4504-8773-2E03C594E68A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpWorkflowTestProject", "ProjectTemplates\CSharp\CSharpWorkflowTestProject\CSharpWorkflowTestProject.csproj", "{86938D85-3B55-47FF-97FC-225764B987A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +136,18 @@ Global
 		{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}.Debug2|Any CPU.Build.0 = Debug|Any CPU
 		{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55CB04B5-E053-4504-8773-2E03C594E68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86938D85-3B55-47FF-97FC-225764B987A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,5 +162,7 @@ Global
 		{40CCA5AF-458A-41C8-9B31-6294261B25E2} = {347362E3-0529-4A7F-A49E-519E08378140}
 		{C9AD3DE3-3F37-4949-8586-E59672F78922} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
 		{B34A5217-0F6D-493F-B6DD-BB5CF091AB99} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
+		{55CB04B5-E053-4504-8773-2E03C594E68A} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
+		{86938D85-3B55-47FF-97FC-225764B987A8} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
 	EndGlobalSection
 EndGlobal

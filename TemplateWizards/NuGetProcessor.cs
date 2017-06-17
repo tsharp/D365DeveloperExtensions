@@ -24,6 +24,8 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
+
+                //TODO: handle this error better if unable to connect - displays large error detail otherwise
                 MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
             }
             finally

@@ -6,7 +6,7 @@
              xmlns:resx="clr-namespace:TemplateWizards.Resources"
              xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Title="{x:Static resx:Resource.SdkVersionPickerTitle}"
-             Height="300" Width="250">
+             Height="300" Width="350">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,29 +14,37 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Width="250" VerticalAlignment="Top" HorizontalAlignment="Left">
+    <Grid Width="350" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="36" />
+            <RowDefinition Height="233" />
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ListView Name="SdkVersions" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" SelectionMode="Single" Grid.Row="0" SelectionChanged="SdkVersions_OnSelectionChanged">
+        <ListView Name="SdkVersions" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" SelectionMode="Single" Grid.Row="0" SelectionChanged="SdkVersions_OnSelectionChanged" 
+                  Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
             <ListView.View>
                 <GridView x:Name="SdkVersionsGrid" AllowsColumnReorder="False">
-                    <GridViewColumn></GridViewColumn>
+                    <GridViewColumn ></GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,5" Height="25" VerticalAlignment="Bottom">
+            <Button x:Name="Cancel" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Height="25"
+                    Background="{DynamicResource {x:Static platformUi:EnvironmentColors.ButtonTextBrushKey}}" Margin="20,0,0,0">
+                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}"></TextBlock>
+            </Button>
+            <Button x:Name="OK" Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Width="75" Height="25"
+                    Background="{DynamicResource {x:Static platformUi:EnvironmentColors.ButtonTextBrushKey}}" Margin="10,0,0,0">
+                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
+            </Button>
+        </StackPanel>
 
-        <ToolBarTray VerticalAlignment="Bottom" Grid.Row="1">
-            <ToolBar Height="36">
-                <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
-                    <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}"></TextBlock>
-                    <!--<Image Source="{Binding Mode=OneWay, Source={StaticResource Cancel24}}" Height="24" Width="24"></Image>-->
-                </Button>
-                <Button x:Name="Ok" Padding="2,2,2,2" Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}" >
-                    <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
-                </Button>
-            </ToolBar>
-        </ToolBarTray>
+        <!--<ToolBar x:Name="MainToolbar" Height="36" Grid.Row="1" OverflowMode="Never" Loaded="MainToolbar_OnLoaded" Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
+            <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}">
+                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}"></TextBlock>
+            </Button>
+            <Button x:Name="Ok" Padding="2,2,2,2" Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}">
+                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
+            </Button>
+        </ToolBar>-->
     </Grid>
 </platformUi:DialogWindow>

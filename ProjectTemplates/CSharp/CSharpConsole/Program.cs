@@ -18,9 +18,10 @@ namespace CRMSimpleConsole
         {
             try
             {
-                _client = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CRMConnectionString"].ConnectionString);
-
-                //Do stuff
+                using (_client = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CRMConnectionString"].ConnectionString))
+                {
+                    //Do stuff
+                }
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {

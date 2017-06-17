@@ -100,5 +100,20 @@ namespace TemplateWizards
             string selectedVersion = ((ListViewItem)sdkVersions.SelectedItem).Content.ToString();
             SetSelectedVersion(selectedVersion);
         }
+
+        private void MainToolbar_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            if (toolBar == null)
+                return;
+
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+                overflowGrid.Visibility = Visibility.Collapsed;
+
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+                mainPanelBorder.Margin = new Thickness();
+        }
     }
 }
