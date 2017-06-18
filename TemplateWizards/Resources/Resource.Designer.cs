@@ -106,6 +106,15 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uninstalling NuGet Package.
+        /// </summary>
+        public static string NuGetPackageUninstallingStatusBarMessage {
+            get {
+                return ResourceManager.GetString("NuGetPackageUninstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string NuGetPickerCancelButtonText {

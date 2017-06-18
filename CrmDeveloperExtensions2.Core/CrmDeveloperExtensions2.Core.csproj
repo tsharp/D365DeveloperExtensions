@@ -217,5 +217,8 @@
     <Resource Include="Images\package_16.png" />
     <Resource Include="Images\unpackage_16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\merge_16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

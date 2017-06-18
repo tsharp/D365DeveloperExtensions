@@ -37,7 +37,7 @@ namespace PluginDeployer
         private readonly DTE _dte;
         private readonly Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-        //private ObservableCollection<WebResourceItem> _webResourceItems;
+        private bool _isIlMergeInstalled;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
@@ -283,7 +283,7 @@ namespace PluginDeployer
                 new Action(() =>
                     {
                         if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
+                            StatusBar.SetStatusBarValue(_dte, "Retrieving assemblies...", (vsStatusAnimation)animation);
                         LockMessage.Content = message;
                         LockOverlay.Visibility = Visibility.Visible;
                     }
@@ -320,6 +320,50 @@ namespace PluginDeployer
 
         private void AssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+        }
+
+        private void IlMerge_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ConnPane.SelectedProject == null)
+                    return;
+
+                if (!_isIlMergeInstalled)
+                {
+                    bool installed = IlMergeHandler.Install(_dte, ConnPane.SelectedProject);
+
+                    //CRM Assemblies shouldn't be copied local to prevent merging
+                    if (installed)
+                        IlMergeHandler.SetReferenceCopyLocal(ConnPane.SelectedProject, false);
+
+                    SetIlMergeTooltip(true);
+                    _isIlMergeInstalled = true;
+                }
+                else
+                {
+                    bool uninstalled = IlMergeHandler.Uninstall(_dte, ConnPane.SelectedProject);
+
+                    // Reset CRM Assemblies to copy local
+                    if (uninstalled)
+                        IlMergeHandler.SetReferenceCopyLocal(ConnPane.SelectedProject, true);
+
+                    SetIlMergeTooltip(false);
+                    _isIlMergeInstalled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error installing : " + Environment.NewLine + Environment.NewLine + ex.Message);
+            }
+        }
+
+        private void SetIlMergeTooltip(bool installed)
+        {
+            IlMerge.ToolTip = installed ?
+                PluginDeployer.Resources.Resource.ILMergeTooltipRemove :
+                PluginDeployer.Resources.Resource.ILMergeTooltipEnable;
+
         }
     }
 }

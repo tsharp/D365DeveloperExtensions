@@ -6,7 +6,7 @@
             xmlns:resx="clr-namespace:TemplateWizards.Resources"
             xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
             mc:Ignorable="d" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Title="{x:Static resx:Resource.TestProjectPickerTitle}"
-            Height="300" Width="350" HasMaximizeButton="False" HasMinimizeButton="False" ResizeMode="NoResize">
+            Height="125" Width="350" HasMaximizeButton="False" HasMinimizeButton="False" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,7 +32,7 @@
                 <ComboBoxItem Content="" Tag="" IsSelected="True"></ComboBoxItem>
             </ComboBox>
         </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,5" Height="25"  Width="350" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,5,0,5" Height="25"  Width="350" VerticalAlignment="Bottom">
             <Button x:Name="CreateProject" ToolTip="{x:Static resx:Resource.TestProjectPickerCreateProjectTooltipText}" Width="84" Height="25" Click="CreateProject_OnClick"
                     Background="{DynamicResource {x:Static platformUi:EnvironmentColors.ButtonTextBrushKey}}" Margin="20,0,0,0">
                 <TextBlock Text="{x:Static resx:Resource.TestProjectPickerCreateProjectButtonText}"></TextBlock>

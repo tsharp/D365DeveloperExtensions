@@ -61,6 +61,24 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ILMerge Referenced Assemblies.
+        /// </summary>
+        internal static string ILMergeTooltipEnable {
+            get {
+                return ResourceManager.GetString("ILMergeTooltipEnable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove ILMerge.
+        /// </summary>
+        internal static string ILMergeTooltipRemove {
+            get {
+                return ResourceManager.GetString("ILMergeTooltipRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm Dev: Plug-in Deployer.
         /// </summary>
         internal static string ToolWindowTitle {

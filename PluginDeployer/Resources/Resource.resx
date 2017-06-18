@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ILMergeTooltipEnable" xml:space="preserve">
+    <value>ILMerge Referenced Assemblies</value>
+  </data>
+  <data name="ILMergeTooltipRemove" xml:space="preserve">
+    <value>Remove ILMerge</value>
+  </data>
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>Crm Dev: Plug-in Deployer</value>
   </data>

@@ -16,16 +16,22 @@
     </Window.Resources>
     <Grid Width="350" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="233" />
+            <RowDefinition Height="241" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ListView Name="SdkVersions" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" SelectionMode="Single" Grid.Row="0" SelectionChanged="SdkVersions_OnSelectionChanged" 
-                  Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
+                  Background="{DynamicResource {x:Static platformUi:EnvironmentColors.NewProjectBackgroundBrushKey}}" Foreground="{DynamicResource {x:Static platformUi:EnvironmentColors.SystemWindowTextBrushKey}}">
             <ListView.View>
                 <GridView x:Name="SdkVersionsGrid" AllowsColumnReorder="False">
-                    <GridViewColumn ></GridViewColumn>
+                    <GridViewColumn>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Height" Value="30" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,5" Height="25" VerticalAlignment="Bottom">
             <Button x:Name="Cancel" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Height="25"

@@ -34,6 +34,25 @@ namespace TemplateWizards
             }
         }
 
+        public static void UnInstallPackage(DTE dte, IVsPackageUninstaller uninstaller, Project project, string package)
+        {
+            try
+            {
+                StatusBar.SetStatusBarValue(dte, Resources.Resource.NuGetPackageUninstallingStatusBarMessage + ": " + package);
+
+                uninstaller.UninstallPackage(project, package, true);
+            }
+            catch (Exception ex)
+            {
+
+                //MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+            }
+            finally
+            {
+                StatusBar.ClearStatusBarValue(dte);
+            }
+        }
+
         public static string DetermineClientType(string coreVersion)
         {
             Version version = Versioning.StringToVersion(coreVersion);

@@ -132,6 +132,9 @@
   <data name="NuGetPackageInstallingStatusBarMessage" xml:space="preserve">
     <value>Installing NuGet Package</value>
   </data>
+  <data name="NuGetPackageUninstallingStatusBarMessage" xml:space="preserve">
+    <value>Uninstalling NuGet Package</value>
+  </data>
   <data name="NuGetPickerCancelButtonText" xml:space="preserve">
     <value>Cancel</value>
   </data>
