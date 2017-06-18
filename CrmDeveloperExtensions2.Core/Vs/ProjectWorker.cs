@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Controls;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Constants = EnvDTE.Constants;
+using VSLangProj;
 
 namespace CrmDeveloperExtensions2.Core.Vs
 {
@@ -51,7 +54,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         public static Project GetProjectByName(string projectName)
         {
-            IList<Project> projects = GetProjects();
+            IList<Project> projects = GetProjects(false);
             foreach (Project project in projects)
             {
                 if (project.Name != projectName) continue;
@@ -62,7 +65,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             return null;
         }
 
-        private static IList<Project> GetProjects()
+        public static IList<Project> GetProjects(bool excludeUnitTestProjects)
         {
             List<Project> list = new List<Project>();
 
@@ -71,7 +74,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 return list;
 
             Projects projects = dte.Solution.Projects;
-            
+
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
@@ -84,7 +87,20 @@ namespace CrmDeveloperExtensions2.Core.Vs
                     list.Add(project);
             }
 
-            return list;
+            return excludeUnitTestProjects ? FilterUnitTestProjects(list) : list;
+        }
+
+        private static IList<Project> FilterUnitTestProjects(List<Project> list)
+        {
+            List<Project> filteredList = new List<Project>();
+            foreach (Project project in list)
+            {
+                if (IsUnitTestProject(project))
+                    continue;
+                filteredList.Add(project);
+            }
+
+            return filteredList;
         }
 
         private static IEnumerable<Project> GetSolutionFolderProjects(Project solutionFolder)
@@ -211,6 +227,55 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 }
             }
             return projectFiles;
+        }
+
+        public static string GetSdkCoreVersion(Project project)
+        {
+            var vsproject = project?.Object as VSProject;
+            if (vsproject == null)
+                return null;
+
+            foreach (Reference reference in vsproject.References)
+            {
+                if (reference.SourceProject != null)
+                    continue;
+
+                if (reference.Name == "Microsoft.Xrm.Sdk")
+                    return reference.Version;
+            }
+
+            return null;
+        }
+
+        public static string GetProjectTypeGuids(Project project)
+        {
+            string projectTypeGuids = String.Empty;
+            IVsHierarchy hierarchy;
+
+            object service = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
+            var solution = (IVsSolution)service;
+
+            var result = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
+
+            if (result != 0)
+                return projectTypeGuids;
+
+            var aggregatableProject = (IVsAggregatableProject)hierarchy;
+            aggregatableProject.GetAggregateProjectTypeGuids(out projectTypeGuids);
+
+            return projectTypeGuids;
+        }
+
+        public static bool IsUnitTestProject(Project project)
+        {
+            string projectTypeGuids = GetProjectTypeGuids(project);
+            if (string.IsNullOrEmpty(projectTypeGuids))
+                return false;
+
+            projectTypeGuids = projectTypeGuids.Replace("{", String.Empty).Replace("}", String.Empty);
+            string[] guids = projectTypeGuids.Split(';');
+
+            return guids.Contains(ExtensionConstants.UnitTestProjectType.ToString(), StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }

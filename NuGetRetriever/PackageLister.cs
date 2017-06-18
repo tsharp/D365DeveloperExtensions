@@ -1,10 +1,7 @@
-﻿using System;
+﻿using CrmDeveloperExtensions2.Core.Models;
+using NuGet;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CrmDeveloperExtensions2.Core.Models;
-using NuGet;
 
 namespace NuGetRetriever
 {
@@ -21,16 +18,29 @@ namespace NuGetRetriever
                 if (package.Published != null && package.Published.Value.Year == 1900)
                     continue;
 
-                results.Add(new NuGetPackage()
+                results.Add(new NuGetPackage
                 {
                     Id = package.Id,
                     Name = package.Title,
                     Version = package.Version.Version,
-                    VersionText = package.Version.ToOriginalString()
+                    VersionText = package.Version.ToOriginalString(),
+                    XrmToolingClient = UsesXrmToolingClient(package)
                 });
             }
 
             return new List<NuGetPackage>(results.OrderByDescending(v => v.Version.ToString()));
+        }
+
+        private static bool UsesXrmToolingClient(IPackageMetadata package)
+        {
+            if (package.DependencySets?.Count() != 1)
+                return false;
+
+            foreach (PackageDependency dependency in package.DependencySets.First().Dependencies)
+                if (dependency.Id == "Microsoft.CrmSdk.XrmTooling.CoreAssembly")
+                    return true;
+
+            return false;
         }
     }
 }

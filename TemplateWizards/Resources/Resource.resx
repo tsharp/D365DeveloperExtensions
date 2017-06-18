@@ -132,6 +132,21 @@
   <data name="NuGetPackageInstallingStatusBarMessage" xml:space="preserve">
     <value>Installing NuGet Package</value>
   </data>
+  <data name="NuGetPickerCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NuGetPickerCancelTooltipText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NuGetPickerOKButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NuGetPickerOKTooltipText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NuGetPickerTitle" xml:space="preserve">
+    <value>Crm DevEx</value>
+  </data>
   <data name="SdkAssemblyCore" xml:space="preserve">
     <value>Microsoft.CrmSdk.CoreAssemblies</value>
   </data>
@@ -158,5 +173,20 @@
   </data>
   <data name="SdkVersionPickerTitle" xml:space="preserve">
     <value>Crm DevEx</value>
+  </data>
+  <data name="TestProjectPickerCreateProjectButtonText" xml:space="preserve">
+    <value>Create Project</value>
+  </data>
+  <data name="TestProjectPickerCreateProjectTooltipText" xml:space="preserve">
+    <value>Create Project</value>
+  </data>
+  <data name="TestProjectPickerProjectToTestLabel" xml:space="preserve">
+    <value>Project To Test</value>
+  </data>
+  <data name="TestProjectPickerTitle" xml:space="preserve">
+    <value>Crm DevEx</value>
+  </data>
+  <data name="TestProjectPickerUnitTestFrameworkLabel" xml:space="preserve">
+    <value>Unit Test Framework</value>
   </data>
 </root>

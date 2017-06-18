@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml;
-using System.Xml.Linq;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
 using NuGet.VisualStudio;
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows;
+using System.Xml;
 
 namespace TemplateWizards
 {
@@ -26,7 +21,6 @@ namespace TemplateWizards
         private string _workflowVersion;
         private string _clientVersion;
         private string _clientPackage;
-        private string _project;
         private string _crmProjectType = "Plug-in";
         private bool _needsCore;
         private bool _needsWorkflow;
@@ -34,8 +28,8 @@ namespace TemplateWizards
         private bool _isUnitTest;
         private bool _isUnitTestItem;
         private bool _signAssembly;
-        private bool _isNunit;
         private string _destDirectory;
+        private string _unitTestFrameworkPackage;
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
@@ -43,6 +37,7 @@ namespace TemplateWizards
             {
                 _dte = (DTE)automationObject;
 
+                replacementsDictionary.Add("$referenceproject$", "False");
                 if (replacementsDictionary.ContainsKey("$destinationdirectory$"))
                     _destDirectory = replacementsDictionary["$destinationdirectory$"];
 
@@ -52,34 +47,16 @@ namespace TemplateWizards
                     ReadWizardData(wizardData);
                 }
 
-                //Display the form prompting for the SDK version and/or project to unit test against
-                if (_needsCore)
+                if (_isUnitTest)
                 {
-                    var sdkVersionPicker = new SdkVersionPicker(_needsWorkflow, _needsClient)
-                    {
-                        HasMinimizeButton = false,
-                        HasMaximizeButton = false,
-                        ResizeMode = ResizeMode.NoResize
-                    };
-                    bool? result = sdkVersionPicker.ShowModal();
-
-                    if (!result.HasValue || result.Value == false)
-                        throw new WizardBackoutException();
-
-                    _coreVersion = sdkVersionPicker.CoreVersion;
-                    _workflowVersion = sdkVersionPicker.WorkflowVersion;
-                    _clientVersion = sdkVersionPicker.ClientVersion;
-                    _clientPackage = sdkVersionPicker.ClientPackage;
-
-                    if (!string.IsNullOrEmpty(_clientVersion))
-                    {
-                        if (Versioning.StringToVersion(_clientVersion).Major >= 8)
-                            replacementsDictionary.Add("$useXrmToolingClientUsing$", "1");
-                        else
-                            replacementsDictionary.Add("$useXrmToolingClientUsing$", "0");
-                    }
+                    PreHandleUnitTestProjects(replacementsDictionary);
+                    return;
                 }
 
+                if (_needsCore)
+                {
+                    PreHandleCrmAssemblyProjects(replacementsDictionary);
+                }
             }
             catch (WizardBackoutException)
             {
@@ -101,6 +78,74 @@ namespace TemplateWizards
             {
                 MessageBox.Show($"Error occurred running wizard:\n\n{ex}");
                 throw new WizardCancelledException("Internal error", ex);
+            }
+        }
+
+        private void PreHandleCrmAssemblyProjects(Dictionary<string, string> replacementsDictionary)
+        {
+            var sdkVersionPicker = new SdkVersionPicker(_needsWorkflow, _needsClient);
+            bool? result = sdkVersionPicker.ShowModal();
+
+            if (!result.HasValue || result.Value == false)
+            {
+                //TODO: test this
+                throw new WizardBackoutException();
+            }
+
+            _coreVersion = sdkVersionPicker.CoreVersion;
+            _workflowVersion = sdkVersionPicker.WorkflowVersion;
+            _clientVersion = sdkVersionPicker.ClientVersion;
+            _clientPackage = sdkVersionPicker.ClientPackage;
+
+            if (!string.IsNullOrEmpty(_clientVersion))
+            {
+                replacementsDictionary.Add("$useXrmToolingClientUsing$",
+                    Versioning.StringToVersion(_clientVersion).Major >= 8 ? "1" : "0");
+            }
+        }
+
+        private void PreHandleUnitTestProjects(Dictionary<string, string> replacementsDictionary)
+        {
+            var testProjectPicker = new TestProjectPicker();
+            bool? result = testProjectPicker.ShowModal();
+
+            if (testProjectPicker.SelectedProject != null)
+            {
+                //TODO: Why am I doing this?
+                Solution solution = _dte.Solution;
+                Project project = testProjectPicker.SelectedProject;
+                string path = string.Empty;
+                string projectPath = Path.GetDirectoryName(project.FullName);
+                string solutionPath = Path.GetDirectoryName(solution.FullName);
+                if (!string.IsNullOrEmpty(projectPath) && !string.IsNullOrEmpty(solutionPath))
+                {
+                    if (projectPath.StartsWith(solutionPath))
+                        path = "..\\" + project.UniqueName;
+                    else
+                        path = project.FullName;
+                }
+
+                replacementsDictionary["$referenceproject$"] = "True";
+                replacementsDictionary.Add("$projectPath$", path);
+                replacementsDictionary.Add("$projectId$", project.Kind);
+                replacementsDictionary.Add("$projectName$", project.Name);
+            }
+
+            if (testProjectPicker.SelectedUnitTestFramework != null)
+            {
+                _unitTestFrameworkPackage = testProjectPicker.SelectedUnitTestFramework.NugetName;
+
+                replacementsDictionary.Add("$useXrmToolingClientUsing$",
+                    testProjectPicker.SelectedUnitTestFramework.CrmMajorVersion >= 8 ? "1" : "0");
+            }
+            else
+            {
+                if (testProjectPicker.SelectedProject == null)
+                    return;
+
+                string version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
+                replacementsDictionary.Add("$useXrmToolingClientUsing$",
+                    Versioning.StringToVersion(version).Major >= 8 ? "1" : "0");
             }
         }
 
@@ -130,28 +175,27 @@ namespace TemplateWizards
 
             switch (_crmProjectType)
             {
+                case "Unit":
+                    PostHandleUnitTestProjects(project, installer);
+                    break;
                 case "Console":
                 case "Plug-in":
                 case "Workflow":
-                    HandleCrmAssemblyProjects(project, installer);
+                    PostHandleCrmAssemblyProjects(project, installer);
                     break;
                 case "WebResource":
-                    HandleWebResourceProjects(project);
+                    PostHandleWebResourceProjects(project);
                     break;
                 //case "TypeScript":
                 //    HandleTypeScriptProject(project, installer);
                 //    break;
                 case "SolutionPackage":
-                    HandleSolutionPackagerProject(project);
+                    PostHandleSolutionPackagerProject(project);
                     break;
             }
         }
 
-        //TODO:   <package id = "MSTest.TestAdapter" version="1.1.18" targetFramework="net452" />
-        //TODO:   <package id = "MSTest.TestFramework" version="1.1.18" targetFramework="net452" />
-
-
-        private void HandleSolutionPackagerProject(Project project)
+        private void PostHandleSolutionPackagerProject(Project project)
         {
             foreach (SolutionConfiguration solutionConfiguration in _dte.Solution.SolutionBuild.SolutionConfigurations)
                 foreach (SolutionContext solutionContext in solutionConfiguration.SolutionContexts)
@@ -162,7 +206,7 @@ namespace TemplateWizards
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
         }
 
-        private void HandleWebResourceProjects(Project project)
+        private void PostHandleWebResourceProjects(Project project)
         {
             //Turn off Build option in build configurations
             SolutionConfigurations solutionConfigurations = _dte.Solution.SolutionBuild.SolutionConfigurations;
@@ -170,7 +214,16 @@ namespace TemplateWizards
             SolutionWorker.SetBuildConfigurationOff(solutionConfigurations, folderProjectFileName);
         }
 
-        private void HandleCrmAssemblyProjects(Project project, IVsPackageInstaller installer)
+        private void PostHandleUnitTestProjects(Project project, IVsPackageInstaller installer)
+        {
+            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestAdapter", "1.1.18");
+            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestFramework", "1.1.18");
+
+            if (_unitTestFrameworkPackage != null)
+                NuGetProcessor.InstallPackage(_dte, installer, project, _unitTestFrameworkPackage, null);
+        }
+
+        private void PostHandleCrmAssemblyProjects(Project project, IVsPackageInstaller installer)
         {
             try
             {
@@ -190,23 +243,10 @@ namespace TemplateWizards
 
 
                 ProjectWorker.ExcludeFolder(project, "bin");
+                ProjectWorker.ExcludeFolder(project, "performance");
 
                 if (_signAssembly)
                     Signing.GenerateKey(_dte, project, _destDirectory);
-
-                if (_isUnitTest)
-                    return;
-
-                //InstallPackage(installer, project, "Moq", "4.5.28");
-                //if (_isNunit)
-                //{
-                //    InstallPackage(installer, project, "NUnitTestAdapter.WithFramework", "2.0.0");
-                //    AddSetting(project, "CRMTestType", "NUNIT");
-                //}
-                //else
-                //    AddSetting(project, "CRMTestType", "UNIT");
-
-                ProjectWorker.ExcludeFolder(project, "performance");
             }
             catch (Exception ex)
             {

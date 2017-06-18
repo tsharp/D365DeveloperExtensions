@@ -8,5 +8,6 @@ namespace CrmDeveloperExtensions2.Core.Models
         public string Name { get; set; }
         public Version Version { get; set; }
         public string VersionText { get; set; }
+        public bool XrmToolingClient { get; set; }
     }
 }

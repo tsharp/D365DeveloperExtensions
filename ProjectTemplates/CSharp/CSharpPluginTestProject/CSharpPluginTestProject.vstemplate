@@ -24,7 +24,7 @@
     <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
   </WizardExtension>
   <WizardData>
-    <CRMProjectType>Plug-in</CRMProjectType>
+    <CRMProjectType>Unit</CRMProjectType>
     <NeedsCore>true</NeedsCore>
     <NeedsWorkflow>false</NeedsWorkflow>
     <NeedsClient>true</NeedsClient>

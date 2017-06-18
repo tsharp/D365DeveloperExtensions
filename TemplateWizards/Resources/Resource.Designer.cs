@@ -106,6 +106,51 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NuGetPickerCancelButtonText {
+            get {
+                return ResourceManager.GetString("NuGetPickerCancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NuGetPickerCancelTooltipText {
+            get {
+                return ResourceManager.GetString("NuGetPickerCancelTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NuGetPickerOKButtonText {
+            get {
+                return ResourceManager.GetString("NuGetPickerOKButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NuGetPickerOKTooltipText {
+            get {
+                return ResourceManager.GetString("NuGetPickerOKTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crm DevEx.
+        /// </summary>
+        public static string NuGetPickerTitle {
+            get {
+                return ResourceManager.GetString("NuGetPickerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Microsoft.CrmSdk.CoreAssemblies.
         /// </summary>
         public static string SdkAssemblyCore {
@@ -183,6 +228,51 @@ namespace TemplateWizards.Resources {
         public static string SdkVersionPickerTitle {
             get {
                 return ResourceManager.GetString("SdkVersionPickerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Project.
+        /// </summary>
+        public static string TestProjectPickerCreateProjectButtonText {
+            get {
+                return ResourceManager.GetString("TestProjectPickerCreateProjectButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Project.
+        /// </summary>
+        public static string TestProjectPickerCreateProjectTooltipText {
+            get {
+                return ResourceManager.GetString("TestProjectPickerCreateProjectTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project To Test.
+        /// </summary>
+        public static string TestProjectPickerProjectToTestLabel {
+            get {
+                return ResourceManager.GetString("TestProjectPickerProjectToTestLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crm DevEx.
+        /// </summary>
+        public static string TestProjectPickerTitle {
+            get {
+                return ResourceManager.GetString("TestProjectPickerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit Test Framework.
+        /// </summary>
+        public static string TestProjectPickerUnitTestFrameworkLabel {
+            get {
+                return ResourceManager.GetString("TestProjectPickerUnitTestFrameworkLabel", resourceCulture);
             }
         }
     }

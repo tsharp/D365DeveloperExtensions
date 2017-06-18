@@ -71,19 +71,33 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="NuGetPicker.xaml.cs">
+      <DependentUpon>NuGetPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SdkVersionPicker.xaml.cs">
       <DependentUpon>SdkVersionPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProjectTemplateWizard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signing.cs" />
+    <Compile Include="TestProjectPicker.xaml.cs">
+      <DependentUpon>TestProjectPicker.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="CrmDevExKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="NuGetPicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SdkVersionPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestProjectPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
