@@ -93,6 +93,20 @@
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpPluginClass\CSharpPluginClass.csproj">
+      <Project>{0B7F7208-B7C4-4C79-BCBD-F5C0A46A5600}</Project>
+      <Name>CSharpPluginClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpWorkflowClass\CSharpWorkflowClass.csproj">
+      <Project>{CD9BBF13-B6A5-4DC0-A698-D1C323A63CC9}</Project>
+      <Name>CSharpWorkflowClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\NuGetRetriever\NuGetRetriever.csproj">
       <Project>{BD5ABC7E-6459-4CFB-82BD-39643599A285}</Project>
       <Name>NuGetRetriever</Name>

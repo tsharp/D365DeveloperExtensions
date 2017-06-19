@@ -1,0 +1,60 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>PluginClass.cs</DefaultName>
+    <Name>CRM/365 Plug-in Class</Name>
+    <Description>Dynamics CRM/365 Plug-in Class</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>icon.png</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Core</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Xml.Linq</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Data.DataSetExtensions</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>Microsoft.CSharp</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Data</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Xml</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.DirectoryServices</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.DirectoryServices.AccountManagement</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.IdentityModel</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Runtime.Serialization</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Security</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.ServiceModel</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.ServiceModel.Web</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Web</Assembly>
+      </Reference>
+    </References>
+    <ProjectItem SubType="Crm DevEx" TargetFileName="$fileinputname$.cs" ReplaceParameters="true">PluginClass.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

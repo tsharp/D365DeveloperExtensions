@@ -277,5 +277,16 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
             return guids.Contains(ExtensionConstants.UnitTestProjectType.ToString(), StringComparer.InvariantCultureIgnoreCase);
         }
+
+        public static string GetAssemblyPath(Project project)
+        {
+            string fullPath = project.Properties.Item("FullPath").Value.ToString();
+            string outputPath = project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+            string outputDir = Path.Combine(fullPath, outputPath);
+            string outputFileName = project.Properties.Item("OutputFileName").Value.ToString();
+            string assemblyPath = Path.Combine(outputDir, outputFileName);
+
+            return assemblyPath;
+        }
     }
 }
