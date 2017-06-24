@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Constants = EnvDTE.Constants;
@@ -287,6 +288,19 @@ namespace CrmDeveloperExtensions2.Core.Vs
             string assemblyPath = Path.Combine(outputDir, outputFileName);
 
             return assemblyPath;
+        }
+
+        public static bool BuildProject(Project project)
+        {
+            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (dte == null)
+                return false;
+
+            SolutionBuild solutionBuild = dte.Solution.SolutionBuild;
+            solutionBuild.BuildProject(dte.Solution.SolutionBuild.ActiveConfiguration.Name, project.UniqueName, true);
+
+            //0 = no errors
+            return solutionBuild.LastBuildInfo <= 0;
         }
     }
 }

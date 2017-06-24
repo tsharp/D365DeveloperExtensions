@@ -71,6 +71,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
@@ -97,6 +98,7 @@
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="IlMerge.cs" />
     <Compile Include="ModelBuilder.cs" />
+    <Compile Include="PluginData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PluginDeployerHost.cs" />
     <Compile Include="PluginDeployerWindow.xaml.cs">
@@ -107,11 +109,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="SparkleXrm\AssemblyContainer.cs" />
+    <Compile Include="SparkleXrm\CodeParser.cs" />
+    <Compile Include="SparkleXrm\Config\ConfigFile.cs" />
+    <Compile Include="SparkleXrm\Config\EarlyBoundTypeConfig.cs" />
+    <Compile Include="SparkleXrm\Config\PluginDeployConfig.cs" />
+    <Compile Include="SparkleXrm\Config\WebResource.cs" />
+    <Compile Include="SparkleXrm\Config\WebresourceDeployConfig.cs" />
+    <Compile Include="SparkleXrm\CrmPluginRegistrationAttribute.cs" />
+    <Compile Include="SparkleXrm\CustomAttributeDataEx.cs" />
+    <Compile Include="SparkleXrm\DirectoryInfoEx.cs" />
+    <Compile Include="SparkleXrm\EntitiesTrim.cs" />
+    <Compile Include="SparkleXrm\Exceptions.cs" />
+    <Compile Include="SparkleXrm\ITrace.cs" />
+    <Compile Include="SparkleXrm\PluginRegistraton.cs" />
+    <Compile Include="SparkleXrm\Reflection.cs" />
+    <Compile Include="SparkleXrm\TargetTypeEnum.cs" />
+    <Compile Include="SparkleXrm\Tasks\DeployPluginsTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\DeployWebResourcesTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\DeployWorkflowActivitiesTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\DownloadPluginMetadataTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\DownloadWebresourceConfigTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\EarlyBoundClassGeneratorTask.cs" />
+    <Compile Include="SparkleXrm\Tasks\Queries.cs" />
+    <Compile Include="SparkleXrm\Tasks\Task.cs" />
+    <Compile Include="SparkleXrm\TraceLogger.cs" />
     <Compile Include="ViewModels\CrmSolution.cs" />
     <Compile Include="ViewModels\CrmAssembly.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="CrmDevExKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>

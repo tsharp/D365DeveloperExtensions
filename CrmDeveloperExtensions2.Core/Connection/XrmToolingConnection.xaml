@@ -23,7 +23,7 @@
                 <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" IsEnabled="False" Padding="2,2,2,2" Background="White" Click="Connect_OnClick">
                     <Image Source="../Images/connect_16.png" Width="16" Height="16" ToolTip="Connect To CRM/D365"></Image>
                 </Button>
-                <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="Auto-login to last connected org?" 
+                <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="Auto-login to last connected org?" IsChecked="True"
                           Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked"></CheckBox>
             </StackPanel>
         </StackPanel>

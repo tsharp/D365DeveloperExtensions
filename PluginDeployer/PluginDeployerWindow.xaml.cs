@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,10 +25,14 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using PluginDeployer.ViewModels;
+using SparkleXrm.Tasks;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
+using Thread = System.Threading.Thread;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace PluginDeployer
@@ -35,7 +40,7 @@ namespace PluginDeployer
     public partial class PluginDeployerWindow : UserControl, INotifyPropertyChanged
     {
         private readonly DTE _dte;
-        private readonly Solution _solution;
+        private readonly EnvDTE.Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private bool _isIlMergeInstalled;
 
@@ -228,7 +233,7 @@ namespace PluginDeployer
             ShowMessage("Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
 
             var solutionTask = GetSolutions();
-            var assembliesTask = GetAssemblies();
+            var assembliesTask = GetCrmAssemblies();
 
             await Task.WhenAll(solutionTask, assembliesTask);
 
@@ -260,7 +265,7 @@ namespace PluginDeployer
             return true;
         }
 
-        private async Task<bool> GetAssemblies()
+        private async Task<bool> GetCrmAssemblies()
         {
             EntityCollection results =
                 await Task.Run(() => Crm.Assembly.RetrieveAssembliesFromCrm(ConnPane.CrmService));
@@ -271,8 +276,8 @@ namespace PluginDeployer
 
             List<CrmAssembly> assemblies = ModelBuilder.CreateCrmAssemblyView(results);
 
-            AssemblyList.ItemsSource = assemblies;
-            AssemblyList.SelectedIndex = 0;
+            CrmAssemblyList.ItemsSource = assemblies;
+            CrmAssemblyList.SelectedIndex = 0;
 
             return true;
         }
@@ -304,6 +309,35 @@ namespace PluginDeployer
 
         private void Publish_OnClick(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                ShowMessage("Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
+
+                if (CrmAssemblyList.SelectedIndex == -1)
+                    return;
+
+                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+                var ctx = new OrganizationServiceContext(service);
+
+                ProjectWorker.BuildProject(ConnPane.SelectedProject);
+
+                using (ctx)
+                {
+                    PluginRegistraton r = new PluginRegistraton(service, ctx, new TraceLogger());
+
+                    string path = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
+
+                    CrmAssembly assembly = (CrmAssembly)CrmAssemblyList.SelectedItem;
+                    if (assembly.IsWorkflow)
+                        r.RegisterWorkflowActivities(path);
+                    else
+                        r.RegisterPlugin(path);
+                }
+            }
+            finally
+            {
+                HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+            }
         }
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
@@ -364,6 +398,10 @@ namespace PluginDeployer
                 PluginDeployer.Resources.Resource.ILMergeTooltipRemove :
                 PluginDeployer.Resources.Resource.ILMergeTooltipEnable;
 
+        }
+
+        private void ProjectAssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
         }
     }
 }
