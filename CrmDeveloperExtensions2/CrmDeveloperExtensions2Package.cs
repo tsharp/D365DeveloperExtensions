@@ -42,9 +42,10 @@ namespace CrmDeveloperExtensions2
     [Guid(PackageGuids.GuidCrmDeveloperExtensionsPkgString)]
     [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
 
-    //User Settings - Logging Section
+    //User Settings - Sections
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Logging", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Web Browser", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "External Tools", 0, 0, true)]
 
     public sealed class CrmDeveloperExtensions2Package : Package
     {

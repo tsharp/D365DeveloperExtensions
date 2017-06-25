@@ -25,7 +25,7 @@ namespace CrmDeveloperExtensions2.Core
         //Need to add entry to CrmDeveloperExtensions2017 - CrmDeveloperExtensions2017Package.cs [ProvideOptionPage]
 
         [Category("Web Browser Options")]
-        [DisplayName("Use internal web browser?")]
+        [DisplayName("Use internal VS web browser?")]
         [Description("Use the internal Visual Studio browser or your default browser for web content")]
         public bool UseInternalBrowser { get; set; } = false;
 
@@ -73,6 +73,18 @@ namespace CrmDeveloperExtensions2.Core
         [DisplayName("Xrm.Tooling log file path")]
         [Description("Path to Xrm.Tooling log file storage")]
         public string XrmToolingLogFilePath { get; set; } = String.Empty;
+
+        //TODO: validate file path format
+        [Category("External Tools Options")]
+        [DisplayName("Plug-in Registration Tool path")]
+        [Description("Path to latest Plug-in Registration Tool executable")]
+        public string PluginRegistrationToolPath { get; set; } = String.Empty;
+
+        //TODO: validate file path format
+        [Category("External Tools Options")]
+        [DisplayName("Solution Packager Tool path")]
+        [Description("Path to latest Solution Packager executable")]
+        public string SolutionPackagerToolPath { get; set; } = String.Empty;
 
         protected override void OnApply(PageApplyEventArgs e)
         {
@@ -124,6 +136,22 @@ namespace CrmDeveloperExtensions2.Core
                 Resources.Resource.UserOptionsWebBrowserPage];
 
             return (bool)props.Item("UseInternalBrowser").Value;
+        }
+
+        public static string GetPluginRegistraionToolPath(DTE dte)
+        {
+            var props = dte.Properties[Resources.Resource.UserOptionsCategory,
+                Resources.Resource.UserOptionsToolsPage];
+
+            return props.Item("PluginRegistrationToolPath").Value.ToString();
+        }
+
+        public static string GetSolutionPackagerToolPath(DTE dte)
+        {
+            var props = dte.Properties[Resources.Resource.UserOptionsCategory,
+                Resources.Resource.UserOptionsToolsPage];
+
+            return props.Item("SolutionPackagerToolPath").Value.ToString();
         }
     }
 }

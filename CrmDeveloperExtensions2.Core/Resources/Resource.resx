@@ -139,6 +139,12 @@
   <data name="OutputLoggerWindowTitle" xml:space="preserve">
     <value>Crm DevEx</value>
   </data>
+  <data name="PluginRegistraionToolPath" xml:space="preserve">
+    <value>Plug-in Registraion Tool Path</value>
+  </data>
+  <data name="SolutionPackagerToolPath" xml:space="preserve">
+    <value>Solution Packager Tool Path</value>
+  </data>
   <data name="StatusBarMessageConnecting" xml:space="preserve">
     <value>Connecting...</value>
   </data>
@@ -150,6 +156,12 @@
   </data>
   <data name="UserOptionsLoggingPageCategory" xml:space="preserve">
     <value>Logging Options</value>
+  </data>
+  <data name="UserOptionsToolsPage" xml:space="preserve">
+    <value>External Tools</value>
+  </data>
+  <data name="UserOptionsToolsPageCategory" xml:space="preserve">
+    <value>External Tools Options</value>
   </data>
   <data name="UserOptionsWebBrowserPage" xml:space="preserve">
     <value>Web Browser</value>

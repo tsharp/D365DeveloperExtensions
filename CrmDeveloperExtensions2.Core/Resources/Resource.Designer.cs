@@ -124,6 +124,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plug-in Registraion Tool Path.
+        /// </summary>
+        public static string PluginRegistraionToolPath {
+            get {
+                return ResourceManager.GetString("PluginRegistraionToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution Packager Tool Path.
+        /// </summary>
+        public static string SolutionPackagerToolPath {
+            get {
+                return ResourceManager.GetString("SolutionPackagerToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting....
         /// </summary>
         public static string StatusBarMessageConnecting {
@@ -156,6 +174,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptionsLoggingPageCategory {
             get {
                 return ResourceManager.GetString("UserOptionsLoggingPageCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External Tools.
+        /// </summary>
+        public static string UserOptionsToolsPage {
+            get {
+                return ResourceManager.GetString("UserOptionsToolsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External Tools Options.
+        /// </summary>
+        public static string UserOptionsToolsPageCategory {
+            get {
+                return ResourceManager.GetString("UserOptionsToolsPageCategory", resourceCulture);
             }
         }
         

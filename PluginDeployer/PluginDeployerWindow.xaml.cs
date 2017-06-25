@@ -95,6 +95,7 @@ namespace PluginDeployer
             Solutions.IsEnabled = enabled;
             IlMerge.IsEnabled = enabled;
             SpklInstrument.IsEnabled = enabled;
+            RegistrationTool.IsEnabled = enabled;
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -429,6 +430,36 @@ namespace PluginDeployer
             finally
             {
                 HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            }
+        }
+
+        private void RegistrationTool_OnClick(object sender, RoutedEventArgs e)
+        {
+            string path = UserOptionsGrid.GetPluginRegistraionToolPath(_dte);
+
+            if (string.IsNullOrEmpty(path))
+            {
+                MessageBox.Show("Set Plug-in Registraion Tool path under Tools -> Options -> CRM Developer Extensions");
+                return;
+            }
+
+            if (!path.EndsWith("exe", StringComparison.CurrentCultureIgnoreCase))
+                path = Path.Combine(path, "PluginRegistration.exe");
+
+
+            if (!File.Exists(path))
+            {
+                MessageBox.Show("PluginRegistration.exe not found at: " + path);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error launching Plug-in Registration Tool: " + Environment.NewLine + Environment.NewLine + ex.Message);
             }
         }
     }
