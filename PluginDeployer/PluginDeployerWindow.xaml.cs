@@ -323,15 +323,15 @@ namespace PluginDeployer
 
                 using (ctx)
                 {
-                    PluginRegistraton r = new PluginRegistraton(service, ctx, new TraceLogger());
+                    PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
 
                     string path = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
 
                     CrmAssembly assembly = (CrmAssembly)CrmAssemblyList.SelectedItem;
                     if (assembly.IsWorkflow)
-                        r.RegisterWorkflowActivities(path);
+                        pluginRegistraton.RegisterWorkflowActivities(path);
                     else
-                        r.RegisterPlugin(path);
+                        pluginRegistraton.RegisterPlugin(path);
                 }
             }
             finally
@@ -397,11 +397,36 @@ namespace PluginDeployer
             IlMerge.ToolTip = installed ?
                 PluginDeployer.Resources.Resource.ILMergeTooltipRemove :
                 PluginDeployer.Resources.Resource.ILMergeTooltipEnable;
-
         }
 
         private void ProjectAssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+        }
+
+        private void SpklInstrument_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ShowMessage("Instrumenting...", vsStatusAnimation.vsStatusAnimationSync);
+
+                if (CrmAssemblyList.SelectedIndex == -1)
+                    return;
+
+                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+                var ctx = new OrganizationServiceContext(service);
+
+                Project project = ConnPane.SelectedProject;
+                ProjectWorker.BuildProject(project);
+
+                string path = Path.GetDirectoryName(project.FullName);
+
+                DownloadPluginMetadataTask downloadPluginMetadataTask = new DownloadPluginMetadataTask(ctx, new TraceLogger());
+                downloadPluginMetadataTask.Execute(path);
+            }
+            finally
+            {
+                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            }
         }
     }
 }

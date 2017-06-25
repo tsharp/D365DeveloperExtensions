@@ -40,7 +40,7 @@ namespace SparkleXrm.Tasks
                 {
                     // Find if it contains any IPlugin files
                     CodeParser parser = new CodeParser(new Uri(codeFile));
-
+                   
                     if (parser.PluginCount > 0)
                     {
                         // Backup 
@@ -76,25 +76,27 @@ namespace SparkleXrm.Tasks
             }
             _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
 
-            // Create a spkl.json file here
-            var files = ConfigFile.FindConfig(filePath,false);
-            var file = files[0];
+            //TODO: remove backup files
 
-            if (file.plugins == null)
-            {
-                file.plugins = new List<PluginDeployConfig>();
-            }
+            //// Create a spkl.json file here
+            //var files = ConfigFile.FindConfig(filePath,false);
+            //var file = files[0];
 
-            if (file.plugins.Where(a=>a.assemblypath == @"bin\Debug").FirstOrDefault()==null)
-            {
-                file.plugins.Add(new PluginDeployConfig()
-                {
-                    assemblypath = @"bin\Debug"
-                });
-            }
+            //if (file.plugins == null)
+            //{
+            //    file.plugins = new List<PluginDeployConfig>();
+            //}
+
+            //if (file.plugins.Where(a=>a.assemblypath == @"bin\Debug").FirstOrDefault()==null)
+            //{
+            //    file.plugins.Add(new PluginDeployConfig()
+            //    {
+            //        assemblypath = @"bin\Debug"
+            //    });
+            //}
            
-            file.filePath = filePath;
-            file.Save();
+            //file.filePath = filePath;
+            //file.Save();
         }
 
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)

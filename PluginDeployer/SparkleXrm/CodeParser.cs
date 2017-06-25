@@ -116,7 +116,7 @@ namespace SparkleXrm.Tasks
         public int RemoveExistingAttributes()
         {
             int count = 0;
-            MatchEvaluator evaluator = delegate (Match match)
+            MatchEvaluator evaluator = delegate
             {
                 count++;
                 return "" ;
@@ -124,9 +124,7 @@ namespace SparkleXrm.Tasks
             
             _code = Regex.Replace(_code, _attributeRegex, evaluator);
             return count;
-        }
-
-       
+        }     
 
         public void AddAttribute(CrmPluginRegistrationAttribute attribute, string className)
         {
@@ -145,10 +143,16 @@ namespace SparkleXrm.Tasks
 
             // Add the attribute
             var attributeCode = attribute.GetAttributeCode(indentation);
+            //var attributeCode = attribute.GetAttributeCode("");
+
+            //attributeCode = attributeCode.Replace("\r\n", String.Empty).Replace("\n", String.Empty).Replace("\r", String.Empty);
+
+            //TODO: see about getting everything on 1 line AND not getting inconsistent line ending warnings
+            //TODO: see about making sure everything gets inserted into #region if in place
 
             // Insert   
             _code = _code.Insert(lineBreak, attributeCode);
-
+            //_code = _code.Insert(lineBreak, indentation + attributeCode);
         }
         #endregion
     }
