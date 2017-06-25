@@ -76,12 +76,6 @@ namespace PluginDeployer
                 ResetForm();
                 return;
             }
-
-            //if (!_projectEventsRegistered)
-            //{
-            //    RegisterProjectEvents();
-            //    _projectEventsRegistered = true;
-            //}
         }
 
         private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
@@ -90,6 +84,17 @@ namespace PluginDeployer
 
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
+
+            SetButtonState(true);
+        }
+
+        private void SetButtonState(bool enabled)
+        {
+            Publish.IsEnabled = enabled;
+            Customizations.IsEnabled = enabled;
+            Solutions.IsEnabled = enabled;
+            IlMerge.IsEnabled = enabled;
+            SpklInstrument.IsEnabled = enabled;
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -221,12 +226,10 @@ namespace PluginDeployer
 
         private void ResetForm()
         {
-            //_webResourceItems = new ObservableCollection<WebResourceItem>();
             SolutionList.IsEnabled = false;
+
+            SetButtonState(false);
         }
-
-
-
 
         private async Task GetCrmData()
         {

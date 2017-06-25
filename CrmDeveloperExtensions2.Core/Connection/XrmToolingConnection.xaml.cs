@@ -208,6 +208,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             ResetForm();
 
+            CrmService?.Dispose();
+
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
         }
         protected virtual void OnConnected(ConnectEventArgs e)

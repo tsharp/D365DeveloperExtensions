@@ -122,6 +122,8 @@ namespace WebResourceDeployer
             await GetCrmData();
 
             SolutionList.IsEnabled = true;
+            Customizations.IsEnabled = true;
+            Solutions.IsEnabled = true;
 
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
@@ -467,7 +469,11 @@ namespace WebResourceDeployer
             Customizations.IsEnabled = false;
             Solutions.IsEnabled = false;
             SolutionList.IsEnabled = false;
+            SolutionList.ItemsSource = null;
+            WebResourceType.SelectedIndex = -1;
+            WebResourceGrid.ItemsSource = null;
             AddWebResource.IsEnabled = false;
+            ShowManaged.IsChecked = false;
         }
 
         private void PublishSelectAll_OnClick(object sender, RoutedEventArgs e)
