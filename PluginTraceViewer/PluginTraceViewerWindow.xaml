@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="PluginTraceViewer.PluginTraceViewerWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
+             mc:Ignorable="d"
+             d:DesignHeight="350" d:DesignWidth="1100">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"></connection:XrmToolingConnection>
+        <Grid Column="1" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button x:Name="Customizations" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Customizations_OnClick" IsEnabled="False" Background="White">
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/customizations_16.png" Width="16" Height="16" ToolTip="Open CRM Default Solution"></Image>
+                </Button>
+                <Button x:Name="Solutions" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Solutions_OnClick" IsEnabled="False" Background="White">
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/solutions_16.png" Width="16" Height="16" ToolTip="Open CRM Solutions Page"></Image>
+                </Button>
+            </StackPanel>
+            <DataGrid x:Name="CrmPluginTraces" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Margin="5, 30, 0,0" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Created On" Binding="{Binding CreatedOn}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Entity" Binding="{Binding Entity}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Message" Binding="{Binding MessageName}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Correlation Id" Binding="{Binding CorrelationId}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Depth" Binding="{Binding Depth}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Type Name" Binding="{Binding TypeName}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Execution Duration" Binding="{Binding ExecutionDuration}"></DataGridTextColumn>
+                </DataGrid.Columns>
+                <DataGrid.ItemContainerStyle>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DetailsRowClick_Handler"/>
+                    </Style>
+                </DataGrid.ItemContainerStyle>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding MessageBlock}" Margin="10" />
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+            </DataGrid>
+            <Grid x:Name="LockOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ZIndex="10" Background="{DynamicResource OverlayColor}" Visibility="Hidden">
+                <Label x:Name="LockMessage" Content="Working..." VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"></Label>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
+

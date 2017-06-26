@@ -141,6 +141,7 @@
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
+    <Compile Include="DateFormatting.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
     <Compile Include="Enums\OutputLoggerMessageType.cs" />

@@ -8,6 +8,7 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using CrmDeveloperExtensions2.Core;
 using PluginDeployer;
+using PluginTraceViewer;
 using SolutionPackager;
 using WebResourceDeployer;
 using ExLogger = CrmDeveloperExtensions2.Core.Logging.ExtensionLogger;
@@ -38,6 +39,7 @@ namespace CrmDeveloperExtensions2
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
     [ProvideToolWindow(typeof(SolutionPackagerHost))]
+    [ProvideToolWindow(typeof(PluginTraceViewerHost))]
 
     [Guid(PackageGuids.GuidCrmDeveloperExtensionsPkgString)]
     [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
@@ -67,43 +69,28 @@ namespace CrmDeveloperExtensions2
 
             //Plug-in Deployer
             CommandID pdWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidPluginDeployerWindow);
-            OleMenuCommand pdWindowItem = new OleMenuCommand(ShowPluginDeployer, pdWindowCommandId);
+            OleMenuCommand pdWindowItem = new OleMenuCommand(ShowToolWindow<PluginDeployerHost>, pdWindowCommandId);
             mcs.AddCommand(pdWindowItem);
 
             //Web Resource Deployer
             CommandID wrdWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidWebResourceDeployerWindow);
-            OleMenuCommand wrdWindowItem = new OleMenuCommand(ShowWebResourceDeployer, wrdWindowCommandId);
+            OleMenuCommand wrdWindowItem = new OleMenuCommand(ShowToolWindow<WebResourceDeployerHost>, wrdWindowCommandId);
             mcs.AddCommand(wrdWindowItem);
 
             //Solution Packager
             CommandID spWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidSolutionPackagerWindow);
-            OleMenuCommand spWindowItem = new OleMenuCommand(ShowSolutionPackager, spWindowCommandId);
+            OleMenuCommand spWindowItem = new OleMenuCommand(ShowToolWindow<SolutionPackagerHost>, spWindowCommandId);
             mcs.AddCommand(spWindowItem);
+
+            //Plug-in Trace Viewer
+            CommandID ptvWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidPluginTraceViewerWindow);
+            OleMenuCommand ptvWindowItem = new OleMenuCommand(ShowToolWindow<PluginTraceViewerHost>, ptvWindowCommandId);
+            mcs.AddCommand(ptvWindowItem);
         }
 
-        private void ShowPluginDeployer(object sender, EventArgs e)
+        private void ShowToolWindow<T>(object sender, EventArgs a)
         {
-            ToolWindowPane window = FindToolWindow(typeof(PluginDeployerHost), 0, true);
-            if (window?.Frame == null)
-                throw new NotSupportedException("Cannot create tool window.");
-
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
-
-        private void ShowWebResourceDeployer(object sender, EventArgs e)
-        {
-            ToolWindowPane window = FindToolWindow(typeof(WebResourceDeployerHost), 0, true);
-            if (window?.Frame == null)
-                throw new NotSupportedException("Cannot create tool window.");
-
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
-
-        private void ShowSolutionPackager(object sender, EventArgs e)
-        {
-            ToolWindowPane window = FindToolWindow(typeof(SolutionPackagerHost), 0, true);
+            ToolWindowPane window = FindToolWindow(typeof(T), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window.");
 

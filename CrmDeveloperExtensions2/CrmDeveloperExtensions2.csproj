@@ -55,7 +55,6 @@
     <Compile Include="StartupTasks.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="CrmDevExKey.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
@@ -116,6 +115,12 @@
     <ProjectReference Include="..\PluginDeployer\PluginDeployer.csproj">
       <Project>{64CA2809-ABE4-47A5-AB20-086578C1B847}</Project>
       <Name>PluginDeployer</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\PluginTraceViewer\PluginTraceViewer.csproj">
+      <Project>{97AA7ED6-5020-44E4-88E9-7D63F49FA766}</Project>
+      <Name>PluginTraceViewer</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>

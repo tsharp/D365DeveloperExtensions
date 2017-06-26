@@ -61,7 +61,7 @@
       </Button>-->
 
       <!--Plug-in Deployer-->
-      <Button guid="GuidCrmDevExCmdSet" id="CmdidPluginDeployerWindow" priority="0xFFFD" type="Button">
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidPluginDeployerWindow" priority="0xFFFA" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
         <!--<Icon guid="GuidPluginImage" id="Plugin" />-->
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -70,9 +70,20 @@
           <ButtonText>Plug-in Deployer</ButtonText>
         </Strings>
       </Button>
+      
+      <!--Plug-in Trace Viewer-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidPluginTraceViewerWindow" priority="0xFFFB" type="Button">
+        <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
+        <!--<Icon guid="GuidPluginImage" id="Plugin" />-->
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Plug-in Trace Viewer</ButtonText>
+        </Strings>
+      </Button>
 
       <!--Web Resource Deployer-->
-      <Button guid="GuidCrmDevExCmdSet" id="CmdidWebResourceDeployerWindow" priority="0xFFFE" type="Button">
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidWebResourceDeployerWindow" priority="0xFFFC" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
         <!--<Icon guid="GuidWebResourceImage" id="WebResource" />-->
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -82,19 +93,8 @@
         </Strings>
       </Button>
 
-      <!--Report Deployer--><!--
-      <Button guid="GuidCrmDevExCmdSet" id="CmdidReportDeployerWindow" priority="0xFFFF" type="Button">
-        <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
-        <Icon guid="GuidReportImage" id="Report" />
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>TextChanges</CommandFlag>
-        <Strings>
-          <ButtonText>Report Deployer</ButtonText>
-        </Strings>
-      </Button>
-
-      --><!--Solution Packager-->
-      <Button guid="GuidCrmDevExCmdSet" id="CmdidSolutionPackagerWindow" priority="0xFFFF" type="Button">
+      <!--Solution Packager-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidSolutionPackagerWindow" priority="0xFFFD" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
         <!--<Icon guid="GuidSolutionPackageImage" id="Package" />-->
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -115,7 +115,7 @@
   </Commands>
 
   <Symbols>
-    <GuidSymbol name="GuidCrmDeveloperExtensionsPkg" value="{a4fa8f78-98af-4633-8621-bbdd7792a6ac}" />
+    <GuidSymbol name="GuidCrmDeveloperExtensionsPkg" value="{A4FA8F78-98AF-4633-8621-BBDD7792A6AC}" />
 
     <!--Item Templates--><!--
     <GuidSymbol name="GuidItMenuCommandsCmdSet" value="{393DA428-4DEC-489D-9BC7-586DD3DEAE24}">
@@ -125,12 +125,12 @@
       <IDSymbol name="CmdidAddItem3" value="0x0110" />
     </GuidSymbol>-->
 
-    <!--CRM Developer Extensions Project Menu-->
+    <!--CRM Developer Extensions Solution Menu-->
     <GuidSymbol name="GuidCrmDevExCmdSet" value="{95CD7B0B-0592-4683-B42C-A79A41380FFE}">
       <IDSymbol name="ProjectMenuGroup" value="0x1020" />
       <IDSymbol name="CmdidPluginDeployerWindow" value="0x0101" />
       <IDSymbol name="CmdidWebResourceDeployerWindow" value="0x0102" />
-      <!--<IDSymbol name="CmdidReportDeployerWindow" value="0x0103" />-->
+      <IDSymbol name="CmdidPluginTraceViewerWindow" value="0x0103" />
       <IDSymbol name="CmdidSolutionPackagerWindow" value="0x0104" />
       <IDSymbol name="TopLevelMenu" value="0x0100" />
       <IDSymbol name="TopLevelMenuGroup" value="0x0200" />

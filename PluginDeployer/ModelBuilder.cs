@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
 using Microsoft.Xrm.Sdk;
 using PluginDeployer.ViewModels;
+using System;
+using System.Collections.Generic;
 
 namespace PluginDeployer
 {
