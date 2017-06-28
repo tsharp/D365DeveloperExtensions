@@ -26,6 +26,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using NLog;
 using Microsoft.VisualStudio;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Tooling.Connector;
 using PluginTraceViewer.ViewModels;
 using static CrmDeveloperExtensions2.Core.FileSystem;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
@@ -39,6 +40,7 @@ namespace PluginTraceViewer
         private readonly DTE _dte;
         private readonly Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
+
 
         public PluginTraceViewerWindow()
         {
@@ -65,22 +67,45 @@ namespace PluginTraceViewer
                 ResetForm();
                 return;
             }
+
+            //WindowEventsOnWindowActivated in this project can be called when activating another window
+            //so we don't want to contine further unless our window is active
+            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+                return;
+
+            //Grid is populated already
+            if (CrmPluginTraces.ItemsSource != null)
+                return;
+
+            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            {
+                SetWindowCaption(gotFocus.Caption);
+                SetButtonState(true);
+                LoadData();
+            }
         }
 
-        private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        private void SetWindowCaption(string currentCaption)
         {
-            await GetCrmData();
+            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+        }
+
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        {
+            SetWindowCaption(_dte.ActiveWindow.Caption);
+            SetButtonState(true);
+            LoadData();
         }
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
                 $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Solutions_OnClick(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
                 "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
         }
 
@@ -92,22 +117,28 @@ namespace PluginTraceViewer
         private void ResetForm()
         {
             CrmPluginTraces.ItemsSource = null;
+            SetButtonState(false);
         }
 
         private async Task GetCrmData()
         {
-            ShowMessage("Getting plug-in trace logs...", vsStatusAnimation.vsStatusAnimationSync);
-
-            var traceTask = GetCrmPluginTraces();
-
-            await Task.WhenAll(traceTask);
-
-            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-
-            if (!traceTask.Result)
+            try
             {
-                MessageBox.Show("Error Plug-in Trace Logs. See the Output Window for additional details.");
-                return;
+                ShowMessage("Getting plug-in trace logs...", vsStatusAnimation.vsStatusAnimationSync);
+
+                var traceTask = GetCrmPluginTraces();
+
+                await Task.WhenAll(traceTask);
+
+                if (!traceTask.Result)
+                {
+                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                    MessageBox.Show("Error Plug-in Trace Logs. See the Output Window for additional details.");
+                }
+            }
+            finally
+            {
+                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
@@ -123,13 +154,6 @@ namespace PluginTraceViewer
             CrmPluginTraces.ItemsSource = pluginTraces;
 
             return true;
-        }
-
-        private void DetailsRowClick_Handler(object sender, MouseButtonEventArgs e)
-        {
-            DataGridRow row = sender as DataGridRow;
-            if (row != null)
-                row.DetailsVisibility = row.IsSelected ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void ShowMessage(string message, vsStatusAnimation? animation = null)
@@ -155,6 +179,42 @@ namespace PluginTraceViewer
                         LockOverlay.Visibility = Visibility.Hidden;
                     }
                 ));
+        }
+
+        private void ViewDetails_OnClick(object sender, RoutedEventArgs e)
+        {
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+            {
+                if (!(vis is DataGridRow))
+                    continue;
+
+                var row = (DataGridRow)vis;
+                row.DetailsVisibility = row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                break;
+            }
+        }
+
+        private void SetButtonState(bool enabled)
+        {
+            Customizations.IsEnabled = enabled;
+            Solutions.IsEnabled = enabled;
+        }
+
+        private void Refresh_OnClick(object sender, RoutedEventArgs e)
+        {
+            LoadData();
+        }
+
+        private async void LoadData()
+        {
+            await GetCrmData();
+        }
+
+        private void OpenInCrm_OnClick(object sender, RoutedEventArgs e)
+        {
+            Guid pluginTraceLogId = new Guid(((Button)sender).CommandParameter.ToString());
+
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"userdefined/edit.aspx?etc=4619&id=%7b{pluginTraceLogId}%7d");
         }
     }
 }

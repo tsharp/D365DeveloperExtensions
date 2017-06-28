@@ -106,11 +106,17 @@ namespace WebResourceDeployer
                 return;
             }
 
-            //if (!_projectEventsRegistered)
-            //{
-            //    RegisterProjectEvents();
-            //    _projectEventsRegistered = true;
-            //}
+            //WindowEventsOnWindowActivated in this project can be called when activating another window
+            //so we don't want to contine further unless our window is active
+            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+                return;
+
+            SetWindowCaption(gotFocus.Caption);
+        }
+
+        private void SetWindowCaption(string currentCaption)
+        {
+            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
@@ -265,13 +271,13 @@ namespace WebResourceDeployer
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
                 $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Solutions_OnClick(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService.CrmConnectOrgUriActual,
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
                 "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
         }
 
@@ -606,11 +612,9 @@ namespace WebResourceDeployer
         {
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
 
-            Uri crmFullUri = ConnPane.CrmService.CrmConnectOrgUriActual;
-            Uri crmUrl = new Uri(crmFullUri.GetLeftPart(UriPartial.Authority));
             string contentUrl = $"main.aspx?etc=9333&id=%7b{webResourceId}%7d&pagetype=webresourceedit";
 
-            WebBrowser.OpenCrmPage(_dte, crmUrl, contentUrl);
+            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, contentUrl);
         }
 
         private async void CompareWebResource_OnClick(object sender, RoutedEventArgs e)

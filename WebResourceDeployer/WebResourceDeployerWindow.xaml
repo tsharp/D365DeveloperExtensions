@@ -99,7 +99,7 @@
                     <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="GetWebResource" Click="GetWebResource_OnClick"  CommandParameter="{Binding WebResourceId}" 
+                                <Button x:Name="GetWebResource" Click="GetWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
                                         ToolTip="Download: Right-click to specify folder" Background="White" BorderThickness="0">
                                     <Image Source="/CrmDeveloperExtensions2.Core;component/images/download_16.png" Width="16" Height="16"></Image>
                                     <Button.ContextMenu>

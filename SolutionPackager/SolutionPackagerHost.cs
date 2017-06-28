@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace SolutionPackager
 {
-    [Guid("F8BF1118-57B6-4404-9923-8A98AB710EBA")] //Also located in XrmToolingConnection.xaml.cs 
+    [Guid("F8BF1118-57B6-4404-9923-8A98AB710EBA")] //Also located in ExtensionConstants.cs 
     public sealed class SolutionPackagerHost : ToolWindowPane
     {
         public SolutionPackagerHost() : base(null)

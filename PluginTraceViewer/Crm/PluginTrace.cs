@@ -17,8 +17,8 @@ namespace PluginTraceViewer.Crm
                 QueryExpression query = new QueryExpression
                 {
                     EntityName = "plugintracelog",
-                    ColumnSet = new ColumnSet("primaryentity", "correlationid", "messageblock", "messagename", "depth",
-                    "performanceexecutionduration", "typename", "createdon"),
+                    ColumnSet = new ColumnSet("plugintracelogid", "primaryentity", "correlationid", "messageblock", "messagename", "depth",
+                    "performanceexecutionduration", "typename", "createdon", "mode", "exceptiondetails"),
                     LinkEntities =
                     {
                         new LinkEntity

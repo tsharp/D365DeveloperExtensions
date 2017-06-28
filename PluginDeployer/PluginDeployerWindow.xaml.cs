@@ -76,6 +76,11 @@ namespace PluginDeployer
                 ResetForm();
                 return;
             }
+
+            //WindowEventsOnWindowActivated in this project can be called when activating another window
+            //so we don't want to contine further unless our window is active
+            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+                return;
         }
 
         private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)

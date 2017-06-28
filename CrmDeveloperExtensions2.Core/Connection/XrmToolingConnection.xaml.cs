@@ -97,9 +97,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void WindowEventsOnWindowActivated(Window gotFocus, Window lostFocus)
         {
-            //if (_projects.Count == 0)
-            //    GetProjectsForList();
-
             //No solution loaded
             if (_solution.Count == 0)
             {
@@ -109,9 +106,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            string[] crmDevExWindows = { "A3479AE0-5F4F-4A14-96F4-46F39000023A", "FA0E0759-D337-4C4C-8474-217A6BDC3C06",
-                "F8BF1118-57B6-4404-9923-8A98AB710EBA", "E7A15FDA-6C33-48F8-A1E7-D78E49458A7A" };
-            if (!crmDevExWindows.Contains(gotFocus.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty)))
+            if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
             if (_projects.Count == 0)
@@ -121,6 +116,13 @@ namespace CrmDeveloperExtensions2.Core.Connection
             {
                 RegisterProjectEvents();
                 _projectEventsRegistered = true;
+            }
+
+            if (CrmService == null)
+            {
+                CrmServiceClient client = SharedGlobals.GetGlobal("CrmService", _dte) as CrmServiceClient;
+                if (client != null)
+                    CrmService = client;
             }
         }
 
@@ -208,8 +210,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SolutionEventsOnBeforeClosing()
         {
             ResetForm();
-
+        
             CrmService?.Dispose();
+            CrmService = null;
 
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
         }
@@ -347,6 +350,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
             CrmLoginForm loginForm = (CrmLoginForm)sender;
             CrmService = loginForm.CrmConnectionMgr.CrmSvc;
             OrganizationId = loginForm.CrmConnectionMgr.ConnectedOrgId;
+
+            SharedGlobals.SetGlobal("CrmService", loginForm.CrmConnectionMgr.CrmSvc, _dte);
 
             Dispatcher.Invoke(() =>
             {

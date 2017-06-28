@@ -146,6 +146,7 @@
     <Compile Include="Crm\Connection.cs" />
     <Compile Include="Enums\OutputLoggerMessageType.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="HostWindow.cs" />
     <Compile Include="Logging\ExtensionLogger.cs" />
     <Compile Include="Logging\XrmToolingLogging.cs" />
     <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
@@ -227,6 +228,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\registrationtool_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\details_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

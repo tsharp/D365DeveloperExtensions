@@ -61,11 +61,17 @@ namespace SolutionPackager
                 return;
             }
 
-            //if (!_projectEventsRegistered)
-            //{
-            //    RegisterProjectEvents();
-            //    _projectEventsRegistered = true;
-            //}
+            //WindowEventsOnWindowActivated in this project can be called when activating another window
+            //so we don't want to contine further unless our window is active
+            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+                return;
+
+            SetWindowCaption(gotFocus.Caption);
+        }
+
+        private void SetWindowCaption(string currentCaption)
+        {
+            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
