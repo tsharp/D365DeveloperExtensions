@@ -1,50 +1,51 @@
-﻿using System;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.Xrm.Sdk;
+using NLog;
+using PluginTraceViewer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Vs;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using NLog;
-using Microsoft.VisualStudio;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
-using PluginTraceViewer.ViewModels;
-using static CrmDeveloperExtensions2.Core.FileSystem;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace PluginTraceViewer
 {
-    public partial class PluginTraceViewerWindow : UserControl
+    public partial class PluginTraceViewerWindow : UserControl, INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-
+        private readonly BackgroundWorker _worker;
+        private DateTime _lastLogDate = DateTime.MinValue;
+        private ObservableCollection<CrmPluginTrace> _traces;
+        public ObservableCollection<CrmPluginTrace> Traces
+        {
+            get => _traces;
+            set
+            {
+                _traces = value;
+                OnPropertyChanged();
+            }
+        }
 
         public PluginTraceViewerWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -57,6 +58,90 @@ namespace PluginTraceViewer
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
+
+            _worker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            _worker.DoWork += WorkerOnDoWork;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private delegate void UpdateGridDelegate(ObservableCollection<CrmPluginTrace> pluginTraces);
+
+        private void UpdateDelegateGrid(ObservableCollection<CrmPluginTrace> newTraces)
+        {
+            if (newTraces.Count <= 0)
+                return;
+
+            newTraces = new ObservableCollection<CrmPluginTrace>(newTraces.OrderBy(t => t.CreatedOn));
+
+            OutputLogger.WriteToOutputWindow("Adding new traces: " + newTraces.Count, MessageType.Info);
+            foreach (CrmPluginTrace crmPluginTrace in newTraces)
+                Traces.Insert(0, crmPluginTrace);
+
+            _lastLogDate = GetLastDate();
+        }
+
+        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            while (!_worker.CancellationPending)
+            {
+                EntityCollection results = Crm.PluginTrace.RetrievePluginTracesFromCrm(ConnPane.CrmService, _lastLogDate);
+                ObservableCollection<CrmPluginTrace> newTraces = ModelBuilder.CreateCrmPluginTraceView(results);
+
+                if (newTraces.Count > 0)
+                {
+                    OutputLogger.WriteToOutputWindow("Retrieved new traces: " + newTraces.Count, MessageType.Info);
+
+                    UpdateGridDelegate updateGridDelegate = UpdateDelegateGrid;
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, updateGridDelegate, newTraces);
+                }
+                else
+                {
+                    OutputLogger.WriteToOutputWindow("No new traces", MessageType.Info);
+                }
+
+                System.Threading.Thread.Sleep(30000);
+            }
+        }
+
+        private void CancelBackgroundWorker()
+        {
+            _worker.CancelAsync();
+            Refresh.IsEnabled = true;
+            OutputLogger.WriteToOutputWindow("Stopped polling for plug-in trace log records", MessageType.Info);
+        }
+
+        private DateTime GetLastDate()
+        {
+            if (Traces.Count <= 0)
+                return DateTime.Now;
+
+            var crmPluginTrace = CrmPluginTraces.ItemContainerGenerator.Items[0] as CrmPluginTrace;
+
+            return crmPluginTrace?.CreatedOn ?? DateTime.Now;
+        }
+
+        private void Poll_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_worker.IsBusy)
+            {
+                CancelBackgroundWorker();
+            }
+            else
+            {
+                OutputLogger.WriteToOutputWindow("Started polling for plug-in trace log records: Interval 30 seconds", MessageType.Info);
+                Refresh.IsEnabled = false;
+                _worker.RunWorkerAsync();
+            }
         }
 
         private void WindowEventsOnWindowActivated(EnvDTE.Window gotFocus, EnvDTE.Window lostFocus)
@@ -67,6 +152,15 @@ namespace PluginTraceViewer
                 ResetForm();
                 return;
             }
+
+            //Should be that the tool window case closed
+            if (lostFocus == null)
+            {
+                //_worker.CancelAsync();
+                CancelBackgroundWorker();
+                return;
+            }
+
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
@@ -118,6 +212,8 @@ namespace PluginTraceViewer
         {
             CrmPluginTraces.ItemsSource = null;
             SetButtonState(false);
+            if (_worker.IsBusy)
+                _worker.CancelAsync();
         }
 
         private async Task GetCrmData()
@@ -145,13 +241,14 @@ namespace PluginTraceViewer
         private async Task<bool> GetCrmPluginTraces()
         {
             EntityCollection results =
-                await Task.Run(() => Crm.PluginTrace.RetrievePluginTracesFromCrm(ConnPane.CrmService));
+                await Task.Run(() => Crm.PluginTrace.RetrievePluginTracesFromCrm(ConnPane.CrmService, DateTime.Now.AddDays(-1)));
+
             if (results == null)
                 return false;
 
-            List<CrmPluginTrace> pluginTraces = ModelBuilder.CreateCrmPluginTraceView(results);
+            Traces = ModelBuilder.CreateCrmPluginTraceView(results);
 
-            CrmPluginTraces.ItemsSource = pluginTraces;
+            _lastLogDate = GetLastDate();
 
             return true;
         }
@@ -198,6 +295,8 @@ namespace PluginTraceViewer
         {
             Customizations.IsEnabled = enabled;
             Solutions.IsEnabled = enabled;
+            Refresh.IsEnabled = enabled;
+            Poll.IsEnabled = enabled;
         }
 
         private void Refresh_OnClick(object sender, RoutedEventArgs e)
@@ -215,6 +314,21 @@ namespace PluginTraceViewer
             Guid pluginTraceLogId = new Guid(((Button)sender).CommandParameter.ToString());
 
             WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"userdefined/edit.aspx?etc=4619&id=%7b{pluginTraceLogId}%7d");
+        }
+
+        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        {
+            Guid[] pluginTraceLogsToDelete =
+                Traces.Where(d => d.PendingDelete).Select(d => d.PluginTraceLogidId).ToArray();
+
+            List<Guid> deletedPluginTraceLogIds = 
+                Crm.PluginTrace.DeletePluginTracesFromCrm(ConnPane.CrmService, pluginTraceLogsToDelete);
+
+            foreach (Guid pluginTraceLogId in deletedPluginTraceLogIds)
+            {
+                var pluginTraceLog = Traces.FirstOrDefault(t => t.PluginTraceLogidId == pluginTraceLogId);
+                Traces.Remove(pluginTraceLog);
+            }
         }
     }
 }

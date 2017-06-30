@@ -21,9 +21,12 @@
                 <Button x:Name="Solutions" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Solutions_OnClick" IsEnabled="False" Background="White">
                     <Image Source="/CrmDeveloperExtensions2.Core;component/images/solutions_16.png" Width="16" Height="16" ToolTip="Open CRM Solutions Page"></Image>
                 </Button>
+                <Button x:Name="Poll" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Poll_OnClick" IsEnabled="False" Background="White">
+                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/poll_16.png" Width="16" Height="16" ToolTip="Poll Log For Changes"></Image>
+                </Button>
             </StackPanel>
             <DataGrid x:Name="CrmPluginTraces" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Margin="5, 30, 0,0" 
-                      CanUserResizeColumns="False" CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed">
+                      CanUserResizeColumns="False" CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed"  ItemsSource="{Binding Path=Traces, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CanUserSort="False" Width="16">
                         <DataGridTemplateColumn.Header>
@@ -47,6 +50,20 @@
                                 <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Background="White" BorderThickness="0" CommandParameter="{Binding PluginTraceLogidId}">
                                     <Image Source="/CrmDeveloperExtensions2.Core;component/images/open_16.png" ToolTip="Open In Crm"></Image>
                                 </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn CanUserSort="False" Width="16">
+                        <DataGridTemplateColumn.Header>
+                            <StackPanel>
+                                <Button x:Name="Delete" Click="Delete_OnClick" Background="White" BorderThickness="0" Margin="-3" Padding="0">
+                                    <Image Source="/CrmDeveloperExtensions2.Core;component/images/remove_16.png" ToolTip="Delete Log(s)"></Image>
+                                </Button>
+                            </StackPanel>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PendingDelete, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

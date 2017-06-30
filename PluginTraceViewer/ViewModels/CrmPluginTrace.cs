@@ -18,5 +18,6 @@ namespace PluginTraceViewer.ViewModels
         public string TypeName { get; set; }
         public DateTime CreatedOnUtc { get; set; }
         public DateTime CreatedOn { get; set; }
+        public bool PendingDelete { get; set; }
     }
 }

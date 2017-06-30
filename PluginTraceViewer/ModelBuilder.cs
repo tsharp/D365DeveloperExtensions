@@ -2,15 +2,15 @@
 using Microsoft.Xrm.Sdk;
 using PluginTraceViewer.ViewModels;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace PluginTraceViewer
 {
     public static class ModelBuilder
     {
-        public static List<CrmPluginTrace> CreateCrmPluginTraceView(EntityCollection pluginTraces)
+        public static ObservableCollection<CrmPluginTrace> CreateCrmPluginTraceView(EntityCollection pluginTraces)
         {
-            List<CrmPluginTrace> crmPluginTraces = new List<CrmPluginTrace>();
+            ObservableCollection<CrmPluginTrace> crmPluginTraces = new ObservableCollection<CrmPluginTrace>();
 
             foreach (Entity pluginTrace in pluginTraces.Entities)
             {

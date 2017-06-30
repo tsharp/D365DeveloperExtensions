@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
 
 namespace CrmDeveloperExtensions2.Core.Logging
 {
@@ -38,7 +38,7 @@ namespace CrmDeveloperExtensions2.Core.Logging
 
         public static void WriteToOutputWindow(string message, Enums.MessageType messageType)
         {
-            message = $"{messageType.ToString().ToUpper()}: {DateTime.Now:MMddyyyy}  {message}";
+            message = $"{messageType.ToString().ToUpper()} | {DateTime.Now:G}: {message}";
             message = Environment.NewLine + message;
 
             _customPane.OutputString(message);
