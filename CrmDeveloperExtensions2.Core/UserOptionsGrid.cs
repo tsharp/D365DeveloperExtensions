@@ -86,6 +86,17 @@ namespace CrmDeveloperExtensions2.Core
         [Description("Path to latest Solution Packager executable")]
         public string SolutionPackagerToolPath { get; set; } = String.Empty;
 
+        //TODO: validate file path format
+        [Category("External Tools Options")]
+        [DisplayName("CrmSvcUtil Tool path")]
+        [Description("Path to latest CrmSvcUtil executable")]
+        public string CrmSvcUtilToolPath { get; set; } = String.Empty;
+
+        [Category("Intellisense Options")]
+        [DisplayName("Use Intellisense?")]
+        [Description("Get metadata from CRM and provide string completion - this will require closing and re-opening any files")]
+        public bool UseIntellisense { get; set; } = false;
+
         protected override void OnApply(PageApplyEventArgs e)
         {
             OnApplied(e);
@@ -152,6 +163,22 @@ namespace CrmDeveloperExtensions2.Core
                 Resources.Resource.UserOptionsToolsPage];
 
             return props.Item("SolutionPackagerToolPath").Value.ToString();
+        }
+
+        public static string GetCrmSvcUtilToolPath(DTE dte)
+        {
+            var props = dte.Properties[Resources.Resource.UserOptionsCategory,
+                Resources.Resource.UserOptionsToolsPage];
+
+            return props.Item("CrmSvcUtilToolPath").Value.ToString();
+        }
+
+        public static bool GetUseIntellisense(DTE dte)
+        {
+            var props = dte.Properties[Resources.Resource.UserOptionsCategory,
+                Resources.Resource.UserOptionsIntellisensePage];
+
+            return (bool)props.Item("UseIntellisense").Value;
         }
     }
 }

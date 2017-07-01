@@ -70,6 +70,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CrmSvcUtil Tool Path.
+        /// </summary>
+        public static string CrmSvcUtilToolPath {
+            get {
+                return ResourceManager.GetString("CrmSvcUtilToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extension Logging Disabled.
         /// </summary>
         public static string ExtensionLoggingDisabled {
@@ -156,6 +165,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptionsCategory {
             get {
                 return ResourceManager.GetString("UserOptionsCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intellisense.
+        /// </summary>
+        public static string UserOptionsIntellisensePage {
+            get {
+                return ResourceManager.GetString("UserOptionsIntellisensePage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intellisense Options.
+        /// </summary>
+        public static string UserOptionsIntellisensePageCategory {
+            get {
+                return ResourceManager.GetString("UserOptionsIntellisensePageCategory", resourceCulture);
             }
         }
         

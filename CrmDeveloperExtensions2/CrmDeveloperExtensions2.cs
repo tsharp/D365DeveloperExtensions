@@ -11,6 +11,7 @@ namespace CrmDeveloperExtensions2
         public const string GuidCrmDevExCmdSetString = "95CD7B0B-0592-4683-B42C-A79A41380FFE";
         public static Guid GuidCrmDeveloperExtensionsPkg = new Guid(GuidCrmDeveloperExtensionsPkgString);
         public static Guid GuidCrmDevExCmdSet = new Guid(GuidCrmDevExCmdSetString);
+        public const string GuidCrmIntellisensePkgString = "C999FB53-B0D4-4AA6-8454-621D305A7CAF";
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
@@ -22,6 +23,7 @@ namespace CrmDeveloperExtensions2
         public const int CmdidWebResourceDeployerWindow = 0x0102;
         public const int CmdidPluginTraceViewerWindow = 0x0103;
         public const int CmdidSolutionPackagerWindow = 0x0104;
+        public const int CmdidCrmIntellisense = 0x0105;
         public const int TopLevelMenu = 0x0100;
         public const int TopLevelMenuGroup = 0x0200;
     }

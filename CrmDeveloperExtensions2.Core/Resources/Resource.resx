@@ -121,6 +121,9 @@
     <value>CrmDevEx.json</value>
     <comment>Do not localize</comment>
   </data>
+  <data name="CrmSvcUtilToolPath" xml:space="preserve">
+    <value>CrmSvcUtil Tool Path</value>
+  </data>
   <data name="ExtensionLoggingDisabled" xml:space="preserve">
     <value>Extension Logging Disabled</value>
   </data>
@@ -150,6 +153,12 @@
   </data>
   <data name="UserOptionsCategory" xml:space="preserve">
     <value>Crm DevEx</value>
+  </data>
+  <data name="UserOptionsIntellisensePage" xml:space="preserve">
+    <value>Intellisense</value>
+  </data>
+  <data name="UserOptionsIntellisensePageCategory" xml:space="preserve">
+    <value>Intellisense Options</value>
   </data>
   <data name="UserOptionsLoggingPage" xml:space="preserve">
     <value>Logging</value>

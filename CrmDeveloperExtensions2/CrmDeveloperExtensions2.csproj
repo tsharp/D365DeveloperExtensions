@@ -92,6 +92,12 @@
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
+    <ProjectReference Include="..\CrmIntellisense\CrmIntellisense.csproj">
+      <Project>{e616f209-2233-4db6-9493-94184472b01c}</Project>
+      <Name>CrmIntellisense</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\CSharp\CSharpPluginClass\CSharpPluginClass.csproj">
       <Project>{0B7F7208-B7C4-4C79-BCBD-F5C0A46A5600}</Project>
       <Name>CSharpPluginClass</Name>
