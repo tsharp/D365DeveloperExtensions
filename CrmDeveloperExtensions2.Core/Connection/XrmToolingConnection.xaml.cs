@@ -65,7 +65,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
-
+            
             _solution = _dte.Solution;
             if (_solution == null)
                 return;

@@ -43,14 +43,5 @@
                 <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
             </Button>
         </StackPanel>
-
-        <!--<ToolBar x:Name="MainToolbar" Height="36" Grid.Row="1" OverflowMode="Never" Loaded="MainToolbar_OnLoaded" Background="{DynamicResource {x:Static platformUi:EnvironmentColors.EnvironmentBackgroundBrushKey}}">
-            <Button x:Name="Cancel" Padding="2,2,2,2" Click="Cancel_Click" ToolTip="{x:Static resx:Resource.SdkVersionPickerCancelTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}">
-                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}"></TextBlock>
-            </Button>
-            <Button x:Name="Ok" Padding="2,2,2,2" Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Width="75" Background="{DynamicResource VsBrush.EnvironmentBackgroundGradient}">
-                <TextBlock Text="{x:Static resx:Resource.SdkVersionPickerOKButtonText}"/>
-            </Button>
-        </ToolBar>-->
     </Grid>
 </platformUi:DialogWindow>

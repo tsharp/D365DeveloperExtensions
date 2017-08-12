@@ -46,6 +46,10 @@ namespace TemplateWizards
 
                 SdkVersions.Items.Add(item);
             }
+
+            //TODO: need to ensure a default value is picked after loading the package list
+            //string selectedVersion = ((ListViewItem)SdkVersions.SelectedItem).Content.ToString();
+            //SetSelectedVersion(selectedVersion);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -99,21 +103,6 @@ namespace TemplateWizards
             ListView sdkVersions = (ListView)sender;
             string selectedVersion = ((ListViewItem)sdkVersions.SelectedItem).Content.ToString();
             SetSelectedVersion(selectedVersion);
-        }
-
-        private void MainToolbar_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            ToolBar toolBar = sender as ToolBar;
-            if (toolBar == null)
-                return;
-
-            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
-            if (overflowGrid != null)
-                overflowGrid.Visibility = Visibility.Collapsed;
-
-            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
-            if (mainPanelBorder != null)
-                mainPanelBorder.Margin = new Thickness();
         }
     }
 }
