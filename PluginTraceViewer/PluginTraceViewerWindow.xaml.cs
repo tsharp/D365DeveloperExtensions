@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Microsoft.VisualStudio.Imaging;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
@@ -46,6 +47,12 @@ namespace PluginTraceViewer
         {
             InitializeComponent();
             DataContext = this;
+
+            //TODO: would be better if this used a converter in xaml
+            Customizations.Content = Customizations.Content.ToString().ToUpper();
+            Solutions.Content = Solutions.Content.ToString().ToUpper();
+            Poll.Content = Poll.Content.ToString().ToUpper();
+            PollOff.Content = PollOff.Content.ToString().ToUpper();
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -135,11 +142,17 @@ namespace PluginTraceViewer
             if (_worker.IsBusy)
             {
                 CancelBackgroundWorker();
+
+                PollOff.Visibility = Visibility.Collapsed;
+                Poll.Visibility = Visibility.Visible;
             }
             else
             {
                 OutputLogger.WriteToOutputWindow("Started polling for plug-in trace log records: Interval 30 seconds", MessageType.Info);
                 Refresh.IsEnabled = false;
+                PollOff.Visibility = Visibility.Visible;
+                Poll.Visibility = Visibility.Collapsed;
+
                 _worker.RunWorkerAsync();
             }
         }
@@ -297,6 +310,7 @@ namespace PluginTraceViewer
             Solutions.IsEnabled = enabled;
             Refresh.IsEnabled = enabled;
             Poll.IsEnabled = enabled;
+            PollOff.IsEnabled = enabled;
         }
 
         private void Refresh_OnClick(object sender, RoutedEventArgs e)
@@ -321,7 +335,7 @@ namespace PluginTraceViewer
             Guid[] pluginTraceLogsToDelete =
                 Traces.Where(d => d.PendingDelete).Select(d => d.PluginTraceLogidId).ToArray();
 
-            List<Guid> deletedPluginTraceLogIds = 
+            List<Guid> deletedPluginTraceLogIds =
                 Crm.PluginTrace.DeletePluginTracesFromCrm(ConnPane.CrmService, pluginTraceLogsToDelete);
 
             foreach (Guid pluginTraceLogId in deletedPluginTraceLogIds)
