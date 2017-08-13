@@ -1,247 +1,40 @@
-﻿<UserControl
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"          
              xmlns:Themes="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" 
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="120" d:DesignWidth="200">
     <UserControl.Resources>
-        <Style TargetType="{x:Type UserControl}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBackgroundKey}}"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        </Style>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        </Style>
-        <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        </Style>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DataGridStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
         <Expander.Header>
-            <TextBlock Text="Connections">
+            <TextBlock Text="Connect">
                 <TextBlock.LayoutTransform>
-                    <RotateTransform Angle="-90"/>
+                    <RotateTransform Angle="90"/>
                 </TextBlock.LayoutTransform>
             </TextBlock>
         </Expander.Header>
         <StackPanel>
-            <StackPanel Height="31" Background="{DynamicResource VsBrush.CommandBarGradientBegin}" Margin="5, 0, 0, 0"></StackPanel>
+            <StackPanel Height="31" Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"></StackPanel>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="Project" />
             <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" SelectionChanged="SolutionProjectsList_OnSelectionChanged"
-                      Initialized="SolutionProjectsList_Initialized"  Template="{DynamicResource ComboBoxControlTemplate}"
-                          Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}">
-                <ComboBox.Resources>
-                    <Style TargetType="ComboBoxItem">
-                        <Setter Property="SnapsToDevicePixels" Value="true"/>
-                        <Setter Property="OverridesDefaultStyle" Value="true"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ComboBoxItem">
-                                    <Border  Name="Border" Padding="6 4 6 4" SnapsToDevicePixels="true">
-                                        <ContentPresenter />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                    <ControlTemplate x:Key="ComboBoxControlTemplate" TargetType="{x:Type ComboBox}">
-                        <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
-                            </Grid.ColumnDefinitions>
-                            <Popup x:Name="PART_Popup" AllowsTransparency="True" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
-                                <Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
-                                    <Border x:Name="dropDownBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBackgroundGradientKey}}">
-                                        <ScrollViewer x:Name="DropDownScrollViewer">
-                                            <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
-                                                <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                                </Canvas>
-                                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                            </Grid>
-                                        </ScrollViewer>
-                                    </Border>
-                                </Themes:SystemDropShadowChrome>
-                            </Popup>
-                            <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" 
-                                          Grid.ColumnSpan="2" Grid.Column="0"
-                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="{x:Type ToggleButton}">
-                                        <Setter Property="OverridesDefaultStyle" Value="True"/>
-                                        <Setter Property="IsTabStop" Value="False"/>
-                                        <Setter Property="Focusable" Value="False"/>
-                                        <Setter Property="ClickMode" Value="Press"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                                    <Border x:Name="templateRoot" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="1" 
-                                                            SnapsToDevicePixels="True" Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}">
-                                                        <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" 
-                                                                Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                                            <Path x:Name="Arrow" Data="M 0 0 L 3.5 3 L 6 0 Z" Fill="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuSubmenuGlyphKey}}" 
-                                                                  HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"></Setter>
-                                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
-                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.BackgroundKey}}"></Setter>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"></Setter>
-                                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="false"/>
-                                                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
-                                                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                            <Setter Property="BorderThickness" TargetName="splitBorder" Value="1,0,0,0"></Setter>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.BackgroundKey}}"/>
-                                                            <Setter Property="BorderThickness" TargetName="splitBorder" Value="1,0,0,0"></Setter>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                        </MultiDataTrigger>
-                                                        <Trigger Property="IsPressed" Value="true">
-                                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"></Setter>
-                                                        </Trigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <Trigger Property="IsEnabled" Value="false">
-                                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                                                        </Trigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                                                        </MultiDataTrigger>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
-                                                                <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                                                        </MultiDataTrigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ToggleButton.Style>
-                            </ToggleButton>
-                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" 
-                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                              IsHitTestVisible="False" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="True">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-                            </Trigger>
-                            <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="True">
-                                <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
-                                <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
-                            </Trigger>
-                            <Trigger Property="HasItems" Value="False">
-                                <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsGrouping" Value="True"/>
-                                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
-                            </MultiTrigger>
-                            <Trigger Property="CanContentScroll" SourceName="DropDownScrollViewer" Value="False">
-                                <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
-                                <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ComboBox.Resources>
-            </ComboBox>
+                      Initialized="SolutionProjectsList_Initialized" Template="{DynamicResource ComboBoxControlTemplate}" />
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" IsEnabled="False" Padding="2,2,2,2" Background="White" Click="Connect_OnClick">
-                    <Image Source="../Images/connect_16.png" Width="16" Height="16" ToolTip="Connect To CRM/D365"/>
-                    <!--<imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" />-->
-
+                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="Connect To CRM/D365" />
                 </Button>
                 <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="Auto-login to last connected org?" IsChecked="True"
                           Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked"/>

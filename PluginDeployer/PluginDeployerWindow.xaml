@@ -58,7 +58,7 @@
                     </ComboBox>
                 </StackPanel>
             </StackPanel>
-            <Grid x:Name="LockOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ZIndex="10" Background="{DynamicResource OverlayColor}" Visibility="Hidden">
+            <Grid x:Name="LockOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ZIndex="10" Background="DarkGray" Opacity="0.5" Visibility="Hidden">
                 <Label x:Name="LockMessage" Content="Working..." VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"></Label>
             </Grid>
         </Grid>
