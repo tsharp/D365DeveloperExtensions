@@ -120,4 +120,112 @@
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>Crm Dev: Web Resource Deployer</value>
   </data>
+  <data name="SolutionsLabel_Label_Content" xml:space="preserve">
+    <value>Solution</value>
+  </data>
+  <data name="FilterLabel_Label_Content" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="HTML_ComboBoxItem_Content" xml:space="preserve">
+    <value>Webpage (HTML)</value>
+  </data>
+  <data name="CSS_ComboBoxItem_Content" xml:space="preserve">
+    <value>Style Sheet (CSS)</value>
+  </data>
+  <data name="JS_ComboBoxItem_Content" xml:space="preserve">
+    <value>Script (JScript)</value>
+  </data>
+  <data name="XML_ComboBoxItem_Content" xml:space="preserve">
+    <value>Data (XML)</value>
+  </data>
+  <data name="PNG_ComboBoxItem_Content" xml:space="preserve">
+    <value>PNG format</value>
+  </data>
+  <data name="JPG_ComboBoxItem_Content" xml:space="preserve">
+    <value>JPG format</value>
+  </data>
+  <data name="GIF_ComboBoxItem_Content" xml:space="preserve">
+    <value>GIF format</value>
+  </data>
+  <data name="XAP_ComboBoxItem_Content" xml:space="preserve">
+    <value>Silverlight (XAP)</value>
+  </data>
+  <data name="XSL_ComboBoxItem_Content" xml:space="preserve">
+    <value>Style Sheet (XSL)</value>
+  </data>
+  <data name="ICO_ComboBoxItem_Content" xml:space="preserve">
+    <value>ICO format</value>
+  </data>
+  <data name="SVG_ComboBoxItem_Content" xml:space="preserve">
+    <value>Vector format (SVG)</value>
+  </data>
+  <data name="RESX_ComboBoxItem_Content" xml:space="preserve">
+    <value>String (RESX)</value>
+  </data>
+  <data name="Solutions_Button_Content" xml:space="preserve">
+    <value>Solutions</value>
+  </data>
+  <data name="Solutions_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Solutions Page</value>
+  </data>
+  <data name="Customizations_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Customizations Page</value>
+  </data>
+  <data name="AddWebResource_Button_Content" xml:space="preserve">
+    <value>New Item</value>
+  </data>
+  <data name="AddWebResource_Button_ToolTip" xml:space="preserve">
+    <value>New Web Resource</value>
+  </data>
+  <data name="Customizations_Button_Content" xml:space="preserve">
+    <value>Customizations</value>
+  </data>
+  <data name="Publish_Button_Content" xml:space="preserve">
+    <value>Pubish</value>
+  </data>
+  <data name="Publish_Button_ToolTip" xml:space="preserve">
+    <value>Publish to CRM/365</value>
+  </data>
+  <data name="ShowManaged_CheckBox_Content" xml:space="preserve">
+    <value>Show Managed</value>
+  </data>
+  <data name="Type_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Publish_DataGridTemplateColumn_Header" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="PublishSelectAll_CheckBox_ToolTip" xml:space="preserve">
+    <value>Publish - Select/Unselect All</value>
+  </data>
+  <data name="PublishItem_CheckBox_ToolTip" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="Name_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DisplayName_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="MappedTo_DataGridTemplateColumn_Header" xml:space="preserve">
+    <value>Mapped To</value>
+  </data>
+  <data name="ClickToMapLabel_TextBlock_ToolTip" xml:space="preserve">
+    <value>Click to Map File</value>
+  </data>
+  <data name="GetWebResource_Button_ToolTip" xml:space="preserve">
+    <value>Download: Right-click to specify folder</value>
+  </data>
+  <data name="DownloadImage_Button_ToolTip" xml:space="preserve">
+    <value>Download from CRM/365</value>
+  </data>
+  <data name="OpenInCrmImage_Button_ToolTip" xml:space="preserve">
+    <value>Open in CRM/365</value>
+  </data>
+  <data name="CompareImage_Button_ToolTip" xml:space="preserve">
+    <value>Compare With CRM/365</value>
+  </data>
+  <data name="DeleteImage_Button_ToolTip" xml:space="preserve">
+    <value>Delete From CRM/365</value>
+  </data>
 </root>

@@ -234,9 +234,9 @@ namespace PluginTraceViewer.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Type Name.
         /// </summary>
-        public static string TypeName_DataGridTextColumn_Headerr {
+        public static string TypeName_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("TypeName_DataGridTextColumn_Headerr", resourceCulture);
+                return ResourceManager.GetString("TypeName_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
