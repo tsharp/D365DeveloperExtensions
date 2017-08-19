@@ -19,7 +19,7 @@ namespace CrmDeveloperExtensions2.Core.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -61,11 +61,38 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-login to last connected org?.
+        /// </summary>
+        public static string AutoLogin_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("AutoLogin_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CrmDevEx.json.
         /// </summary>
         public static string ConfigFileName {
             get {
                 return ResourceManager.GetString("ConfigFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect.
+        /// </summary>
+        public static string Connect_TextBlock_Text {
+            get {
+                return ResourceManager.GetString("Connect_TextBlock_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect To CRM/D365.
+        /// </summary>
+        public static string ConnectImage_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("ConnectImage_Button_Tooltip", resourceCulture);
             }
         }
         
@@ -93,6 +120,60 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string ExtensionLoggingEnabled {
             get {
                 return ResourceManager.GetString("ExtensionLoggingEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Working....
+        /// </summary>
+        public static string LockMessage_Label_DefaultContent {
+            get {
+                return ResourceManager.GetString("LockMessage_Label_DefaultContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot connect to CRM/365 - see Output window for details.
+        /// </summary>
+        public static string MessageBox_CannotConnect {
+            get {
+                return ResourceManager.GetString("MessageBox_CannotConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection Status.
+        /// </summary>
+        public static string MessageBox_CannotConnect_Title {
+            get {
+                return ResourceManager.GetString("MessageBox_CannotConnect_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error connecting to CRM/365: Last error.
+        /// </summary>
+        public static string OutputLogger_ErrorConnecting_Error {
+            get {
+                return ResourceManager.GetString("OutputLogger_ErrorConnecting_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last exception.
+        /// </summary>
+        public static string OutputLogger_ErrorConnecting_Exception {
+            get {
+                return ResourceManager.GetString("OutputLogger_ErrorConnecting_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected to CRM/365.
+        /// </summary>
+        public static string OutputLogger_SuccessConnecting {
+            get {
+                return ResourceManager.GetString("OutputLogger_SuccessConnecting", resourceCulture);
             }
         }
         
@@ -138,6 +219,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string PluginRegistraionToolPath {
             get {
                 return ResourceManager.GetString("PluginRegistraionToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project.
+        /// </summary>
+        public static string Project_Label_Content {
+            get {
+                return ResourceManager.GetString("Project_Label_Content", resourceCulture);
             }
         }
         

@@ -107,6 +107,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -143,6 +144,9 @@
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
+    <Compile Include="Controls\LockOverlay.xaml.cs">
+      <DependentUpon>LockOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DateFormatting.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
@@ -184,6 +188,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\LockOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -217,6 +225,7 @@
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

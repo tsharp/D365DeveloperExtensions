@@ -120,4 +120,64 @@
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>Crm Dev: Plug-in Trace Viewer</value>
   </data>
+  <data name="Customizations_Button_Content" xml:space="preserve">
+    <value>Customizations</value>
+  </data>
+  <data name="Customizations_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Customizations Page</value>
+  </data>
+  <data name="Solutions_Button_Content" xml:space="preserve">
+    <value>Solutions</value>
+  </data>
+  <data name="Solutions_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Solutions Page</value>
+  </data>
+  <data name="Poll_Button_Content" xml:space="preserve">
+    <value>Start Polling</value>
+  </data>
+  <data name="Poll_Button_ToolTip" xml:space="preserve">
+    <value>Start polling CRM/365 for new plug-in trace logs</value>
+  </data>
+  <data name="PollOff_Button_Content" xml:space="preserve">
+    <value>Stop Polling</value>
+  </data>
+  <data name="PollOff_Button_ToolTip" xml:space="preserve">
+    <value>Stop polling CRM/365 for plug-in trace logs</value>
+  </data>
+  <data name="RefreshImage_Button_ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ViewDetailsImage_Button_ToolTip" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="OpenInCrmImage_Button_ToolTip" xml:space="preserve">
+    <value>Open In CRM/365</value>
+  </data>
+  <data name="DeleteLogsImage_Button_ToolTip" xml:space="preserve">
+    <value>Delete Logs</value>
+  </data>
+  <data name="CreatonOn_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Created On</value>
+  </data>
+  <data name="Entity_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="Message_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="CorrelationId_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Correlation Id</value>
+  </data>
+  <data name="Depth_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Depth</value>
+  </data>
+  <data name="Mode_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="TypeName_DataGridTextColumn_Headerr" xml:space="preserve">
+    <value>Type Name</value>
+  </data>
+  <data name="ExecutionDuration_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Execution Duration</value>
+  </data>
 </root>

@@ -184,4 +184,34 @@
   <data name="XrmToolingLoggingEnabled" xml:space="preserve">
     <value>Xrm.Tooling Logging Enabled</value>
   </data>
+  <data name="Connect_TextBlock_Text" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="ConnectImage_Button_Tooltip" xml:space="preserve">
+    <value>Connect To CRM/D365</value>
+  </data>
+  <data name="AutoLogin_Button_ToolTip" xml:space="preserve">
+    <value>Auto-login to last connected org?</value>
+  </data>
+  <data name="Project_Label_Content" xml:space="preserve">
+    <value>Project</value>
+  </data>
+  <data name="LockMessage_Label_DefaultContent" xml:space="preserve">
+    <value>Working...</value>
+  </data>
+  <data name="MessageBox_CannotConnect" xml:space="preserve">
+    <value>Cannot connect to CRM/365 - see Output window for details</value>
+  </data>
+  <data name="MessageBox_CannotConnect_Title" xml:space="preserve">
+    <value>Connection Status</value>
+  </data>
+  <data name="OutputLogger_ErrorConnecting_Error" xml:space="preserve">
+    <value>Error connecting to CRM/365: Last error</value>
+  </data>
+  <data name="OutputLogger_ErrorConnecting_Exception" xml:space="preserve">
+    <value>Last exception</value>
+  </data>
+  <data name="OutputLogger_SuccessConnecting" xml:space="preserve">
+    <value>Connected to CRM/365</value>
+  </data>
 </root>

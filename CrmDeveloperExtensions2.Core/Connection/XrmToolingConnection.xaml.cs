@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Resources;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using EnvDTE80;
@@ -65,7 +66,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
-            
+
             _solution = _dte.Solution;
             if (_solution == null)
                 return;
@@ -210,7 +211,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SolutionEventsOnBeforeClosing()
         {
             ResetForm();
-        
+
             CrmService?.Dispose();
             CrmService = null;
 
@@ -322,19 +323,19 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 if (ctrl.CrmConnectionMgr?.CrmSvc == null || !ctrl.CrmConnectionMgr.CrmSvc.IsReady)
                 {
                     if (ctrl.CrmConnectionMgr != null)
-                        OutputLogger.WriteToOutputWindow("Error connecting to CRM: Last error: " +
+                        OutputLogger.WriteToOutputWindow(Resource.OutputLogger_ErrorConnecting_Error + ": " +
                                                          ctrl.CrmConnectionMgr.LastError + Environment.NewLine +
-                                                         "Last exception: " +
+                                                         Resource.OutputLogger_ErrorConnecting_Exception + ": " +
                                                          ctrl.CrmConnectionMgr.LastException.Message +
                                                          Environment.NewLine +
                                                          ctrl.CrmConnectionMgr.LastException.StackTrace,
                             MessageType.Error);
-                    MessageBox.Show("Cannot connect to CRM - see Output window for details", "Connection Status");
+                    MessageBox.Show(Resource.MessageBox_CannotConnect, Resource.MessageBox_CannotConnect_Title);
                     return;
                 }
 
-                OutputLogger.WriteToOutputWindow("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
-                    " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, MessageType.Info);
+                OutputLogger.WriteToOutputWindow(Resource.OutputLogger_SuccessConnecting + " | " +
+                    ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion + " | " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, MessageType.Info);
             }
             finally
             {

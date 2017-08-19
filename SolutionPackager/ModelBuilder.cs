@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
 using Microsoft.Xrm.Sdk;
 using SolutionPackager.ViewModels;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SolutionPackager
 {
     public static class ModelBuilder
     {
-        public static List<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
+        public static ObservableCollection<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
         {
-            List<CrmSolution> crmSolutions = new List<CrmSolution>();
+            ObservableCollection<CrmSolution> crmSolutions = new ObservableCollection<CrmSolution>();
 
             foreach (Entity entity in solutions.Entities)
             {
@@ -18,7 +19,10 @@ namespace SolutionPackager
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
-                    UniqueName = entity.GetAttributeValue<string>("uniquename")
+                    UniqueName = entity.GetAttributeValue<string>("uniquename"),
+                    Version = Version.Parse(entity.GetAttributeValue<string>("version")),
+                    Prefix = entity.GetAttributeValue<AliasedValue>("publisher.customizationprefix").Value.ToString(),
+                    NameVersion = $"{entity.GetAttributeValue<string>("friendlyname")} {entity.GetAttributeValue<string>("version")}"
                 };
 
                 crmSolutions.Add(solution);
@@ -29,13 +33,12 @@ namespace SolutionPackager
             return crmSolutions;
         }
 
-        private static List<CrmSolution> SortSolutions(List<CrmSolution> solutions)
+        private static ObservableCollection<CrmSolution> SortSolutions(ObservableCollection<CrmSolution> solutions)
         {
             //Default on top
-            var i = solutions.FindIndex(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
-            var item = solutions[i];
-            solutions.RemoveAt(i);
-            solutions.Insert(0, item);
+            var defaultSolution =solutions.FirstOrDefault(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
+            solutions.Remove(defaultSolution);
+            solutions.Insert(0, defaultSolution);
 
             return solutions;
         }

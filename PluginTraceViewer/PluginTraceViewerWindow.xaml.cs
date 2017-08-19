@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CrmDeveloperExtensions2.Core.Controls;
 using Microsoft.VisualStudio.Imaging;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
@@ -224,6 +225,7 @@ namespace PluginTraceViewer
         private void ResetForm()
         {
             CrmPluginTraces.ItemsSource = null;
+            CrmPluginTraces.IsEnabled = false;
             SetButtonState(false);
             if (_worker.IsBusy)
                 _worker.CancelAsync();
@@ -260,6 +262,8 @@ namespace PluginTraceViewer
                 return false;
 
             Traces = ModelBuilder.CreateCrmPluginTraceView(results);
+            CrmPluginTraces.IsEnabled = true;
+            Refresh.Opacity = 1;
 
             _lastLogDate = GetLastDate();
 
@@ -273,8 +277,8 @@ namespace PluginTraceViewer
                     {
                         if (animation != null)
                             StatusBar.SetStatusBarValue(_dte, "Retrieving plug-in trace logs...", (vsStatusAnimation)animation);
-                        LockMessage.Content = message;
-                        LockOverlay.Visibility = Visibility.Visible;
+
+                        Overlay.Show(message);
                     }
                 ));
         }
@@ -286,7 +290,7 @@ namespace PluginTraceViewer
                     {
                         if (animation != null)
                             StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        LockOverlay.Visibility = Visibility.Hidden;
+                        Overlay.Hide();
                     }
                 ));
         }

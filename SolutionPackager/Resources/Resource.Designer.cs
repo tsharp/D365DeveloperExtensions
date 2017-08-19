@@ -19,10 +19,10 @@ namespace SolutionPackager.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    public class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace SolutionPackager.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SolutionPackager.Resources.Resource", typeof(Resource).Assembly);
@@ -51,7 +51,7 @@ namespace SolutionPackager.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,110 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customizations.
+        /// </summary>
+        public static string Customizations_Button_Content {
+            get {
+                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Customizations Page.
+        /// </summary>
+        public static string Customizations_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Managed Solution?.
+        /// </summary>
+        public static string DownloadManaged_CheckBox_Content {
+            get {
+                return ResourceManager.GetString("DownloadManaged_CheckBox_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package.
+        /// </summary>
+        public static string PackageSolution_Button_Content {
+            get {
+                return ResourceManager.GetString("PackageSolution_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package Solution.
+        /// </summary>
+        public static string PackageSolution_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("PackageSolution_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution To Package.
+        /// </summary>
+        public static string SolutionList_ComboBox_ToolTip {
+            get {
+                return ResourceManager.GetString("SolutionList_ComboBox_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solutions.
+        /// </summary>
+        public static string Solutions_Button_Content {
+            get {
+                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Solutions Page.
+        /// </summary>
+        public static string Solutions_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solutions.
+        /// </summary>
+        public static string SolutionsLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("SolutionsLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm DevEx: Solution Packager.
         /// </summary>
-        internal static string ToolWindowTitle {
+        public static string ToolWindowTitle {
             get {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpackage.
+        /// </summary>
+        public static string UnpackageSolution_Button_Content {
+            get {
+                return ResourceManager.GetString("UnpackageSolution_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpackage Solution.
+        /// </summary>
+        public static string UnpackageSolution_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("UnpackageSolution_Button_ToolTip", resourceCulture);
             }
         }
     }
