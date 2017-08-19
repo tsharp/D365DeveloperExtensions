@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xrm.Tooling.Connector;
+using System;
 using System.Linq;
 using System.Text;
-using Microsoft.Xrm.Tooling.Connector;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -14,14 +14,14 @@ namespace CrmDeveloperExtensions2.Core
             StringBuilder sb = new StringBuilder();
             sb.Append(parts[0]);
 
-            string url = WebBrowser.GetBaseCrmUrlFomClient(client).ToString();
+            var url = client == null ? "Not connected" : WebBrowser.GetBaseCrmUrlFomClient(client).ToString();
             if (!string.IsNullOrEmpty(url))
             {
                 sb.Append(" | Connected to: ");
                 sb.Append(url);
             }
 
-            string version = client.ConnectedOrgVersion.ToString();
+            string version = client?.ConnectedOrgVersion.ToString() ?? "";
             if (!string.IsNullOrEmpty(version))
             {
                 sb.Append(" | Version: ");

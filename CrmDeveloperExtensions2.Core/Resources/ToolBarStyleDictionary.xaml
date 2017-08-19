@@ -30,6 +30,7 @@
     </Style>
     <Style TargetType="{x:Type StackPanel}" x:Key="StacKPanelToolbar">
         <Setter Property="Background" Value="{DynamicResource VsBrush.CommandBarGradientBegin}"/>
+        <Setter Property="Height" Value="31" />
     </Style>
 
 </ResourceDictionary>

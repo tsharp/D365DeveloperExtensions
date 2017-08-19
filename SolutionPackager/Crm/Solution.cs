@@ -18,7 +18,7 @@ namespace SolutionPackager.Crm
                 QueryExpression query = new QueryExpression
                 {
                     EntityName = "solution",
-                    ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename"),
+                    ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename", "version"),
                     Criteria = new FilterExpression
                     {
                         Conditions =
@@ -35,6 +35,18 @@ namespace SolutionPackager.Crm
                                 Operator = ConditionOperator.Equal,
                                 Values = { false }
                             }
+                        }
+                    },
+                    LinkEntities =
+                    {
+                        new LinkEntity
+                        {
+                            LinkFromEntityName = "solution",
+                            LinkFromAttributeName = "publisherid",
+                            LinkToEntityName = "publisher",
+                            LinkToAttributeName = "publisherid",
+                            Columns = new ColumnSet("customizationprefix"),
+                            EntityAlias = "publisher"
                         }
                     },
                     Orders =

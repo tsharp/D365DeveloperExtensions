@@ -2,10 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"          
-             xmlns:Themes="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" 
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="120" d:DesignWidth="200">
@@ -21,22 +20,22 @@
     </UserControl.Resources>
     <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
         <Expander.Header>
-            <TextBlock Text="Connect">
+            <TextBlock Text="{x:Static resources:Resource.Connect_TextBlock_Text}">
                 <TextBlock.LayoutTransform>
                     <RotateTransform Angle="90"/>
                 </TextBlock.LayoutTransform>
             </TextBlock>
         </Expander.Header>
         <StackPanel>
-            <StackPanel Height="31" Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"></StackPanel>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="Project" />
-            <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" SelectionChanged="SolutionProjectsList_OnSelectionChanged"
-                      Initialized="SolutionProjectsList_Initialized" Template="{DynamicResource ComboBoxControlTemplate}" />
+            <StackPanel Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"></StackPanel>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.Project_Label_Content}" />
+            <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" 
+                      SelectionChanged="SolutionProjectsList_OnSelectionChanged" Initialized="SolutionProjectsList_Initialized" Template="{DynamicResource ComboBoxControlTemplate}" />
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="Connect" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" IsEnabled="False" Padding="2,2,2,2" Background="White" Click="Connect_OnClick">
-                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="Connect To CRM/D365" />
+                <Button x:Name="Connect" Margin="5,5,0,0" IsEnabled="False" Click="Connect_OnClick">
+                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="{x:Static resources:Resource.ConnectImage_Button_Tooltip}" />
                 </Button>
-                <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="Auto-login to last connected org?" IsChecked="True"
+                <CheckBox x:Name="AutoLogin" Margin="5,5,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.AutoLogin_Button_ToolTip}" IsChecked="True"
                           Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked"/>
             </StackPanel>
         </StackPanel>
