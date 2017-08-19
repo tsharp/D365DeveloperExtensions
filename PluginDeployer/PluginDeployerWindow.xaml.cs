@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -81,16 +82,33 @@ namespace PluginDeployer
             //so we don't want to contine further unless our window is active
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
+
+            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            {
+                SetWindowCaption(gotFocus.Caption);
+                SetButtonState(true);
+                LoadData();
+            }
         }
 
-        private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-            await GetCrmData();
+            SetButtonState(true);
+            LoadData();
 
+            //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
+        }
 
-            SetButtonState(true);
+        private async void LoadData()
+        {
+            await GetCrmData();
+        }
+
+        private void SetWindowCaption(string currentCaption)
+        {
+            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void SetButtonState(bool enabled)
@@ -101,6 +119,9 @@ namespace PluginDeployer
             IlMerge.IsEnabled = enabled;
             SpklInstrument.IsEnabled = enabled;
             RegistrationTool.IsEnabled = enabled;
+            SolutionList.IsEnabled = enabled;
+            CrmAssemblyList.IsEnabled = enabled;
+            ProjectAssemblyList.IsEnabled = enabled;
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -298,8 +319,7 @@ namespace PluginDeployer
                     {
                         if (animation != null)
                             StatusBar.SetStatusBarValue(_dte, "Retrieving assemblies...", (vsStatusAnimation)animation);
-                        LockMessage.Content = message;
-                        LockOverlay.Visibility = Visibility.Visible;
+                        Overlay.Show(message);
                     }
                 ));
         }
@@ -311,7 +331,7 @@ namespace PluginDeployer
                     {
                         if (animation != null)
                             StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        LockOverlay.Visibility = Visibility.Hidden;
+                        Overlay.Hide();
                     }
                 ));
         }

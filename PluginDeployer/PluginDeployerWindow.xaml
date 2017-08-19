@@ -1,12 +1,22 @@
 ﻿<UserControl x:Class="PluginDeployer.PluginDeployerWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
+             xmlns:lockOverlay="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
+             xmlns:resources="clr-namespace:PluginDeployer.Resources"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -15,51 +25,49 @@
         <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved"
                                          ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved"></connection:XrmToolingConnection>
-
-        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <Button x:Name="Publish" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Publish_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/publish_16.png" Width="16" Height="16" ToolTip="Build And Deploy To CRM"></Image>
-            </Button>
-            <Button x:Name="Customizations" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Customizations_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/customizations_16.png" Width="16" Height="16" ToolTip="Open CRM Default Solution"></Image>
-            </Button>
-            <Button x:Name="Solutions" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="Solutions_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/solutions_16.png" Width="16" Height="16" ToolTip="Open CRM Solutions Page"></Image>
-            </Button>
-            <Button x:Name="IlMerge" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="IlMerge_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/merge_16.png" Width="16" Height="16" ToolTip="Toggle ILMerging Referenced Assemblies"></Image>
-            </Button>
-            <Button x:Name="SpklInstrument" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="SpklInstrument_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/instrument_16.png" Width="16" Height="16" ToolTip="Add Spkl deployment attributes"></Image>
-            </Button>
-            <Button x:Name="RegistrationTool" Margin="5,5,0,0" VerticalAlignment="Top" Padding="2,2,2,2" Click="RegistrationTool_OnClick" Background="White" IsEnabled="False">
-                <Image Source="/CrmDeveloperExtensions2.Core;component/images/registrationtool_16.png" Width="16" Height="16" ToolTip="Launch Plug-in Registrion Tool"></Image>
-            </Button>
-            <!--<TextBlock Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" 
+        <Grid Column="1" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
+                <Button x:Name="Publish" Click="Publish_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.Publish_Button_Content}" ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" />
+                <Button x:Name="Customizations" Click="Customizations_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.Customizations_Button_Content}" ToolTip="{x:Static resources:Resource.Customizations_Button_ToolTip}" />
+                <Button x:Name="Solutions" Click="Solutions_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.Solutions_Button_Content}" ToolTip="{x:Static resources:Resource.Solutions_Button_ToolTip}" />
+                <Button x:Name="IlMerge" Click="IlMerge_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.IlMerge_Button_Content}" ToolTip="{x:Static resources:Resource.IlMerge_Button_ToolTip}" />
+                <Button x:Name="SpklInstrument" Click="SpklInstrument_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.SpklInstrument_Button_Content}" ToolTip="{x:Static resources:Resource.SpklInstrument_Button_ToolTip}" />
+                <Button x:Name="RegistrationTool" Click="RegistrationTool_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    Content="{x:Static resources:Resource.RegistrationTool_Button_Content}" ToolTip="{x:Static resources:Resource.RegistrationTool_Button_ToolTip}" />
+                <!--<TextBlock Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" 
                                Text="Use SDK Plug-in Registration Tool for initial deployment and step/image management" />-->
-        </StackPanel>
-        <Grid HorizontalAlignment="Stretch" Grid.Column="1" Margin="5, 30, 0,0">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="105" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">Solution</Label>
-                    <ComboBox x:Name="SolutionList" Margin="5,5,0,0" DisplayMemberPath="Name" SelectionChanged="SolutionList_OnSelectionChanged" Width="350">
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="105" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">CRM Assembly</Label>
-                    <ComboBox x:Name="CrmAssemblyList" Margin="5,5,0,0" DisplayMemberPath="DisplayName"
-                                      SelectionChanged="AssemblyList_OnSelectionChanged" Width="350">
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="105" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">Project Assembly</Label>
-                    <ComboBox x:Name="ProjectAssemblyList" Margin="5,5,0,0" DisplayMemberPath="DisplayName"
-                                      SelectionChanged="ProjectAssemblyList_OnSelectionChanged" Width="350">
-                    </ComboBox>
-                </StackPanel>
             </StackPanel>
-            <Grid x:Name="LockOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" ZIndex="10" Background="DarkGray" Opacity="0.5" Visibility="Hidden">
-                <Label x:Name="LockMessage" Content="Working..." VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"></Label>
+            <Grid HorizontalAlignment="Stretch" Margin="5, 30, 0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" />
+                    <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" DisplayMemberPath="Name" SelectionChanged="SolutionList_OnSelectionChanged" Width="350" 
+                                  Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False" />
+                    <Label x:Name="AssemblyLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="{x:Static resources:Resource.AssemblyLabel_Label_Content}"/>
+                    <ComboBox x:Name="CrmAssemblyList" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
+                                      SelectionChanged="AssemblyList_OnSelectionChanged" Width="350" IsEnabled="False" />
+                    <Label x:Name="ProjectAssemblyLabel" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="{x:Static resources:Resource.ProjectAssemblyLabel_Label_Content}" />
+                    <ComboBox x:Name="ProjectAssemblyList" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
+                                      SelectionChanged="ProjectAssemblyList_OnSelectionChanged" Width="350" IsEnabled="False">
+                    </ComboBox>
+                </Grid>
+                <lockOverlay:LockOverlay x:Name="Overlay" />
             </Grid>
         </Grid>
     </Grid>

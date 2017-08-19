@@ -19,10 +19,10 @@ namespace PluginDeployer.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    public class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace PluginDeployer.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PluginDeployer.Resources.Resource", typeof(Resource).Assembly);
@@ -51,7 +51,7 @@ namespace PluginDeployer.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,54 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Assembly.
+        /// </summary>
+        public static string AssemblyLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("AssemblyLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customizations.
+        /// </summary>
+        public static string Customizations_Button_Content {
+            get {
+                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Customizations Page.
+        /// </summary>
+        public static string Customizations_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IlMerge.
+        /// </summary>
+        public static string IlMerge_Button_Content {
+            get {
+                return ResourceManager.GetString("IlMerge_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle ILMerging Referenced Assemblies.
+        /// </summary>
+        public static string IlMerge_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("IlMerge_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ILMerge Referenced Assemblies.
         /// </summary>
-        internal static string ILMergeTooltipEnable {
+        public static string ILMergeTooltipEnable {
             get {
                 return ResourceManager.GetString("ILMergeTooltipEnable", resourceCulture);
             }
@@ -72,16 +117,106 @@ namespace PluginDeployer.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Remove ILMerge.
         /// </summary>
-        internal static string ILMergeTooltipRemove {
+        public static string ILMergeTooltipRemove {
             get {
                 return ResourceManager.GetString("ILMergeTooltipRemove", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Project Assembly.
+        /// </summary>
+        public static string ProjectAssemblyLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("ProjectAssemblyLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish.
+        /// </summary>
+        public static string Publish_Button_Content {
+            get {
+                return ResourceManager.GetString("Publish_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish to CRM/365.
+        /// </summary>
+        public static string Publish_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Publish_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration Tool.
+        /// </summary>
+        public static string RegistrationTool_Button_Content {
+            get {
+                return ResourceManager.GetString("RegistrationTool_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch Plug-in Registrion Tool.
+        /// </summary>
+        public static string RegistrationTool_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("RegistrationTool_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution.
+        /// </summary>
+        public static string SolutionLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("SolutionLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solutions.
+        /// </summary>
+        public static string Solutions_Button_Content {
+            get {
+                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Solutions Page.
+        /// </summary>
+        public static string Solutions_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Spkl.
+        /// </summary>
+        public static string SpklInstrument_Button_Content {
+            get {
+                return ResourceManager.GetString("SpklInstrument_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Spkl deployment attributes.
+        /// </summary>
+        public static string SpklInstrument_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("SpklInstrument_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm Dev: Plug-in Deployer.
         /// </summary>
-        internal static string ToolWindowTitle {
+        public static string ToolWindowTitle {
             get {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
             }
