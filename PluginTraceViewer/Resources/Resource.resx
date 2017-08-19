@@ -174,7 +174,7 @@
   <data name="Mode_DataGridTextColumn_Header" xml:space="preserve">
     <value>Mode</value>
   </data>
-  <data name="TypeName_DataGridTextColumn_Headerr" xml:space="preserve">
+  <data name="TypeName_DataGridTextColumn_Header" xml:space="preserve">
     <value>Type Name</value>
   </data>
   <data name="ExecutionDuration_DataGridTextColumn_Header" xml:space="preserve">

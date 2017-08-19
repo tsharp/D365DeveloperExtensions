@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -43,6 +44,17 @@ namespace WebResourceDeployer
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<WebResourceItem> _webResourceItems;
         private ObservableCollection<ComboBoxItem> _projectFiles;
+
+        public Visibility ShowVersion9
+        {
+            get
+            {
+                if (ConnPane.CrmService == null)
+                    return Visibility.Collapsed;
+
+                return ConnPane.CrmService.ConnectedOrgVersion.Major >= 9 ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
 
         public ObservableCollection<ComboBoxItem> ProjectFiles
         {
@@ -111,7 +123,21 @@ namespace WebResourceDeployer
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
-            SetWindowCaption(gotFocus.Caption);
+            //Grid is populated already
+            if (WebResourceGrid.ItemsSource != null)
+                return;
+
+            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            {
+                SetWindowCaption(gotFocus.Caption);
+                SetButtonState(true);
+                LoadData();
+            }
+        }
+
+        private async void LoadData()
+        {
+            await GetCrmData();
         }
 
         private void SetWindowCaption(string currentCaption)
@@ -119,18 +145,17 @@ namespace WebResourceDeployer
             _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
-        private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
             _webResourceItems = new ObservableCollection<WebResourceItem>();
             ProjectFiles = new ObservableCollection<ComboBoxItem>();
             ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
 
-            await GetCrmData();
+            SetWindowCaption(_dte.ActiveWindow.Caption);
+            SetButtonState(true);
+            LoadData();
 
-            SolutionList.IsEnabled = true;
-            Customizations.IsEnabled = true;
-            Solutions.IsEnabled = true;
-
+            //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
         }
@@ -468,18 +493,24 @@ namespace WebResourceDeployer
             }
         }
 
+        private void SetButtonState(bool enabled)
+        {
+            Publish.IsEnabled = enabled;
+            Customizations.IsEnabled = enabled;
+            Solutions.IsEnabled = enabled;
+            AddWebResource.IsEnabled = enabled;
+        }
+
         private void ResetForm()
         {
             _webResourceItems = new ObservableCollection<WebResourceItem>();
-            Publish.IsEnabled = false;
-            Customizations.IsEnabled = false;
-            Solutions.IsEnabled = false;
+
             SolutionList.IsEnabled = false;
             SolutionList.ItemsSource = null;
             WebResourceType.SelectedIndex = -1;
             WebResourceGrid.ItemsSource = null;
-            AddWebResource.IsEnabled = false;
             ShowManaged.IsChecked = false;
+            SetButtonState(false);
         }
 
         private void PublishSelectAll_OnClick(object sender, RoutedEventArgs e)
@@ -767,7 +798,7 @@ namespace WebResourceDeployer
             if (e.PropertyName == "BoundFile")
             {
                 if (WebResourceGrid.ItemsSource != null)
-                    foreach (WebResourceItem webResourceItem in _webResourceItems.Where( w => w.WebResourceId == item.WebResourceId))
+                    foreach (WebResourceItem webResourceItem in _webResourceItems.Where(w => w.WebResourceId == item.WebResourceId))
                     {
                         webResourceItem.BoundFile = item.BoundFile;
                         if (string.IsNullOrEmpty(item.BoundFile))
@@ -854,7 +885,7 @@ namespace WebResourceDeployer
 
             //Item Count
             CollectionView cv = (CollectionView)icv;
-            ItemCount.Text = cv.Count + " Items";
+            ItemCount.Content = cv.Count + " Items";
         }
 
         private void ShowMessage(string message, vsStatusAnimation? animation = null)
@@ -864,8 +895,7 @@ namespace WebResourceDeployer
                     {
                         if (animation != null)
                             StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
-                        LockMessage.Content = message;
-                        LockOverlay.Visibility = Visibility.Visible;
+                        Overlay.Show(message);
                     }
                 ));
         }
@@ -877,7 +907,7 @@ namespace WebResourceDeployer
                     {
                         if (animation != null)
                             StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        LockOverlay.Visibility = Visibility.Hidden;
+                        Overlay.Hide();
                     }
                 ));
         }

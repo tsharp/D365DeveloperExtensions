@@ -7,7 +7,7 @@
     xmlns:lockOverlay="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
     xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
     xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
-    xmlns:Resources="clr-namespace:PluginTraceViewer.Resources"
+    xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
     x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
     mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100" SnapsToDevicePixels="True">
     <UserControl.Resources>
@@ -28,13 +28,13 @@
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
                 <Button x:Name="Customizations" Click="Customizations_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static Resources:Resource.Customizations_Button_Content}" ToolTip="{x:Static Resources:Resource.Customizations_Button_ToolTip}" />
+                        Content="{x:Static resources:Resource.Customizations_Button_Content}" ToolTip="{x:Static resources:Resource.Customizations_Button_ToolTip}" />
                 <Button x:Name="Solutions" Click="Solutions_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static Resources:Resource.Solutions_Button_Content}" ToolTip="{x:Static Resources:Resource.Solutions_Button_ToolTip}" />
+                        Content="{x:Static resources:Resource.Solutions_Button_Content}" ToolTip="{x:Static resources:Resource.Solutions_Button_ToolTip}" />
                 <Button x:Name="Poll" Click="Poll_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static Resources:Resource.Poll_Button_Content}" ToolTip="{x:Static Resources:Resource.Poll_Button_ToolTip}" />
+                        Content="{x:Static resources:Resource.Poll_Button_Content}" ToolTip="{x:Static resources:Resource.Poll_Button_ToolTip}" />
                 <Button x:Name="PollOff" Click="Poll_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static Resources:Resource.PollOff_Button_Content}" ToolTip="{x:Static Resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
+                        Content="{x:Static resources:Resource.PollOff_Button_Content}" ToolTip="{x:Static resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
             </StackPanel>
             <DataGrid x:Name="CrmPluginTraces" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Margin="5,31,0,0" BorderThickness="0" Background="Transparent" 
                       ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeColumns="False" CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed" 
@@ -45,7 +45,7 @@
                             <StackPanel Background="Transparent">
                                 <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" Opacity=".25">
                                     <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
-                                                        ToolTip="{x:Static Resources:Resource.RefreshImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.RefreshImage_Button_ToolTip}" />
                                 </Button>
                             </StackPanel>
                         </DataGridTemplateColumn.Header>
@@ -53,7 +53,7 @@
                             <DataTemplate>
                                 <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
                                     <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
-                                                        ToolTip="{x:Static Resources:Resource.ViewDetailsImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.ViewDetailsImage_Button_ToolTip}" />
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -63,7 +63,7 @@
                             <DataTemplate>
                                 <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
                                     <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
-                                                        ToolTip="{x:Static Resources:Resource.OpenInCrmImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -73,7 +73,7 @@
                             <StackPanel>
                                 <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
                                     <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
-                                                        ToolTip="{x:Static Resources:Resource.DeleteLogsImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.DeleteLogsImage_Button_ToolTip}" />
                                 </Button>
                             </StackPanel>
                         </DataGridTemplateColumn.Header>
@@ -84,20 +84,20 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.CreatonOn_DataGridTextColumn_Header}" Binding="{Binding CreatedOn}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.Entity_DataGridTextColumn_Header}" Binding="{Binding Entity}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.Message_DataGridTextColumn_Header}" Binding="{Binding MessageName}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.CorrelationId_DataGridTextColumn_Header}" Binding="{Binding CorrelationId}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
+                    <DataGridTextColumn Header="{x:Static resources:Resource.CreatonOn_DataGridTextColumn_Header}" Binding="{Binding CreatedOn}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.Entity_DataGridTextColumn_Header}" Binding="{Binding Entity}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.Message_DataGridTextColumn_Header}" Binding="{Binding MessageName}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.CorrelationId_DataGridTextColumn_Header}" Binding="{Binding CorrelationId}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.Mode_DataGridTextColumn_Header}" Binding="{Binding Mode}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.TypeName_DataGridTextColumn_Headerr}" Binding="{Binding TypeName}"/>
-                    <DataGridTextColumn Header="{x:Static Resources:Resource.ExecutionDuration_DataGridTextColumn_Header}" Binding="{Binding ExecutionDuration}">
+                    <DataGridTextColumn Header="{x:Static resources:Resource.Mode_DataGridTextColumn_Header}" Binding="{Binding Mode}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.TypeName_DataGridTextColumn_Header}" Binding="{Binding TypeName}"/>
+                    <DataGridTextColumn Header="{x:Static resources:Resource.ExecutionDuration_DataGridTextColumn_Header}" Binding="{Binding ExecutionDuration}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="HorizontalAlignment" Value="Right" />
