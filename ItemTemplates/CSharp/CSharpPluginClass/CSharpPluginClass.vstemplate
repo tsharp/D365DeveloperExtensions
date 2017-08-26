@@ -6,7 +6,7 @@
     <Icon>icon.png</Icon>
     <TemplateID>a092755b-a211-42b2-b052-48bbf8008b24</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>PluginClass.cs</DefaultName>
   </TemplateData>

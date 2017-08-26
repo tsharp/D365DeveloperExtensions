@@ -162,23 +162,11 @@
   <data name="RESX_ComboBoxItem_Content" xml:space="preserve">
     <value>String (RESX)</value>
   </data>
-  <data name="Solutions_Button_Content" xml:space="preserve">
-    <value>Solutions</value>
-  </data>
-  <data name="Solutions_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Solutions Page</value>
-  </data>
-  <data name="Customizations_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Customizations Page</value>
-  </data>
   <data name="AddWebResource_Button_Content" xml:space="preserve">
     <value>New Item</value>
   </data>
   <data name="AddWebResource_Button_ToolTip" xml:space="preserve">
     <value>New Web Resource</value>
-  </data>
-  <data name="Customizations_Button_Content" xml:space="preserve">
-    <value>Customizations</value>
   </data>
   <data name="Publish_Button_Content" xml:space="preserve">
     <value>Pubish</value>

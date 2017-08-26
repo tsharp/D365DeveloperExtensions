@@ -70,24 +70,6 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Customizations.
-        /// </summary>
-        public static string Customizations_Button_Content {
-            get {
-                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Customizations Page.
-        /// </summary>
-        public static string Customizations_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to IlMerge.
         /// </summary>
         public static string IlMerge_Button_Content {
@@ -174,24 +156,6 @@ namespace PluginDeployer.Resources {
         public static string SolutionLabel_Label_Content {
             get {
                 return ResourceManager.GetString("SolutionLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Solutions.
-        /// </summary>
-        public static string Solutions_Button_Content {
-            get {
-                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Solutions Page.
-        /// </summary>
-        public static string Solutions_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
             }
         }
         

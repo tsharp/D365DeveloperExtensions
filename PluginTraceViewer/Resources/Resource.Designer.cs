@@ -79,24 +79,6 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Customizations.
-        /// </summary>
-        public static string Customizations_Button_Content {
-            get {
-                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Customizations Page.
-        /// </summary>
-        public static string Customizations_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete Logs.
         /// </summary>
         public static string DeleteLogsImage_Button_ToolTip {
@@ -201,24 +183,6 @@ namespace PluginTraceViewer.Resources {
         public static string RefreshImage_Button_ToolTip {
             get {
                 return ResourceManager.GetString("RefreshImage_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Solutions.
-        /// </summary>
-        public static string Solutions_Button_Content {
-            get {
-                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Solutions Page.
-        /// </summary>
-        public static string Solutions_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
             }
         }
         

@@ -10,15 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -27,14 +22,11 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using PluginDeployer.ViewModels;
 using SparkleXrm.Tasks;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
-using Thread = System.Threading.Thread;
-using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace PluginDeployer
 {
@@ -46,7 +38,11 @@ namespace PluginDeployer
         private bool _isIlMergeInstalled;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        //public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -114,8 +110,6 @@ namespace PluginDeployer
         private void SetButtonState(bool enabled)
         {
             Publish.IsEnabled = enabled;
-            Customizations.IsEnabled = enabled;
-            Solutions.IsEnabled = enabled;
             IlMerge.IsEnabled = enabled;
             SpklInstrument.IsEnabled = enabled;
             RegistrationTool.IsEnabled = enabled;
@@ -367,14 +361,6 @@ namespace PluginDeployer
             {
                 HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
             }
-        }
-
-        private void Customizations_OnClick(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Solutions_OnClick(object sender, RoutedEventArgs e)
-        {
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

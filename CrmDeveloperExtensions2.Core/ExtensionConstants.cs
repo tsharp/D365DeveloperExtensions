@@ -18,5 +18,8 @@ namespace CrmDeveloperExtensions2.Core
 
         public static string[] CrmDevExWindows = { "A3479AE0-5F4F-4A14-96F4-46F39000023A", "FA0E0759-D337-4C4C-8474-217A6BDC3C06",
             "F8BF1118-57B6-4404-9923-8A98AB710EBA", "E7A15FDA-6C33-48F8-A1E7-D78E49458A7A" };
+
+        public static string SolutionPackagerLogFile = "SolutionPackager.log";
+        public static string SolutionPackagerMapFile = "mapping.xml";
     }
 }

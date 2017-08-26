@@ -106,6 +106,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customizations.
+        /// </summary>
+        public static string Customizations_Button_Content {
+            get {
+                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Customizations Page.
+        /// </summary>
+        public static string Customizations_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extension Logging Disabled.
         /// </summary>
         public static string ExtensionLoggingDisabled {
@@ -237,6 +255,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string SolutionPackagerToolPath {
             get {
                 return ResourceManager.GetString("SolutionPackagerToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solutions.
+        /// </summary>
+        public static string Solutions_Button_Content {
+            get {
+                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM/365 Solutions Page.
+        /// </summary>
+        public static string Solutions_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
             }
         }
         

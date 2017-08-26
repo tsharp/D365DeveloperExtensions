@@ -214,4 +214,16 @@
   <data name="OutputLogger_SuccessConnecting" xml:space="preserve">
     <value>Connected to CRM/365</value>
   </data>
+  <data name="Customizations_Button_Content" xml:space="preserve">
+    <value>Customizations</value>
+  </data>
+  <data name="Customizations_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Customizations Page</value>
+  </data>
+  <data name="Solutions_Button_Content" xml:space="preserve">
+    <value>Solutions</value>
+  </data>
+  <data name="Solutions_Button_ToolTip" xml:space="preserve">
+    <value>CRM/365 Solutions Page</value>
+  </data>
 </root>

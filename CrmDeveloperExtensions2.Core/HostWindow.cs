@@ -14,7 +14,7 @@ namespace CrmDeveloperExtensions2.Core
             StringBuilder sb = new StringBuilder();
             sb.Append(parts[0]);
 
-            var url = client == null ? "Not connected" : WebBrowser.GetBaseCrmUrlFomClient(client).ToString();
+            var url = (client?.ConnectedOrgUniqueName == null) ? "Not connected" : WebBrowser.GetBaseCrmUrlFomClient(client).ToString();
             if (!string.IsNullOrEmpty(url))
             {
                 sb.Append(" | Connected to: ");

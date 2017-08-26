@@ -30,6 +30,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
 using static CrmDeveloperExtensions2.Core.FileSystem;
+using Mapping = WebResourceDeployer.Config.Mapping;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
@@ -294,18 +295,6 @@ namespace WebResourceDeployer
             FilterWebResources();
         }
 
-        private void Customizations_OnClick(object sender, RoutedEventArgs e)
-        {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
-        }
-
-        private void Solutions_OnClick(object sender, RoutedEventArgs e)
-        {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
-        }
-
         private void WebResourceGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Make rows unselectable
@@ -333,7 +322,7 @@ namespace WebResourceDeployer
 
             string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
 
-            Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
+            CrmDeveloperExtensions2.Core.Config.Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
         }
 
         private void UpdateWebResourceItemsBoundFile(string oldValue, string newValue)
@@ -496,8 +485,6 @@ namespace WebResourceDeployer
         private void SetButtonState(bool enabled)
         {
             Publish.IsEnabled = enabled;
-            Customizations.IsEnabled = enabled;
-            Solutions.IsEnabled = enabled;
             AddWebResource.IsEnabled = enabled;
         }
 
@@ -693,7 +680,7 @@ namespace WebResourceDeployer
             foreach (WebResourceItem webResourceItem in _webResourceItems.Where(w => w.WebResourceId == webResourceId))
                 _webResourceItems.Remove(webResourceItem);
 
-            _webResourceItems = Mapping.HandleMappings(_dte, ConnPane.SelectedProject, _webResourceItems, ConnPane.OrganizationId);
+            _webResourceItems = Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject, _webResourceItems, ConnPane.OrganizationId);
 
             FilterWebResources();
 
@@ -780,7 +767,7 @@ namespace WebResourceDeployer
 
             _webResourceItems = new ObservableCollection<WebResourceItem>(_webResourceItems.OrderBy(w => w.Name));
 
-            _webResourceItems = Mapping.HandleMappings(_dte, ConnPane.SelectedProject, _webResourceItems, ConnPane.OrganizationId);
+            _webResourceItems = Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject, _webResourceItems, ConnPane.OrganizationId);
             WebResourceGrid.ItemsSource = _webResourceItems;
             FilterWebResources();
             WebResourceGrid.IsEnabled = true;

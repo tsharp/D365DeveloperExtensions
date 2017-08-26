@@ -61,29 +61,20 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Customizations.
+        ///   Looks up a localized string similar to Create Managed Solution?.
         /// </summary>
-        public static string Customizations_Button_Content {
+        public static string CreateManagedLabel_Label_Content {
             get {
-                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Customizations Page.
-        /// </summary>
-        public static string Customizations_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("CreateManagedLabel_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Download Managed Solution?.
         /// </summary>
-        public static string DownloadManaged_CheckBox_Content {
+        public static string DownloadManagedLabel_Label_Content {
             get {
-                return ResourceManager.GetString("DownloadManaged_CheckBox_Content", resourceCulture);
+                return ResourceManager.GetString("DownloadManagedLabel_Label_Content", resourceCulture);
             }
         }
         
@@ -106,29 +97,38 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Publish.
+        /// </summary>
+        public static string PublishSolution_Button_Content {
+            get {
+                return ResourceManager.GetString("PublishSolution_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import and publish latest unmanaged solution to CRM/365.
+        /// </summary>
+        public static string PublishSolution_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("PublishSolution_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store Solution Files?.
+        /// </summary>
+        public static string SaveSolutionsLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("SaveSolutionsLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solution To Package.
         /// </summary>
         public static string SolutionList_ComboBox_ToolTip {
             get {
                 return ResourceManager.GetString("SolutionList_ComboBox_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Solutions.
-        /// </summary>
-        public static string Solutions_Button_Content {
-            get {
-                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Solutions Page.
-        /// </summary>
-        public static string Solutions_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
             }
         }
         

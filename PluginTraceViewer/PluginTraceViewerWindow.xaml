@@ -3,20 +3,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
-    xmlns:lockOverlay="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
     xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
     xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+    xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
+    xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
+    xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
     xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
     x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
     mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100" SnapsToDevicePixels="True">
     <UserControl.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DataGridStyleDictionary.xaml"></ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"></ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DataGridStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -27,14 +29,14 @@
         <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"/>
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                <Button x:Name="Customizations" Click="Customizations_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static resources:Resource.Customizations_Button_Content}" ToolTip="{x:Static resources:Resource.Customizations_Button_ToolTip}" />
-                <Button x:Name="Solutions" Click="Solutions_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static resources:Resource.Solutions_Button_Content}" ToolTip="{x:Static resources:Resource.Solutions_Button_ToolTip}" />
                 <Button x:Name="Poll" Click="Poll_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static resources:Resource.Poll_Button_Content}" ToolTip="{x:Static resources:Resource.Poll_Button_ToolTip}" />
+                        Content="{Binding Source={x:Static resources:Resource.Poll_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        ToolTip="{x:Static resources:Resource.Poll_Button_ToolTip}" />
                 <Button x:Name="PollOff" Click="Poll_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{x:Static resources:Resource.PollOff_Button_Content}" ToolTip="{x:Static resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
+                        Content="{Binding Source={x:Static resources:Resource.PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        ToolTip="{x:Static resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
+                <coreControls:CustomizationButton />
+                <coreControls:SolutionsButton />
             </StackPanel>
             <DataGrid x:Name="CrmPluginTraces" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Margin="5,31,0,0" BorderThickness="0" Background="Transparent" 
                       ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeColumns="False" CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed" 
@@ -111,7 +113,7 @@
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
             </DataGrid>
-            <lockOverlay:LockOverlay x:Name="Overlay" />
+            <coreControls:LockOverlay x:Name="Overlay" />
         </Grid>
     </Grid>
 </UserControl>

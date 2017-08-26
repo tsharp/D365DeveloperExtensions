@@ -120,18 +120,6 @@
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>Crm Dev: Plug-in Trace Viewer</value>
   </data>
-  <data name="Customizations_Button_Content" xml:space="preserve">
-    <value>Customizations</value>
-  </data>
-  <data name="Customizations_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Customizations Page</value>
-  </data>
-  <data name="Solutions_Button_Content" xml:space="preserve">
-    <value>Solutions</value>
-  </data>
-  <data name="Solutions_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Solutions Page</value>
-  </data>
   <data name="Poll_Button_Content" xml:space="preserve">
     <value>Start Polling</value>
   </data>
