@@ -25,7 +25,6 @@ using Microsoft.Xrm.Sdk.Client;
 using NLog;
 using PluginDeployer.ViewModels;
 using SparkleXrm.Tasks;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 
 namespace PluginDeployer
@@ -254,14 +253,14 @@ namespace PluginDeployer
 
         private async Task GetCrmData()
         {
-            ShowMessage("Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
 
             var solutionTask = GetSolutions();
             var assembliesTask = GetCrmAssemblies();
 
             await Task.WhenAll(solutionTask, assembliesTask);
 
-            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
             if (!solutionTask.Result)
             {
@@ -306,35 +305,11 @@ namespace PluginDeployer
             return true;
         }
 
-        private void ShowMessage(string message, vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Retrieving assemblies...", (vsStatusAnimation)animation);
-                        Overlay.Show(message);
-                    }
-                ));
-        }
-
-        private void HideMessage(vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        Overlay.Hide();
-                    }
-                ));
-        }
-
         private void Publish_OnClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                ShowMessage("Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.ShowMessage(_dte, "Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 if (CrmAssemblyList.SelectedIndex == -1)
                     return;
@@ -359,7 +334,7 @@ namespace PluginDeployer
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
             }
         }
 
@@ -422,7 +397,7 @@ namespace PluginDeployer
         {
             try
             {
-                ShowMessage("Instrumenting...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Instrumenting...", vsStatusAnimation.vsStatusAnimationSync);
 
                 if (CrmAssemblyList.SelectedIndex == -1)
                     return;
@@ -440,7 +415,7 @@ namespace PluginDeployer
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
