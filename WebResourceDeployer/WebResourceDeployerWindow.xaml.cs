@@ -31,7 +31,6 @@ using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
 using static CrmDeveloperExtensions2.Core.FileSystem;
 using Mapping = WebResourceDeployer.Config.Mapping;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
@@ -265,7 +264,7 @@ namespace WebResourceDeployer
 
         private async void UpdateWebResources(List<WebResourceItem> items)
         {
-            ShowMessage("Updating & Publishing...", vsStatusAnimation.vsStatusAnimationDeploy);
+            Overlay.ShowMessage(_dte, "Updating & Publishing...", vsStatusAnimation.vsStatusAnimationDeploy);
 
             List<Entity> webResources = new List<Entity>();
             foreach (WebResourceItem webResourceItem in items)
@@ -283,7 +282,7 @@ namespace WebResourceDeployer
             else
                 success = await Task.Run(() => Crm.WebResource.UpdateAndPublishMultiple(ConnPane.CrmService, webResources));
 
-            HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
 
             if (success) return;
 
@@ -572,7 +571,7 @@ namespace WebResourceDeployer
         {
             try
             {
-                ShowMessage("Downloading file...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Downloading file...", vsStatusAnimation.vsStatusAnimationSync);
 
                 Entity webResource = await Task.Run(() => Crm.WebResource.RetrieveWebResourceFromCrm(client, webResourceId));
 
@@ -589,7 +588,7 @@ namespace WebResourceDeployer
                         MessageBoxButton.YesNo);
                     if (result != MessageBoxResult.Yes)
                     {
-                        HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                        Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                         return;
                     }
                 }
@@ -622,7 +621,7 @@ namespace WebResourceDeployer
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
@@ -637,7 +636,7 @@ namespace WebResourceDeployer
 
         private async void CompareWebResource_OnClick(object sender, RoutedEventArgs e)
         {
-            ShowMessage("Downloading file for compare...", vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.ShowMessage(_dte, "Downloading file for compare...", vsStatusAnimation.vsStatusAnimationSync);
 
             //Get the file from CRM and save in temp files
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
@@ -645,7 +644,7 @@ namespace WebResourceDeployer
 
             OutputLogger.WriteToOutputWindow($"Retrieved Web Resource {webResourceId} For Compare", MessageType.Info);
 
-            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
             string tempFile = WriteTempFile(webResource.GetAttributeValue<string>("name"),
                     Crm.WebResource.DecodeWebResource(webResource.GetAttributeValue<string>("content")));
@@ -672,7 +671,7 @@ namespace WebResourceDeployer
                                                             "This will attempt to delete the web resource from CRM.", "Delete Web Resource", MessageBoxButton.YesNo);
             if (deleteResult != MessageBoxResult.Yes) return;
 
-            ShowMessage("Deleting web resource...", vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.ShowMessage(_dte, "Deleting web resource...", vsStatusAnimation.vsStatusAnimationSync);
 
             Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
             await Task.Run(() => Crm.WebResource.DeleteWebResourcetFromCrm(ConnPane.CrmService, webResourceId));
@@ -686,7 +685,7 @@ namespace WebResourceDeployer
 
             OutputLogger.WriteToOutputWindow($"Deleted Web Resource {webResourceId}", MessageType.Info);
 
-            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
         }
 
         private void ProjectFileList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -706,14 +705,14 @@ namespace WebResourceDeployer
 
         private async Task GetCrmData()
         {
-            ShowMessage("Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
 
             var solutionTask = GetSolutions();
             var webResourceTask = GetWebResources();
 
             await Task.WhenAll(solutionTask, webResourceTask);
 
-            HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
             if (!solutionTask.Result)
             {
@@ -873,30 +872,6 @@ namespace WebResourceDeployer
             //Item Count
             CollectionView cv = (CollectionView)icv;
             ItemCount.Content = cv.Count + " Items";
-        }
-
-        private void ShowMessage(string message, vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
-                        Overlay.Show(message);
-                    }
-                ));
-        }
-
-        private void HideMessage(vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        Overlay.Hide();
-                    }
-                ));
         }
     }
 }

@@ -18,7 +18,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
@@ -215,7 +214,7 @@ namespace PluginTraceViewer
         {
             try
             {
-                ShowMessage("Getting plug-in trace logs...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Getting plug-in trace logs...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var traceTask = GetCrmPluginTraces();
 
@@ -223,13 +222,13 @@ namespace PluginTraceViewer
 
                 if (!traceTask.Result)
                 {
-                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show("Error Plug-in Trace Logs. See the Output Window for additional details.");
                 }
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
@@ -248,31 +247,6 @@ namespace PluginTraceViewer
             _lastLogDate = GetLastDate();
 
             return true;
-        }
-
-        private void ShowMessage(string message, vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Retrieving plug-in trace logs...", (vsStatusAnimation)animation);
-
-                        Overlay.Show(message);
-                    }
-                ));
-        }
-
-        private void HideMessage(vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        Overlay.Hide();
-                    }
-                ));
         }
 
         private void ViewDetails_OnClick(object sender, RoutedEventArgs e)

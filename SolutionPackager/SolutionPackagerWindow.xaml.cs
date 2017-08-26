@@ -23,13 +23,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using Window = EnvDTE.Window;
 
 namespace SolutionPackager
 {
-    public partial class SolutionPackagerWindow : UserControl, INotifyPropertyChanged
+    public partial class SolutionPackagerWindow : INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
@@ -68,7 +67,7 @@ namespace SolutionPackager
         {
             InitializeComponent();
             DataContext = this;
-            
+
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
@@ -138,7 +137,7 @@ namespace SolutionPackager
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
             SetControlState(true);
-           
+
             LoadData();
 
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
@@ -173,13 +172,10 @@ namespace SolutionPackager
 
         private void SetControlState(bool enabled)
         {
-            //if (includeSolutionList)
-            //    Solutions.IsEnabled = enabled;
             if (enabled == false)
                 PackageSolution.IsEnabled = false;
             UnpackageSolution.IsEnabled = enabled;
             SolutionList.IsEnabled = enabled;
-            //Customizations.IsEnabled = enabled;
             SaveSolutions.IsEnabled = enabled;
             ProjectFolder.IsEnabled = enabled;
             EnableSolutionPackagerLog.IsEnabled = enabled;
@@ -205,7 +201,7 @@ namespace SolutionPackager
         {
             try
             {
-                ShowMessage("Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var solutionTask = GetSolutions();
 
@@ -213,7 +209,7 @@ namespace SolutionPackager
 
                 if (!solutionTask.Result)
                 {
-                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show("Error Retrieving Solutions. See the Output Window for additional details.");
                 }
 
@@ -221,7 +217,7 @@ namespace SolutionPackager
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
@@ -266,30 +262,6 @@ namespace SolutionPackager
                 SetFormVersionNumbers();
         }
 
-        private void ShowMessage(string message, vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Working...", (vsStatusAnimation)animation);
-                        Overlay.Show(message);
-                    }
-                ));
-        }
-
-        private void HideMessage(vsStatusAnimation? animation = null)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        if (animation != null)
-                            StatusBar.ClearStatusBarValue(_dte, (vsStatusAnimation)animation);
-                        Overlay.Hide();
-                    }
-                ));
-        }
-
         private void PublishSolution_OnClick(object sender, RoutedEventArgs e)
         {
             PublishSolutionToCrm();
@@ -315,14 +287,13 @@ namespace SolutionPackager
             bool success;
             try
             {
-                ShowMessage("Importing solution...", vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.ShowMessage(_dte, "Importing solution...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 success = await Task.Run(() => PublishToCrm(latestSolutionPath, publishAll));
             }
             finally
             {
-                Overlay.Hide();
-                HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
             }
             if (!success)
                 MessageBox.Show("Error importing or publishing solution. See output window for details.");
@@ -336,7 +307,7 @@ namespace SolutionPackager
             if (!publishAll)
                 return success;
 
-            ShowMessage("Publishing customizations...", vsStatusAnimation.vsStatusAnimationDeploy);
+            Overlay.ShowMessage(_dte, "Publishing customizations...", vsStatusAnimation.vsStatusAnimationDeploy);
 
             success =
                 await Task.Run(() => CrmDeveloperExtensions2.Core.Crm.Publish.PublishAllCustomizations(ConnPane.CrmService));
@@ -407,7 +378,7 @@ namespace SolutionPackager
 
         private void TriggerMappingUpdate(object sender)
         {
-            Control c = (Control) sender;
+            Control c = (Control)sender;
             if (!c.IsLoaded)
                 return;
 
@@ -466,22 +437,19 @@ namespace SolutionPackager
                 CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
                 CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
 
-                Overlay.Show("Working...");
-                ShowMessage("Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
 
                 bool success = Packager.CreatePackage(_dte, selectedSolution.UniqueName, version, ConnPane.SelectedProject, crmDevExSolutionPackage);
 
                 if (!success)
                 {
-                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-                    Overlay.Hide();
+                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show("Error Packaging Solution. See the Output Window for additional details.");
                 }
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-                Overlay.Hide();
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
@@ -500,8 +468,7 @@ namespace SolutionPackager
                 CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
                 CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
 
-                Overlay.Show("Working...");
-                ShowMessage("Connecting to CRM/365 and getting unmanaged solution...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Connecting to CRM/365 and getting unmanaged solution...", vsStatusAnimation.vsStatusAnimationSync);
 
                 List<Task> tasks = new List<Task>();
                 var getUmanagedSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, selectedSolution, false);
@@ -518,8 +485,7 @@ namespace SolutionPackager
 
                 if (string.IsNullOrEmpty(getUmanagedSolution.Result))
                 {
-                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-                    Overlay.Hide();
+                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show("Error Retrieving Unmanaged Solution. See the Output Window for additional details.");
                     return;
                 }
@@ -528,15 +494,14 @@ namespace SolutionPackager
                 {
                     if (string.IsNullOrEmpty(getManagedSolution.Result))
                     {
-                        HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-                        Overlay.Hide();
+                        Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                         MessageBox.Show("Error Retrieving Managed Solution. See the Output Window for additional details.");
                         return;
                     }
                 }
 
                 OutputLogger.WriteToOutputWindow("Retrieved Unmanaged Solution From CRM", MessageType.Info);
-                ShowMessage("Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, "Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
 
                 bool success = Packager.ExtractPackage(_dte, getUmanagedSolution.Result, getManagedSolution?.Result, ConnPane.SelectedProject, crmDevExSolutionPackage);
 
@@ -548,8 +513,7 @@ namespace SolutionPackager
             }
             finally
             {
-                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
-                Overlay.Hide();
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
         }
 
