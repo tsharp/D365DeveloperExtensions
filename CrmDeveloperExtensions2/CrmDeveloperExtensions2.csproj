@@ -105,6 +105,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSolutionPackagerMap\CSharpSolutionPackagerMap.csproj">
+      <Project>{E8D7659C-BB6B-4FDF-B0D8-6E6007F4696F}</Project>
+      <Name>CSharpSolutionPackagerMap</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\CSharp\CSharpWorkflowClass\CSharpWorkflowClass.csproj">
       <Project>{CD9BBF13-B6A5-4DC0-A698-D1C323A63CC9}</Project>
       <Name>CSharpWorkflowClass</Name>

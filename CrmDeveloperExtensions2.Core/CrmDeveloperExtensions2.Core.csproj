@@ -62,6 +62,10 @@
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Settings.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86" />
     <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Immutable.10.0.10.0.30319\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Validation, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -104,6 +108,7 @@
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
@@ -133,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Config\Mapping.cs" />
     <Compile Include="Connection\ConnectEventArgs.cs" />
     <Compile Include="Connection\CrmLoginForm.xaml.cs">
       <DependentUpon>CrmLoginForm.xaml</DependentUpon>
@@ -144,9 +150,17 @@
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
+    <Compile Include="Controls\SolutionsButton.xaml.cs">
+      <DependentUpon>SolutionsButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CustomizationButton.xaml.cs">
+      <DependentUpon>CustomizationButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LockOverlay.xaml.cs">
       <DependentUpon>LockOverlay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ToUpperConverter.cs" />
+    <Compile Include="Crm\Publish.cs" />
     <Compile Include="DateFormatting.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
@@ -156,11 +170,13 @@
     <Compile Include="Logging\ExtensionLogger.cs" />
     <Compile Include="Logging\XrmToolingLogging.cs" />
     <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
+    <Compile Include="Models\CrmDevExSolutionPackage.cs" />
     <Compile Include="Models\CrmDexExConfig.cs" />
     <Compile Include="Models\CrmDexExConfigWebResource.cs" />
     <Compile Include="Models\MockingFramework.cs" />
     <Compile Include="Models\NuGetPackage.cs" />
     <Compile Include="Logging\OutputLogger.cs" />
+    <Compile Include="StringFormatting.cs" />
     <Compile Include="Vs\ProjectItemWorker.cs" />
     <Compile Include="Vs\ProjectWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -185,6 +201,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Connection\CrmLoginForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SolutionsButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\CustomizationButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

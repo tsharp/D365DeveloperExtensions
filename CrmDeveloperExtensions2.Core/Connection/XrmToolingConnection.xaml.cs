@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
@@ -31,6 +32,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private ProjectItem _movedProjectItem;
         private string _movedProjectItemOldName;
         private bool _autoLogin;
+        private bool _isConnected;
 
         public CrmServiceClient CrmService;
         public Guid OrganizationId;
@@ -47,6 +49,15 @@ namespace CrmDeveloperExtensions2.Core.Connection
             }
         }
         public Project SelectedProject;
+        public bool IsConnected
+        {
+            get => _isConnected;
+            set
+            {
+                _isConnected = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event EventHandler<ConnectEventArgs> Connected;
         public event EventHandler SolutionBeforeClosing;
@@ -58,6 +69,13 @@ namespace CrmDeveloperExtensions2.Core.Connection
         public event EventHandler<ProjectItemRenamedEventArgs> ProjectItemRenamed;
         public event EventHandler<ProjectItemMovedEventArgs> ProjectItemMoved;
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<SelectionChangedEventArgs> SelectedProjectChanged;
+
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public XrmToolingConnection()
         {
@@ -122,7 +140,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             if (CrmService == null)
             {
                 CrmServiceClient client = SharedGlobals.GetGlobal("CrmService", _dte) as CrmServiceClient;
-                if (client != null)
+                if (client?.ConnectedOrgUniqueName != null)
                     CrmService = client;
             }
         }
@@ -362,8 +380,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             OnConnected(new ConnectEventArgs
             {
-                ServiceClient = loginForm.CrmConnectionMgr.CrmSvc
+                ServiceClient = loginForm.CrmConnectionMgr.CrmSvc,
             });
+
+            IsConnected = true;
         }
 
         private void SolutionProjectsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -371,6 +391,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
             ComboBox solutionProjectsList = (ComboBox)sender;
             SelectedProject = (Project)solutionProjectsList.SelectedItem;
             Connect.IsEnabled = SelectedProject != null;
+
+            SelectedProjectChanged?.Invoke(this, e);
         }
 
         private void SolutionProjectsList_Initialized(object sender, EventArgs e)

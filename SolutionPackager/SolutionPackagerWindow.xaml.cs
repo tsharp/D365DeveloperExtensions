@@ -1,28 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Controls;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using NLog;
 using SolutionPackager.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
-using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
+using Window = EnvDTE.Window;
 
 namespace SolutionPackager
 {
@@ -31,14 +34,25 @@ namespace SolutionPackager
         private readonly DTE _dte;
         private readonly Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-
         private ObservableCollection<CrmSolution> _solutionData;
+        private ObservableCollection<string> _solutionFolders;
+
+        public bool SolutionXmlExists;
         public ObservableCollection<CrmSolution> SolutionData
         {
             get => _solutionData;
             set
             {
                 _solutionData = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> SolutionFolders
+        {
+            get => _solutionFolders;
+            set
+            {
+                _solutionFolders = value;
                 OnPropertyChanged();
             }
         }
@@ -54,13 +68,7 @@ namespace SolutionPackager
         {
             InitializeComponent();
             DataContext = this;
-
-            //TODO: would be better if this used a converter in xaml
-            Customizations.Content = Customizations.Content.ToString().ToUpper();
-            Solutions.Content = Solutions.Content.ToString().ToUpper();
-            PackageSolution.Content = PackageSolution.Content.ToString().ToUpper();
-            UnpackageSolution.Content = UnpackageSolution.Content.ToString().ToUpper();
-
+            
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
@@ -72,9 +80,14 @@ namespace SolutionPackager
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
+
+            DataObject.AddPastingHandler(VersionMajor, TextBoxPasting);
+            DataObject.AddPastingHandler(VersionMinor, TextBoxPasting);
+            DataObject.AddPastingHandler(VersionBuild, TextBoxPasting);
+            DataObject.AddPastingHandler(VersionRevision, TextBoxPasting);
         }
 
-        private void WindowEventsOnWindowActivated(EnvDTE.Window gotFocus, EnvDTE.Window lostFocus)
+        private void WindowEventsOnWindowActivated(Window gotFocus, Window lostFocus)
         {
             //No solution loaded
             if (_solution.Count == 0)
@@ -88,7 +101,33 @@ namespace SolutionPackager
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
-            SetWindowCaption(gotFocus.Caption);
+            //Window was already loaded
+            if (SolutionData != null)
+                return;
+
+            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            {
+                SetWindowCaption(gotFocus.Caption);
+                SetControlState(true);
+                BindPackageButton();
+                LoadData();
+            }
+        }
+
+        private async void LoadData()
+        {
+            GetSolutionFolders();
+            await GetCrmData();
+        }
+
+        private void BindPackageButton()
+        {
+            SolutionXmlExists = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject) && SolutionData != null;
+        }
+
+        private void GetSolutionFolders()
+        {
+            SolutionFolders = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
         }
 
         private void SetWindowCaption(string currentCaption)
@@ -96,14 +135,16 @@ namespace SolutionPackager
             _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
-        private async void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-            SetButtonState(true);
-
-            await GetCrmData();
+            SetControlState(true);
+           
+            LoadData();
 
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
+
+            SetWindowCaption(_dte.ActiveWindow.Caption);
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -127,125 +168,37 @@ namespace SolutionPackager
 
             string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
 
-            //Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
+            Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
         }
 
-        private void SetButtonState(bool enabled)
+        private void SetControlState(bool enabled)
         {
-            Customizations.IsEnabled = enabled;
-            Solutions.IsEnabled = enabled;
-            PackageSolution.IsEnabled = enabled;
+            //if (includeSolutionList)
+            //    Solutions.IsEnabled = enabled;
+            if (enabled == false)
+                PackageSolution.IsEnabled = false;
             UnpackageSolution.IsEnabled = enabled;
             SolutionList.IsEnabled = enabled;
+            //Customizations.IsEnabled = enabled;
+            SaveSolutions.IsEnabled = enabled;
+            ProjectFolder.IsEnabled = enabled;
+            EnableSolutionPackagerLog.IsEnabled = enabled;
             DownloadManaged.IsEnabled = enabled;
-        }
-
-        private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
-        {
-            ProjectItem projectItem = e.ProjectItem;
-            if (projectItem.Name == null) return;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-            string oldName = e.OldName;
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-                string oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
-
-                //UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
-
-                //UpdateProjectFilesAfterChange(oldItemName, newItemName);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
-
-                //UpdateWebResourceItemsBoundFilePath(oldItemPath, newItemPath);
-
-                //UpdateProjectFilesPathsAfterChange(oldItemPath, newItemPath);
-            }
-        }
-
-        private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
-        {
-            ProjectItem projectItem = e.ProjectItem;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
-                //UpdateWebResourceItemsBoundFile(itemName, null);
-
-                //UpdateProjectFilesAfterChange(itemName, null);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = itemName.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                //UpdateWebResourceItemsBoundFilePath(itemName, null);
-
-                //UpdateProjectFilesPathsAfterChange(itemName, null);
-            }
-        }
-
-        private void ConnPane_OnProjectItemMoved(object sender, ProjectItemMovedEventArgs e)
-        {
-            ProjectItem postMoveProjectItem = e.PostMoveProjectItem;
-            string oldItemName = e.PreMoveName;
-            var projectPath = Path.GetDirectoryName(postMoveProjectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-            Guid itemType = new Guid(postMoveProjectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string newItemName = FileSystem.LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1]);
-
-                //UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
-
-                //UpdateProjectFilesAfterChange(oldItemName, newItemName);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = newItemPath.LastIndexOf(postMoveProjectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                //UpdateWebResourceItemsBoundFilePath(oldItemName, newItemPath);
-
-                //UpdateProjectFilesPathsAfterChange(oldItemName, newItemPath);
-            }
-        }
-        private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
-        {
+            CreateManaged.IsEnabled = enabled;
+            VersionMajor.IsEnabled = enabled;
+            VersionMinor.IsEnabled = enabled;
+            VersionBuild.IsEnabled = enabled;
+            VersionRevision.IsEnabled = enabled;
+            UpdateVersion.IsEnabled = enabled;
+            PublishAll.IsEnabled = enabled;
         }
 
         private void ResetForm()
         {
-            SolutionList.ItemsSource = null;
-            SetButtonState(false);
+            RemoveEventHandlers();
+            SolutionData = null;
+            SolutionFolders = null;
+            SetControlState(false);
         }
 
         private async Task GetCrmData()
@@ -263,6 +216,8 @@ namespace SolutionPackager
                     HideMessage(vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show("Error Retrieving Solutions. See the Output Window for additional details.");
                 }
+
+                AddEventHandlers();
             }
             finally
             {
@@ -281,7 +236,34 @@ namespace SolutionPackager
             SolutionData = ModelBuilder.CreateCrmSolutionView(results);
             SolutionList.DisplayMemberPath = "NameVersion";
 
+            CrmDevExSolutionPackage crmDevExSolutionPackage =
+                Config.Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject,
+                    SolutionData, ConnPane.OrganizationId);
+
+            if (crmDevExSolutionPackage == null)
+            {
+                ProjectFolder.SelectedItem = SolutionFolders.FirstOrDefault(s => s == "/_Solutions");
+                return true;
+            }
+
+            SetControlStateForItem(crmDevExSolutionPackage);
+
             return true;
+        }
+
+        private void SetControlStateForItem(CrmDevExSolutionPackage crmDevExSolutionPackage)
+        {
+            SolutionList.SelectedItem = SolutionData.FirstOrDefault(s => s.SolutionId == crmDevExSolutionPackage.SolutionId);
+            SaveSolutions.IsChecked = crmDevExSolutionPackage.SaveSolutions;
+            ProjectFolder.SelectedItem = SolutionFolders.FirstOrDefault(s => s == crmDevExSolutionPackage.ProjectFolder);
+            EnableSolutionPackagerLog.IsChecked = crmDevExSolutionPackage.EnableSolutionPackagerLog;
+            DownloadManaged.IsChecked = crmDevExSolutionPackage.DownloadManaged;
+            CreateManaged.IsChecked = crmDevExSolutionPackage.CreateManaged;
+            PublishAll.IsChecked = crmDevExSolutionPackage.PublishAll;
+
+            PackageSolution.IsEnabled = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject);
+            if (PackageSolution.IsEnabled)
+                SetFormVersionNumbers();
         }
 
         private void ShowMessage(string message, vsStatusAnimation? animation = null)
@@ -290,7 +272,7 @@ namespace SolutionPackager
                 new Action(() =>
                     {
                         if (animation != null)
-                            StatusBar.SetStatusBarValue(_dte, "Retrieving web resources...", (vsStatusAnimation)animation);
+                            StatusBar.SetStatusBarValue(_dte, "Working...", (vsStatusAnimation)animation);
                         Overlay.Show(message);
                     }
                 ));
@@ -308,36 +290,407 @@ namespace SolutionPackager
                 ));
         }
 
-        private void Publish_OnClick(object sender, RoutedEventArgs e)
+        private void PublishSolution_OnClick(object sender, RoutedEventArgs e)
         {
+            PublishSolutionToCrm();
         }
 
-        private void Customizations_OnClick(object sender, RoutedEventArgs e)
+        private async void PublishSolutionToCrm()
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to publish solution?", "Ok to publish?",
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+
+            if (result == MessageBoxResult.No)
+                return;
+
+            string latestSolutionPath =
+                SolutionXml.GetLatestSolutionPath(ConnPane.SelectedProject, ProjectFolder.SelectedItem.ToString());
+
+            if (string.IsNullOrEmpty(latestSolutionPath))
+            {
+                MessageBox.Show("Unable to find latest solution.");
+                return;
+            }
+            bool publishAll = PublishAll.IsChecked == true;
+            bool success;
+            try
+            {
+                ShowMessage("Importing solution...", vsStatusAnimation.vsStatusAnimationDeploy);
+
+                success = await Task.Run(() => PublishToCrm(latestSolutionPath, publishAll));
+            }
+            finally
+            {
+                Overlay.Hide();
+                HideMessage(vsStatusAnimation.vsStatusAnimationDeploy);
+            }
+            if (!success)
+                MessageBox.Show("Error importing or publishing solution. See output window for details.");
+
         }
 
-        private void Solutions_OnClick(object sender, RoutedEventArgs e)
+        private async Task<bool> PublishToCrm(string latestSolutionPath, bool publishAll)
         {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
+            var success = await Task.Run(() => Crm.Solution.ImportSolution(ConnPane.CrmService, latestSolutionPath));
+
+            if (!publishAll)
+                return success;
+
+            ShowMessage("Publishing customizations...", vsStatusAnimation.vsStatusAnimationDeploy);
+
+            success =
+                await Task.Run(() => CrmDeveloperExtensions2.Core.Crm.Publish.PublishAllCustomizations(ConnPane.CrmService));
+
+            return success;
+        }
+
+        private CrmDevExSolutionPackage CreateMappingObject()
+        {
+            if (SolutionList.SelectedItem == null)
+                return null;
+
+            return new CrmDevExSolutionPackage
+            {
+                SolutionId = ((CrmSolution)SolutionList.SelectedItem).SolutionId,
+                SaveSolutions = SaveSolutions.IsChecked ?? false,
+                EnableSolutionPackagerLog = EnableSolutionPackagerLog.IsChecked ?? false,
+                ProjectFolder = ProjectFolder.SelectedItem.ToString(),
+                DownloadManaged = DownloadManaged.IsChecked ?? false,
+                CreateManaged = CreateManaged.IsChecked ?? false,
+                PublishAll = PublishAll.IsChecked ?? false
+            };
+        }
+
+        private void AddEventHandlers()
+        {
+            SolutionList.SelectionChanged += SolutionList_OnSelectionChanged;
+            DownloadManaged.Checked += DownloadManaged_OnChecked;
+            DownloadManaged.Unchecked += DownloadManaged_OnChecked;
+            SaveSolutions.Checked += SaveSolutions_OnChecked;
+            SaveSolutions.Unchecked += SaveSolutions_OnChecked;
+            CreateManaged.Checked += CreateManaged_OnChecked;
+            CreateManaged.Unchecked += CreateManaged_OnChecked;
+            PublishAll.Checked += PublishAll_OnChecked;
+            PublishAll.Unchecked += PublishAll_OnChecked;
+        }
+
+        private void RemoveEventHandlers()
+        {
+            SolutionList.SelectionChanged -= SolutionList_OnSelectionChanged;
+            DownloadManaged.Checked -= DownloadManaged_OnChecked;
+            DownloadManaged.Unchecked -= DownloadManaged_OnChecked;
+            SaveSolutions.Checked -= SaveSolutions_OnChecked;
+            SaveSolutions.Unchecked -= SaveSolutions_OnChecked;
+            CreateManaged.Checked -= CreateManaged_OnChecked;
+            CreateManaged.Unchecked -= CreateManaged_OnChecked;
+            PublishAll.Checked -= PublishAll_OnChecked;
+            PublishAll.Unchecked -= PublishAll_OnChecked;
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!SolutionList.IsLoaded)
+                return;
+
+            if (SolutionList.SelectedItem == null)
+            {
+                SetControlState(false);
+
+                Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, null, ConnPane.OrganizationId);
+                return;
+            }
+
+            SetControlState(true);
+            SetFormVersionNumbers();
+            Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, CreateMappingObject(), ConnPane.OrganizationId);
+        }
+
+        private void TriggerMappingUpdate(object sender)
+        {
+            Control c = (Control) sender;
+            if (!c.IsLoaded)
+                return;
+
+            Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, CreateMappingObject(), ConnPane.OrganizationId);
         }
 
         private void DownloadManaged_OnChecked(object sender, RoutedEventArgs e)
         {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void SaveSolutions_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void CreateManaged_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void PublishAll_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void ConnPane_OnSelectedProjectChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox solutionProjectsList = (ComboBox)e.Source;
+            if (!solutionProjectsList.IsLoaded || ConnPane.SelectedProject == null)
+                return;
+
+            Config.Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject, SolutionData,
+                ConnPane.OrganizationId);
         }
 
         private void PackageSolution_OnClick(object sender, RoutedEventArgs e)
         {
+            PackageProcess();
+        }
+
+        private void PackageProcess()
+        {
+            try
+            {
+                if (SolutionList.SelectedItem == null)
+                    return;
+
+                Version version = SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject);
+                if (version == null)
+                {
+                    MessageBox.Show("Invalid Solution.xml version number. See the Output Window for additional details.");
+                    return;
+                }
+
+                CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
+                CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
+
+                Overlay.Show("Working...");
+                ShowMessage("Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
+
+                bool success = Packager.CreatePackage(_dte, selectedSolution.UniqueName, version, ConnPane.SelectedProject, crmDevExSolutionPackage);
+
+                if (!success)
+                {
+                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                    Overlay.Hide();
+                    MessageBox.Show("Error Packaging Solution. See the Output Window for additional details.");
+                }
+            }
+            finally
+            {
+                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.Hide();
+            }
         }
 
         private void UnpackageSolution_OnClick(object sender, RoutedEventArgs e)
         {
+            UnpackageProcess();
+        }
+
+        private async void UnpackageProcess()
+        {
+            try
+            {
+                if (SolutionList.SelectedItem == null)
+                    return;
+
+                CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
+                CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
+
+                Overlay.Show("Working...");
+                ShowMessage("Connecting to CRM/365 and getting unmanaged solution...", vsStatusAnimation.vsStatusAnimationSync);
+
+                List<Task> tasks = new List<Task>();
+                var getUmanagedSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, selectedSolution, false);
+                tasks.Add(getUmanagedSolution);
+
+                Task<string> getManagedSolution = null;
+                if (crmDevExSolutionPackage.DownloadManaged)
+                {
+                    getManagedSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, selectedSolution, true);
+                    tasks.Add(getManagedSolution);
+                }
+
+                await Task.WhenAll(tasks);
+
+                if (string.IsNullOrEmpty(getUmanagedSolution.Result))
+                {
+                    HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                    Overlay.Hide();
+                    MessageBox.Show("Error Retrieving Unmanaged Solution. See the Output Window for additional details.");
+                    return;
+                }
+
+                if (crmDevExSolutionPackage.DownloadManaged && getManagedSolution != null)
+                {
+                    if (string.IsNullOrEmpty(getManagedSolution.Result))
+                    {
+                        HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                        Overlay.Hide();
+                        MessageBox.Show("Error Retrieving Managed Solution. See the Output Window for additional details.");
+                        return;
+                    }
+                }
+
+                OutputLogger.WriteToOutputWindow("Retrieved Unmanaged Solution From CRM", MessageType.Info);
+                ShowMessage("Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
+
+                bool success = Packager.ExtractPackage(_dte, getUmanagedSolution.Result, getManagedSolution?.Result, ConnPane.SelectedProject, crmDevExSolutionPackage);
+
+                if (!success)
+                    MessageBox.Show("Error Extracting Solution. See the Output Window for additional details.");
+
+                PackageSolution.IsEnabled = true;
+                SetFormVersionNumbers();
+            }
+            finally
+            {
+                HideMessage(vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.Hide();
+            }
+        }
+
+        private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
+        {
+            BindPackageButton();
+
+            ProjectItem projectItem = e.ProjectItem;
+            Guid itemType = new Guid(projectItem.Kind);
+
+            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
+                return;
+
+            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+
+            string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+            SolutionFolders.Add(newItemName);
+
+            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+        }
+
+        private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
+        {
+            BindPackageButton();
+
+            ProjectItem projectItem = e.ProjectItem;
+
+            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+
+            Guid itemType = new Guid(projectItem.Kind);
+
+            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
+                return;
+
+            var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+
+
+            SolutionFolders.Remove(itemName);
+
+            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+        }
+
+        private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
+        {
+            BindPackageButton();
+
+            ProjectItem projectItem = e.ProjectItem;
+            if (projectItem.Name == null) return;
+
+            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+            if (projectPath == null) return;
+            string oldName = e.OldName;
+            Guid itemType = new Guid(projectItem.Kind);
+
+            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
+                return;
+
+            var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+
+            int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
+            if (index == -1) return;
+
+            var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
+
+            SolutionFolders.Remove(oldItemPath);
+
+            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+        }
+
+        private void SetFormVersionNumbers()
+        {
+            Version version = SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject);
+            if (version == null)
+            {
+                VersionMajor.Text = String.Empty;
+                VersionMinor.Text = String.Empty;
+                VersionBuild.Text = String.Empty;
+                VersionRevision.Text = String.Empty;
+                return;
+            }
+
+            VersionMajor.Text = version.Major.ToString();
+            VersionMinor.Text = version.Minor.ToString();
+            VersionBuild.Text = version.Build != -1 ? version.Build.ToString() : String.Empty;
+            VersionRevision.Text = version.Revision != -1 ? version.Revision.ToString() : String.Empty;
+        }
+
+        private void UpdateVersion_OnClick(object sender, RoutedEventArgs e)
+        {
+            Version version = ValidateVersionInput(VersionMajor.Text, VersionMinor.Text,
+                VersionBuild.Text, VersionRevision.Text);
+            if (version == null)
+            {
+                MessageBox.Show("Invalid version number");
+                return;
+            }
+
+            bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version);
+            if (!success)
+                MessageBox.Show("Error updating Solution.xml version: see output window for details");
+        }
+
+        private Version ValidateVersionInput(string majorIn, string minorIn, string buildIn, string revisionIn)
+        {
+            bool isMajorInt = int.TryParse(majorIn, out int major);
+            bool isMinorInt = int.TryParse(minorIn, out int minor);
+            bool isBuildInt = int.TryParse(buildIn, out int build);
+            bool isRevisionInt = int.TryParse(revisionIn, out int revision);
+
+            if (!isMajorInt || !isMinorInt)
+                return null;
+
+            string v = string.Concat(major, ".", minor, (isBuildInt) ? $".{build}" : null,
+                isRevisionInt ? $".{revision}" : null);
+
+            return new Version(v);
+        }
+
+        private void Version_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+        }
+
+        private static bool IsTextAllowed(string text)
+        {
+            Regex regex = new Regex("[^0-9.-]+");
+            return !regex.IsMatch(text);
+        }
+
+        private void TextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(String)))
+            {
+                String text = (String)e.DataObject.GetData(typeof(String));
+                if (!IsTextAllowed(text))
+                    e.CancelCommand();
+            }
+            else
+                e.CancelCommand();
         }
     }
 }

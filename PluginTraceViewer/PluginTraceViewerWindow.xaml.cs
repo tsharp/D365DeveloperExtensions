@@ -18,8 +18,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core.Controls;
-using Microsoft.VisualStudio.Imaging;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
@@ -48,12 +46,6 @@ namespace PluginTraceViewer
         {
             InitializeComponent();
             DataContext = this;
-
-            //TODO: would be better if this used a converter in xaml
-            Customizations.Content = Customizations.Content.ToString().ToUpper();
-            Solutions.Content = Solutions.Content.ToString().ToUpper();
-            Poll.Content = Poll.Content.ToString().ToUpper();
-            PollOff.Content = PollOff.Content.ToString().ToUpper();
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -205,18 +197,6 @@ namespace PluginTraceViewer
             LoadData();
         }
 
-        private void Customizations_OnClick(object sender, RoutedEventArgs e)
-        {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
-        }
-
-        private void Solutions_OnClick(object sender, RoutedEventArgs e)
-        {
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                "tools/Solution/home_solution.aspx?etc=7100&sitemappath=Settings|Customizations|nav_solution");
-        }
-
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
         {
             ResetForm();
@@ -310,8 +290,6 @@ namespace PluginTraceViewer
 
         private void SetButtonState(bool enabled)
         {
-            Customizations.IsEnabled = enabled;
-            Solutions.IsEnabled = enabled;
             Refresh.IsEnabled = enabled;
             Poll.IsEnabled = enabled;
             PollOff.IsEnabled = enabled;

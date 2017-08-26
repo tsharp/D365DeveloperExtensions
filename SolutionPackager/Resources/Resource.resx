@@ -120,18 +120,6 @@
   <data name="ToolWindowTitle" xml:space="preserve">
     <value>Crm DevEx: Solution Packager</value>
   </data>
-  <data name="Customizations_Button_Content" xml:space="preserve">
-    <value>Customizations</value>
-  </data>
-  <data name="Customizations_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Customizations Page</value>
-  </data>
-  <data name="Solutions_Button_Content" xml:space="preserve">
-    <value>Solutions</value>
-  </data>
-  <data name="Solutions_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Solutions Page</value>
-  </data>
   <data name="PackageSolution_Button_Content" xml:space="preserve">
     <value>Package</value>
   </data>
@@ -150,7 +138,19 @@
   <data name="SolutionList_ComboBox_ToolTip" xml:space="preserve">
     <value>Solution To Package</value>
   </data>
-  <data name="DownloadManaged_CheckBox_Content" xml:space="preserve">
+  <data name="DownloadManagedLabel_Label_Content" xml:space="preserve">
     <value>Download Managed Solution?</value>
+  </data>
+  <data name="SaveSolutionsLabel_Label_Content" xml:space="preserve">
+    <value>Store Solution Files?</value>
+  </data>
+  <data name="CreateManagedLabel_Label_Content" xml:space="preserve">
+    <value>Create Managed Solution?</value>
+  </data>
+  <data name="PublishSolution_Button_Content" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="PublishSolution_Button_ToolTip" xml:space="preserve">
+    <value>Import and publish latest unmanaged solution to CRM/365</value>
   </data>
 </root>

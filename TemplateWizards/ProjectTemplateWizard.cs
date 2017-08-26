@@ -8,6 +8,7 @@ using NuGet.VisualStudio;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 using System.Windows;
 using System.Xml;
 
@@ -203,6 +204,9 @@ namespace TemplateWizards
             //Delete bin & obj folders
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//bin", true);
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
+
+            //Add the default "_Solutions" folder
+            project.ProjectItems.AddFolder("_Solutions");
         }
 
         private void PostHandleWebResourceProjects(Project project)

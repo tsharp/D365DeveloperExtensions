@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="CrmDeveloperExtensions2.Core.Controls.SolutionsButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
+             xmlns:converters="clr-namespace:CrmDeveloperExtensions2.Core.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="20" d:DesignWidth="120" SnapsToDevicePixels="True">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ToolBarStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Button x:Name="Solutions" Click="Solutions_OnClick"  Style="{DynamicResource ToolBarButtonStyle}" Loaded="Solutions_OnLoaded"
+            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            Content="{Binding Source={x:Static resources:Resource.Solutions_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}"
+            ToolTip="{x:Static resources:Resource.Solutions_Button_ToolTip}" />
+</UserControl>

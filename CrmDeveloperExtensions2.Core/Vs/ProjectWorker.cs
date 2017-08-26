@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
@@ -120,14 +122,47 @@ namespace CrmDeveloperExtensions2.Core.Vs
             return list;
         }
 
-        public static ObservableCollection<MenuItem> GetProjectFoldersForMenu(string projectName)
+        public static ObservableCollection<string> GetProjectFolders(Project project)
         {
-            List<string> projectFolders = new List<string>();
+            ObservableCollection<string> folders = new ObservableCollection<string>();
+            if (project == null)
+                return folders;
+
+            List<string> projectFolders = GetRootLevelProjectFolders(project);
+
+            foreach (string projectFolder in projectFolders)
+            {
+                folders.Add(projectFolder);
+            }
+
+            return folders;
+        }
+
+        public static ObservableCollection<MenuItem> GetProjectFoldersForMenu(string projectName)
+        {       
             ObservableCollection<MenuItem> projectMenuItems = new ObservableCollection<MenuItem>();
             Project project = GetProjectByName(projectName);
             if (project == null)
                 return projectMenuItems;
 
+            List<string> projectFolders = GetRootLevelProjectFolders(project);
+
+            foreach (string projectFolder in projectFolders)
+            {
+                MenuItem item = new MenuItem
+                {
+                    Header = projectFolder
+                };
+
+                projectMenuItems.Add(item);
+            }
+
+            return projectMenuItems;
+        }
+
+        private static List<string> GetRootLevelProjectFolders(Project project)
+        {
+            List<string> projectFolders = new List<string>();
             var projectItems = project.ProjectItems;
             for (int i = 1; i <= projectItems.Count; i++)
             {
@@ -141,18 +176,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             }
 
             projectFolders.Insert(0, "/");
-
-            foreach (string projectFolder in projectFolders)
-            {
-                MenuItem item = new MenuItem
-                {
-                    Header = projectFolder
-                };
-
-                projectMenuItems.Add(item);
-            }
-
-            return projectMenuItems;
+            return projectFolders;
         }
 
         private static ObservableCollection<string> GetFolders(ProjectItem projectItem, string path)
@@ -241,7 +265,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 if (reference.SourceProject != null)
                     continue;
 
-                if (reference.Name == "Microsoft.Xrm.Sdk")
+                if (reference.Name == ExtensionConstants.MicrosoftXrmSdk)
                     return reference.Version;
             }
 
@@ -301,6 +325,21 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
             //0 = no errors
             return solutionBuild.LastBuildInfo <= 0;
+        }
+
+        public static string GetProjectPath(Project project)
+        {
+            string path = project.FullName;
+
+            path = Path.GetDirectoryName(path);
+
+            if (string.IsNullOrEmpty(path))
+            {
+                OutputLogger.WriteToOutputWindow("Unable to get path from project", MessageType.Error);
+                return null;
+            }
+
+            return path;
         }
     }
 }

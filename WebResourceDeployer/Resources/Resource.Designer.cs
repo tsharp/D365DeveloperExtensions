@@ -106,24 +106,6 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Customizations.
-        /// </summary>
-        public static string Customizations_Button_Content {
-            get {
-                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Customizations Page.
-        /// </summary>
-        public static string Customizations_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete From CRM/365.
         /// </summary>
         public static string DeleteImage_Button_ToolTip {
@@ -309,24 +291,6 @@ namespace WebResourceDeployer.Resources {
         public static string ShowManaged_CheckBox_Content {
             get {
                 return ResourceManager.GetString("ShowManaged_CheckBox_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Solutions.
-        /// </summary>
-        public static string Solutions_Button_Content {
-            get {
-                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Solutions Page.
-        /// </summary>
-        public static string Solutions_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
             }
         }
         

@@ -8,5 +8,6 @@ namespace CrmDeveloperExtensions2.Core.Models
         public Guid OrganizationId { get; set; }
         public string ProjectUniqueName { get; set; }
         public List<CrmDexExConfigWebResource> WebResources { get; set; }
+        public CrmDevExSolutionPackage SolutionPackage { get; set; }
     }
 }

@@ -1,22 +1,22 @@
-﻿using EnvDTE;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Config;
+using CrmDeveloperExtensions2.Core.Models;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Models;
 using WebResourceDeployer.ViewModels;
 
-namespace WebResourceDeployer
+namespace WebResourceDeployer.Config
 {
     public static class Mapping
     {
-        public static ObservableCollection<WebResourceItem> HandleMappings(DTE dte, Project project, ObservableCollection<WebResourceItem> webResourceItems, Guid organizationId)
+        public static ObservableCollection<WebResourceItem> HandleMappings(string solutionPath, Project project, ObservableCollection<WebResourceItem> webResourceItems, Guid organizationId)
         {
-            CrmDexExConfig crmDexExConfig = GetConfigFile(dte.Solution.FullName, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
+            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
             if (crmDevExConfigOrgMap.WebResources == null)
                 crmDevExConfigOrgMap.WebResources = new List<CrmDexExConfigWebResource>();
 
@@ -46,15 +46,15 @@ namespace WebResourceDeployer
             }
 
             if (mappingsToRemove.Count > 0)
-                RemoveMappings(dte.Solution.FullName, project, mappingsToRemove, organizationId);
+                RemoveMappings(solutionPath, project, mappingsToRemove, organizationId);
 
             return webResourceItems;
         }
 
         public static void AddOrUpdateMapping(string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
         {
-            CrmDexExConfig crmDexExConfig = GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
+            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
 
             List<CrmDexExConfigWebResource> crmDexExConfigWebResources = crmDevExConfigOrgMap.WebResources;
             if (crmDexExConfigWebResources == null)
@@ -71,7 +71,7 @@ namespace WebResourceDeployer
 
         private static void UpdateMapping(CrmDexExConfig crmDexExConfig, string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
         {
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
 
             List<CrmDexExConfigWebResource> crmDexExConfigWebResources = crmDevExConfigOrgMap.WebResources.Where(w => w.WebResourceId == webResourceItem.WebResourceId).ToList();
 
@@ -83,8 +83,8 @@ namespace WebResourceDeployer
 
         public static void RemoveMappings(string solutionPath, Project project, List<CrmDexExConfigWebResource> crmDexExConfigWebResources, Guid organizationId)
         {
-            CrmDexExConfig crmDexExConfig = GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
+            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
 
             crmDevExConfigOrgMap.WebResources.RemoveAll(
                 w => crmDexExConfigWebResources.Any(m => m.WebResourceId == w.WebResourceId));
@@ -94,7 +94,7 @@ namespace WebResourceDeployer
 
         private static void AddMapping(CrmDexExConfig crmDexExConfig, string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
         {
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
 
             CrmDexExConfigWebResource crmDexExConfigWebResource = new CrmDexExConfigWebResource
             {
@@ -105,49 +105,6 @@ namespace WebResourceDeployer
             crmDevExConfigOrgMap.WebResources.Add(crmDexExConfigWebResource);
 
             ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
-        }
-
-        private static CrmDexExConfig GetConfigFile(string solutionPath, string projectUniqueName, Guid organizationId)
-        {
-            return !ConfigFile.ConfigFileExists(solutionPath) ?
-                ConfigFile.CreateConfigFile(organizationId, projectUniqueName, solutionPath) :
-                ConfigFile.GetConfigFile(solutionPath);
-        }
-
-        private static CrmDevExConfigOrgMap GetOrgMap(ref CrmDexExConfig crmDexExConfig, Guid organizationId, string projectUniqueName)
-        {
-            CrmDevExConfigOrgMap orgMap = crmDexExConfig.CrmDevExConfigOrgMaps.FirstOrDefault(o => o.OrganizationId == organizationId);
-            if (orgMap != null)
-                return orgMap;
-
-            orgMap = new CrmDevExConfigOrgMap
-            {
-                OrganizationId = organizationId,
-                ProjectUniqueName = projectUniqueName,
-                WebResources = new List<CrmDexExConfigWebResource>()
-            };
-
-            crmDexExConfig.CrmDevExConfigOrgMaps.Add(orgMap);
-
-            return orgMap;
-        }
-
-        public static void UpdateProjectName(string solutionPath, string oldProjectUniqueName, string newProjectUniqueName)
-        {
-            CrmDexExConfig crmDexExConfig = ConfigFile.GetConfigFile(solutionPath);
-            if (crmDexExConfig == null)
-                return;
-
-            bool updated = false;
-            foreach (CrmDevExConfigOrgMap crmDevExConfigOrgMap in crmDexExConfig.CrmDevExConfigOrgMaps)
-                if (crmDevExConfigOrgMap.ProjectUniqueName.Equals(oldProjectUniqueName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    crmDevExConfigOrgMap.ProjectUniqueName = newProjectUniqueName;
-                    updated = true;
-                }
-
-            if (updated)
-                ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
         }
     }
 }

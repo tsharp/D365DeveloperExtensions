@@ -90,7 +90,7 @@
     <Compile Include="ModelBuilder.cs" />
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="Crm\WebResource.cs" />
-    <Compile Include="Mapping.cs" />
+    <Compile Include="Config\Mapping.cs" />
     <Compile Include="NewWebResource.xaml.cs">
       <DependentUpon>NewWebResource.xaml</DependentUpon>
     </Compile>

@@ -9,6 +9,9 @@ namespace NuGetRetriever
     {
         public static List<NuGetPackage> GetPackagesbyId(string packageId)
         {
+            //TODO: Change to use NuGet API to get sources
+            //https://docs.microsoft.com/en-us/nuget/visual-studio-extensibility/nuget-api-in-visual-studio
+
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
             List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
 
