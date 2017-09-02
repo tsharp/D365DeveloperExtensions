@@ -14,6 +14,7 @@ using System.Windows.Threading;
 using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using Microsoft.VisualStudio.PlatformUI;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -32,7 +33,6 @@ namespace WebResourceDeployer
         public NewWebResource(CrmServiceClient client, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
         {
             InitializeComponent();
-
             _client = client;
 
             bool result = GetSolutions(selectedSolutionId);
@@ -148,25 +148,25 @@ namespace WebResourceDeployer
 
         private void Type_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TypeLabel.Foreground = Type.SelectedItem != null ? Brushes.Black : Brushes.Red;
+            //TypeLabel.Foreground = Type.SelectedItem != null ? Brushes.Black : Brushes.Red;
         }
 
         private void Name_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            NameLabel.Foreground = string.IsNullOrEmpty(Name.Text) ? Brushes.Red : Brushes.Black;
+            //NameLabel.Foreground = string.IsNullOrEmpty(Name.Text) ? Brushes.Red : Brushes.Black;
         }
 
         private void Files_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Files.SelectedItem == null)
             {
-                FilesLabel.Foreground = Brushes.Red;
-                Name.Text = null;
-                DisplayName.Text = null;
+                //FilesLabel.Foreground = Brushes.Red;
+                Name.Text = String.Empty;
+                DisplayName.Text = String.Empty;
                 return;
             }
 
-            FilesLabel.Foreground = Brushes.Black;
+            //FilesLabel.Foreground = Brushes.Black;
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
 
             DisplayName.Text = FileNameToDisplayName(fileName);
@@ -238,12 +238,12 @@ namespace WebResourceDeployer
             if (Solutions.SelectedItem != null)
             {
                 CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
-                SolutionsLabel.Foreground = Brushes.Black;
+                //SolutionsLabel.Foreground = Brushes.Black;
                 Prefix.Text = solution.Prefix + "_";
             }
             else
             {
-                SolutionsLabel.Foreground = Brushes.Red;
+                //SolutionsLabel.Foreground = Brushes.Red;
                 Prefix.Text = "new_";
             }
 
@@ -253,8 +253,8 @@ namespace WebResourceDeployer
             Type.IsEnabled = isSolutionSelected;
             Description.IsEnabled = isSolutionSelected;
 
-            Name.Text = null;
-            DisplayName.Text = null;
+            Name.Text = String.Empty;
+            DisplayName.Text = String.Empty;
             Type.SelectedIndex = -1;
             Files.SelectedIndex = -1;
         }
@@ -288,8 +288,8 @@ namespace WebResourceDeployer
             Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(() =>
                     {
-                        LockMessage.Content = message;
-                        LockOverlay.Visibility = Visibility.Visible;
+                        //LockMessage.Content = message;
+                        //LockOverlay.Visibility = Visibility.Visible;
                     }
                 ));
         }
@@ -299,9 +299,14 @@ namespace WebResourceDeployer
             Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(() =>
                     {
-                        LockOverlay.Visibility = Visibility.Hidden;
+                        //LockOverlay.Visibility = Visibility.Hidden;
                     }
                 ));
+        }
+
+        private void Cancel_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

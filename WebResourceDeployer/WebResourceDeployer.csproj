@@ -95,6 +95,7 @@
       <DependentUpon>NewWebResource.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CrmSolution.cs" />
+    <Compile Include="ViewModels\NewWebResource.cs" />
     <Compile Include="ViewModels\WebResourceItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs">

@@ -232,7 +232,7 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pubish.
+        ///   Looks up a localized string similar to Publish.
         /// </summary>
         public static string Publish_Button_Content {
             get {

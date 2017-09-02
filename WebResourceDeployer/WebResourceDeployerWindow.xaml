@@ -59,7 +59,7 @@
                 <Button x:Name="Publish" Click="Publish_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
                         Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" />
-                <Button x:Name="AddWebResource" Click="AddWebResource_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                <Button x:Name="AddWebResource" Click="AddWebResource_OnClick" IsEnabled="True" Style="{DynamicResource ToolBarButtonStyle}" 
                         Content="{Binding Source={x:Static resources:Resource.AddWebResource_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.AddWebResource_Button_ToolTip}" />
                 <coreControls:CustomizationButton />
