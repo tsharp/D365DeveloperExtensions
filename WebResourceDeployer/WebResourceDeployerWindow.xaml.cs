@@ -176,6 +176,7 @@ namespace WebResourceDeployer
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
             NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, projectsFiles, solutionId);
             bool? result = newWebResource.ShowModal();
+           
 
             if (result != true) return;
 

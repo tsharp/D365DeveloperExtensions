@@ -169,7 +169,7 @@
     <value>New Web Resource</value>
   </data>
   <data name="Publish_Button_Content" xml:space="preserve">
-    <value>Pubish</value>
+    <value>Publish</value>
   </data>
   <data name="Publish_Button_ToolTip" xml:space="preserve">
     <value>Publish to CRM/365</value>
