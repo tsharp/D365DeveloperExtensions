@@ -156,6 +156,8 @@ namespace WebResourceDeployer
             WebResourceTypes =
                 CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(ConnPane.CrmService.ConnectedOrgVersion.Major, true);
 
+            SolutionList.IsEnabled = true;
+
             //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
@@ -774,7 +776,7 @@ namespace WebResourceDeployer
 
             ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
 
-            _webResourceItems = ModelBuilder.CreateWebResourceItemView2(results, ConnPane.SelectedProject.Name, projectFolders);
+            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name, projectFolders);
 
             foreach (WebResourceItem webResourceItem in _webResourceItems)
                 webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
@@ -864,6 +866,50 @@ namespace WebResourceDeployer
             {
                 item.Publish = false;
             }
+        }
+
+        private void Refresh_OnClick(object sender, RoutedEventArgs e)
+        {
+            RefreshFromCrm();
+        }
+
+        private async void RefreshFromCrm()
+        {
+            Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+
+            var toPublish = _webResourceItems.Where(w => w.Publish);
+
+            EntityCollection results = await Task.Run(() => Crm.WebResource.RetrieveWebResourcesFromCrm(ConnPane.CrmService));
+            if (results == null)
+            {
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
+                MessageBox.Show("Error Retrieving Web Resources. See the Output Window for additional details.");
+                return;
+            }
+
+            OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
+
+            ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
+
+            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name, projectFolders);
+
+            foreach (WebResourceItem webResourceItem in _webResourceItems)
+                webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
+
+            _webResourceItems = new ObservableCollection<WebResourceItem>(_webResourceItems.OrderBy(w => w.Name));
+
+            _webResourceItems = Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject, _webResourceItems, ConnPane.OrganizationId);
+            WebResourceGrid.ItemsSource = _webResourceItems;
+
+            FilterWebResources();
+
+            var toUpdate = _webResourceItems.Where(w => toPublish.Any(t => w.WebResourceId == t.WebResourceId));
+            foreach (WebResourceItem item in toUpdate)
+            {
+                item.Publish = true;
+            }
+
+            Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
         }
     }
 }

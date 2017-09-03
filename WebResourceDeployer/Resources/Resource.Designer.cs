@@ -124,15 +124,6 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter.
-        /// </summary>
-        public static string FilterLabel_Label_Content {
-            get {
-                return ResourceManager.GetString("FilterLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Download: Right-click to specify folder.
         /// </summary>
         public static string GetWebResource_Button_ToolTip {
@@ -255,6 +246,15 @@ namespace WebResourceDeployer.Resources {
         public static string Type_DataGridTextColumn_Header {
             get {
                 return ResourceManager.GetString("Type_DataGridTextColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string WebResourceTypeLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("WebResourceTypeLabel_Label_Content", resourceCulture);
             }
         }
     }
