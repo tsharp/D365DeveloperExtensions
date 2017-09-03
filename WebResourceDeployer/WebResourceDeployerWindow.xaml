@@ -9,6 +9,7 @@
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
@@ -126,13 +127,8 @@
                                         <imaging:CrispImage x:Name="DownloadImage" Moniker="{x:Static catalog:KnownMonikers.Download}"
                                                         ToolTip="{x:Static resources:Resource.DownloadImage_Button_ToolTip}" />
                                         <Button.ContextMenu>
-                                            <ContextMenu ItemsSource="{Binding Path=ProjectFolders, UpdateSourceTrigger=PropertyChanged}">
-                                                <ContextMenu.ItemContainerStyle>
-                                                    <Style TargetType="MenuItem">
-                                                        <Setter Property="CommandParameter" Value="{Binding WebResourceId}" />
-                                                    </Style>
-                                                </ContextMenu.ItemContainerStyle>
-                                            </ContextMenu>
+                                            <ContextMenu ItemsSource="{Binding Path=ProjectFolders, UpdateSourceTrigger=PropertyChanged}" 
+                                                         Style="{DynamicResource GridContextMenuStyle}" ItemContainerStyle="{DynamicResource GridButtonContextMenuStyle}"/>
                                         </Button.ContextMenu>
                                     </Button>
                                 </DataTemplate>
@@ -187,10 +183,11 @@
             <coreControls:LockOverlay x:Name="Overlay" />
             <Popup x:Name="FilePopup" StaysOpen="False">
                 <StackPanel>
-                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center" 
+                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center"
                               Template="{DynamicResource ComboBoxControlTemplate}"
-                              ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Label x:Name="FileId" Visibility="Collapsed"/>
+                              ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    </ComboBox>
+                    <Label x:Name="FileId" Visibility="Collapsed" />
                 </StackPanel>
             </Popup>
         </Grid>
