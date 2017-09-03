@@ -1,4 +1,17 @@
-﻿using System;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Config;
+using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.Vs;
+using EnvDTE;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Tooling.Connector;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,21 +26,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Controls;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Vs;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using NLog;
-using Microsoft.VisualStudio;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
 using static CrmDeveloperExtensions2.Core.FileSystem;
 using Mapping = WebResourceDeployer.Config.Mapping;
@@ -36,7 +34,7 @@ using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace WebResourceDeployer
 {
-    public partial class WebResourceDeployerWindow : UserControl, INotifyPropertyChanged
+    public partial class WebResourceDeployerWindow : INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
@@ -44,30 +42,28 @@ namespace WebResourceDeployer
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<WebResourceItem> _webResourceItems;
         private ObservableCollection<ComboBoxItem> _projectFiles;
+        private ObservableCollection<WebResourceType> _webResourceTypes;
 
-        public Visibility ShowVersion9
+        public ObservableCollection<WebResourceType> WebResourceTypes
         {
-            get
+            get => _webResourceTypes;
+            set
             {
-                if (ConnPane.CrmService == null)
-                    return Visibility.Collapsed;
-
-                return ConnPane.CrmService.ConnectedOrgVersion.Major >= 9 ? Visibility.Visible : Visibility.Hidden;
+                _webResourceTypes = value;
+                OnPropertyChanged();
             }
         }
-
         public ObservableCollection<ComboBoxItem> ProjectFiles
         {
             get => _projectFiles;
             set
             {
                 _projectFiles = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged();
             }
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
-        public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -130,8 +126,11 @@ namespace WebResourceDeployer
             if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
             {
                 SetWindowCaption(gotFocus.Caption);
-                SetButtonState(true);
+                //SetButtonState(true);
                 LoadData();
+
+                WebResourceTypes =
+                    CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(ConnPane.CrmService.ConnectedOrgVersion.Major, true);
             }
         }
 
@@ -152,8 +151,10 @@ namespace WebResourceDeployer
             ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
 
             SetWindowCaption(_dte.ActiveWindow.Caption);
-            SetButtonState(true);
+            //SetButtonState(true);
             LoadData();
+            WebResourceTypes =
+                CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(ConnPane.CrmService.ConnectedOrgVersion.Major, true);
 
             //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
@@ -174,9 +175,8 @@ namespace WebResourceDeployer
         {
             ObservableCollection<ComboBoxItem> projectsFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
-            NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, projectsFiles, solutionId);
+            NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, _dte, projectsFiles, solutionId);
             bool? result = newWebResource.ShowModal();
-           
 
             if (result != true) return;
 
@@ -299,11 +299,6 @@ namespace WebResourceDeployer
         {
             //Make rows unselectable
             WebResourceGrid.UnselectAllCells();
-        }
-
-        private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
-        {
-            ResetForm();
         }
 
         private void ConnPane_OnSolutionProjectRemoved(object sender, SolutionProjectRemovedEventArgs e)
@@ -485,7 +480,7 @@ namespace WebResourceDeployer
         private void SetButtonState(bool enabled)
         {
             Publish.IsEnabled = enabled;
-            AddWebResource.IsEnabled = enabled;
+            //AddWebResource.IsEnabled = enabled;
         }
 
         private void ResetForm()
@@ -498,6 +493,25 @@ namespace WebResourceDeployer
             WebResourceGrid.ItemsSource = null;
             ShowManaged.IsChecked = false;
             SetButtonState(false);
+        }
+
+        private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
+        {
+            ResetForm();
+
+            ClearConnection();
+        }
+
+        private void ConnPane_OnSolutionOpened(object sender, EventArgs e)
+        {
+            ClearConnection();
+        }
+
+        private void ClearConnection()
+        {
+            ConnPane.IsConnected = false;
+            ConnPane.CrmService?.Dispose();
+            ConnPane.CrmService = null;
         }
 
         private void PublishSelectAll_OnClick(object sender, RoutedEventArgs e)
@@ -556,7 +570,7 @@ namespace WebResourceDeployer
             if (!string.IsNullOrEmpty(webResourceItem?.BoundFile))
                 folder = Crm.WebResource.GetExistingFolderFromBoundFile(webResourceItem, folder);
 
-            await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService, ConnPane.SelectedProject.Name);
+            await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService);
         }
 
         private async void DownloadWebResourceToFolder(object sender, RoutedEventArgs routedEventArgs)
@@ -565,10 +579,10 @@ namespace WebResourceDeployer
             string folder = item.Header.ToString();
             Guid webResourceId = (Guid)item.CommandParameter;
 
-            await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService, ConnPane.SelectedProject.Name);
+            await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService);
         }
 
-        private async Task DownloadWebResourceAsync(Guid webResourceId, string folder, CrmServiceClient client, string projectName)
+        private async Task DownloadWebResourceAsync(Guid webResourceId, string folder, CrmServiceClient client)
         {
             try
             {
@@ -773,7 +787,7 @@ namespace WebResourceDeployer
             WebResourceGrid.IsEnabled = true;
             WebResourceType.IsEnabled = true;
             ShowManaged.IsEnabled = true;
-            AddWebResource.IsEnabled = true;
+            //AddWebResource.IsEnabled = true;
 
             return true;
         }
@@ -831,48 +845,25 @@ namespace WebResourceDeployer
 
         private void FilterWebResources()
         {
-            ComboBoxItem selectedItem = (ComboBoxItem)WebResourceType.SelectedItem;
-            string type = selectedItem?.Tag.ToString() ?? String.Empty;
+            int type = ((WebResourceType)WebResourceType.SelectedItem)?.Type ?? -1;
             bool showManaged = ShowManaged.IsChecked != null && ShowManaged.IsChecked.Value;
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ??
                 ExtensionConstants.DefaultSolutionId;
 
-            //Clear publish flags
-            if (!string.IsNullOrEmpty(type))
-            {
-                foreach (WebResourceItem webResourceItem in _webResourceItems)
-                {
-                    if (selectedItem != null && (webResourceItem.Type.ToString() != selectedItem.Tag.ToString() || (webResourceItem.IsManaged && !showManaged)))
-                        webResourceItem.Publish = false;
-                }
-            }
-
-            //Filter the items
+            //Apply filter
             ICollectionView icv = CollectionViewSource.GetDefaultView(WebResourceGrid.ItemsSource);
             if (icv == null) return;
 
-            icv.Filter = o =>
+            icv.Filter = o => o is WebResourceItem w &&
+                (!showManaged ? w.IsManaged == false : w.IsManaged || w.IsManaged == false) &&
+                (WebResourceType.SelectedIndex > 0 ? w.Type == type : w.Type > 0) &&
+                w.SolutionId == solutionId;
+
+            //Only keep publish flags for items still visable
+            foreach (WebResourceItem item in _webResourceItems.Except(icv.OfType<WebResourceItem>()))
             {
-                WebResourceItem w = o as WebResourceItem;
-                //File type filter & show managed + unmanaged
-                if (!string.IsNullOrEmpty(type) && showManaged)
-                    return w != null && (w.Type.ToString() == type && w.SolutionId == solutionId);
-
-                //File type filter & show unmanaged only
-                if (!string.IsNullOrEmpty(type) && !showManaged)
-                    return w != null && (w.Type.ToString() == type && !w.IsManaged && w.SolutionId == solutionId);
-
-                //No file type filter & show managed + unmanaged
-                if (string.IsNullOrEmpty(type) && showManaged)
-                    return w != null && (w.SolutionId == solutionId);
-
-                //No file type filter & show unmanaged only
-                return w != null && (!w.IsManaged && w.SolutionId == solutionId);
-            };
-
-            //Item Count
-            CollectionView cv = (CollectionView)icv;
-            ItemCount.Content = cv.Count + " Items";
+                item.Publish = false;
+            }
         }
     }
 }

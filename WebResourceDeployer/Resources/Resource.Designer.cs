@@ -97,15 +97,6 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Style Sheet (CSS).
-        /// </summary>
-        public static string CSS_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("CSS_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete From CRM/365.
         /// </summary>
         public static string DeleteImage_Button_ToolTip {
@@ -151,47 +142,11 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GIF format.
+        ///   Looks up a localized string similar to Item Count.
         /// </summary>
-        public static string GIF_ComboBoxItem_Content {
+        public static string ItemCount_Label_Content {
             get {
-                return ResourceManager.GetString("GIF_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Webpage (HTML).
-        /// </summary>
-        public static string HTML_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("HTML_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ICO format.
-        /// </summary>
-        public static string ICO_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("ICO_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to JPG format.
-        /// </summary>
-        public static string JPG_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("JPG_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Script (JScript).
-        /// </summary>
-        public static string JS_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("JS_ComboBoxItem_Content", resourceCulture);
+                return ResourceManager.GetString("ItemCount_Label_Content", resourceCulture);
             }
         }
         
@@ -219,15 +174,6 @@ namespace WebResourceDeployer.Resources {
         public static string OpenInCrmImage_Button_ToolTip {
             get {
                 return ResourceManager.GetString("OpenInCrmImage_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PNG format.
-        /// </summary>
-        public static string PNG_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("PNG_ComboBoxItem_Content", resourceCulture);
             }
         }
         
@@ -277,15 +223,6 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to String (RESX).
-        /// </summary>
-        public static string RESX_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("RESX_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Show Managed.
         /// </summary>
         public static string ShowManaged_CheckBox_Content {
@@ -304,15 +241,6 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vector format (SVG).
-        /// </summary>
-        public static string SVG_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("SVG_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Crm Dev: Web Resource Deployer.
         /// </summary>
         public static string ToolWindowTitle {
@@ -327,33 +255,6 @@ namespace WebResourceDeployer.Resources {
         public static string Type_DataGridTextColumn_Header {
             get {
                 return ResourceManager.GetString("Type_DataGridTextColumn_Header", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Silverlight (XAP).
-        /// </summary>
-        public static string XAP_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("XAP_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data (XML).
-        /// </summary>
-        public static string XML_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("XML_ComboBoxItem_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Style Sheet (XSL).
-        /// </summary>
-        public static string XSL_ComboBoxItem_Content {
-            get {
-                return ResourceManager.GetString("XSL_ComboBoxItem_Content", resourceCulture);
             }
         }
     }

@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 using Task = System.Threading.Tasks.Task;
 using Window = EnvDTE.Window;
 
@@ -55,7 +54,6 @@ namespace SolutionPackager
                 OnPropertyChanged();
             }
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -149,6 +147,20 @@ namespace SolutionPackager
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
         {
             ResetForm();
+
+            ClearConnection();
+        }
+
+        private void ConnPane_OnSolutionOpened(object sender, EventArgs e)
+        {
+            ClearConnection();
+        }
+
+        private void ClearConnection()
+        {
+            ConnPane.IsConnected = false;
+            ConnPane.CrmService?.Dispose();
+            ConnPane.CrmService = null;
         }
 
         private void ConnPane_OnSolutionProjectRemoved(object sender, SolutionProjectRemovedEventArgs e)
@@ -174,7 +186,7 @@ namespace SolutionPackager
         {
             if (enabled == false)
                 PackageSolution.IsEnabled = false;
-            UnpackageSolution.IsEnabled = enabled;
+            //UnpackageSolution.IsEnabled = enabled;
             SolutionList.IsEnabled = enabled;
             SaveSolutions.IsEnabled = enabled;
             ProjectFolder.IsEnabled = enabled;

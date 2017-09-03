@@ -1,20 +1,20 @@
-﻿using EnvDTE;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
+using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using Microsoft.VisualStudio.PlatformUI;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -22,6 +22,8 @@ namespace WebResourceDeployer
     public partial class NewWebResource
     {
         private readonly CrmServiceClient _client;
+        private readonly DTE _dte;
+        private ObservableCollection<WebResourceType> _webResourceTypes;
 
         public Guid NewId;
         public int NewType;
@@ -29,11 +31,22 @@ namespace WebResourceDeployer
         public string NewDisplayName;
         public string NewBoundFile;
         public Guid NewSolutionId;
+        public ObservableCollection<WebResourceType> WebResourceTypes
+        {
+            get => _webResourceTypes;
+            set
+            {
+                _webResourceTypes = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public NewWebResource(CrmServiceClient client, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
+        public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
         {
             InitializeComponent();
+            DataContext = this;
             _client = client;
+            _dte = dte;
 
             bool result = GetSolutions(selectedSolutionId);
             if (!result)
@@ -44,6 +57,14 @@ namespace WebResourceDeployer
             }
 
             Files.ItemsSource = projectFiles;
+            WebResourceTypes =
+                CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void Create_OnClick(object sender, RoutedEventArgs e)
@@ -58,11 +79,11 @@ namespace WebResourceDeployer
             string relativePath = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
             string name = Name.Text.Trim();
             string prefix = Prefix.Text;
-            int type = Convert.ToInt32(((ComboBoxItem)Type.SelectedItem).Tag.ToString());
+            int type = ((WebResourceType)Type.SelectedItem).Type;
             string displayName = DisplayName.Text.Trim();
             string description = Description.Text.Trim();
 
-            ShowMessage("Creating...");
+            Overlay.ShowMessage(_dte, "Creating...");
 
             Entity webResource =
                 Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath);
@@ -70,7 +91,7 @@ namespace WebResourceDeployer
             Guid webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
             if (webResourceId == Guid.Empty)
             {
-                HideMessage();
+                Overlay.HideMessage(_dte);
                 DialogResult = false;
                 Close();
             }
@@ -81,7 +102,7 @@ namespace WebResourceDeployer
                 bool addedToSolution = await Task.Run(() => Crm.Solution.AddWebResourceToSolution(_client, solution.UniqueName, webResourceId));
                 if (!addedToSolution)
                 {
-                    HideMessage();
+                    Overlay.HideMessage(_dte);
                     DialogResult = false;
                     Close();
                     return;
@@ -96,7 +117,7 @@ namespace WebResourceDeployer
             NewBoundFile = relativePath;
             NewSolutionId = solution.SolutionId;
 
-            HideMessage();
+            Overlay.HideMessage(_dte);
             DialogResult = true;
             Close();
         }
@@ -115,65 +136,30 @@ namespace WebResourceDeployer
 
         private bool ValidateForm()
         {
-            if (Files.SelectedItem == null)
-            {
-                MessageBox.Show("Select a file");
-                Files.Focus();
-                return false;
-            }
+            if (Crm.WebResource.ValidateName(Name.Text))
+                return true;
 
-            if (string.IsNullOrEmpty(Name.Text))
-            {
-                MessageBox.Show("Name is required");
-                Name.Focus();
-                return false;
-            }
-
-            if (!Crm.WebResource.ValidateName(Name.Text))
-            {
-                MessageBox.Show("Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters");
-                Name.Focus();
-                return false;
-            }
-
-            if (Type.SelectedItem == null)
-            {
-                MessageBox.Show("Select a web resource type");
-                Type.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        private void Type_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //TypeLabel.Foreground = Type.SelectedItem != null ? Brushes.Black : Brushes.Red;
-        }
-
-        private void Name_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            //NameLabel.Foreground = string.IsNullOrEmpty(Name.Text) ? Brushes.Red : Brushes.Black;
+            MessageBox.Show("Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters");
+            Name.Focus();
+            return false;
         }
 
         private void Files_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Files.SelectedItem == null)
             {
-                //FilesLabel.Foreground = Brushes.Red;
                 Name.Text = String.Empty;
                 DisplayName.Text = String.Empty;
                 return;
             }
 
-            //FilesLabel.Foreground = Brushes.Black;
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
 
             DisplayName.Text = FileNameToDisplayName(fileName);
 
             string extension = Path.GetExtension(fileName);
 
-            if (extension.ToUpper() != ".TS")
+            if (extension.ToUpper() == ".TS")
             {
                 DisplayName.Text = Path.ChangeExtension(DisplayName.Text, ".js");
                 Name.Text = Path.ChangeExtension(fileName, ".js");
@@ -187,36 +173,7 @@ namespace WebResourceDeployer
                 return;
             }
 
-            Type.SelectedValue = ExtensionToType(extension);
-        }
-
-        private string ExtensionToType(string extension)
-        {
-            switch (extension.ToUpper())
-            {
-                case ".CSS":
-                    return "Style Sheet (CSS)";
-                case ".JS":
-                case ".TS":
-                    return "Script (JScript)";
-                case ".XML":
-                    return "Data (XML)";
-                case ".PNG":
-                    return "PNG format";
-                case ".JPG":
-                    return "JPG format";
-                case ".GIF":
-                    return "GIF format";
-                case ".XAP":
-                    return "Silverlight (XAP)";
-                case ".XSL":
-                case ".XSLT":
-                    return "Style Sheet (XSL)";
-                case ".ICO":
-                    return "ICO format";
-                default:
-                    return "Webpage (HTML)";
-            }
+            Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == extension.Replace(".", string.Empty).ToUpper());
         }
 
         private string FileNameToDisplayName(string fileName)
@@ -234,34 +191,18 @@ namespace WebResourceDeployer
 
         private void Solutions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool isSolutionSelected = Solutions.SelectedItem != null;
             if (Solutions.SelectedItem != null)
             {
                 CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
-                //SolutionsLabel.Foreground = Brushes.Black;
                 Prefix.Text = solution.Prefix + "_";
             }
             else
-            {
-                //SolutionsLabel.Foreground = Brushes.Red;
                 Prefix.Text = "new_";
-            }
-
-            Files.IsEnabled = isSolutionSelected;
-            Name.IsEnabled = isSolutionSelected;
-            DisplayName.IsEnabled = isSolutionSelected;
-            Type.IsEnabled = isSolutionSelected;
-            Description.IsEnabled = isSolutionSelected;
-
-            Name.Text = String.Empty;
-            DisplayName.Text = String.Empty;
-            Type.SelectedIndex = -1;
-            Files.SelectedIndex = -1;
         }
 
         private bool GetSolutions(Guid selectedSolutionId)
         {
-            ShowMessage("Getting solutions from CRM...");
+            Overlay.ShowMessage(_dte, "Getting solutions from CRM...");
 
             EntityCollection results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
 
@@ -278,35 +219,15 @@ namespace WebResourceDeployer
 
             Solutions.ItemsSource = solutions;
 
-            HideMessage();
+            Overlay.HideMessage(_dte);
 
             return true;
         }
 
-        private void ShowMessage(string message)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        //LockMessage.Content = message;
-                        //LockOverlay.Visibility = Visibility.Visible;
-                    }
-                ));
-        }
-
-        private void HideMessage()
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(() =>
-                    {
-                        //LockOverlay.Visibility = Visibility.Hidden;
-                    }
-                ));
-        }
-
         private void Cancel_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            DialogResult = false;
+            Close();
         }
     }
 }

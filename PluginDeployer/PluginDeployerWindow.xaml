@@ -26,10 +26,10 @@
         </Grid.ColumnDefinitions>
         <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved"
-                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved"></connection:XrmToolingConnection>
+                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened"/>
         <Grid Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                <Button x:Name="Publish" Click="Publish_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
                     Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" />
                 <Button x:Name="IlMerge" Click="IlMerge_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
@@ -38,12 +38,11 @@
                 <Button x:Name="SpklInstrument" Click="SpklInstrument_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
                     Content="{Binding Source={x:Static resources:Resource.SpklInstrument_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.SpklInstrument_Button_ToolTip}" />
-                <Button x:Name="RegistrationTool" Click="RegistrationTool_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                <Button x:Name="RegistrationTool" Click="RegistrationTool_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
                     Content="{Binding Source={x:Static resources:Resource.RegistrationTool_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.RegistrationTool_Button_ToolTip}" />
-
-                <coreControls:CustomizationButton />
-                <coreControls:SolutionsButton />
+                <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
 
                 <!--<TextBlock Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" 
                                Text="Use SDK Plug-in Registration Tool for initial deployment and step/image management" />-->

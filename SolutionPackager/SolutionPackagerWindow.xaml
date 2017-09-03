@@ -28,11 +28,11 @@
         </Grid.ColumnDefinitions>
         <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_OnSelectedProjectChanged" ProjectItemAdded="ConnPane_OnProjectItemAdded"
-                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed"/>
+                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" SolutionOpened="ConnPane_OnSolutionOpened"/>
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                    <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                    <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.UnpackageSolution_Button_Content}}" 
                             ToolTip="{x:Static resources:Resource.UnpackageSolution_Button_ToolTip}" />
                     <Button x:Name="PackageSolution" Click="PackageSolution_OnClick" 
@@ -42,9 +42,9 @@
                             ToolTip="{x:Static resources:Resource.PackageSolution_Button_ToolTip}" />
                     <Button x:Name="PublishSolution" Click="PublishSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.PublishSolution_Button_Content}}" 
-                            ToolTip="{x:Static resources:Resource.PublishSolution_Button_ToolTip}" />
-                    <coreControls:CustomizationButton  />
-                    <coreControls:SolutionsButton />
+                            ToolTip="{x:Static resources:Resource.PublishSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                    <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                    <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
