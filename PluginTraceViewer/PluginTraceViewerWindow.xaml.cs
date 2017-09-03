@@ -23,7 +23,7 @@ using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
 namespace PluginTraceViewer
 {
-    public partial class PluginTraceViewerWindow : UserControl, INotifyPropertyChanged
+    public partial class PluginTraceViewerWindow : INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
@@ -199,6 +199,20 @@ namespace PluginTraceViewer
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
         {
             ResetForm();
+
+            ClearConnection();
+        }
+
+        private void ConnPane_OnSolutionOpened(object sender, EventArgs e)
+        {
+            ClearConnection();
+        }
+
+        private void ClearConnection()
+        {
+            ConnPane.IsConnected = false;
+            ConnPane.CrmService?.Dispose();
+            ConnPane.CrmService = null;
         }
 
         private void ResetForm()
@@ -265,8 +279,8 @@ namespace PluginTraceViewer
         private void SetButtonState(bool enabled)
         {
             Refresh.IsEnabled = enabled;
-            Poll.IsEnabled = enabled;
-            PollOff.IsEnabled = enabled;
+            //Poll.IsEnabled = enabled;
+            //PollOff.IsEnabled = enabled;
         }
 
         private void Refresh_OnClick(object sender, RoutedEventArgs e)

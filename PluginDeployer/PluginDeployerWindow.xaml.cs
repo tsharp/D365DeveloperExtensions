@@ -108,10 +108,10 @@ namespace PluginDeployer
 
         private void SetButtonState(bool enabled)
         {
-            Publish.IsEnabled = enabled;
+            //Publish.IsEnabled = enabled;
             IlMerge.IsEnabled = enabled;
             SpklInstrument.IsEnabled = enabled;
-            RegistrationTool.IsEnabled = enabled;
+            //RegistrationTool.IsEnabled = enabled;
             SolutionList.IsEnabled = enabled;
             CrmAssemblyList.IsEnabled = enabled;
             ProjectAssemblyList.IsEnabled = enabled;
@@ -120,6 +120,20 @@ namespace PluginDeployer
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
         {
             ResetForm();
+
+            ClearConnection();
+        }
+
+        private void ConnPane_OnSolutionOpened(object sender, EventArgs e)
+        {
+            ClearConnection();
+        }
+
+        private void ClearConnection()
+        {
+            ConnPane.IsConnected = false;
+            ConnPane.CrmService?.Dispose();
+            ConnPane.CrmService = null;
         }
 
         private void ConnPane_OnSolutionProjectRemoved(object sender, SolutionProjectRemovedEventArgs e)

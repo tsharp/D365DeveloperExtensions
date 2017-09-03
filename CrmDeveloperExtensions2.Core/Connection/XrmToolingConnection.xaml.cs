@@ -21,7 +21,7 @@ using Window = EnvDTE.Window;
 
 namespace CrmDeveloperExtensions2.Core.Connection
 {
-    public partial class XrmToolingConnection : UserControl, INotifyPropertyChanged
+    public partial class XrmToolingConnection : INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly Solution _solution;
@@ -58,8 +58,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 OnPropertyChanged();
             }
         }
-
         public event EventHandler<ConnectEventArgs> Connected;
+        public event EventHandler SolutionOpened;
         public event EventHandler SolutionBeforeClosing;
         public event EventHandler<SolutionProjectAddedEventArgs> SolutionProjectAdded;
         public event EventHandler<SolutionProjectRemovedEventArgs> SolutionProjectRemoved;
@@ -71,7 +71,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<SelectionChangedEventArgs> SelectedProjectChanged;
 
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -80,6 +79,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         public XrmToolingConnection()
         {
             InitializeComponent();
+            DataContext = this;
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -128,7 +128,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
-            if (_projects.Count == 0)
+            if (_projects == null || _projects.Count == 0)
                 GetProjectsForList();
 
             if (!_projectEventsRegistered)
@@ -141,7 +141,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
             {
                 CrmServiceClient client = SharedGlobals.GetGlobal("CrmService", _dte) as CrmServiceClient;
                 if (client?.ConnectedOrgUniqueName != null)
+                {
                     CrmService = client;
+                    _isConnected = true;
+                }
             }
         }
 
@@ -158,7 +161,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 _vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
             }
         }
-
         public void ProjectItemMoveDeleted(ProjectItem projectItem)
         {
             _movedProjectItem = projectItem;
@@ -168,7 +170,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             _movedProjectItemOldName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
         }
-
         public void ProjectItemMoveAdded(ProjectItem projectItem)
         {
             if (SelectedProject == null)
@@ -186,10 +187,12 @@ namespace CrmDeveloperExtensions2.Core.Connection
             ProjectItemEventsOnItemMoved(projectItem, _movedProjectItemOldName);
             _movedProjectItem = null;
         }
-
         private void SolutionEventsOnOpened()
         {
+            ClearConnection();
             GetProjectsForList();
+
+            SolutionOpened?.Invoke(this, null);
         }
         private void SolutionEventsOnProjectRemoved(Project project)
         {
@@ -229,9 +232,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SolutionEventsOnBeforeClosing()
         {
             ResetForm();
-
-            CrmService?.Dispose();
-            CrmService = null;
+            ClearConnection();
 
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
         }
@@ -275,7 +276,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
             var handler = ProjectItemMoved;
             handler?.Invoke(this, e);
         }
-
         private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
             OnProjectItemRemoved(new ProjectItemRemovedEventArgs
@@ -283,7 +283,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 ProjectItem = projectItem
             });
         }
-
         private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
             OnProjectItemAdded(new ProjectItemAddedEventArgs
@@ -291,7 +290,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 ProjectItem = projectItem
             });
         }
-
         private void ProjectItemsEventsOnItemRenamed(ProjectItem projectItem, string oldName)
         {
             OnProjectItemRenamed(new ProjectItemRenamedEventArgs
@@ -300,7 +298,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 OldName = oldName
             });
         }
-
         private void ProjectItemEventsOnItemMoved(ProjectItem postMoveProjectItem, string preMoveName)
         {
             OnProjectItemMoved(new ProjectItemMovedEventArgs
@@ -309,9 +306,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 PostMoveProjectItem = postMoveProjectItem
             });
         }
-
         private void GetProjectsForList()
         {
+            _projects = new ObservableCollection<Project>();
             IList<Project> projects = SolutionWorker.GetProjects();
             foreach (Project project in projects)
             {
@@ -329,7 +326,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             try
             {
-                StatusBar.SetStatusBarValue(_dte, Core.Resources.Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
+                StatusBar.SetStatusBarValue(_dte, Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
 
                 CrmLoginForm ctrl = new CrmLoginForm(_autoLogin);
                 ctrl.ConnectionToCrmCompleted += ConnectionToCrmCompleted;
@@ -403,6 +400,16 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             _projects = new ObservableCollection<Project>();
             SolutionProjectsList.ItemsSource = null;
+        }
+
+        private void ClearConnection()
+        {
+            SharedGlobals.SetGlobal("CrmService", null, _dte);
+            IsConnected = false;
+            CrmService?.Dispose();
+            CrmService = null;
+            Projects = null;
+            SelectedProject = null;
         }
 
         private void AutoLogin_Checked(object sender, RoutedEventArgs e)

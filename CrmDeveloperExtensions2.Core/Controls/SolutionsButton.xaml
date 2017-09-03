@@ -16,7 +16,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Button x:Name="Solutions" Click="Solutions_OnClick"  Style="{DynamicResource ToolBarButtonStyle}" Loaded="Solutions_OnLoaded"
-            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEnabled="{Binding Path=IsConnected, FallbackValue=false, Mode=TwoWay}"
             Content="{Binding Source={x:Static resources:Resource.Solutions_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}"
             ToolTip="{x:Static resources:Resource.Solutions_Button_ToolTip}" />
 </UserControl>
