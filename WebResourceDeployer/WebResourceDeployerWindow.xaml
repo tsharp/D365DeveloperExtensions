@@ -48,11 +48,14 @@
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
+                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" />
+                    </Button>
                     <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
                           DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False">
                     </ComboBox>
-                    <Label x:Name="FilterLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.FilterLabel_Label_Content}" />
+                    <Label x:Name="WebResourceTypeLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.WebResourceTypeLabel_Label_Content}" />
                     <ComboBox x:Name="WebResourceType" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="WebResourceType_OnSelectionChanged" DisplayMemberPath="DisplayName"
                           IsEnabled="False" Width="120" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding WebResourceTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
@@ -70,11 +73,11 @@
                     </Label>
                 </StackPanel>
                 <DataGrid x:Name="WebResourceGrid" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5,0,0,0" BorderThickness="0" Background="Transparent"
-                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true"  CanUserAddRows="False"
-                      IsEnabled="False" CanUserDeleteRows="False" EnableColumnVirtualization="True" SelectionChanged="WebResourceGrid_OnSelectionChanged">
+                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" CanUserAddRows="False"
+                      IsEnabled="False" CanUserDeleteRows="False" EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Visibility="Collapsed" Binding="{Binding WebResourceId}"/>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False"/>
+                        <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False" />
                         <DataGridTemplateColumn Header="{x:Static resources:Resource.Publish_DataGridTemplateColumn_Header}" x:Name="PublishColumn" CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>

@@ -123,8 +123,8 @@
   <data name="SolutionsLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>
-  <data name="FilterLabel_Label_Content" xml:space="preserve">
-    <value>Filter</value>
+  <data name="WebResourceTypeLabel_Label_Content" xml:space="preserve">
+    <value>Type</value>
   </data>
   <data name="AddWebResource_Button_Content" xml:space="preserve">
     <value>New Item</value>

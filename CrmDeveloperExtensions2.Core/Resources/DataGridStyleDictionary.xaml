@@ -9,14 +9,14 @@
 
     <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridColumnHeaderStyle">
         <Setter Property="Background" Value="Transparent"></Setter>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="-1,-1,0,0" />
-        <Setter Property="Padding" Value="5"></Setter>
+        <Setter Property="Padding" Value="5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"></Setter>
+                <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextInactiveKey}}"/>
@@ -24,10 +24,11 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type DataGridRow}">
+    <Style TargetType="{x:Type DataGridRow}" x:Key="DataGridRowStyle">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"/>
     </Style>
+
     <Style TargetType="{x:Type Button}" x:Key="GridHeaderButtonStyle">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">

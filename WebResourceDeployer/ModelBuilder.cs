@@ -10,35 +10,7 @@ namespace WebResourceDeployer
 {
     public static class ModelBuilder
     {
-        public static List<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
-        {
-            List<WebResourceItem> webResourceItems = new List<WebResourceItem>();
-
-            foreach (Entity webResource in webResources.Entities)
-            {
-                WebResourceItem webResourceItem = new WebResourceItem
-                {
-                    WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
-                    Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
-                    IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
-                    TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
-                    Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
-                    ProjectFolders = projectFolders,
-                    SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
-                };
-
-                object displayName;
-                bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out displayName);
-                if (hasDisplayName)
-                    webResourceItem.DisplayName = webResource.GetAttributeValue<AliasedValue>("webresource.displayname").Value.ToString();
-
-                webResourceItems.Add(webResourceItem);
-            }
-
-            return webResourceItems;
-        }
-
-        public static ObservableCollection<WebResourceItem> CreateWebResourceItemView2(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
+        public static ObservableCollection<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
         {
             ObservableCollection<WebResourceItem> webResourceItems = new ObservableCollection<WebResourceItem>();
 
