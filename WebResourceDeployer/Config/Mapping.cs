@@ -26,23 +26,31 @@ namespace WebResourceDeployer.Config
             List<CrmDexExConfigWebResource> mappedWebResources = crmDevExConfigOrgMap.WebResources;
 
             foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
-                if (webResourceItems.Count(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId) == 0)
-                {
-                    mappingsToRemove.Add(crmDexExConfigWebResource);
-                    mappedWebResources.Remove(crmDexExConfigWebResource);
-                }
+            {
+                if (webResourceItems.Count(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId) != 0)
+                    continue;
+
+                mappingsToRemove.Add(crmDexExConfigWebResource);
+                mappedWebResources.Remove(crmDexExConfigWebResource);
+            }
 
             //Add bound file from mapping
             foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
+            {
                 if (webResourceItems.Count(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId) > 0)
-                    webResourceItems.Where(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId).ToList().ForEach(w => w.BoundFile = crmDexExConfigWebResource.File);
+                    webResourceItems.Where(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId).ToList()
+                        .ForEach(w => w.BoundFile = crmDexExConfigWebResource.File);
+            }
 
             //Remove mappings where project file was deleted
             foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
             {
                 string mappedFilePath = FileSystem.BoundFileToLocalPath(crmDexExConfigWebResource.File, project.FullName);
                 if (!File.Exists(mappedFilePath))
+                {
                     mappingsToRemove.Add(crmDexExConfigWebResource);
+                    webResourceItems.Where(w => w.BoundFile == crmDexExConfigWebResource.File).ToList().ForEach(w => w.BoundFile = null);
+                }
             }
 
             if (mappingsToRemove.Count > 0)

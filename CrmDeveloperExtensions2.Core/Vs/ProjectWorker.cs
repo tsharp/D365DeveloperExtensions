@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Constants = EnvDTE.Constants;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Windows.Controls;
 using VSLangProj;
+using Constants = EnvDTE.Constants;
 
 namespace CrmDeveloperExtensions2.Core.Vs
 {
     public static class ProjectWorker
     {
-        static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "TS" };
-        static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
+        private static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "TS", "SVG", "RESX" };
+        private static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
 
         public static void ExcludeFolder(Project project, string folderName)
         {
@@ -72,8 +70,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
         {
             List<Project> list = new List<Project>();
 
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte == null)
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return list;
 
             Projects projects = dte.Solution.Projects;
@@ -256,8 +253,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         public static string GetSdkCoreVersion(Project project)
         {
-            var vsproject = project?.Object as VSProject;
-            if (vsproject == null)
+            if (!(project?.Object is VSProject vsproject))
                 return null;
 
             foreach (Reference reference in vsproject.References)
@@ -275,12 +271,11 @@ namespace CrmDeveloperExtensions2.Core.Vs
         public static string GetProjectTypeGuids(Project project)
         {
             string projectTypeGuids = String.Empty;
-            IVsHierarchy hierarchy;
 
             object service = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
             var solution = (IVsSolution)service;
 
-            var result = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
+            var result = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
 
             if (result != 0)
                 return projectTypeGuids;
@@ -316,8 +311,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         public static bool BuildProject(Project project)
         {
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte == null)
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return false;
 
             SolutionBuild solutionBuild = dte.Solution.SolutionBuild;

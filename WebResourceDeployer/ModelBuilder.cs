@@ -27,10 +27,9 @@ namespace WebResourceDeployer
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
 
-                object displayName;
-                bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out displayName);
+                bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out var displayName);
                 if (hasDisplayName)
-                    webResourceItem.DisplayName = webResource.GetAttributeValue<AliasedValue>("webresource.displayname").Value.ToString();
+                    webResourceItem.DisplayName = ((AliasedValue)displayName).Value.ToString();
 
                 webResourceItems.Add(webResourceItem);
             }

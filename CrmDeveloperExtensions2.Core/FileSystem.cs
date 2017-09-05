@@ -68,6 +68,9 @@ namespace CrmDeveloperExtensions2.Core
 
         public static string BoundFileToLocalPath(string boundFile, string projectPath)
         {
+            if (string.IsNullOrEmpty(boundFile))
+                return "";
+
             string path = Path.GetDirectoryName(projectPath);
             if (path == null)
                 return null;

@@ -87,6 +87,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\AllowCompareConverter.cs" />
     <Compile Include="Converters\NewWebResourceCreateConverter.cs" />
     <Compile Include="ModelBuilder.cs" />
     <Compile Include="Crm\Solution.cs" />
