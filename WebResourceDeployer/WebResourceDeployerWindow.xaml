@@ -10,6 +10,7 @@
              xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
@@ -21,6 +22,7 @@
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter" />
+            <converters:AllowCompareConverter x:Key="AllowCompareConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -48,9 +50,12 @@
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Orientation="Horizontal"> 
                     <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
-                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" />
+                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" Margin="5,0,0,0" />
+                    </Button>
+                    <Button x:Name="DownloadAll" Click="DownloadAll_OnClick"  Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
+                        <imaging:CrispImage x:Name="DownloadAllImage" Moniker="{x:Static catalog:KnownMonikers.DownloadFolder}" ToolTip="Download All Items" VerticalAlignment="Bottom" Margin="5,0,0,0" />
                     </Button>
                     <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
@@ -98,6 +103,7 @@
                             <DataGridTextColumn.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="ToolTip" Value="{Binding Name}" />
+                                    <Setter Property="Margin" Value="5,0,0,0"/>
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
@@ -105,6 +111,7 @@
                             <DataGridTextColumn.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="ToolTip" Value="{Binding DisplayName}" />
+                                    <Setter Property="Margin" Value="5,0,0,0"/>
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
@@ -147,10 +154,15 @@
                         <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
-                                        IsEnabled="{Binding AllowCompare, Mode=OneWay}">
+                                    <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}">
                                         <imaging:CrispImage x:Name="CompareImage" Moniker="{x:Static catalog:KnownMonikers.CompareFiles}"
                                                         ToolTip="{x:Static resources:Resource.CompareImage_Button_ToolTip}" />
+                                        <Button.IsEnabled>
+                                            <MultiBinding Converter="{StaticResource AllowCompareConverter}">
+                                                <Binding Path="BoundFile" />
+                                                <Binding Path="Type" />
+                                            </MultiBinding>
+                                        </Button.IsEnabled>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

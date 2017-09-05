@@ -12,24 +12,25 @@ namespace CrmDeveloperExtensions2.Core.Models
         public int Type { get; set; }
         public int CrmMinimumMajorVersion { get; set; }
         public int CrmMaximumMajorVersion { get; set; }
+        public bool AllowCompare { get; set; }
     }
 
     public static class WebResourceTypes
     {
-        private static List<WebResourceType> Types => new List<WebResourceType>
+        public static List<WebResourceType> Types => new List<WebResourceType>
         {
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "HTML", DisplayName = "Webpage (HTML)", Type = 1},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "CSS", DisplayName = "Style Sheet (CSS)", Type = 2},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "JS", DisplayName = "Script (JScript)", Type = 3},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XML", DisplayName = "Data (XML)", Type = 4},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "PNG", DisplayName = "PNG format", Type = 5},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "JPG", DisplayName = "JPG format", Type = 6},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "GIF", DisplayName = "GIF format", Type = 7},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XAP", DisplayName = "Silverlight (XAP)", Type = 8},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XSL", DisplayName = "Style Sheet (XSL)", Type = 9},
-            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "ICO", DisplayName = "ICO format", Type = 10},
-            new WebResourceType{CrmMinimumMajorVersion = 9, CrmMaximumMajorVersion = 99, Name = "SVG", DisplayName = "SVG format", Type = 11},
-            new WebResourceType{CrmMinimumMajorVersion = 9, CrmMaximumMajorVersion = 99, Name = "RESX", DisplayName = "RESX format", Type = 12},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "HTML", DisplayName = "Webpage (HTML)", Type = 1, AllowCompare = true},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "CSS", DisplayName = "Style Sheet (CSS)", Type = 2, AllowCompare = true},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "JS", DisplayName = "Script (JScript)", Type = 3, AllowCompare = true},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XML", DisplayName = "Data (XML)", Type = 4, AllowCompare = true},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "PNG", DisplayName = "PNG format", Type = 5, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "JPG", DisplayName = "JPG format", Type = 6, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "GIF", DisplayName = "GIF format", Type = 7, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XAP", DisplayName = "Silverlight (XAP)", Type = 8, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "XSL", DisplayName = "Style Sheet (XSL)", Type = 9, AllowCompare = true},
+            new WebResourceType{CrmMinimumMajorVersion = 5, CrmMaximumMajorVersion = 99, Name = "ICO", DisplayName = "ICO format", Type = 10, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 9, CrmMaximumMajorVersion = 99, Name = "SVG", DisplayName = "SVG format", Type = 11, AllowCompare = false},
+            new WebResourceType{CrmMinimumMajorVersion = 9, CrmMaximumMajorVersion = 99, Name = "RESX", DisplayName = "RESX format", Type = 12, AllowCompare = true},
         };
 
         public static ObservableCollection<WebResourceType> GetTypes(int majorVersion, bool addEmpty)

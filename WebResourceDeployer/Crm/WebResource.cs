@@ -1,4 +1,5 @@
-﻿using System;
+﻿//https://github.com/umbraco/Visual-Studio-Extension/blob/master/UmbracoStudio/VisualStudio/ProjectExtensions.cs
+using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using EnvDTE;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
@@ -407,8 +409,7 @@ namespace WebResourceDeployer.Crm
 
         public static string GetWebResourceContent(Entity webResource)
         {
-            object contentObj;
-            bool hasContent = webResource.Attributes.TryGetValue("content", out contentObj);
+            bool hasContent = webResource.Attributes.TryGetValue("content", out var contentObj);
             var content = hasContent ? contentObj.ToString() : String.Empty;
 
             return content;
@@ -475,8 +476,31 @@ namespace WebResourceDeployer.Crm
             string[] name = webResourceName.Split('/');
             folder = folder.Replace("/", "\\");
             var path = Path.GetDirectoryName(projectFullName) +
-                       ((folder != "\\") ? folder : String.Empty) +
+                       (folder != "\\" ? folder : String.Empty) +
                        "\\" + name[name.Length - 1];
+
+            return path;
+        }
+
+        public static string ConvertWebResourceNameFullToPath(string webResourceName, string rootFolder, Project project)
+        {           
+            string[] folders = webResourceName.Split('/');
+
+            string currentFullPath = Path.GetDirectoryName(project.FullName);
+            string currentPartialPath = String.Empty;
+            for (int i = 0; i < folders.Length - 1; i++)
+            {
+                string currentFolder = CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.CreateValidFolderName(folders[i]);
+                currentFullPath = Path.Combine(currentFullPath, currentFolder);
+                currentPartialPath = Path.Combine(currentPartialPath, currentFolder);
+                bool exists = Directory.Exists(currentFullPath);
+                if (!exists)
+                    Directory.CreateDirectory(currentFullPath);
+                
+                CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.GetProjectItems(project, currentPartialPath, true);
+            }
+
+            string path = Path.Combine(currentFullPath, folders[folders.Length - 1]);
 
             return path;
         }
