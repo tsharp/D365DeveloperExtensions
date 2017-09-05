@@ -50,7 +50,7 @@
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal"> 
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
                         <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" Margin="5,0,0,0" />
                     </Button>
@@ -65,6 +65,9 @@
                     <ComboBox x:Name="WebResourceType" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="WebResourceType_OnSelectionChanged" DisplayMemberPath="DisplayName"
                           IsEnabled="False" Width="120" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding WebResourceTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
+                    <Label x:Name="NameLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" />
+                    <TextBox x:Name="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
+                             IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" TextChanged="Name_OnTextChanged" />
                     <CheckBox x:Name="ShowManaged" Content="{x:Static resources:Resource.ShowManaged_CheckBox_Content}" Margin="5,0,0,0" VerticalAlignment="Center" Checked="ShowManaged_OnChecked" 
                           Unchecked="ShowManaged_OnChecked" IsEnabled="False" />
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center">

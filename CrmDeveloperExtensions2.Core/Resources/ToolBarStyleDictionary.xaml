@@ -33,4 +33,33 @@
         <Setter Property="Height" Value="31" />
     </Style>
 
+    <Style TargetType="{x:Type TextBox}" x:Key="ToolBarTextBoxStyle">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarGradientBeginKey}}" />
+        <Setter Property="Height" Value="21"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="border" BorderBrush="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsfx:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarMenuBorderKey}}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarHoverKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarMenuBorderKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
