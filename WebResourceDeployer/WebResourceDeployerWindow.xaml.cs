@@ -171,6 +171,11 @@ namespace WebResourceDeployer
             FilterWebResources();
         }
 
+        private void Name_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilterWebResources();
+        }
+
         private void AddWebResource_OnClick(object sender, RoutedEventArgs e)
         {
             ObservableCollection<ComboBoxItem> projectsFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
@@ -409,19 +414,21 @@ namespace WebResourceDeployer
             ProjectItem projectItem = e.ProjectItem;
             Guid itemType = new Guid(projectItem.Kind);
 
-            if (itemType != VSConstants.GUID_ItemType_PhysicalFile)
-                return;
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFile) {
+                var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
+                if (projectPath == null) return;
 
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
+                string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+                ProjectFiles.Add(new ComboBoxItem {
+                    Content = newItemName
+                });
 
-            string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-            ProjectFiles.Add(new ComboBoxItem
-            {
-                Content = newItemName
-            });
+                ProjectFiles = new ObservableCollection<ComboBoxItem>(ProjectFiles.OrderBy(p => p.Content.ToString()));
+            }
 
-            ProjectFiles = new ObservableCollection<ComboBoxItem>(ProjectFiles.OrderBy(p => p.Content.ToString()));
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder) {
+                //TODO: see old code
+            }
         }
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
@@ -929,6 +936,7 @@ namespace WebResourceDeployer
             icv.Filter = o => o is WebResourceItem w &&
                 (!showManaged ? w.IsManaged == false : w.IsManaged || w.IsManaged == false) &&
                 (WebResourceType.SelectedIndex > 0 ? w.Type == type : w.Type > 0) &&
+                (!string.IsNullOrEmpty(Name.Text.Trim()) && Name.Text.Trim().Length > 2 ? w.Name.Contains(Name.Text.Trim()) : w.Name != null) &&
                 w.SolutionId == solutionId;
 
             //Only keep publish flags for items still visable
@@ -980,6 +988,6 @@ namespace WebResourceDeployer
             }
 
             Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-        }
+        }      
     }
 }
