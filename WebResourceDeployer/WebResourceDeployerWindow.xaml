@@ -23,6 +23,8 @@
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter" />
             <converters:AllowCompareConverter x:Key="AllowCompareConverter"/>
+            <converters:StateConverter x:Key="StateConverter"/>
+            <coreConverters:InverseConverter x:Key="InverseConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -51,11 +53,11 @@
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
-                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" Margin="5,0,0,0" />
+                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
+                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" />
                     </Button>
-                    <Button x:Name="DownloadAll" Click="DownloadAll_OnClick"  Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" MinWidth="20">
-                        <imaging:CrispImage x:Name="DownloadAllImage" Moniker="{x:Static catalog:KnownMonikers.DownloadFolder}" ToolTip="Download All Items" VerticalAlignment="Bottom" Margin="5,0,0,0" />
+                    <Button x:Name="DownloadAll" Click="DownloadAll_OnClick"  Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
+                        <imaging:CrispImage x:Name="DownloadAllImage" Moniker="{x:Static catalog:KnownMonikers.DownloadFolder}" ToolTip="Download All Items" VerticalAlignment="Bottom" />
                     </Button>
                     <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
@@ -68,8 +70,8 @@
                     <Label x:Name="NameLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" />
                     <TextBox x:Name="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
                              IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" TextChanged="Name_OnTextChanged" />
-                    <CheckBox x:Name="ShowManaged" Content="{x:Static resources:Resource.ShowManaged_CheckBox_Content}" Margin="5,0,0,0" VerticalAlignment="Center" Checked="ShowManaged_OnChecked" 
-                          Unchecked="ShowManaged_OnChecked" IsEnabled="False" />
+                    <CheckBox x:Name="ShowManaged" Content="{x:Static resources:Resource.ShowManaged_CheckBox_Content}" Margin="15,0,0,0" VerticalAlignment="Center" Checked="ShowManaged_OnChecked" 
+                          Unchecked="ShowManaged_OnChecked" IsEnabled="False" Padding="2,2,2,2" />
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center">
                         <TextBlock>
                             <TextBlock.Text>
@@ -81,12 +83,12 @@
                         </TextBlock>
                     </Label>
                 </StackPanel>
-                <DataGrid x:Name="WebResourceGrid" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5,0,0,0" BorderThickness="0" Background="Transparent"
-                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" CanUserAddRows="False"
-                      IsEnabled="False" CanUserDeleteRows="False" EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged">
+                <DataGrid x:Name="WebResourceGrid" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5,0,0,0" BorderThickness="0" Background="Transparent" Style="{DynamicResource DataGridStyle}"
+                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" CanUserAddRows="False" CellStyle="{DynamicResource DataGridCellStyle}" CanUserResizeColumns="False"
+                      IsEnabled="False" CanUserDeleteRows="False" EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Visibility="Collapsed" Binding="{Binding WebResourceId}"/>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False" />
+                        <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False"/>
                         <DataGridTemplateColumn Header="{x:Static resources:Resource.Publish_DataGridTemplateColumn_Header}" x:Name="PublishColumn" CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -102,29 +104,16 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" Binding="{Binding Name}" IsReadOnly="True">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding Name}" />
-                                    <Setter Property="Margin" Value="5,0,0,0"/>
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" Binding="{Binding DisplayName}" IsReadOnly="True">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding DisplayName}" />
-                                    <Setter Property="Margin" Value="5,0,0,0"/>
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
-                        <DataGridTemplateColumn Header="{x:Static resources:Resource.MappedTo_DataGridTemplateColumn_Header}" x:Name="FileListColumn" 
-                                            CanUserSort="True" SortMemberPath="BoundFile">
+                        <DataGridTextColumn Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" Binding="{Binding Name}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="State" Binding="{Binding IsManaged, Converter={StaticResource StateConverter}}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" Binding="{Binding DisplayName}" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="{x:Static resources:Resource.MappedTo_DataGridTemplateColumn_Header}" x:Name="FileListColumn"
+                            CanUserSort="True" SortMemberPath="BoundFile">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid HorizontalAlignment="Stretch" MouseLeftButtonDown="BoundFile_OnMouseLeftButtonDown">
-                                        <TextBlock x:Name="ClickToMapLabel" Text="{Binding Path=BoundFile}" Tag="{Binding WebResourceId}" 
-                                               ToolTip="{x:Static resources:Resource.ClickToMapLabel_TextBlock_ToolTip}"/>
+                                        <TextBlock x:Name="ClickToMapLabel" Text="{Binding Path=BoundFile}" Tag="{Binding WebResourceId}" Padding="2,0,2,0"
+                                            ToolTip="{x:Static resources:Resource.ClickToMapLabel_TextBlock_ToolTip}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -133,12 +122,12 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="GetWebResource" Click="GetWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
-                                        ToolTip="{x:Static resources:Resource.GetWebResource_Button_ToolTip}">
-                                        <imaging:CrispImage x:Name="DownloadImage" Moniker="{x:Static catalog:KnownMonikers.Download}"
-                                                        ToolTip="{x:Static resources:Resource.DownloadImage_Button_ToolTip}" />
+                                        ToolTip="{x:Static resources:Resource.GetWebResource_Button_ToolTip}" Style="{DynamicResource ImageButtonStyle}">
+                                        <imaging:CrispImage x:Name="DownloadImage" Moniker="{x:Static catalog:KnownMonikers.Download}" 
+                                            ToolTip="{x:Static resources:Resource.DownloadImage_Button_ToolTip}" />
                                         <Button.ContextMenu>
                                             <ContextMenu ItemsSource="{Binding Path=ProjectFolders, UpdateSourceTrigger=PropertyChanged}" 
-                                                         Style="{DynamicResource GridContextMenuStyle}" ItemContainerStyle="{DynamicResource GridButtonContextMenuStyle}"/>
+                                            Style="{DynamicResource GridContextMenuStyle}" ItemContainerStyle="{DynamicResource GridButtonContextMenuStyle}"/>
                                         </Button.ContextMenu>
                                     </Button>
                                 </DataTemplate>
@@ -147,9 +136,9 @@
                         <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="OpenWebResource" Click="OpenWebResource_OnClick" CommandParameter="{Binding WebResourceId}">
+                                    <Button x:Name="OpenWebResource" Click="OpenWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
                                         <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.Open}"
-                                                        ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
+                                            ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -157,7 +146,7 @@
                         <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}">
+                                    <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
                                         <imaging:CrispImage x:Name="CompareImage" Moniker="{x:Static catalog:KnownMonikers.CompareFiles}"
                                                         ToolTip="{x:Static resources:Resource.CompareImage_Button_ToolTip}" />
                                         <Button.IsEnabled>
@@ -173,21 +162,10 @@
                         <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="DeleteWebResource" Click="DeleteWebResource_OnClick" CommandParameter="{Binding WebResourceId}">
+                                    <Button x:Name="DeleteWebResource" Click="DeleteWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
+                                            Style="{DynamicResource ImageButtonStyle}" IsEnabled="{Binding IsManaged, Converter={StaticResource InverseConverter}}">
                                         <imaging:CrispImage x:Name="DeleteImage" Moniker="{x:Static catalog:KnownMonikers.Remove}"
                                                         ToolTip="{x:Static resources:Resource.DeleteImage_Button_ToolTip}" />
-                                        <Button.Style>
-                                            <Style TargetType="{x:Type Button}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=IsManaged}" Value="True">
-                                                        <Setter Property="IsEnabled" Value="False" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=IsManaged}" Value="False">
-                                                        <Setter Property="IsEnabled" Value="True" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -198,7 +176,7 @@
             <coreControls:LockOverlay x:Name="Overlay" />
             <Popup x:Name="FilePopup" StaysOpen="False">
                 <StackPanel>
-                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Center"
+                    <ComboBox x:Name="ProjectFileList" SelectionChanged="ProjectFileList_OnSelectionChanged" VerticalAlignment="Top"
                               Template="{DynamicResource ComboBoxControlTemplate}"
                               ItemsSource="{Binding Path=ProjectFiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>

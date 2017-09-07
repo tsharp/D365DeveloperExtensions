@@ -159,6 +159,7 @@
     <Compile Include="Controls\LockOverlay.xaml.cs">
       <DependentUpon>LockOverlay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\InverseConverter.cs" />
     <Compile Include="Converters\ToUpperConverter.cs" />
     <Compile Include="Crm\Publish.cs" />
     <Compile Include="DateFormatting.cs" />
