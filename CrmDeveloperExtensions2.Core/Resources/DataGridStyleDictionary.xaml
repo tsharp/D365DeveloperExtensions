@@ -4,8 +4,10 @@
                     xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
                     xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging">
 
-    <Style TargetType="{x:Type DataGrid}">
+    <Style TargetType="{x:Type DataGrid}" x:Key="DataGridStyle">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.TitleBarActiveGradientBrushKey}}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
     </Style>
 
     <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridColumnHeaderStyle">
@@ -30,8 +32,39 @@
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"/>
     </Style>
 
+    <Style TargetType="{x:Type DataGridCell}" x:Key="DataGridCellStyle">
+        <Setter Property="Padding" Value="2,0,2,0" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--<Style TargetType="{x:Type DataGridCell}" x:Key="DataGridImageButtonCellStyle" BasedOn="{StaticResource DataGridCellStyle}">
+        <Setter Property="Padding" Value="0" />
+    </Style>-->
+
     <Style TargetType="{x:Type Button}" x:Key="GridHeaderButtonStyle">
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="MinHeight" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="MinWidth" Value="20"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -43,7 +76,10 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value=".5"/>
             </Trigger>
         </Style.Triggers>
     </Style>

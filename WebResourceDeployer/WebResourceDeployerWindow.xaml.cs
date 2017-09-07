@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -569,9 +570,13 @@ namespace WebResourceDeployer
                 }
             }
 
-            ProjectFileList.Width = WebResourceGrid.Columns[5].ActualWidth - 2;
-            FilePopup.PlacementTarget = textBlock;
+            //Fixes the placemet of the popup so it fits in the cell w/ the padding applied
+            ProjectFileList.Width = WebResourceGrid.Columns[6].ActualWidth - 1;
+            FilePopup.PlacementTarget = grid;
             FilePopup.Placement = PlacementMode.Relative;
+            FilePopup.VerticalOffset = -3;
+            FilePopup.HorizontalOffset = -2;
+
             FilePopup.IsOpen = true;
             ProjectFileList.IsDropDownOpen = true;
         }
