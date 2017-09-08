@@ -51,7 +51,7 @@
                         <DataGridTemplateColumn CanUserSort="False">
                             <DataGridTemplateColumn.Header>
                                 <StackPanel Background="Transparent">
-                                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" Opacity=".25">
+                                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" Opacity=".25">
                                         <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
                                                         ToolTip="{x:Static resources:Resource.RefreshImage_Button_ToolTip}" />
                                     </Button>
@@ -59,7 +59,7 @@
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
+                                    <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
                                                         ToolTip="{x:Static resources:Resource.ViewDetailsImage_Button_ToolTip}" />
                                     </Button>
@@ -69,7 +69,7 @@
                         <DataGridTemplateColumn CanUserSort="False" Width="16">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
+                                    <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
                                                         ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
                                     </Button>
@@ -79,7 +79,7 @@
                         <DataGridTemplateColumn CanUserSort="False">
                             <DataGridTemplateColumn.Header>
                                 <StackPanel>
-                                    <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource GridHeaderButtonStyle}">
+                                    <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
                                                         ToolTip="{x:Static resources:Resource.DeleteLogsImage_Button_ToolTip}" />
                                     </Button>

@@ -32,6 +32,9 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style x:Key="DataGridImageButtonCellStyle" BasedOn="{StaticResource DataGridCellStyle}" TargetType="{x:Type DataGridCell}">
+                <Setter Property="Padding" Value="0"/>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -50,7 +53,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                    <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
+                    <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="False"
                             Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter}, Mode=OneWay}" 
                             ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" />
                     <Button x:Name="AddWebResource" Click="AddWebResource_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
@@ -60,27 +63,30 @@
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
+                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
                         <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" ToolTip="Refresh" VerticalAlignment="Bottom" />
                     </Button>
-                    <Button x:Name="DownloadAll" Click="DownloadAll_OnClick"  Style="{DynamicResource GridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
+                    <Button x:Name="DownloadAll" Click="DownloadAll_OnClick"  Style="{DynamicResource DataGridHeaderButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}">
                         <imaging:CrispImage x:Name="DownloadAllImage" Moniker="{x:Static catalog:KnownMonikers.DownloadFolder}" ToolTip="Download All Items" VerticalAlignment="Bottom" />
                     </Button>
-                    <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" />
+                    <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}"
+                           Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
                           DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False">
                     </ComboBox>
-                    <Label x:Name="WebResourceTypeLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="{x:Static resources:Resource.WebResourceTypeLabel_Label_Content}" />
+                    <Label x:Name="WebResourceTypeLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled, ElementName=WebResourceType}"
+                           Content="{x:Static resources:Resource.WebResourceTypeLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}"/>
                     <ComboBox x:Name="WebResourceType" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="WebResourceType_OnSelectionChanged" DisplayMemberPath="DisplayName"
                           IsEnabled="False" Width="120" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding WebResourceTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
-                    <Label x:Name="NameLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" />
+                    <Label x:Name="NameLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" 
+                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=Name}"/>
                     <TextBox x:Name="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
-                             IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" TextChanged="Name_OnTextChanged" />
+                             IsEnabled="False" TextChanged="Name_OnTextChanged" />
                     <CheckBox x:Name="ShowManaged" Content="{x:Static resources:Resource.ShowManaged_CheckBox_Content}" Margin="15,0,0,0" VerticalAlignment="Center" Checked="ShowManaged_OnChecked" 
-                          Unchecked="ShowManaged_OnChecked" IsEnabled="False" Padding="2,2,2,2" />
-                    <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center">
-                        <TextBlock>
+                          Unchecked="ShowManaged_OnChecked" IsEnabled="False" Padding="2,2,2,2" Style="{DynamicResource ToolBarCheckBoxStyle}" />
+                    <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}">
+                        <TextBlock IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Style="{DynamicResource ToolBarTextBlockStyle}">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0}: {1}">
                                     <Binding Source="{x:Static resources:Resource.ItemCount_Label_Content}" Mode="OneWay"/>
@@ -100,14 +106,14 @@
                                                 CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <CheckBox x:Name="PublishSelectAll" Click="PublishSelectAll_OnClick" IsThreeState="True" 
+                                    <CheckBox x:Name="PublishSelectAll" Click="PublishSelectAll_OnClick" IsThreeState="True" Style="{DynamicResource DataGridCheckBoxStyle}"
                                           ToolTip="{x:Static resources:Resource.PublishSelectAll_CheckBox_ToolTip}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <CheckBox x:Name="PublishItem" IsChecked="{Binding Publish, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                          ToolTip="{x:Static resources:Resource.PublishItem_CheckBox_ToolTip}"
+                                          ToolTip="{x:Static resources:Resource.PublishItem_CheckBox_ToolTip}" Style="{DynamicResource DataGridCheckBoxStyle}"
                                           IsEnabled="{Binding AllowPublish, Mode=OneWay}" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -126,7 +132,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" 
+                                                CellStyle="{StaticResource DataGridImageButtonCellStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="GetWebResource" Click="GetWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
@@ -135,13 +142,14 @@
                                             ToolTip="{x:Static resources:Resource.DownloadImage_Button_ToolTip}" />
                                         <Button.ContextMenu>
                                             <ContextMenu ItemsSource="{Binding Path=ProjectFolders, UpdateSourceTrigger=PropertyChanged}" 
-                                            Style="{DynamicResource GridContextMenuStyle}" ItemContainerStyle="{DynamicResource GridButtonContextMenuStyle}"/>
+                                            Style="{DynamicResource DataGridContextMenuStyle}" ItemContainerStyle="{DynamicResource DataGridButtonContextMenuStyle}"/>
                                         </Button.ContextMenu>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" 
+                                                CellStyle="{StaticResource DataGridImageButtonCellStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="OpenWebResource" Click="OpenWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
@@ -151,7 +159,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" 
+                                                CellStyle="{StaticResource DataGridImageButtonCellStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
@@ -167,7 +176,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" 
+                                                CellStyle="{StaticResource DataGridImageButtonCellStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="DeleteWebResource" Click="DeleteWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
