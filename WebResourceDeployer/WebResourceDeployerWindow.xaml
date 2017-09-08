@@ -25,6 +25,13 @@
             <converters:AllowCompareConverter x:Key="AllowCompareConverter"/>
             <converters:StateConverter x:Key="StateConverter"/>
             <coreConverters:InverseConverter x:Key="InverseConverter" />
+            <Style x:Key="DataGridColumnHeaderNoMouseOverStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -89,7 +96,8 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Visibility="Collapsed" Binding="{Binding WebResourceId}"/>
                         <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False"/>
-                        <DataGridTemplateColumn Header="{x:Static resources:Resource.Publish_DataGridTemplateColumn_Header}" x:Name="PublishColumn" CanUserSort="False" CanUserResize="False">
+                        <DataGridTemplateColumn Header="{x:Static resources:Resource.Publish_DataGridTemplateColumn_Header}" x:Name="PublishColumn" CanUserSort="False" 
+                                                CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <CheckBox x:Name="PublishSelectAll" Click="PublishSelectAll_OnClick" IsThreeState="True" 
@@ -118,7 +126,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="GetWebResource" Click="GetWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
@@ -133,7 +141,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="OpenWebResource" Click="OpenWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
@@ -143,7 +151,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="CompareWebResource" Click="CompareWebResource_OnClick" CommandParameter="{Binding WebResourceId}" Style="{DynamicResource ImageButtonStyle}">
@@ -159,7 +167,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="DeleteWebResource" Click="DeleteWebResource_OnClick" CommandParameter="{Binding WebResourceId}" 
