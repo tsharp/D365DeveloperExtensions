@@ -1,13 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+                    xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
 
-    <Style TargetType="{x:Type Window}" x:Key="WindowStyle">
-        <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+    <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBackgroundKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"/>
         <Setter Property="ShowInTaskbar" Value="False"/>
         <Setter Property="ResizeMode" Value="NoResize"/>
     </Style>
@@ -21,10 +21,10 @@
     </Style>
 
     <Style TargetType="{x:Type ListView}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBackgroundKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
         <Setter Property="BorderThickness" Value="0,0,0,2"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"/>
     </Style>
 
     <Style x:Key="PickerListViewItemStyle" TargetType="{x:Type ListViewItem}">
@@ -45,12 +45,12 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarHoverKey}}" />
+                            <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
                             <Setter Property="BorderBrush" Value="Transparent" />
                             <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarMouseDownBackgroundBeginKey}}"/>
+                            <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMouseDownBackgroundBeginKey}}"/>
                             <Setter Property="BorderBrush" Value="Transparent" />
                             <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
@@ -67,7 +67,7 @@
                 <RowDefinition Height="0.00001*" />
                 <RowDefinition MaxHeight="18" />
             </Grid.RowDefinitions>
-            <Border Grid.RowSpan="3" Background="{DynamicResource {x:Static vsfx:VsBrushes.ScrollBarBackgroundKey}}" />
+            <Border Grid.RowSpan="3" Background="{DynamicResource {x:Static shell:VsBrushes.ScrollBarBackgroundKey}}" />
             <RepeatButton Grid.Row="0" Style="{DynamicResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
             <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
                 <Track.DecreaseRepeatButton>
@@ -75,7 +75,7 @@
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
                     <Thumb Style="{DynamicResource ScrollBarThumb}" Margin="1,0,1,0" BorderThickness="0" 
-                                   Background="{DynamicResource {x:Static vsfx:VsBrushes.ScrollBarThumbBackgroundKey}}" />
+                                   Background="{DynamicResource {x:Static shell:VsBrushes.ScrollBarThumbBackgroundKey}}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{DynamicResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
@@ -165,7 +165,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" 
-                                      Fill="{DynamicResource {x:Static vsfx:VsBrushes.ScrollBarThumbGlyphKey}}"/>
+                                      Fill="{DynamicResource {x:Static shell:VsBrushes.ScrollBarThumbGlyphKey}}"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

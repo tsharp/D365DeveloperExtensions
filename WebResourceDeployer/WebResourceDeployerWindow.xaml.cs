@@ -415,19 +415,22 @@ namespace WebResourceDeployer
             ProjectItem projectItem = e.ProjectItem;
             Guid itemType = new Guid(projectItem.Kind);
 
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile) {
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
+            {
                 var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
                 if (projectPath == null) return;
 
                 string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-                ProjectFiles.Add(new ComboBoxItem {
+                ProjectFiles.Add(new ComboBoxItem
+                {
                     Content = newItemName
                 });
 
                 ProjectFiles = new ObservableCollection<ComboBoxItem>(ProjectFiles.OrderBy(p => p.Content.ToString()));
             }
 
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder) {
+            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
+            {
                 //TODO: see old code
             }
         }
@@ -509,6 +512,8 @@ namespace WebResourceDeployer
             WebResourceType.SelectedIndex = -1;
             WebResourceGrid.ItemsSource = null;
             ShowManaged.IsChecked = false;
+            Name.Text = null;
+            Name.IsEnabled = false;
             SetButtonState(false);
         }
 
@@ -872,7 +877,7 @@ namespace WebResourceDeployer
             WebResourceGrid.IsEnabled = true;
             WebResourceType.IsEnabled = true;
             ShowManaged.IsEnabled = true;
-
+            Name.IsEnabled = true;
             return true;
         }
 
@@ -993,6 +998,6 @@ namespace WebResourceDeployer
             }
 
             Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-        }      
+        }
     }
 }
