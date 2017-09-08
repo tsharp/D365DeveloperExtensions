@@ -4,13 +4,13 @@
                     xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
                     xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging">
 
-    <Style TargetType="{x:Type DataGrid}" x:Key="DataGridStyle">
+    <Style x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.TitleBarActiveGradientBrushKey}}"/>
         <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
         <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
     </Style>
 
-    <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridColumnHeaderStyle">
+    <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" >
         <Setter Property="Background" Value="Transparent"></Setter>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBorderKey}}"/>
@@ -27,12 +27,12 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type DataGridRow}" x:Key="DataGridRowStyle">
+    <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}" >
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.CommandBarTextActiveKey}}"/>
     </Style>
 
-    <Style TargetType="{x:Type DataGridCell}" x:Key="DataGridCellStyle">
+    <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
         <Setter Property="Padding" Value="2,0,2,0" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Focusable" Value="False"/>
@@ -54,7 +54,7 @@
         <Setter Property="Padding" Value="0" />
     </Style>-->
 
-    <Style TargetType="{x:Type Button}" x:Key="GridHeaderButtonStyle">
+    <Style x:Key="GridHeaderButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Margin" Value="0"/>
@@ -84,7 +84,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type MenuItem}" x:Key="GridButtonContextMenuStyle">
+    <Style x:Key="GridButtonContextMenuStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
         <!--TODO: figure out a away not to hard-code the field-->
         <Setter Property="CommandParameter" Value="{Binding WebResourceId}" />
@@ -108,7 +108,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type ContextMenu}" x:Key="GridContextMenuStyle">
+    <Style x:Key="GridContextMenuStyle" TargetType="{x:Type ContextMenu}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
