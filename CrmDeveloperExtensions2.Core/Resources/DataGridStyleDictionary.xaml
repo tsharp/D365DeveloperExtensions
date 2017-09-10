@@ -79,9 +79,9 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="DataGridButtonContextMenuStyle" TargetType="{x:Type MenuItem}">
+    <!--<Style x:Key="DataGridButtonContextMenuStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        <!--TODO: figure out a away not to hard-code the field-->
+        --><!--TODO: figure out a away not to hard-code the field--><!--
         <Setter Property="CommandParameter" Value="{Binding WebResourceId}" />
         <Setter Property="IsCheckable" Value="True" />
         <Setter Property="Template">
@@ -123,7 +123,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style x:Key="DataGridCheckBoxStyle" TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>

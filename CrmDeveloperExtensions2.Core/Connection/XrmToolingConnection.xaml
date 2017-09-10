@@ -5,6 +5,8 @@
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
+             xmlns:local="clr-namespace:CrmDeveloperExtensions2.Core.Connection"
+             xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="120" d:DesignWidth="200">
@@ -16,6 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <coreConverters:InverseConverter x:Key="InverseConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
@@ -27,7 +30,7 @@
             </TextBlock>
         </Expander.Header>
         <StackPanel>
-            <StackPanel Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"></StackPanel>
+            <StackPanel Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"/>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.Project_Label_Content}" />
             <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170"
                       SelectionChanged="SolutionProjectsList_OnSelectionChanged" Initialized="SolutionProjectsList_Initialized" Template="{DynamicResource ComboBoxControlTemplate}" />

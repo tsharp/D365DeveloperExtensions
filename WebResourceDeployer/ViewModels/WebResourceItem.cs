@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
 
 namespace WebResourceDeployer.ViewModels
 {
@@ -27,18 +25,6 @@ namespace WebResourceDeployer.ViewModels
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public bool IsManaged { get; set; }
-        private ObservableCollection<MenuItem> _projectFolders;
-        public ObservableCollection<MenuItem> ProjectFolders
-        {
-            get => _projectFolders;
-            set
-            {
-                if (_projectFolders == value) return;
-
-                _projectFolders = value;
-                OnPropertyChanged();
-            }
-        }
         public bool AllowCompare => SetAllowCompare();
         public bool AllowPublish => SetAllowPublish();
         private string _boundFile;

@@ -17,7 +17,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -43,6 +42,7 @@ namespace WebResourceDeployer
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<WebResourceItem> _webResourceItems;
         private ObservableCollection<ComboBoxItem> _projectFiles;
+        private ObservableCollection<string> _projectFolders;
         private ObservableCollection<WebResourceType> _webResourceTypes;
 
         public ObservableCollection<WebResourceType> WebResourceTypes
@@ -51,6 +51,15 @@ namespace WebResourceDeployer
             set
             {
                 _webResourceTypes = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> ProjectFolders
+        {
+            get => _projectFolders;
+            set
+            {
+                _projectFolders = value;
                 OnPropertyChanged();
             }
         }
@@ -63,6 +72,7 @@ namespace WebResourceDeployer
                 OnPropertyChanged();
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -119,7 +129,7 @@ namespace WebResourceDeployer
             //so we don't want to contine further unless our window is active
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
-
+            
             //Grid is populated already
             if (WebResourceGrid.ItemsSource != null)
                 return;
@@ -149,6 +159,7 @@ namespace WebResourceDeployer
             _webResourceItems = new ObservableCollection<WebResourceItem>();
             ProjectFiles = new ObservableCollection<ComboBoxItem>();
             ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
 
             SetWindowCaption(_dte.ActiveWindow.Caption);
             LoadData();
@@ -184,32 +195,22 @@ namespace WebResourceDeployer
             NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, _dte, projectsFiles, solutionId);
             bool? result = newWebResource.ShowModal();
 
-            if (result != true) return;
+            if (result != true)
+                return;
 
-            ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
-            WebResourceItem defaultItem = ModelBuilder.WebResourceItemFromNew(newWebResource, newWebResource.NewSolutionId, projectFolders);
+            WebResourceItem defaultItem = ModelBuilder.WebResourceItemFromNew(newWebResource, newWebResource.NewSolutionId);
             defaultItem.PropertyChanged += WebResourceItem_PropertyChanged;
             //Needs to be after setting the property changed event
             defaultItem.BoundFile = newWebResource.NewBoundFile;
-
-            foreach (MenuItem menuItem in defaultItem.ProjectFolders)
-            {
-                menuItem.CommandParameter = defaultItem.WebResourceId;
-            }
 
             _webResourceItems.Add(defaultItem);
 
             if (newWebResource.NewSolutionId != ExtensionConstants.DefaultSolutionId)
             {
-                WebResourceItem solutionItem = ModelBuilder.WebResourceItemFromNew(newWebResource, ExtensionConstants.DefaultSolutionId, projectFolders);
+                WebResourceItem solutionItem = ModelBuilder.WebResourceItemFromNew(newWebResource, ExtensionConstants.DefaultSolutionId);
                 solutionItem.PropertyChanged += WebResourceItem_PropertyChanged;
                 //Needs to be after setting the property changed event
                 solutionItem.BoundFile = newWebResource.NewBoundFile;
-
-                foreach (MenuItem menuItem in solutionItem.ProjectFolders)
-                {
-                    menuItem.CommandParameter = solutionItem.WebResourceId;
-                }
 
                 _webResourceItems.Add(solutionItem);
             }
@@ -430,9 +431,7 @@ namespace WebResourceDeployer
             }
 
             if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                //TODO: see old code
-            }
+                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
         }
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
@@ -440,7 +439,8 @@ namespace WebResourceDeployer
             ProjectItem projectItem = e.ProjectItem;
 
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
+            if (projectPath == null)
+                return;
 
             Guid itemType = new Guid(projectItem.Kind);
 
@@ -455,11 +455,13 @@ namespace WebResourceDeployer
 
             if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
             {
-                var itemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
+                var itemName = LocalPathToCrmPath(projectPath,
+                    projectItem.FileNames[1].TrimEnd(Path.DirectorySeparatorChar));
 
                 int index = itemName.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
                 if (index == -1) return;
+
+                ProjectFolders.Remove(itemName);
 
                 UpdateWebResourceItemsBoundFilePath(itemName, null);
 
@@ -495,6 +497,8 @@ namespace WebResourceDeployer
                 UpdateWebResourceItemsBoundFilePath(oldItemName, newItemPath);
 
                 UpdateProjectFilesPathsAfterChange(oldItemName, newItemPath);
+
+                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
             }
         }
 
@@ -512,7 +516,7 @@ namespace WebResourceDeployer
             WebResourceType.SelectedIndex = -1;
             WebResourceGrid.ItemsSource = null;
             ShowManaged.IsChecked = false;
-            Name.Text = null;
+            Name.Text = String.Empty;
             Name.IsEnabled = false;
             SetButtonState(false);
         }
@@ -599,12 +603,9 @@ namespace WebResourceDeployer
             await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService);
         }
 
-        private async void DownloadWebResourceToFolder(object sender, RoutedEventArgs routedEventArgs)
+        //private async void DownloadWebResourceToFolder(object sender, RoutedEventArgs routedEventArgs)
+        private async void DownloadWebResourceToFolder(string folder, Guid webResourceId)
         {
-            MenuItem item = (MenuItem)sender;
-            string folder = item.Header.ToString();
-            Guid webResourceId = (Guid)item.CommandParameter;
-
             await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService);
         }
 
@@ -649,11 +650,6 @@ namespace WebResourceDeployer
                     if (projectPath == null) return;
 
                     var boundName = fullname.Replace(projectPath, String.Empty).Replace("\\", "/");
-
-                    //foreach (WebResourceItem item in _webResourceItems.Where(w => w.WebResourceId == currentItem.WebResourceId))
-                    //{
-                    //    item.BoundFile = boundName;
-                    //}
 
                     updatesToMake.Add(currentItem.WebResourceId, boundName);
                 });
@@ -816,7 +812,7 @@ namespace WebResourceDeployer
             var webResourceTask = GetWebResources();
 
             await Task.WhenAll(solutionTask, webResourceTask);
-
+           
             Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
             if (!solutionTask.Result)
@@ -845,15 +841,6 @@ namespace WebResourceDeployer
             return true;
         }
 
-        private ObservableCollection<MenuItem> GetProjectFolders()
-        {
-            ObservableCollection<MenuItem> projectFolders = ProjectWorker.GetProjectFoldersForMenu(ConnPane.SelectedProject.Name);
-            foreach (MenuItem projectFolder in projectFolders)
-                projectFolder.Click += DownloadWebResourceToFolder;
-
-            return projectFolders;
-        }
-
         private async Task<bool> GetWebResources()
         {
             EntityCollection results = await Task.Run(() => Crm.WebResource.RetrieveWebResourcesFromCrm(ConnPane.CrmService));
@@ -862,9 +849,8 @@ namespace WebResourceDeployer
 
             OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
 
-            ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
+            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name);
 
-            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name, projectFolders);
 
             foreach (WebResourceItem webResourceItem in _webResourceItems)
                 webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
@@ -977,9 +963,8 @@ namespace WebResourceDeployer
 
             OutputLogger.WriteToOutputWindow("Retrieved Web Resources From CRM", MessageType.Info);
 
-            ObservableCollection<MenuItem> projectFolders = GetProjectFolders();
+            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name);
 
-            _webResourceItems = ModelBuilder.CreateWebResourceItemView(results, ConnPane.SelectedProject.Name, projectFolders);
 
             foreach (WebResourceItem webResourceItem in _webResourceItems)
                 webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
@@ -998,6 +983,26 @@ namespace WebResourceDeployer
             }
 
             Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
+        }
+
+        private void ProjectFolderList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            ComboBox projectFolderList = (ComboBox) sender;
+            string folder = projectFolderList.SelectedValue?.ToString();
+            if (string.IsNullOrEmpty(folder)) return;
+            Guid webResourceId = new Guid(FolderId.Content.ToString());
+            DownloadWebResourceToFolder(folder, webResourceId);
+        }
+
+        private void GetWebResource_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Button button = (Button)sender;
+            FolderId.Content = button.CommandParameter;
+
+            FolderPopup.PlacementTarget = button;
+            FolderPopup.Placement = PlacementMode.Relative;
+
+            FolderPopup.IsOpen = true;
+            ProjectFolderList.IsDropDownOpen = true;
         }
     }
 }

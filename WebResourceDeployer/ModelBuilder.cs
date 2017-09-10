@@ -1,16 +1,15 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using CrmDeveloperExtensions2.Core;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
 {
     public static class ModelBuilder
     {
-        public static ObservableCollection<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName, ObservableCollection<MenuItem> projectFolders)
+        public static ObservableCollection<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName)
         {
             ObservableCollection<WebResourceItem> webResourceItems = new ObservableCollection<WebResourceItem>();
 
@@ -23,7 +22,6 @@ namespace WebResourceDeployer
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
                     TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
-                    ProjectFolders = projectFolders,
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
 
@@ -70,7 +68,7 @@ namespace WebResourceDeployer
             return solutions;
         }
 
-        public static WebResourceItem WebResourceItemFromNew(NewWebResource newWebResource, Guid solutionId, ObservableCollection<MenuItem> projectFolders)
+        public static WebResourceItem WebResourceItemFromNew(NewWebResource newWebResource, Guid solutionId)
         {
             WebResourceItem webResourceItem = new WebResourceItem
             {
@@ -79,7 +77,6 @@ namespace WebResourceDeployer
                 DisplayName = newWebResource.NewDisplayName,
                 TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
                 Type = newWebResource.NewType,
-                ProjectFolders = projectFolders,
                 SolutionId = solutionId
             };
 
