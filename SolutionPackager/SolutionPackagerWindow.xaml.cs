@@ -66,6 +66,8 @@ namespace SolutionPackager
             InitializeComponent();
             DataContext = this;
 
+            SolutionFolders = new ObservableCollection<string>();
+
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
                 return;
@@ -205,7 +207,7 @@ namespace SolutionPackager
         {
             RemoveEventHandlers();
             SolutionData = null;
-            SolutionFolders = null;
+            SolutionFolders = new ObservableCollection<string>();
             SetControlState(false);
         }
 
