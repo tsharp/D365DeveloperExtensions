@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>CRM/365 Spkl Plug-in Registration Attributes</Name>
+    <Description>Required for adding assembly registration details from CRM/365 and deploying.</Description>
+    <Icon>icon.png</Icon>
+    <TemplateID>2cbd34be-f54c-4cfa-bcd7-5de379c5d074</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>CrmPluginRegistrationAttribute.cs</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+    </References>
+    <ProjectItem ReplaceParameters="true">CrmPluginRegistrationAttribute.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>
