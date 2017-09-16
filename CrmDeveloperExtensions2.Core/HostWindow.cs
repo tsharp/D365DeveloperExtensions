@@ -33,6 +33,9 @@ namespace CrmDeveloperExtensions2.Core
 
         public static bool IsCrmDevExWindow(EnvDTE.Window window)
         {
+            if (window.ObjectKind == null)
+                return false;
+
             string windowGuid = window.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty);
             return ExtensionConstants.CrmDevExWindows.Contains(windowGuid);
         }

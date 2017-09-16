@@ -29,16 +29,14 @@ namespace CrmIntellisense
         {
             //This gets executed as each code file is loaded
             //1st
-            DTE dte = GetGlobalService(typeof(DTE)) as DTE;
-            if (dte == null)
+            if (!(GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
             bool useIntellisense = UserOptionsGrid.GetUseIntellisense(dte);
             if (!useIntellisense)
                 return;
 
-            CrmServiceClient client = SharedGlobals.GetGlobal("CrmService", dte) as CrmServiceClient;
-            if (client == null)
+            if (!(SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client))
                 return;
 
             ITextView textView = AdapterService.GetWpfTextView(textViewAdapter);

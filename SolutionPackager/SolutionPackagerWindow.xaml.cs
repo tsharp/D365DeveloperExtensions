@@ -174,14 +174,14 @@ namespace SolutionPackager
 
         private void ConnPane_OnSolutionProjectRenamed(object sender, SolutionProjectRenamedEventArgs e)
         {
-            Project project = e.Project;
-            string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
-            if (string.IsNullOrEmpty(solutionPath))
-                return;
+            //Project project = e.Project;
+            //string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
+            //if (string.IsNullOrEmpty(solutionPath))
+            //    return;
 
-            string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
+            //string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
 
-            Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
+            //Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
         }
 
         private void SetControlState(bool enabled)
@@ -565,7 +565,6 @@ namespace SolutionPackager
                 return;
 
             var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
 
             SolutionFolders.Remove(itemName);
 

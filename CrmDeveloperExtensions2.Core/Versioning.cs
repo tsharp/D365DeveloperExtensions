@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using EnvDTE;
+using NLog;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -23,6 +27,12 @@ namespace CrmDeveloperExtensions2.Core
             name = name.Substring(1);
 
             return StringToVersion(name);
+        }
+
+        public static bool DoAssemblyVersionsMatch(Version aVersion, Version bVersion)
+        {
+            return aVersion.Major == bVersion.Major &&
+                   aVersion.Minor == bVersion.Minor;
         }
     }
 }

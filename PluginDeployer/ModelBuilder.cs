@@ -2,15 +2,16 @@
 using Microsoft.Xrm.Sdk;
 using PluginDeployer.ViewModels;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace PluginDeployer
 {
     public static class ModelBuilder
     {
-        public static List<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
+        public static ObservableCollection<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
         {
-            List<CrmSolution> crmSolutions = new List<CrmSolution>();
+            ObservableCollection<CrmSolution> crmSolutions = new ObservableCollection<CrmSolution>();
 
             foreach (Entity entity in solutions.Entities)
             {
@@ -29,20 +30,21 @@ namespace PluginDeployer
             return crmSolutions;
         }
 
-        private static List<CrmSolution> SortSolutions(List<CrmSolution> solutions)
+        private static ObservableCollection<CrmSolution> SortSolutions(ObservableCollection<CrmSolution> solutions)
         {
             //Default on top
-            var i = solutions.FindIndex(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
-            var item = solutions[i];
-            solutions.RemoveAt(i);
-            solutions.Insert(0, item);
+            var defaultSolution = solutions.FirstOrDefault(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
+
+            solutions.Remove(defaultSolution);
+
+            solutions.Insert(0, defaultSolution);
 
             return solutions;
         }
 
-        public static List<CrmAssembly> CreateCrmAssemblyView(EntityCollection assemblies)
+        public static ObservableCollection<CrmAssembly> CreateCrmAssemblyView(EntityCollection assemblies)
         {
-            List<CrmAssembly> crmAssemblies = new List<CrmAssembly>();
+            ObservableCollection<CrmAssembly> crmAssemblies = new ObservableCollection<CrmAssembly>();
 
             foreach (Entity assembly in assemblies.Entities)
             {
@@ -51,9 +53,8 @@ namespace PluginDeployer
                     AssemblyId = assembly.Id,
                     Name = assembly.GetAttributeValue<string>("name"),
                     Version = Version.Parse(assembly.GetAttributeValue<string>("version")),
-                    DisplayName = assembly.GetAttributeValue<string>("name") + " (" + assembly.GetAttributeValue<string>("version") + ")"
-                    //,
-                    //SolutionId = new Guid(assembly.GetAttributeValue<AliasedValue>("solutioncomponent.solutionid").Value.ToString())
+                    DisplayName = assembly.GetAttributeValue<string>("name") + " (" + assembly.GetAttributeValue<string>("version") + ")",
+                    SolutionId = ((EntityReference)assembly.GetAttributeValue<AliasedValue>("solutioncomponent.solutionid").Value).Id
                 };
 
                 if (assembly.Contains("plugintype.isworkflowactivity"))
@@ -61,6 +62,14 @@ namespace PluginDeployer
 
                 crmAssemblies.Add(crmAssembly);
             }
+
+            crmAssemblies.Insert(0, new CrmAssembly
+            {
+                AssemblyId = Guid.Empty,
+                Name = string.Empty,
+                Version = new Version(),
+                DisplayName = String.Empty
+            });
 
             return crmAssemblies;
         }

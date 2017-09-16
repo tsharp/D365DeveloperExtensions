@@ -94,6 +94,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Mapping.cs" />
+    <Compile Include="Converters\EnableGetAttributesButtonConverter.cs" />
+    <Compile Include="Converters\EnablePublishConverter.cs" />
     <Compile Include="Crm\Assembly.cs" />
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="IlMerge.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="SparkleXrm\Tasks\Queries.cs" />
     <Compile Include="SparkleXrm\Tasks\Task.cs" />
     <Compile Include="SparkleXrm\TraceLogger.cs" />
+    <Compile Include="SpklHelpers.cs" />
     <Compile Include="ViewModels\CrmSolution.cs" />
     <Compile Include="ViewModels\CrmAssembly.cs" />
   </ItemGroup>
@@ -158,12 +162,8 @@
       <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
       <Name>CrmDeveloperExtensions2.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PluginTraceViewer\PluginTraceViewer.csproj">
-      <Project>{97AA7ED6-5020-44E4-88E9-7D63F49FA766}</Project>
-      <Name>PluginTraceViewer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TemplateWizards\TemplateWizards.csproj">
-      <Project>{7CC35EFB-7335-4AE1-8A54-317D071F9F12}</Project>
+      <Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>
       <Name>TemplateWizards</Name>
     </ProjectReference>
   </ItemGroup>

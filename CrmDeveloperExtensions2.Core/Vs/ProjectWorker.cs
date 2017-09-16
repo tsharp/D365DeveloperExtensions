@@ -135,28 +135,6 @@ namespace CrmDeveloperExtensions2.Core.Vs
             return folders;
         }
 
-        public static ObservableCollection<MenuItem> GetProjectFoldersForMenu(string projectName)
-        {       
-            ObservableCollection<MenuItem> projectMenuItems = new ObservableCollection<MenuItem>();
-            Project project = GetProjectByName(projectName);
-            if (project == null)
-                return projectMenuItems;
-
-            List<string> projectFolders = GetRootLevelProjectFolders(project);
-
-            foreach (string projectFolder in projectFolders)
-            {
-                MenuItem item = new MenuItem
-                {
-                    Header = projectFolder
-                };
-
-                projectMenuItems.Add(item);
-            }
-
-            return projectMenuItems;
-        }
-
         private static List<string> GetRootLevelProjectFolders(Project project)
         {
             List<string> projectFolders = new List<string>();
@@ -327,13 +305,77 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
             path = Path.GetDirectoryName(path);
 
-            if (string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path))
+                return path;
+
+            OutputLogger.WriteToOutputWindow("Unable to get path from project", MessageType.Error);
+            return null;
+        }
+
+        public static string GetOutputFile(Project project)
+        {
+            string outputFileName = project.Properties.Item("OutputFileName").Value.ToString();
+            string path = GetOutputPath(project);
+            return path == null ?
+                null :
+                Path.Combine(path, outputFileName);
+        }
+
+        private static string GetOutputPath(Project project)
+        {
+            ConfigurationManager configurationManager = project.ConfigurationManager;
+            if (configurationManager == null) return null;
+
+            Configuration activeConfiguration = configurationManager.ActiveConfiguration;
+            string outputPath = activeConfiguration.Properties.Item("OutputPath").Value.ToString();
+            string absoluteOutputPath = String.Empty;
+            string projectFolder;
+
+            if (outputPath.StartsWith(Path.DirectorySeparatorChar.ToString() + Path.DirectorySeparatorChar))
             {
-                OutputLogger.WriteToOutputWindow("Unable to get path from project", MessageType.Error);
-                return null;
+                absoluteOutputPath = outputPath;
+            }
+            else if (outputPath.Length >= 2 && outputPath[0] == Path.VolumeSeparatorChar)
+            {
+                absoluteOutputPath = outputPath;
+            }
+            else if (outputPath.IndexOf("..\\", StringComparison.Ordinal) != -1)
+            {
+                projectFolder = Path.GetDirectoryName(project.FullName);
+
+                while (outputPath.StartsWith("..\\"))
+                {
+                    outputPath = outputPath.Substring(3);
+                    projectFolder = Path.GetDirectoryName(projectFolder);
+                }
+
+                if (projectFolder != null) absoluteOutputPath = Path.Combine(projectFolder, outputPath);
+            }
+            else
+            {
+                projectFolder = Path.GetDirectoryName(project.FullName);
+                if (projectFolder != null)
+                    absoluteOutputPath = Path.Combine(projectFolder, outputPath);
             }
 
-            return path;
+            return absoluteOutputPath;
+        }
+
+        public static bool IsWorkflowProject(Project project)
+        {
+            if (!(project?.Object is VSProject vsproject))
+                return false;
+
+            foreach (Reference reference in vsproject.References)
+            {
+                if (reference.SourceProject != null)
+                    continue;
+
+                if (reference.Name == ExtensionConstants.MicrosoftXrmSdkWorkflow)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

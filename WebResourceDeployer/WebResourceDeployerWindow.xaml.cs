@@ -321,14 +321,14 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnSolutionProjectRenamed(object sender, SolutionProjectRenamedEventArgs e)
         {
-            Project project = e.Project;
-            string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
-            if (string.IsNullOrEmpty(solutionPath))
-                return;
+            //Project project = e.Project;
+            //string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
+            //if (string.IsNullOrEmpty(solutionPath))
+            //    return;
 
-            string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
+            //string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
 
-            CrmDeveloperExtensions2.Core.Config.Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
+            //CrmDeveloperExtensions2.Core.Config.Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
         }
 
         private void UpdateWebResourceItemsBoundFile(string oldValue, string newValue)

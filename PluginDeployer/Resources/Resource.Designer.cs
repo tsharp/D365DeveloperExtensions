@@ -106,15 +106,6 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project Assembly.
-        /// </summary>
-        public static string ProjectAssemblyLabel_Label_Content {
-            get {
-                return ResourceManager.GetString("ProjectAssemblyLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Publish.
         /// </summary>
         public static string Publish_Button_Content {
