@@ -41,12 +41,12 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string file)
+        public Guid RegisterWorkflowActivities(string file)
         {
             var assemblyFilePath = new FileInfo(file);
 
             if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
-                return;
+                return Guid.Empty;
 
             AssemblyContainer assemblyContainer = null;
 
@@ -58,12 +58,12 @@ namespace SparkleXrm.Tasks
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)
-                    return;
+                    return Guid.Empty;
 
                 var plugin = RegisterAssembly(assemblyFilePath, pluginDatas.First().AssemblyName, pluginDatas.First().CrmPluginRegistrationAttributes);
 
                 if (plugin == null)
-                    return;
+                    return plugin.Id;
 
                 foreach (PluginData pluginData in pluginDatas)
                 {
@@ -71,6 +71,8 @@ namespace SparkleXrm.Tasks
                 }
 
                 _ctx.SaveChanges();
+
+                return plugin.Id;
             }
             finally
             {
@@ -183,7 +185,7 @@ namespace SparkleXrm.Tasks
             _service.Execute(addToSolution);
         }
 
-        public void RegisterPlugin(string file)
+        public Guid RegisterPlugin(string file)
         {
             var assemblyFilePath = new FileInfo(file);
             AssemblyContainer assemblyContainer = null;
@@ -196,12 +198,12 @@ namespace SparkleXrm.Tasks
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)
-                    return;
+                    return Guid.Empty;
 
                 var plugin = RegisterAssembly(assemblyFilePath, pluginDatas.First().AssemblyName, pluginDatas.First().CrmPluginRegistrationAttributes);
 
                 if (plugin == null)
-                    return;
+                    return Guid.Empty;
 
                 foreach (PluginData pluginData in pluginDatas)
                 {
@@ -209,6 +211,8 @@ namespace SparkleXrm.Tasks
                 }
 
                 _ctx.SaveChanges();
+
+                return plugin.Id;
             }
             finally
             {
@@ -269,6 +273,7 @@ namespace SparkleXrm.Tasks
                 _trace.WriteLine("Adding Plugin '{0}' to solution {1}", plugin.Name);
                 AddAssemblyToSolution(SolutionUniqueName, plugin);
             }
+
             return plugin;
         }
 

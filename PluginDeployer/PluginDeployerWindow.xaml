@@ -6,6 +6,7 @@
              xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
+             xmlns:converters="clr-namespace:PluginDeployer.Converters"
              xmlns:resources="clr-namespace:PluginDeployer.Resources"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
@@ -17,6 +18,8 @@
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
+            <converters:EnablePublishConverter x:Key="EnablePublishConverter"/>
+            <converters:EnableGetAttributesButtonConverter x:Key="EnableGetAttributesButtonConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -24,28 +27,41 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
-                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved"
-                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened"/>
+        <connection:XrmToolingConnection Grid.Column="0" Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" 
+                                         SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed" SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" 
+                                         SolutionOpened="ConnPane_OnSolutionOpened" SelectedProjectChanged="ConnPane_SelectedProjectChanged"/>
         <Grid Column="1" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                    Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                        ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" />
-                <Button x:Name="IlMerge" Click="IlMerge_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
+                <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
+                        Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource EnablePublishConverter}">
+                            <Binding ElementName="ConnPane" Path="IsConnected" Mode="TwoWay"/>
+                            <Binding ElementName="CrmAssemblyList" Path="SelectedValue" Mode="OneWay"/>
+                            <Binding ElementName="DeploymentType" Path="SelectedValue" Mode="OneWay"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+                <Button x:Name="IlMerge" Click="IlMerge_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
                     Content="{Binding Source={x:Static resources:Resource.IlMerge_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.IlMerge_Button_ToolTip}" />
-                <Button x:Name="SpklInstrument" Click="SpklInstrument_OnClick" IsEnabled="False" Style="{DynamicResource ToolBarButtonStyle}" 
-                    Content="{Binding Source={x:Static resources:Resource.SpklInstrument_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                        ToolTip="{x:Static resources:Resource.SpklInstrument_Button_ToolTip}" />
+                <Button x:Name="SpklInstrument" Click="SpklInstrument_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
+                        Content="{Binding Source={x:Static resources:Resource.SpklInstrument_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        ToolTip="{x:Static resources:Resource.SpklInstrument_Button_ToolTip}">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource EnableGetAttributesButtonConverter}">
+                            <Binding ElementName="ConnPane" Path="IsConnected" Mode="TwoWay"/>
+                            <Binding ElementName="CrmAssemblyList" Path="SelectedValue" Mode="OneWay"/>
+                            <Binding ElementName="DeploymentType" Path="SelectedValue" Mode="OneWay"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
                 <Button x:Name="RegistrationTool" Click="RegistrationTool_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
                     Content="{Binding Source={x:Static resources:Resource.RegistrationTool_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.RegistrationTool_Button_ToolTip}" />
                 <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-
-                <!--<TextBlock Margin="10,5,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" TextAlignment="Right" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" 
-                               Text="Use SDK Plug-in Registration Tool for initial deployment and step/image management" />-->
             </StackPanel>
             <Grid HorizontalAlignment="Stretch" Margin="5, 30, 0,0">
                 <Grid>
@@ -57,20 +73,24 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" />
-                    <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" DisplayMemberPath="Name" SelectionChanged="SolutionList_OnSelectionChanged" Width="350" 
-                                  Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False" />
-                    <Label x:Name="AssemblyLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="{x:Static resources:Resource.AssemblyLabel_Label_Content}"/>
-                    <ComboBox x:Name="CrmAssemblyList" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
-                                      SelectionChanged="AssemblyList_OnSelectionChanged" Width="350" IsEnabled="False" />
-                    <Label x:Name="ProjectAssemblyLabel" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="{x:Static resources:Resource.ProjectAssemblyLabel_Label_Content}" />
-                    <ComboBox x:Name="ProjectAssemblyList" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
-                                      SelectionChanged="ProjectAssemblyList_OnSelectionChanged" Width="350" IsEnabled="False">
-                    </ComboBox>
+                    <Label x:Name="ProjectLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="Project" IsEnabled="{Binding IsEnabled, ElementName=Project}" />
+                    <Label x:Name="Project" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,5,0,0"
+                           IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
+                    <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
+                    <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" DisplayMemberPath="Name" Width="350"
+                                  Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
+                    <Label x:Name="CrmAssemblyListLabel" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="{x:Static resources:Resource.AssemblyLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=CrmAssemblyList}" />
+                    <ComboBox x:Name="CrmAssemblyList" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
+                              Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" ItemsSource="{Binding CrmSolutions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label x:Name="DeploymentTypeLabel" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="Deployment Type" IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}"/>
+                    <ComboBox x:Name="DeploymentType" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
+                              SelectedValuePath="Value"  Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
                 </Grid>
                 <coreControls:LockOverlay x:Name="Overlay" />
             </Grid>

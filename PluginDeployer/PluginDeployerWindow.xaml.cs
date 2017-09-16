@@ -1,46 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using NLog;
 using PluginDeployer.ViewModels;
 using SparkleXrm.Tasks;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using Task = System.Threading.Tasks.Task;
 
 namespace PluginDeployer
 {
-    public partial class PluginDeployerWindow : UserControl, INotifyPropertyChanged
+    public partial class PluginDeployerWindow : INotifyPropertyChanged
     {
         private readonly DTE _dte;
         private readonly EnvDTE.Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private bool _isIlMergeInstalled;
+        private ObservableCollection<CrmSolution> _crmSolutions;
+        private ObservableCollection<CrmAssembly> _crmAssemblies;
 
+        public ObservableCollection<CrmSolution> CrmSolutions
+        {
+            get => _crmSolutions;
+            set
+            {
+                _crmSolutions = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<CrmAssembly> CrmAssemblies
+        {
+            get => _crmAssemblies;
+            set
+            {
+                _crmAssemblies = value;
+                OnPropertyChanged();
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
-        //public void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -78,6 +92,11 @@ namespace PluginDeployer
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
+            //Data is populated already
+            //if (SolutionList.ItemsSource != null)
+            if (_crmSolutions != null)
+                return;
+
             if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
             {
                 SetWindowCaption(gotFocus.Caption);
@@ -88,16 +107,25 @@ namespace PluginDeployer
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
+            _crmSolutions = new ObservableCollection<CrmSolution>();
+            _crmAssemblies = new ObservableCollection<CrmAssembly>();
             SetButtonState(true);
             LoadData();
+            Project.Content = ConnPane.SelectedProject.Name;
 
             //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
                 ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
         }
 
-        private async void LoadData()
+        private async Task LoadData()
         {
+            if (DeploymentType.ItemsSource == null)
+            {
+                DeploymentType.ItemsSource = AssemblyDeploymentTypes.Types;
+                DeploymentType.SelectedIndex = 0;
+            }
+
             await GetCrmData();
         }
 
@@ -108,13 +136,13 @@ namespace PluginDeployer
 
         private void SetButtonState(bool enabled)
         {
-            //Publish.IsEnabled = enabled;
-            IlMerge.IsEnabled = enabled;
-            SpklInstrument.IsEnabled = enabled;
-            //RegistrationTool.IsEnabled = enabled;
-            SolutionList.IsEnabled = enabled;
-            CrmAssemblyList.IsEnabled = enabled;
-            ProjectAssemblyList.IsEnabled = enabled;
+            ////Publish.IsEnabled = enabled;
+            //IlMerge.IsEnabled = enabled;
+            //SpklInstrument.IsEnabled = enabled;
+            ////RegistrationTool.IsEnabled = enabled;
+            //SolutionList.IsEnabled = enabled;
+            //CrmAssemblyList.IsEnabled = enabled;
+            ////ProjectAssemblyList.IsEnabled = enabled;
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -146,121 +174,22 @@ namespace PluginDeployer
         private void ConnPane_OnSolutionProjectRenamed(object sender, SolutionProjectRenamedEventArgs e)
         {
             Project project = e.Project;
-            string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
-            if (string.IsNullOrEmpty(solutionPath))
-                return;
+            if (ConnPane.SelectedProject == project)
+                Project.Content = ConnPane.SelectedProject.Name;
 
-            string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
+            //string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
+            //if (string.IsNullOrEmpty(solutionPath))
+            //    return;
+
+            //string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
 
             //Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
         }
 
-
-        private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
-        {
-            ProjectItem projectItem = e.ProjectItem;
-            if (projectItem.Name == null) return;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-            string oldName = e.OldName;
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-                string oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
-
-                //UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
-
-                //UpdateProjectFilesAfterChange(oldItemName, newItemName);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
-
-                //UpdateWebResourceItemsBoundFilePath(oldItemPath, newItemPath);
-
-                //UpdateProjectFilesPathsAfterChange(oldItemPath, newItemPath);
-            }
-        }
-
-        private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
-        {
-            ProjectItem projectItem = e.ProjectItem;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
-                //UpdateWebResourceItemsBoundFile(itemName, null);
-
-                //UpdateProjectFilesAfterChange(itemName, null);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = itemName.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                //UpdateWebResourceItemsBoundFilePath(itemName, null);
-
-                //UpdateProjectFilesPathsAfterChange(itemName, null);
-            }
-        }
-
-        private void ConnPane_OnProjectItemMoved(object sender, ProjectItemMovedEventArgs e)
-        {
-            ProjectItem postMoveProjectItem = e.PostMoveProjectItem;
-            string oldItemName = e.PreMoveName;
-            var projectPath = Path.GetDirectoryName(postMoveProjectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-            Guid itemType = new Guid(postMoveProjectItem.Kind);
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
-            {
-                string newItemName = FileSystem.LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1]);
-
-                //UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
-
-                //UpdateProjectFilesAfterChange(oldItemName, newItemName);
-            }
-
-            if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-            {
-                var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1])
-                    .TrimEnd(Path.DirectorySeparatorChar);
-
-                int index = newItemPath.LastIndexOf(postMoveProjectItem.Name, StringComparison.Ordinal);
-                if (index == -1) return;
-
-                //UpdateWebResourceItemsBoundFilePath(oldItemName, newItemPath);
-
-                //UpdateProjectFilesPathsAfterChange(oldItemName, newItemPath);
-            }
-        }
-        private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
-        {
-        }
-
         private void ResetForm()
         {
-            SolutionList.IsEnabled = false;
+            _crmSolutions = new ObservableCollection<CrmSolution>();
+            _crmAssemblies = new ObservableCollection<CrmAssembly>();
 
             SetButtonState(false);
         }
@@ -269,10 +198,18 @@ namespace PluginDeployer
         {
             Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
 
+            RemoveEventHandlers();
+
             var solutionTask = GetSolutions();
             var assembliesTask = GetCrmAssemblies();
 
             await Task.WhenAll(solutionTask, assembliesTask);
+
+            SetFormValues();
+
+            FilterAssemblies();
+
+            AddEventHandlers();
 
             Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
@@ -286,6 +223,26 @@ namespace PluginDeployer
                 MessageBox.Show("Error Retrieving Assemblies. See the Output Window for additional details.");
         }
 
+        private void SetFormValues()
+        {
+            CrmDevExAssembly crmDevExAssembly = Config.Mapping.HandleMappings(_dte.Solution.FullName,
+                ConnPane.SelectedProject, ConnPane.OrganizationId, _crmSolutions, _crmAssemblies);
+
+            if (crmDevExAssembly == null)
+            {
+                SolutionList.SelectedIndex = 0; //Default
+                CrmAssemblyList.SelectedIndex = -1;
+                DeploymentType.SelectedIndex = 0;
+
+                return;
+            }
+
+            SolutionList.SelectedItem = _crmSolutions.First(s => s.SolutionId == crmDevExAssembly.SolutionId);
+            CrmAssemblyList.SelectedItem = _crmAssemblies.First(a => a.AssemblyId == crmDevExAssembly.AssemblyId && a.SolutionId == crmDevExAssembly.SolutionId);
+
+            DeploymentType.SelectedValue = crmDevExAssembly.DeploymentType;
+        }
+
         private async Task<bool> GetSolutions()
         {
             EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService));
@@ -294,9 +251,9 @@ namespace PluginDeployer
 
             OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
 
-            List<CrmSolution> solutions = ModelBuilder.CreateCrmSolutionView(results);
+            _crmSolutions = ModelBuilder.CreateCrmSolutionView(results);
 
-            SolutionList.ItemsSource = solutions;
+            SolutionList.ItemsSource = _crmSolutions;
             SolutionList.SelectedIndex = 0;
 
             return true;
@@ -304,46 +261,131 @@ namespace PluginDeployer
 
         private async Task<bool> GetCrmAssemblies()
         {
-            EntityCollection results =
-                await Task.Run(() => Crm.Assembly.RetrieveAssembliesFromCrm(ConnPane.CrmService));
+            EntityCollection results = await Task.Run(() => Crm.Assembly.RetrieveAssembliesFromCrm(ConnPane.CrmService));
             if (results == null)
                 return false;
 
             OutputLogger.WriteToOutputWindow("Retrieved Assemblies From CRM", MessageType.Info);
 
-            List<CrmAssembly> assemblies = ModelBuilder.CreateCrmAssemblyView(results);
+            _crmAssemblies = ModelBuilder.CreateCrmAssemblyView(results);
 
-            CrmAssemblyList.ItemsSource = assemblies;
+            CrmAssemblyList.ItemsSource = _crmAssemblies;
             CrmAssemblyList.SelectedIndex = 0;
 
             return true;
         }
 
-        private void Publish_OnClick(object sender, RoutedEventArgs e)
+        private async void Publish_OnClick(object sender, RoutedEventArgs e)
         {
+            int deploymentType = (int)DeploymentType.SelectedValue;
+
+            switch (deploymentType)
+            {
+                case 1:
+                    await PublishAssemblySpkl();
+                    break;
+                default:
+                    await PublishAssemblyAsync();
+                    break;
+            }
+        }
+
+        private async Task PublishAssemblyAsync()
+        {
+            CrmAssembly crmAssembly;
+            if (CrmAssemblyList.SelectedValue != null)
+                crmAssembly = (CrmAssembly)CrmAssemblyList.SelectedValue;
+            else
+                return;
+
+            if (crmAssembly.AssemblyId == Guid.Empty)
+                return;
+
+            string path = ProjectWorker.GetOutputFile(ConnPane.SelectedProject);
+            if (string.IsNullOrEmpty(path))
+            {
+                MessageBox.Show("Error locating assembly path");
+                return;
+            }
+
+            bool buildOk = ProjectWorker.BuildProject(ConnPane.SelectedProject);
+            if (!buildOk)
+                return;
+
+            Version projectAssemblyVersion = Version.Parse(ConnPane.SelectedProject.Properties.Item("AssemblyVersion").Value.ToString());
+            bool versionMatch = Versioning.DoAssemblyVersionsMatch(projectAssemblyVersion, crmAssembly.Version);
+            if (!versionMatch)
+            {
+                MessageBox.Show("Error Updating Assembly In CRM: Changes To Major & Minor Versions Require Redeployment");
+                return;
+            }
+
+            string assemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
+            if (!assemblyName.Equals(crmAssembly.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                MessageBox.Show("Error Updating Assembly In CRM: Changes To Assembly Name Require Redeployment");
+                return;
+            }
+
+            bool result;
+
             try
             {
                 Overlay.ShowMessage(_dte, "Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
 
-                if (CrmAssemblyList.SelectedIndex == -1)
-                    return;
+                result = await Task.Run(() => Crm.Assembly.UpdateCrmAssembly(ConnPane.CrmService, crmAssembly, path));
+            }
+            finally
+            {
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
+            }
+
+            if (!result)
+            {
+                MessageBox.Show("Error Updating Assembly In CRM: See Output Window for details.");
+                return;
+            }
+
+            crmAssembly.Version = projectAssemblyVersion;
+            crmAssembly.Name = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
+            crmAssembly.DisplayName = crmAssembly.Name + " (" + projectAssemblyVersion + ")";
+            crmAssembly.DisplayName += (crmAssembly.IsWorkflow) ? " [Workflow]" : " [Plug-in]";
+        }
+
+        private async Task PublishAssemblySpkl()
+        {
+            bool buildOk = ProjectWorker.BuildProject(ConnPane.SelectedProject);
+            if (!buildOk)
+                return;
+
+            bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
+            string assemblyPath = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
+
+            bool hasRegistrion = SpklHelpers.RegistrationDetailsPresent(assemblyPath, isWorkflow);
+            if (!hasRegistrion)
+            {
+                MessageBox.Show("You haven't addedd any registration details to the assembly class.");
+                return;
+            }
+
+            try
+            {
+                Overlay.ShowMessage(_dte, "Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
                 var ctx = new OrganizationServiceContext(service);
-
-                ProjectWorker.BuildProject(ConnPane.SelectedProject);
 
                 using (ctx)
                 {
                     PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
 
-                    string path = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
-
-                    CrmAssembly assembly = (CrmAssembly)CrmAssemblyList.SelectedItem;
-                    if (assembly.IsWorkflow)
-                        pluginRegistraton.RegisterWorkflowActivities(path);
+                    Guid assemblyId;
+                    if (isWorkflow)
+                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyPath));
                     else
-                        pluginRegistraton.RegisterPlugin(path);
+                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyPath));
+
+                    await SetAssemblyAfterSpklPublish(assemblyId);
                 }
             }
             finally
@@ -352,12 +394,27 @@ namespace PluginDeployer
             }
         }
 
-        private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async Task SetAssemblyAfterSpklPublish(Guid assemblyId)
         {
+            Guid crmSolutionId = ((CrmSolution)SolutionList.SelectedValue)?.SolutionId ??
+                                 ExtensionConstants.DefaultSolutionId;
+
+            await LoadData();
+
+            CrmAssemblyList.SelectedItem = _crmAssemblies.First(a => a.AssemblyId == assemblyId && a.SolutionId == crmSolutionId);
+            DeploymentType.SelectedValue = 1;
         }
 
-        private void AssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            UpdateMapping();
+
+            FilterAssemblies();
+        }
+
+        private void CrmAssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateMapping();
         }
 
         private void IlMerge_OnClick(object sender, RoutedEventArgs e)
@@ -401,10 +458,6 @@ namespace PluginDeployer
             IlMerge.ToolTip = installed ?
                 PluginDeployer.Resources.Resource.ILMergeTooltipRemove :
                 PluginDeployer.Resources.Resource.ILMergeTooltipEnable;
-        }
-
-        private void ProjectAssemblyList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
         }
 
         private void SpklInstrument_OnClick(object sender, RoutedEventArgs e)
@@ -461,6 +514,66 @@ namespace PluginDeployer
             {
                 MessageBox.Show("Error launching Plug-in Registration Tool: " + Environment.NewLine + Environment.NewLine + ex.Message);
             }
+        }
+
+        private void ConnPane_SelectedProjectChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ConnPane.SelectedProject == null)
+                return;
+
+            Project.Content = ConnPane.SelectedProject.Name;
+        }
+
+        private void DeploymentType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateMapping();
+        }
+
+        private void UpdateMapping()
+        {
+            CrmAssembly crmAssembly = (CrmAssembly)CrmAssemblyList.SelectedValue;
+            if (crmAssembly == null)
+                return;
+
+            Guid crmSolutionId = ((CrmSolution)SolutionList.SelectedValue)?.SolutionId ??
+                ExtensionConstants.DefaultSolutionId;
+
+            int deploymentType = (int?)DeploymentType.SelectedValue ?? 0;
+
+            Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, crmAssembly.AssemblyId,
+                crmSolutionId, deploymentType, ConnPane.OrganizationId);
+        }
+
+        private void AddEventHandlers()
+        {
+            SolutionList.SelectionChanged += SolutionList_OnSelectionChanged;
+            CrmAssemblyList.SelectionChanged += CrmAssemblyList_OnSelectionChanged;
+            DeploymentType.SelectionChanged += DeploymentType_SelectionChanged;
+        }
+
+        private void RemoveEventHandlers()
+        {
+            SolutionList.SelectionChanged -= SolutionList_OnSelectionChanged;
+            CrmAssemblyList.SelectionChanged -= CrmAssemblyList_OnSelectionChanged;
+            DeploymentType.SelectionChanged -= DeploymentType_SelectionChanged;
+        }
+
+        private void FilterAssemblies()
+        {
+            Guid crmSolutionId = ((CrmSolution)SolutionList.SelectedValue)?.SolutionId ??
+                                 ExtensionConstants.DefaultSolutionId;
+
+            CrmAssembly selectedAssembly = null;
+            if (CrmAssemblyList.SelectedItem != null)
+                selectedAssembly = (CrmAssembly)CrmAssemblyList.SelectedItem;
+
+            //Apply filter
+            ICollectionView icv = CollectionViewSource.GetDefaultView(CrmAssemblyList.ItemsSource);
+            if (icv == null) return;
+            icv.Filter = o => o is CrmAssembly a && a.SolutionId == crmSolutionId;
+
+            if (selectedAssembly != null)
+                CrmAssemblyList.SelectedItem = _crmAssemblies.First(a => a.AssemblyId == selectedAssembly.AssemblyId);
         }
     }
 }

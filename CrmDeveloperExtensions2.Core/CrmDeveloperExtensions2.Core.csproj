@@ -163,6 +163,7 @@
     <Compile Include="Converters\ToUpperConverter.cs" />
     <Compile Include="Crm\Publish.cs" />
     <Compile Include="DateFormatting.cs" />
+    <Compile Include="Models\AssemblyDeploymentType.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
     <Compile Include="Enums\OutputLoggerMessageType.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="HostWindow.cs" />
     <Compile Include="Logging\ExtensionLogger.cs" />
     <Compile Include="Logging\XrmToolingLogging.cs" />
+    <Compile Include="Models\CrmDevExAssembly.cs" />
     <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
     <Compile Include="Models\CrmDevExSolutionPackage.cs" />
     <Compile Include="Models\CrmDexExConfig.cs" />

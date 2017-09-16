@@ -153,9 +153,6 @@
   <data name="AssemblyLabel_Label_Content" xml:space="preserve">
     <value>CRM/365 Assembly</value>
   </data>
-  <data name="ProjectAssemblyLabel_Label_Content" xml:space="preserve">
-    <value>Project Assembly</value>
-  </data>
   <data name="SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace CrmDeveloperExtensions2.Core.Config
 {
@@ -36,7 +37,8 @@ namespace CrmDeveloperExtensions2.Core.Config
                 OrganizationId = organizationId,
                 ProjectUniqueName = projectUniqueName,
                 WebResources = new List<CrmDexExConfigWebResource>(),
-                SolutionPackage = null
+                SolutionPackage = null,
+                Assembly = null
             };
 
             crmDexExConfig.CrmDevExConfigOrgMaps.Add(orgMap);
@@ -49,6 +51,26 @@ namespace CrmDeveloperExtensions2.Core.Config
             return !ConfigFile.ConfigFileExists(solutionPath) ?
                 ConfigFile.CreateConfigFile(organizationId, projectUniqueName, solutionPath) :
                 ConfigFile.GetConfigFile(solutionPath);
+        }
+
+        public static void RemoveProject(string solutionPath, string projectUniqueName)
+        {
+            if (!ConfigFile.ConfigFileExists(solutionPath))
+                return;
+
+            CrmDexExConfig crmDexExConfig = ConfigFile.GetConfigFile(solutionPath);
+            var orgMapsToDelete = crmDexExConfig.CrmDevExConfigOrgMaps.Where(o => o.ProjectUniqueName == projectUniqueName);
+
+            if (orgMapsToDelete.Any())
+            {
+                MessageBoxResult result = MessageBox.Show("Delete project mappings?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+
+            crmDexExConfig.CrmDevExConfigOrgMaps.RemoveAll(o => o.ProjectUniqueName == projectUniqueName);
+
+            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
         }
     }
 }

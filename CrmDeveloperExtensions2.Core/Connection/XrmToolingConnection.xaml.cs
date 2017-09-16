@@ -33,6 +33,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private string _movedProjectItemOldName;
         private bool _autoLogin;
         private bool _isConnected;
+        private Project _selectedProject;
 
         public CrmServiceClient CrmService;
         public Guid OrganizationId;
@@ -48,7 +49,15 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Projects"));
             }
         }
-        public Project SelectedProject;
+        public Project SelectedProject
+        {
+            get => _selectedProject;
+            set
+            {
+                _selectedProject = value;
+                OnPropertyChanged();
+            }
+        }
         public bool IsConnected
         {
             get => _isConnected;
@@ -253,6 +262,15 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         protected virtual void OnSolutionProjectRenamed(SolutionProjectRenamedEventArgs e)
         {
+            Project project = e.Project;
+            string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
+            if (string.IsNullOrEmpty(solutionPath))
+                return;
+
+            string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
+
+            Config.Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
+
             var handler = SolutionProjectRenamed;
             handler?.Invoke(this, e);
         }

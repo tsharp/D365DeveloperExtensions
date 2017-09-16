@@ -1,14 +1,11 @@
-﻿using Microsoft.Xrm.Sdk;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using PluginDeployer.ViewModels;
+using System;
+using System.ServiceModel;
 
 namespace PluginDeployer.Crm
 {
@@ -43,19 +40,25 @@ namespace PluginDeployer.Crm
                             LinkFromAttributeName = "pluginassemblyid",
                             LinkToEntityName = "plugintype",
                             LinkToAttributeName = "pluginassemblyid",
-                            EntityAlias = "plugintype",
-                            JoinOperator = JoinOperator.LeftOuter
+                            EntityAlias = "plugintype"
+                        },
+                        new LinkEntity
+                        {
+                            Columns = new ColumnSet("solutionid"),
+                            LinkFromEntityName = "pluginassembly",
+                            LinkFromAttributeName = "pluginassemblyid",
+                            LinkToEntityName = "solutioncomponent",
+                            LinkToAttributeName = "objectid",
+                            EntityAlias = "solutioncomponent",
                         }
-                        //,
-                        //new LinkEntity
-                        //{
-                        //    Columns = new ColumnSet("solutionid"),
-                        //    LinkFromEntityName = "pluginassembly",
-                        //    LinkFromAttributeName = "pluginassemblyid",
-                        //    LinkToEntityName = "solutioncomponent",
-                        //    LinkToAttributeName = "solutioncomponentid",
-                        //    EntityAlias = "solutioncomponent",
-                        //}
+                    },
+                    Orders =
+                    {
+                        new OrderExpression
+                        {
+                            AttributeName = "name",
+                            OrderType = OrderType.Ascending
+                        }
                     }
                 };
 
@@ -74,6 +77,34 @@ namespace PluginDeployer.Crm
                 OutputLogger.WriteToOutputWindow(
                     "Error Retrieving Assemblies From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return null;
+            }
+        }
+
+        public static bool UpdateCrmAssembly(CrmServiceClient client, CrmAssembly crmAssembly, string assebmlyPath)
+        {
+            try
+            {
+                Entity assembly = new Entity("pluginassembly")
+                {
+                    Id = crmAssembly.AssemblyId,
+                    ["content"] = Convert.ToBase64String(CrmDeveloperExtensions2.Core.FileSystem.GetFileBytes(assebmlyPath))
+                };
+
+                client.Update(assembly);
+
+                return true;
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow(
+                    "Error Updating Assembly In CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow(
+                    "Error Updating Assembly In CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return false;
             }
         }
     }

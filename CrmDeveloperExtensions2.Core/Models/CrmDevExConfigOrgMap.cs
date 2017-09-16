@@ -9,5 +9,6 @@ namespace CrmDeveloperExtensions2.Core.Models
         public string ProjectUniqueName { get; set; }
         public List<CrmDexExConfigWebResource> WebResources { get; set; }
         public CrmDevExSolutionPackage SolutionPackage { get; set; }
+        public CrmDevExAssembly Assembly { get; set; }
     }
 }
