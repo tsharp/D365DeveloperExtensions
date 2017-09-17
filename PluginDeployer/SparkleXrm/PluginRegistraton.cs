@@ -38,8 +38,9 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public Guid RegisterWorkflowActivities(string file)
+        public Guid RegisterWorkflowActivities(string file, string solutionName)
         {
+            SolutionUniqueName = solutionName;
             var assemblyFilePath = new FileInfo(file);
 
             if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
@@ -160,8 +161,9 @@ namespace SparkleXrm.Tasks
 
         }
 
-        public Guid RegisterPlugin(string file)
+        public Guid RegisterPlugin(string file, string solutionName)
         {
+            SolutionUniqueName = solutionName;
             var assemblyFilePath = new FileInfo(file);
             AssemblyContainer assemblyContainer = null;
 
