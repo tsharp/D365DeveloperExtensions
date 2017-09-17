@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.CodeDom;
-using SparkleXrm.Tasks.Config;
+//using SparkleXrm.Tasks.Config;
 
 namespace SparkleXrm.Tasks
 {

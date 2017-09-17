@@ -114,11 +114,6 @@
     </Compile>
     <Compile Include="SparkleXrm\AssemblyContainer.cs" />
     <Compile Include="SparkleXrm\CodeParser.cs" />
-    <Compile Include="SparkleXrm\Config\ConfigFile.cs" />
-    <Compile Include="SparkleXrm\Config\EarlyBoundTypeConfig.cs" />
-    <Compile Include="SparkleXrm\Config\PluginDeployConfig.cs" />
-    <Compile Include="SparkleXrm\Config\WebResource.cs" />
-    <Compile Include="SparkleXrm\Config\WebresourceDeployConfig.cs" />
     <Compile Include="SparkleXrm\CrmPluginRegistrationAttribute.cs" />
     <Compile Include="SparkleXrm\CustomAttributeDataEx.cs" />
     <Compile Include="SparkleXrm\DirectoryInfoEx.cs" />
@@ -128,12 +123,7 @@
     <Compile Include="SparkleXrm\PluginRegistraton.cs" />
     <Compile Include="SparkleXrm\Reflection.cs" />
     <Compile Include="SparkleXrm\TargetTypeEnum.cs" />
-    <Compile Include="SparkleXrm\Tasks\DeployPluginsTask.cs" />
-    <Compile Include="SparkleXrm\Tasks\DeployWebResourcesTask.cs" />
-    <Compile Include="SparkleXrm\Tasks\DeployWorkflowActivitiesTask.cs" />
     <Compile Include="SparkleXrm\Tasks\DownloadPluginMetadataTask.cs" />
-    <Compile Include="SparkleXrm\Tasks\DownloadWebresourceConfigTask.cs" />
-    <Compile Include="SparkleXrm\Tasks\EarlyBoundClassGeneratorTask.cs" />
     <Compile Include="SparkleXrm\Tasks\Queries.cs" />
     <Compile Include="SparkleXrm\Tasks\Task.cs" />
     <Compile Include="SparkleXrm\TraceLogger.cs" />

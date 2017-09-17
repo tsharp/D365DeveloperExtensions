@@ -282,7 +282,7 @@ namespace PluginDeployer
             switch (deploymentType)
             {
                 case 1:
-                    await PublishAssemblySpkl();
+                    await PublishAssemblySpklAsync();
                     break;
                 default:
                     await PublishAssemblyAsync();
@@ -352,7 +352,7 @@ namespace PluginDeployer
             crmAssembly.DisplayName += (crmAssembly.IsWorkflow) ? " [Workflow]" : " [Plug-in]";
         }
 
-        private async Task PublishAssemblySpkl()
+        private async Task PublishAssemblySpklAsync()
         {
             bool buildOk = ProjectWorker.BuildProject(ConnPane.SelectedProject);
             if (!buildOk)
