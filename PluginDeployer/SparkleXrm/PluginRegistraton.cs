@@ -4,11 +4,9 @@ using Microsoft.Xrm.Sdk.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using PluginDeployer;
@@ -20,9 +18,8 @@ namespace SparkleXrm.Tasks
     {
         private OrganizationServiceContext _ctx;
         private IOrganizationService _service;
-        private Reflection _reflection;
         private ITrace _trace;
-        private string[] _ignoredAssemblies = {
+        private string[] _ignoredAssemblies = new string[] {
             "Microsoft.Crm.Sdk.Proxy.dll",
             "Microsoft.IdentityModel.dll",
             "Microsoft.Xrm.Sdk.dll",
@@ -34,7 +31,7 @@ namespace SparkleXrm.Tasks
             _ctx = context;
             _service = service;
             _trace = trace;
-
+          
         }
         /// <summary>
         /// If not null, components are added to this solution
@@ -78,32 +75,8 @@ namespace SparkleXrm.Tasks
             {
                 assemblyContainer?.Unload();
             }
-
-            //var assemblyFilePath = new FileInfo(path);
-            //if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
-            //    return;
-            //// Load each assembly 
-            //Assembly assembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
-
-            //if (assembly == null)
-            //    return;
-
-            //// Search for any types that interhit from IPlugin                  
-            //IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(assembly, typeof(System.Activities.CodeActivity));
-
-            //if (pluginTypes.Count() > 0)
-            //{
-            //    //var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes);
-            //    var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes);
-
-            //    if (plugin != null)
-            //    {
-            //        RegisterActivities(pluginTypes, plugin);
-            //    }
-            //}
         }
 
-        //private void RegisterActivities(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
         private void RegisterActivities(List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes, PluginAssembly plugin, string assemblyFullName)
         {
             var sdkPluginTypes = _ctx.GetPluginTypes(plugin);
@@ -157,6 +130,7 @@ namespace SparkleXrm.Tasks
             };
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
+
         }
 
         private void AddTypeToSolution(string solutionName, PluginType sdkPluginType)
@@ -183,6 +157,7 @@ namespace SparkleXrm.Tasks
             };
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
+
         }
 
         public Guid RegisterPlugin(string file)
@@ -233,12 +208,12 @@ namespace SparkleXrm.Tasks
 
             // If found then register or update it
             var plugin = (from p in _ctx.CreateQuery<PluginAssembly>()
-                          where p.Name == assemblyName
-                          select new PluginAssembly
-                          {
-                              Id = p.Id,
-                              Name = p.Name
-                          }).FirstOrDefault();
+                      where p.Name == assemblyName
+                      select new PluginAssembly
+                      {
+                          Id = p.Id,
+                          Name = p.Name
+                      }).FirstOrDefault();
 
             string assemblyBase64 = Convert.ToBase64String(File.ReadAllBytes(assemblyFilePath.FullName));
 
@@ -247,7 +222,7 @@ namespace SparkleXrm.Tasks
                 plugin = new PluginAssembly();
             }
 
-            // Update
+            // update
             plugin.Content = assemblyBase64;
             plugin.Name = assemblyProperties[0];
             plugin.Culture = assemblyProperties[4];
@@ -259,18 +234,20 @@ namespace SparkleXrm.Tasks
             if (plugin.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
+                // Create
                 plugin.Id = _service.Create(plugin);
             }
             else
             {
                 _trace.WriteLine("Updating Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
+                // Update
                 _ctx.UpdateObject(plugin);
             }
 
             // Add to solution
             if (SolutionUniqueName != null)
             {
-                _trace.WriteLine("Adding Plugin '{0}' to solution {1}", plugin.Name);
+                _trace.WriteLine("Adding Plugin '{0}' to solution '{1}'", plugin.Name, SolutionUniqueName);
                 AddAssemblyToSolution(SolutionUniqueName, plugin);
             }
 
@@ -315,27 +292,27 @@ namespace SparkleXrm.Tasks
         private List<SdkMessageProcessingStep> GetExistingSteps(PluginType sdkPluginType)
         {
             // Get existing Steps
-            var steps = (from s in _ctx.CreateQuery<SdkMessageProcessingStep>()
-                         where s.PluginTypeId.Id == sdkPluginType.Id
-                         select new SdkMessageProcessingStep()
-                         {
-                             Id = s.Id,
-                             PluginTypeId = s.PluginTypeId,
-                             SdkMessageId = s.SdkMessageId,
-                             Mode = s.Mode,
-                             Name = s.Name,
-                             Rank = s.Rank,
-                             Configuration = s.Configuration,
-                             Description = s.Description,
-                             Stage = s.Stage,
-                             SupportedDeployment = s.SupportedDeployment,
-                             FilteringAttributes = s.FilteringAttributes,
-                             EventHandler = s.EventHandler,
-                             AsyncAutoDelete = s.AsyncAutoDelete,
-                             Attributes = s.Attributes,
-                             SdkMessageFilterId = s.SdkMessageFilterId
+            var steps =  (from s in _ctx.CreateQuery<SdkMessageProcessingStep>()
+                    where s.PluginTypeId.Id == sdkPluginType.Id
+                    select new SdkMessageProcessingStep()
+                    {
+                        Id = s.Id,
+                        PluginTypeId = s.PluginTypeId,
+                        SdkMessageId = s.SdkMessageId,
+                        Mode = s.Mode,
+                        Name = s.Name,
+                        Rank = s.Rank,
+                        Configuration = s.Configuration,
+                        Description = s.Description,
+                        Stage = s.Stage,
+                        SupportedDeployment = s.SupportedDeployment,
+                        FilteringAttributes = s.FilteringAttributes,
+                        EventHandler = s.EventHandler,
+                        AsyncAutoDelete = s.AsyncAutoDelete,
+                        Attributes = s.Attributes,
+                        SdkMessageFilterId = s.SdkMessageFilterId
 
-                         }).ToList();
+                    }).ToList();
 
             return steps;
 
@@ -345,17 +322,17 @@ namespace SparkleXrm.Tasks
 
         {
             SdkMessageProcessingStep step = null;
-            if (pluginStep.Id != null)
+            if (pluginStep.Id!=null)
             {
                 Guid stepId = new Guid(pluginStep.Id);
                 // Get by ID
-                step = existingSteps.FirstOrDefault(s => s.Id == stepId);
+                step = existingSteps.Where(s => s.Id == stepId).FirstOrDefault();
             }
 
             if (step == null)
             {
                 // Get by Name
-                step = existingSteps.FirstOrDefault(s => s.Name == pluginStep.Name && s.SdkMessageId.Name == pluginStep.Message);
+                step = existingSteps.Where(s => s.Name == pluginStep.Name && s.SdkMessageId.Name == pluginStep.Message).FirstOrDefault();
             }
 
             // Register images
@@ -363,7 +340,7 @@ namespace SparkleXrm.Tasks
             {
                 step = new SdkMessageProcessingStep();
             }
-            Guid? sdkMessageId;
+            Guid? sdkMessageId = null;
             Guid? sdkMessagefilterId = null;
 
             if (pluginStep.EntityLogicalName == "none")
@@ -371,8 +348,7 @@ namespace SparkleXrm.Tasks
                 var message = _ctx.GetMessage(pluginStep.Message);
                 sdkMessageId = message.SdkMessageId;
             }
-            else
-            {
+            else { 
                 var messageFilter = _ctx.GetMessageFilter(pluginStep.EntityLogicalName, pluginStep.Message);
 
                 if (messageFilter == null)
@@ -388,6 +364,7 @@ namespace SparkleXrm.Tasks
             // Update attributes
             step.Name = pluginStep.Name;
             step.Configuration = pluginStep.UnSecureConfiguration;
+            step.Description = pluginStep.Description;
             step.Mode = new OptionSetValue(pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? 1 : 0);
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
@@ -405,12 +382,12 @@ namespace SparkleXrm.Tasks
             }
 
             step.Stage = new OptionSetValue(stage);
-            int supportDeployment;
-            if (pluginStep.Server && pluginStep.Offline)
+            int supportDeployment = 0;
+            if (pluginStep.Server == true && pluginStep.Offline == true)
             {
                 supportDeployment = 2; // Both
             }
-            else if (!pluginStep.Server && pluginStep.Offline)
+            else if (!pluginStep.Server == true && pluginStep.Offline == true)
             {
                 supportDeployment = 1; // Offline only
             }
@@ -424,11 +401,13 @@ namespace SparkleXrm.Tasks
             if (step.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Step '{0}'", step.Name);
+                // Create
                 step.Id = _service.Create(step);
             }
             else
             {
                 _trace.WriteLine("Updating Step '{0}'", step.Name);
+                // Update
                 _ctx.UpdateObject(step);
             }
 
@@ -441,8 +420,12 @@ namespace SparkleXrm.Tasks
             if (SolutionUniqueName != null)
             {
                 AddStepToSolution(SolutionUniqueName, step);
+
             }
         }
+
+       
+
 
         private SdkMessageProcessingStepImage RegisterImage(CrmPluginRegistrationAttribute stepAttribute, SdkMessageProcessingStep step, SdkMessageProcessingStepImage[] existingImages, string imageName, ImageTypeEnum imagetype, string attributes)
         {
@@ -455,14 +438,13 @@ namespace SparkleXrm.Tasks
                             &&
                             a.EntityAlias == imageName
                             && a.ImageType.Value == (int)imagetype).FirstOrDefault();
-
             if (image == null)
             {
                 image = new SdkMessageProcessingStepImage();
             }
 
             image.Name = imageName;
-
+           
             image.ImageType = new OptionSetValue((int)imagetype);
             image.SdkMessageProcessingStepId = new EntityReference(SdkMessageProcessingStep.EntityLogicalName, step.Id);
             image.Attributes1 = attributes;
