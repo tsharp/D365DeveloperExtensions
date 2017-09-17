@@ -346,10 +346,10 @@ namespace PluginDeployer
                 return;
             }
 
-            crmAssembly.Version = projectAssemblyVersion;
-            crmAssembly.Name = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
-            crmAssembly.DisplayName = crmAssembly.Name + " (" + projectAssemblyVersion + ")";
-            crmAssembly.DisplayName += (crmAssembly.IsWorkflow) ? " [Workflow]" : " [Plug-in]";
+            //crmAssembly.Version = projectAssemblyVersion;
+            //crmAssembly.Name = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
+            //crmAssembly.DisplayName = crmAssembly.Name + " (" + projectAssemblyVersion + ")";
+            //crmAssembly.DisplayName += (crmAssembly.IsWorkflow) ? " [Workflow]" : " [Plug-in]";
         }
 
         private async Task PublishAssemblySpklAsync()
@@ -375,15 +375,20 @@ namespace PluginDeployer
                 var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
                 var ctx = new OrganizationServiceContext(service);
 
+                CrmSolution solution = (CrmSolution) SolutionList.SelectedItem;
+                string solutionName = (solution.SolutionId != ExtensionConstants.DefaultSolutionId)
+                    ? solution.UniqueName
+                    : null;
+
                 using (ctx)
                 {
                     PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
 
                     Guid assemblyId;
                     if (isWorkflow)
-                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyPath));
+                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyPath, solutionName));
                     else
-                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyPath));
+                        assemblyId = await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyPath, solutionName));
 
                     await SetAssemblyAfterSpklPublish(assemblyId);
                 }
