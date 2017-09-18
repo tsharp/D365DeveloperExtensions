@@ -18,10 +18,6 @@ namespace PluginDeployer.SparkleXrm
         public bool ReflectionOnly { get; set; }
         private AppDomain Container { get; set; }
         private bool IsWorkflow { get; set; }
-        //public AssemblyName AssemblyName { get; set; }
-        //public string AssemblyFullName { get; set; }
-        //public List<CrmPluginRegistrationAttribute> PluginRegistrationAttributes { get; set; }
-        //public List<CustomAttributeData> CustomAttributeDatas { get; set; }
         public List<PluginData> PluginDatas { get; set; }
 
 

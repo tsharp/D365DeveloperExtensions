@@ -33,12 +33,12 @@ namespace SparkleXrm.Tasks
         public string Prefix { get; set; }
         public string Solution { get; set; }
 
-        protected virtual void ExecuteInternal(string folder, OrganizationServiceContext ctx)
+        protected virtual void ExecuteInternal(string folder, OrganizationServiceContext ctx, bool backupFiles)
         {
 
         }
         
-        public void Execute(string folder)
+        public void Execute(string folder, bool backupFiles)
         {
             if (_context == null)
             {
@@ -46,12 +46,12 @@ namespace SparkleXrm.Tasks
                 {
                     _context = ctx;
                     ctx.MergeOption = MergeOption.NoTracking;
-                    ExecuteInternal(folder, ctx);
+                    ExecuteInternal(folder, ctx, backupFiles);
                 }
             }
             else
             {
-                ExecuteInternal(folder, _context);
+                ExecuteInternal(folder, _context, backupFiles);
             }
         }
     }

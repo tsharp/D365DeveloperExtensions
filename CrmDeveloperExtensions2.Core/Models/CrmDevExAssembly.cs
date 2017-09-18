@@ -7,5 +7,6 @@ namespace CrmDeveloperExtensions2.Core.Models
         public Guid AssemblyId { get; set; }
         public Guid SolutionId { get; set; }
         public int DeploymentType { get; set; }
+        public bool BackupFiles { get; set; }
     }
 }

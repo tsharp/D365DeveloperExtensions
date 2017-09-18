@@ -38,7 +38,7 @@ namespace PluginDeployer.Config
             return crmDevExAssembly;
         }
 
-        public static void AddOrUpdateMapping(string solutionPath, Project project, Guid assemblyId, Guid solutionId, int deploymentType, Guid organizationId)
+        public static void AddOrUpdateMapping(string solutionPath, Project project, Guid assemblyId, Guid solutionId, int deploymentType, bool backupFiles, Guid organizationId)
         {
             CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
             CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
@@ -49,7 +49,8 @@ namespace PluginDeployer.Config
                 {
                     AssemblyId = assemblyId,
                     SolutionId = solutionId,
-                    DeploymentType = deploymentType
+                    DeploymentType = deploymentType,
+                    BackupFiles = backupFiles
                 };
                 crmDevExConfigOrgMap.Assembly = crmDevExAssembly;
             }
