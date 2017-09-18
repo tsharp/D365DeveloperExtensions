@@ -314,5 +314,11 @@ namespace PluginTraceViewer
                 Traces.Remove(pluginTraceLog);
             }
         }
+
+        private void CrmPluginTraces_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Make rows unselectable
+            CrmPluginTraces.UnselectAllCells();
+        }
     }
 }
