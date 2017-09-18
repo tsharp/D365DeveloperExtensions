@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.CodeDom;
-//using SparkleXrm.Tasks.Config;
 
 namespace SparkleXrm.Tasks
 {
@@ -22,7 +21,7 @@ namespace SparkleXrm.Tasks
         {
         }
 
-        protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx)
+        protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx, bool backupFiles)
         {
             _trace.WriteLine("Searching for plugin classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
@@ -40,11 +39,13 @@ namespace SparkleXrm.Tasks
                 {
                     // Find if it contains any IPlugin files
                     CodeParser parser = new CodeParser(new Uri(codeFile));
-                   
+
                     if (parser.PluginCount > 0)
                     {
                         // Backup 
-                        File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code);
+                        if (backupFiles)
+                            File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code);
+
                         foreach (var pluginType in parser.ClassNames)
                         {
                             // Remove existing attributes
@@ -75,28 +76,6 @@ namespace SparkleXrm.Tasks
                 }
             }
             _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
-
-            //TODO: remove backup files
-
-            //// Create a spkl.json file here
-            //var files = ConfigFile.FindConfig(filePath,false);
-            //var file = files[0];
-
-            //if (file.plugins == null)
-            //{
-            //    file.plugins = new List<PluginDeployConfig>();
-            //}
-
-            //if (file.plugins.Where(a=>a.assemblypath == @"bin\Debug").FirstOrDefault()==null)
-            //{
-            //    file.plugins.Add(new PluginDeployConfig()
-            //    {
-            //        assemblypath = @"bin\Debug"
-            //    });
-            //}
-           
-            //file.filePath = filePath;
-            //file.Save();
         }
 
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
@@ -134,7 +113,7 @@ namespace SparkleXrm.Tasks
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
             if (duplicateNames.Count() > 0)
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}",pluginType,string.Join(",",duplicateNames.Select(a=>a.Name))));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}", pluginType, string.Join(",", duplicateNames.Select(a => a.Name))));
             }
 
             if (steps != null)
@@ -145,7 +124,7 @@ namespace SparkleXrm.Tasks
                 {
                     SdkMessageFilter filter = null;
                     // If there is an entity filter then get it
-                    if (step.SdkMessageFilterId!=null)
+                    if (step.SdkMessageFilterId != null)
                     {
                         filter = ctx.GetMessageFilter(step.SdkMessageFilterId.Id);
                     }
@@ -161,13 +140,13 @@ namespace SparkleXrm.Tasks
                     // we output the ID so that we can be independant of name - but it's not neededed for new attributes
                     CrmPluginRegistrationAttribute attribute = new CrmPluginRegistrationAttribute(
                         step.sdkmessageid_sdkmessageprocessingstep.Name,
-                        filter==null ? "none" : filter.PrimaryObjectTypeCode,
+                        filter == null ? "none" : filter.PrimaryObjectTypeCode,
                         (StageEnum)Enum.ToObject(typeof(StageEnum), step.Stage.Value),
                         step.Mode.Value == 0 ? ExecutionModeEnum.Synchronous : ExecutionModeEnum.Asynchronous,
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2 
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     { Id = step.Id.ToString() };

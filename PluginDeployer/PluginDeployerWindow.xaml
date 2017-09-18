@@ -74,10 +74,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label x:Name="ProjectNameLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="ProjectName" IsEnabled="{Binding IsEnabled, ElementName=ProjectName}" />
-                    <Label x:Name="ProjectName" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,5,0,0"
+                           Content="Project Name" IsEnabled="{Binding IsEnabled, ElementName=ProjectName}" />
+                    <Label x:Name="ProjectName" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,0,0,0"
                            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
                     <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
                            Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
@@ -91,6 +92,8 @@
                            Content="Deployment Type" IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}"/>
                     <ComboBox x:Name="DeploymentType" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
                               SelectedValuePath="Value"  Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
+                    <Label x:Name="BackupFilesLabel" Grid.Column="0" Grid.Row="4" Content="Backup Files?" IsEnabled="{Binding IsEnabled, ElementName=SpklInstrument}"/>
+                    <CheckBox x:Name="BackupFiles" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" IsEnabled="{Binding IsEnabled, ElementName=SpklInstrument}" IsThreeState="False" />
                 </Grid>
                 <coreControls:LockOverlay x:Name="Overlay" />
             </Grid>

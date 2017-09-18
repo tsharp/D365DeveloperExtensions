@@ -183,6 +183,7 @@ namespace PluginDeployer
             CrmAssemblyList.ItemsSource = null;
             DeploymentType.ItemsSource = null;
             ProjectName.Content = string.Empty;
+            BackupFiles.IsChecked = false;
         }
 
         private async Task GetCrmData()
@@ -224,14 +225,15 @@ namespace PluginDeployer
                 SolutionList.SelectedIndex = 0; //Default
                 CrmAssemblyList.SelectedIndex = -1;
                 DeploymentType.SelectedIndex = 0;
+                BackupFiles.IsChecked = false;
 
                 return;
             }
 
             SolutionList.SelectedItem = _crmSolutions.First(s => s.SolutionId == crmDevExAssembly.SolutionId);
             CrmAssemblyList.SelectedItem = _crmAssemblies.First(a => a.AssemblyId == crmDevExAssembly.AssemblyId && a.SolutionId == crmDevExAssembly.SolutionId);
-
             DeploymentType.SelectedValue = crmDevExAssembly.DeploymentType;
+            BackupFiles.IsChecked = crmDevExAssembly.BackupFiles;
         }
 
         private async Task<bool> GetSolutions()
@@ -332,15 +334,7 @@ namespace PluginDeployer
             }
 
             if (!result)
-            {
                 MessageBox.Show("Error Updating Assembly In CRM: See Output Window for details.");
-                return;
-            }
-
-            //crmAssembly.Version = projectAssemblyVersion;
-            //crmAssembly.Name = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
-            //crmAssembly.DisplayName = crmAssembly.Name + " (" + projectAssemblyVersion + ")";
-            //crmAssembly.DisplayName += (crmAssembly.IsWorkflow) ? " [Workflow]" : " [Plug-in]";
         }
 
         private async Task PublishAssemblySpklAsync()
@@ -366,7 +360,7 @@ namespace PluginDeployer
                 var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
                 var ctx = new OrganizationServiceContext(service);
 
-                CrmSolution solution = (CrmSolution) SolutionList.SelectedItem;
+                CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
                 string solutionName = (solution.SolutionId != ExtensionConstants.DefaultSolutionId)
                     ? solution.UniqueName
                     : null;
@@ -397,8 +391,13 @@ namespace PluginDeployer
 
             await LoadData();
 
+            bool isNew = CrmAssemblyList.SelectedIndex < 1;
+
             CrmAssemblyList.SelectedItem = _crmAssemblies.First(a => a.AssemblyId == assemblyId && a.SolutionId == crmSolutionId);
             DeploymentType.SelectedValue = 1;
+
+            if (isNew)
+                GetRegistrationDetails();
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -458,6 +457,11 @@ namespace PluginDeployer
 
         private void SpklInstrument_OnClick(object sender, RoutedEventArgs e)
         {
+            GetRegistrationDetails();
+        }
+
+        private void GetRegistrationDetails()
+        {
             try
             {
                 Overlay.ShowMessage(_dte, "Instrumenting...", vsStatusAnimation.vsStatusAnimationSync);
@@ -472,9 +476,10 @@ namespace PluginDeployer
                 ProjectWorker.BuildProject(project);
 
                 string path = Path.GetDirectoryName(project.FullName);
+                bool backupFiles = BackupFiles.IsChecked.HasValue && BackupFiles.IsChecked.Value;
 
                 DownloadPluginMetadataTask downloadPluginMetadataTask = new DownloadPluginMetadataTask(ctx, new TraceLogger());
-                downloadPluginMetadataTask.Execute(path);
+                downloadPluginMetadataTask.Execute(path, backupFiles);
             }
             finally
             {
@@ -535,9 +540,10 @@ namespace PluginDeployer
                 ExtensionConstants.DefaultSolutionId;
 
             int deploymentType = (int?)DeploymentType.SelectedValue ?? 0;
+            bool backupFiles = BackupFiles.IsChecked.HasValue && BackupFiles.IsChecked.Value;
 
             Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, crmAssembly.AssemblyId,
-                crmSolutionId, deploymentType, ConnPane.OrganizationId);
+                crmSolutionId, deploymentType, backupFiles, ConnPane.OrganizationId);
         }
 
         private void AddEventHandlers()
@@ -545,6 +551,13 @@ namespace PluginDeployer
             SolutionList.SelectionChanged += SolutionList_OnSelectionChanged;
             CrmAssemblyList.SelectionChanged += CrmAssemblyList_OnSelectionChanged;
             DeploymentType.SelectionChanged += DeploymentType_SelectionChanged;
+            BackupFiles.Checked += BackupFilesChecked;
+            BackupFiles.Unchecked += BackupFilesChecked;
+        }
+
+        private void BackupFilesChecked(object sender, RoutedEventArgs routedEventArgs)
+        {
+            UpdateMapping();
         }
 
         private void RemoveEventHandlers()
@@ -552,6 +565,8 @@ namespace PluginDeployer
             SolutionList.SelectionChanged -= SolutionList_OnSelectionChanged;
             CrmAssemblyList.SelectionChanged -= CrmAssemblyList_OnSelectionChanged;
             DeploymentType.SelectionChanged -= DeploymentType_SelectionChanged;
+            BackupFiles.Checked -= BackupFilesChecked;
+            BackupFiles.Unchecked -= BackupFilesChecked;
         }
 
         private void FilterAssemblies()
