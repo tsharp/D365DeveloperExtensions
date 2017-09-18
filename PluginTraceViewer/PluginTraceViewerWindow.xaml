@@ -19,6 +19,13 @@
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
+            <Style x:Key="DataGridColumnHeaderNoMouseOverStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -44,9 +51,10 @@
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
-                <DataGrid x:Name="CrmPluginTraces" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Margin="5,0,0,0" IsEnabled="False"
+                <DataGrid x:Name="CrmPluginTraces" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Margin="5,0,0,0" IsEnabled="False"
                           BorderThickness="0" Background="Transparent" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeColumns="False" 
-                          CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding Traces, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                          CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding Traces, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                          Style="{DynamicResource DataGridStyle}" CellStyle="{StaticResource DataGridCellStyle}" RowStyle="{StaticResource DataGridRowStyle}" SelectionChanged="CrmPluginTraces_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn CanUserSort="False">
                             <DataGridTemplateColumn.Header>
@@ -66,7 +74,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" Width="16">
+                        <DataGridTemplateColumn CanUserSort="False" Width="24" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
