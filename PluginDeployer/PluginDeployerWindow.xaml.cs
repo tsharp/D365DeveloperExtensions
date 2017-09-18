@@ -100,7 +100,6 @@ namespace PluginDeployer
             if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
             {
                 SetWindowCaption(gotFocus.Caption);
-                SetButtonState(true);
                 LoadData();
             }
         }
@@ -109,9 +108,8 @@ namespace PluginDeployer
         {
             _crmSolutions = new ObservableCollection<CrmSolution>();
             _crmAssemblies = new ObservableCollection<CrmAssembly>();
-            SetButtonState(true);
             LoadData();
-            Project.Content = ConnPane.SelectedProject.Name;
+            ProjectName.Content = ConnPane.SelectedProject.Name;
 
             //TODO: better place for this?
             if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
@@ -134,19 +132,10 @@ namespace PluginDeployer
             _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
         }
 
-        private void SetButtonState(bool enabled)
-        {
-            ////Publish.IsEnabled = enabled;
-            //IlMerge.IsEnabled = enabled;
-            //SpklInstrument.IsEnabled = enabled;
-            ////RegistrationTool.IsEnabled = enabled;
-            //SolutionList.IsEnabled = enabled;
-            //CrmAssemblyList.IsEnabled = enabled;
-            ////ProjectAssemblyList.IsEnabled = enabled;
-        }
-
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
         {
+            RemoveEventHandlers();
+
             ResetForm();
 
             ClearConnection();
@@ -175,7 +164,7 @@ namespace PluginDeployer
         {
             Project project = e.Project;
             if (ConnPane.SelectedProject == project)
-                Project.Content = ConnPane.SelectedProject.Name;
+                ProjectName.Content = ConnPane.SelectedProject.Name;
 
             //string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
             //if (string.IsNullOrEmpty(solutionPath))
@@ -189,9 +178,11 @@ namespace PluginDeployer
         private void ResetForm()
         {
             _crmSolutions = new ObservableCollection<CrmSolution>();
+            SolutionList.ItemsSource = null;
             _crmAssemblies = new ObservableCollection<CrmAssembly>();
-
-            SetButtonState(false);
+            CrmAssemblyList.ItemsSource = null;
+            DeploymentType.ItemsSource = null;
+            ProjectName.Content = string.Empty;
         }
 
         private async Task GetCrmData()
@@ -526,7 +517,7 @@ namespace PluginDeployer
             if (ConnPane.SelectedProject == null)
                 return;
 
-            Project.Content = ConnPane.SelectedProject.Name;
+            ProjectName.Content = ConnPane.SelectedProject.Name;
         }
 
         private void DeploymentType_SelectionChanged(object sender, SelectionChangedEventArgs e)

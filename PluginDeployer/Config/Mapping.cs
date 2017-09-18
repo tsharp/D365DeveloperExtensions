@@ -43,8 +43,6 @@ namespace PluginDeployer.Config
             CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
             CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
 
-
-
             if (assemblyId != Guid.Empty)
             {
                 CrmDevExAssembly crmDevExAssembly = new CrmDevExAssembly

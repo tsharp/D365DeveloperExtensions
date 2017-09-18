@@ -52,6 +52,7 @@ namespace PluginDeployer.Crm
                             EntityAlias = "solutioncomponent",
                         }
                     },
+                    Distinct = true,
                     Orders =
                     {
                         new OrderExpression

@@ -16,7 +16,7 @@ namespace SparkleXrm.Tasks
         #region Private Fields
         private string _filePath;
         private string _code;
-        private Dictionary<string,Match> _pluginClasses;
+        private Dictionary<string, Match> _pluginClasses;
         private Dictionary<string, Match> _pluginTypes;
         private Dictionary<string, Match> _workflowTypes;
         private Dictionary<string, string> _namespaces = new Dictionary<string, string>();
@@ -24,15 +24,15 @@ namespace SparkleXrm.Tasks
 
         #region Private Constants
         private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
-        private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
+        private const string _attributeRegex = @"[\r\n][\r\n]([ ]*?)#region[\s\S]*([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n)).+?(?:#endregion)";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion
 
         #region Constructors
-        public CodeParser(Uri filePath) : this(filePath, null) 
+        public CodeParser(Uri filePath) : this(filePath, null)
         {
         }
-        public CodeParser(Uri filePath, string customClassRegex) 
+        public CodeParser(Uri filePath, string customClassRegex)
         {
             _filePath = filePath.OriginalString;
             _code = File.ReadAllText(_filePath);
@@ -42,7 +42,7 @@ namespace SparkleXrm.Tasks
             Init();
         }
         public CodeParser(string code) : this(code, null)
-        {  
+        {
         }
         public CodeParser(string code, string customClassRegex)
         {
@@ -135,14 +135,14 @@ namespace SparkleXrm.Tasks
             MatchEvaluator evaluator = delegate (Match match)
             {
                 count++;
-                return "" ;
+                return "";
             };
-            
+
             _code = Regex.Replace(_code, _attributeRegex, evaluator);
             return count;
         }
 
-       
+
 
         public void AddAttribute(CrmPluginRegistrationAttribute attribute, string className)
         {
@@ -159,16 +159,9 @@ namespace SparkleXrm.Tasks
 
             // Add the attribute
             var attributeCode = attribute.GetAttributeCode(indentation);
-            //var attributeCode = attribute.GetAttributeCode("");
-
-            //attributeCode = attributeCode.Replace("\r\n", String.Empty).Replace("\n", String.Empty).Replace("\r", String.Empty);
-
-            //TODO: see about getting everything on 1 line AND not getting inconsistent line ending warnings
-            //TODO: see about making sure everything gets inserted into #region if in place
 
             // Insert   
             _code = _code.Insert(lineBreak, attributeCode);
-            //_code = _code.Insert(lineBreak, indentation + attributeCode);
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace SparkleXrm.Tasks
 {
@@ -115,51 +116,54 @@ namespace SparkleXrm.Tasks
 
             // Image 1
             if (attribute.Image1Name != null)
-                additionalParmeters += indentation + ", Image1Type = ImageTypeEnum." + attribute.Image1Type;
+                additionalParmeters += ",Image1Type = ImageTypeEnum." + attribute.Image1Type;
             if (attribute.Image1Name != null)
-                additionalParmeters += indentation + ", Image1Name = \"" + attribute.Image1Name + "\"";
+                additionalParmeters += ",Image1Name = \"" + attribute.Image1Name + "\"";
             if (attribute.Image1Name != null)
-                additionalParmeters += indentation + ", Image1Attributes = \"" + attribute.Image1Attributes + "\"";
+                additionalParmeters += ",Image1Attributes = \"" + attribute.Image1Attributes + "\"";
 
             // Image 2
             if (attribute.Image2Name != null)
-                additionalParmeters += indentation + ", Image2Type = ImageTypeEnum." + attribute.Image2Type;
+                additionalParmeters += ",Image2Type = ImageTypeEnum." + attribute.Image2Type;
             if (attribute.Image2Name != null)
-                additionalParmeters += indentation + ", Image2Name = \"" + attribute.Image2Name + "\"";
+                additionalParmeters += ",Image2Name = \"" + attribute.Image2Name + "\"";
             if (attribute.Image2Attributes != null)
-                additionalParmeters += indentation + ", Image2Attributes = \"" + attribute.Image2Attributes + "\"";
+                additionalParmeters += ",Image2Attributes = \"" + attribute.Image2Attributes + "\"";
 
 
             if (targetType == TargetType.Plugin)
             {
                 // Description is only option for plugins
                 if (attribute.Description != null)
-                    additionalParmeters += indentation + ", Description = \"" + attribute.Description + "\"";
+                    additionalParmeters += ",Description = \"" + attribute.Description + "\"";
                 if (attribute.Offline)
-                    additionalParmeters += indentation + ", Offline = " + attribute.Offline;
+                    additionalParmeters += ",Offline = " + attribute.Offline;
                 if (!attribute.Server)
-                    additionalParmeters += indentation + ", Server = " + attribute.Server;
+                    additionalParmeters += ",Server = " + attribute.Server;
             }
             if (attribute.Id != null)
-                additionalParmeters += indentation + ", Id = \"" + attribute.Id + "\"";
+                additionalParmeters += ",Id = \"" + attribute.Id + "\"";
 
             if (attribute.DeleteAsyncOperaton != null)
-                additionalParmeters += indentation + ", DeleteAsyncOperaton = " + attribute.DeleteAsyncOperaton;
+                additionalParmeters += ",DeleteAsyncOperaton = " + attribute.DeleteAsyncOperaton;
 
             if (attribute.UnSecureConfiguration != null)
-                additionalParmeters += indentation + ", UnSecureConfiguration = \"" + attribute.UnSecureConfiguration + "\"";
+                additionalParmeters += ",UnSecureConfiguration = \"" + attribute.UnSecureConfiguration + "\"";
 
             if (attribute.SecureConfiguration != null)
-                additionalParmeters += indentation + ", SecureConfiguration = \"" + attribute.SecureConfiguration + "\"";
+                additionalParmeters += ",SecureConfiguration = \"" + attribute.SecureConfiguration + "\"";
 
             if (attribute.Action != null)
-                additionalParmeters += indentation + ", Action = PluginStepOperationEnum." + attribute.Action;
+                additionalParmeters += ",Action = PluginStepOperationEnum." + attribute.Action;
+
+            string tab = "    ";
+            Regex parser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
             // determine which template to use
             if (targetType == TargetType.Plugin)
             {
                 // Plugin Step
-                string template = "{9}[CrmPluginRegistration(\"{0}\", {9}\"{1}\", StageEnum.{2}, ExecutionModeEnum.{3}, {9}\"{4}\", \"{5}\", {6}, {9}IsolationModeEnum.{7}{8}{9})]";
+                string template = "\"{0}\",\"{1}\",StageEnum.{2},ExecutionModeEnum.{3},\"{4}\",\"{5}\",{6},IsolationModeEnum.{7}{8}";
 
                 code = String.Format(template,
                     attribute.Message,
@@ -170,13 +174,12 @@ namespace SparkleXrm.Tasks
                     attribute.Name,
                     attribute.ExecutionOrder,
                     attribute.IsolationMode,
-                    additionalParmeters,
-                    indentation);
+                    additionalParmeters);
             }
             else
             {
                 // Workflow Step
-                string template = "{6}[CrmPluginRegistration({6}\"{0}\", \"{1}\", \"{2}\", \"{3}\", IsolationModeEnum.{4}{6}{5})]";
+                string template = "\"{0}\",\"{1}\",\"{2}\",\"{3}\",IsolationModeEnum.{4}{5}";
 
                 code = String.Format(template,
                     attribute.Name,
@@ -184,9 +187,15 @@ namespace SparkleXrm.Tasks
                     attribute.Description,
                     attribute.GroupName,
                     attribute.IsolationMode,
-                    additionalParmeters,
-                    indentation);
+                    additionalParmeters);
             }
+
+            String[] fields = parser.Split(code);
+            code = String.Join($",{indentation}{tab}", fields);
+            string regionName = targetType == TargetType.Plugin
+                ? $"{attribute.Message} {attribute.EntityLogicalName}"
+                : $"{attribute.Name}";
+            code = $"{indentation}#region {attribute.Message}{regionName}{indentation}[CrmPluginRegistration({indentation}{tab}" + code + $"{indentation})]{indentation}#endregion";
 
             return code;
         }
