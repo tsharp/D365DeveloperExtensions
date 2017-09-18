@@ -75,9 +75,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="ProjectLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="Project" IsEnabled="{Binding IsEnabled, ElementName=Project}" />
-                    <Label x:Name="Project" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,5,0,0"
+                    <Label x:Name="ProjectNameLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                           Content="ProjectName" IsEnabled="{Binding IsEnabled, ElementName=ProjectName}" />
+                    <Label x:Name="ProjectName" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,5,0,0"
                            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
                     <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
                            Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
