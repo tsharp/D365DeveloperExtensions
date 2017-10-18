@@ -150,6 +150,15 @@
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
+    <Compile Include="Controls\DataGridHeaderClearFilterButton.xaml.cs">
+      <DependentUpon>DataGridHeaderClearFilterButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridHeaderFilterPopup.xaml.cs">
+      <DependentUpon>DataGridHeaderFilterPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridHeaderFilterButton.xaml.cs">
+      <DependentUpon>DataGridHeaderFilterButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SolutionsButton.xaml.cs">
       <DependentUpon>SolutionsButton.xaml</DependentUpon>
     </Compile>
@@ -161,6 +170,8 @@
     </Compile>
     <Compile Include="Converters\InverseConverter.cs" />
     <Compile Include="Converters\ToUpperConverter.cs" />
+    <Compile Include="Converters\WatermarkAdorner.cs" />
+    <Compile Include="Converters\WatermarkService.cs" />
     <Compile Include="Crm\Publish.cs" />
     <Compile Include="DateFormatting.cs" />
     <Compile Include="Models\AssemblyDeploymentType.cs" />
@@ -205,6 +216,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Connection\CrmLoginForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DataGridHeaderClearFilterButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DataGridHeaderFilterPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DataGridHeaderFilterButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

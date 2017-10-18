@@ -26,6 +26,10 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="DataGridTextBlocklStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
+    </Style>
+
     <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}" >
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
@@ -80,9 +84,41 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="DataGridHeaderButtonWithTextBlockStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="MinHeight" Value="15"/>
+        <Setter Property="Width" Value="15"/>
+        <Setter Property="MinWidth" Value="15"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value=".5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--<Style x:Key="DataGridButtonContextMenuStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        --><!--TODO: figure out a away not to hard-code the field--><!--
+        -->
+    <!--TODO: figure out a away not to hard-code the field-->
+    <!--
         <Setter Property="CommandParameter" Value="{Binding WebResourceId}" />
         <Setter Property="IsCheckable" Value="True" />
         <Setter Property="Template">
@@ -175,5 +211,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="DataGridPopupStyle" TargetType="{x:Type Popup}">
+       
     </Style>
 </ResourceDictionary>
