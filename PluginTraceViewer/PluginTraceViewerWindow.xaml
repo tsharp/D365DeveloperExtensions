@@ -191,9 +191,9 @@
                             <DataGridTemplateColumn.Header>
                                 <StackPanel Background="Transparent" Orientation="Horizontal">
                                     <AdornerDecorator>
-                                        <TextBox x:Name="DetailsSearch" Width="200" Height="20" TextChanged="DetailsSearch_TextChanged">
+                                        <TextBox x:Name="DetailsSearch" Width="200" Height="20" TextChanged="DetailsSearch_TextChanged" Style="{DynamicResource ToolBarTextBoxStyle}">
                                             <coreConverters:WatermarkService.Watermark>
-                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="Search trace details"></TextBlock>
+                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="Search trace details"/>
                                             </coreConverters:WatermarkService.Watermark>
                                         </TextBox>
                                     </AdornerDecorator>
