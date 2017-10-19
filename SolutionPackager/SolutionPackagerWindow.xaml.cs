@@ -23,6 +23,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
+using Thread = System.Threading.Thread;
 using Window = EnvDTE.Window;
 
 namespace SolutionPackager
@@ -618,17 +619,39 @@ namespace SolutionPackager
 
         private void UpdateVersion_OnClick(object sender, RoutedEventArgs e)
         {
-            Version version = ValidateVersionInput(VersionMajor.Text, VersionMinor.Text,
-                VersionBuild.Text, VersionRevision.Text);
-            if (version == null)
-            {
-                MessageBox.Show("Invalid version number");
-                return;
-            }
+            UpdateSolutionVersion();
+        }
 
-            bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version);
-            if (!success)
-                MessageBox.Show("Error updating Solution.xml version: see output window for details");
+        private async void UpdateSolutionVersion()
+        {
+            try
+            {
+                Version version = ValidateVersionInput(VersionMajor.Text, VersionMinor.Text,
+                    VersionBuild.Text, VersionRevision.Text);
+                if (version == null)
+                {
+                    MessageBox.Show("Invalid version number");
+                    return;
+                }
+
+                Overlay.ShowMessage(_dte, "Updating");
+
+                bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version);
+                if (!success)
+                {
+                    Overlay.HideMessage(_dte);
+                    MessageBox.Show("Error updating Solution.xml version: see output window for details");
+                    return;
+                }
+
+                Overlay.ShowMessage(_dte, "Updated");
+
+                await Task.Delay(500);
+            }
+            finally
+            {
+                Overlay.HideMessage(_dte);
+            }
         }
 
         private Version ValidateVersionInput(string majorIn, string minorIn, string buildIn, string revisionIn)

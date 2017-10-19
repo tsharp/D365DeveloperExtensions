@@ -95,19 +95,20 @@
                     <Label x:Name="VersionLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Set Version"/>
                     <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <TextBox x:Name="VersionMajor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
-                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" />
+                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
                         <TextBox x:Name="VersionMinor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
-                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" />
+                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
                         <TextBox x:Name="VersionBuild" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
-                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" />
+                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
                         <TextBox x:Name="VersionRevision" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
-                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput"/>
-                        <Button x:Name="UpdateVersion" Width="18" Height="18" Margin="5,5,0,0" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="0" 
-                                BorderBrush="Transparent" HorizontalAlignment="Left" IsEnabled="false" Click="UpdateVersion_OnClick">
-                            <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.VersionInformation}" Width="18" Height="18"
-                                                Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
+                        <StackPanel Margin="5,5,0,0">
+                            <Button x:Name="UpdateVersion" Style="{DynamicResource ImageButtonStyle}" 
+                               IsEnabled="false" Click="UpdateVersion_OnClick">
+                                <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.Version}"                                           
                                                 ToolTip="Update the version number in the local project's Solution.xml" />
-                        </Button>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                     <Label x:Name="ImportOptionsLabel" Content="Import Options" Grid.Column="0" Grid.Row="9" FontWeight="Bold"/>
                     <Label x:Name="PublishAllLabel" Content="Publish All?" Grid.Column="0" Grid.Row="10"/>
