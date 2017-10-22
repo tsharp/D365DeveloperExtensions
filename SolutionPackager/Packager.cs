@@ -6,33 +6,14 @@ using Microsoft.VisualStudio;
 using System;
 using System.IO;
 using System.Text;
-using EnvDTE80;
 
 namespace SolutionPackager
 {
     public static class Packager
     {
-        public static bool CreatePackage(DTE dte, string solutionName, Version version, Project project, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        public static bool CreatePackage(DTE dte, string toolPath, string solutionName, Project project,
+            CrmDevExSolutionPackage crmDevExSolutionPackage, string fullPath, string commandArgs)
         {
-            string toolPath = CreateToolPath(dte);
-            if (string.IsNullOrEmpty(toolPath))
-                return false;
-
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            if (string.IsNullOrEmpty(projectPath))
-                return false;
-
-            string filename = FileHandler.FormatSolutionVersionString(solutionName, version, false);
-
-            string solutionProjectFolder = GetProjectSolutionFolder(project, crmDevExSolutionPackage.ProjectFolder);
-
-            string fullPath = Path.Combine(solutionProjectFolder, filename);
-            if (!CrmDeveloperExtensions2.Core.FileSystem.ConfirmOverwrite(
-                new[] { fullPath, fullPath.Replace(".zip", "_managed.zip") }, true))
-                return true;
-
-            string commandArgs = CreatePackCommandArgs(projectPath, solutionProjectFolder, filename,
-                crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.CreateManaged);
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
             //Need this. Extend to allow bigger solutions to unpack
@@ -50,23 +31,40 @@ namespace SolutionPackager
             return true;
         }
 
-        public static bool ExtractPackage(DTE dte, string unmanagedZipPath, string managedZipPath, Project project, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        public static string GetPackageCommandArgs(Project project, string filename, string solutionProjectFolder, string fullPath, CrmDevExSolutionPackage crmDevExSolutionPackage)
         {
-            string toolPath = CreateToolPath(dte);
-            if (string.IsNullOrEmpty(toolPath))
-                return false;
-
             string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
             if (string.IsNullOrEmpty(projectPath))
-                return false;
+                return null;
 
+            if (!CrmDeveloperExtensions2.Core.FileSystem.ConfirmOverwrite(
+                new[] { fullPath, fullPath.Replace(".zip", "_managed.zip") }, true))
+                return null;
+
+            string commandArgs = CreatePackCommandArgs(projectPath, solutionProjectFolder, filename,
+                crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.CreateManaged);
+
+            return commandArgs;
+        }
+
+        public static string GetExtractCommandArgs(string unmanagedZipPath, string managedZipPath, Project project, DirectoryInfo extractedFolder , 
+            CrmDevExSolutionPackage crmDevExSolutionPackage)
+        {
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            if (string.IsNullOrEmpty(projectPath))
+                return null;
+
+            string commandArgs = CreateExtractCommandArgs(unmanagedZipPath, extractedFolder, projectPath,
+                crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.DownloadManaged);
+
+            return commandArgs;
+        }
+
+        public static bool ExtractPackage(DTE dte, string toolPath, string unmanagedZipPath, string managedZipPath, Project project,
+            CrmDevExSolutionPackage crmDevExSolutionPackage, DirectoryInfo extractedFolder, string commandArgs)
+        {
             string solutionProjectFolder = GetProjectSolutionFolder(project, crmDevExSolutionPackage.ProjectFolder);
 
-            DirectoryInfo extractedFolder = FileHandler.CreateExtractFolder(unmanagedZipPath);
-            if (extractedFolder == null)
-                return false;
-
-            string commandArgs = CreateExtractCommandArgs(unmanagedZipPath, extractedFolder, projectPath, crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.DownloadManaged);
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
             //Need this. Extend to allow bigger solutions to unpack
@@ -253,14 +251,14 @@ namespace SolutionPackager
             return true;
         }
 
-        private static string CreateToolPath(DTE dte)
+        public static string CreateToolPath(DTE dte)
         {
             CrmDeveloperExtensions2.Core.UserOptionsGrid.GetSolutionPackagerToolPath(dte);
             string spPath = CrmDeveloperExtensions2.Core.UserOptionsGrid.GetSolutionPackagerToolPath(dte);
 
             if (string.IsNullOrEmpty(spPath))
             {
-                OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Error);
+                OutputLogger.WriteToOutputWindow("Please set the Solution Packager path in options", MessageType.Error);
                 return null;
             }
 
