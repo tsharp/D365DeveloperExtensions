@@ -21,7 +21,6 @@ namespace SolutionPackager
 
             result.Append(".zip");
 
-
             return result.ToString();
         }
 

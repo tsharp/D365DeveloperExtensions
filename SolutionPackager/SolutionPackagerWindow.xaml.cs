@@ -23,7 +23,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
-using Thread = System.Threading.Thread;
 using Window = EnvDTE.Window;
 
 namespace SolutionPackager
@@ -55,6 +54,8 @@ namespace SolutionPackager
                 OnPropertyChanged();
             }
         }
+
+        public string Command;
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -454,7 +455,10 @@ namespace SolutionPackager
 
                 Overlay.ShowMessage(_dte, "Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
 
-                bool success = Packager.CreatePackage(_dte, selectedSolution.UniqueName, version, ConnPane.SelectedProject, crmDevExSolutionPackage);
+                CommandOutput.Text = String.Empty;
+
+                bool success = ExecutePackage(selectedSolution.UniqueName, version, ConnPane.SelectedProject,
+                    crmDevExSolutionPackage);
 
                 if (!success)
                 {
@@ -466,6 +470,33 @@ namespace SolutionPackager
             {
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
+        }
+
+        private bool ExecutePackage(string solutionName, Version version, Project project, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        {
+            string toolPath = Packager.CreateToolPath(_dte);
+            if (string.IsNullOrEmpty(toolPath))
+                return false;
+
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            if (string.IsNullOrEmpty(projectPath))
+                return false;
+
+            string filename = FileHandler.FormatSolutionVersionString(solutionName, version, false);
+
+            string solutionProjectFolder = Packager.GetProjectSolutionFolder(project, crmDevExSolutionPackage.ProjectFolder);
+
+            string fullPath = Path.Combine(solutionProjectFolder, filename);
+
+            string commandArgs = Packager.GetPackageCommandArgs(project, filename, solutionProjectFolder, fullPath, crmDevExSolutionPackage);
+            if (string.IsNullOrEmpty(commandArgs))
+                return false;
+
+            CommandOutput.Text = $"{toolPath} {commandArgs}";
+
+            bool success = Packager.CreatePackage(_dte, toolPath, solutionName, project, crmDevExSolutionPackage, fullPath, commandArgs);
+
+            return success;
         }
 
         private void UnpackageSolution_OnClick(object sender, RoutedEventArgs e)
@@ -518,7 +549,8 @@ namespace SolutionPackager
                 OutputLogger.WriteToOutputWindow("Retrieved Unmanaged Solution From CRM", MessageType.Info);
                 Overlay.ShowMessage(_dte, "Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
 
-                bool success = Packager.ExtractPackage(_dte, getUmanagedSolution.Result, getManagedSolution?.Result, ConnPane.SelectedProject, crmDevExSolutionPackage);
+                bool success = ExecuteExtract(ConnPane.SelectedProject, getUmanagedSolution.Result,
+                    getManagedSolution?.Result, crmDevExSolutionPackage);
 
                 if (!success)
                     MessageBox.Show("Error Extracting Solution. See the Output Window for additional details.");
@@ -530,6 +562,34 @@ namespace SolutionPackager
             {
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
             }
+        }
+
+        private bool ExecuteExtract(Project project, string unmanagedZipPath, string managedZipPath, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        {
+            string toolPath = Packager.CreateToolPath(_dte);
+            if (string.IsNullOrEmpty(toolPath))
+                return false;
+
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            if (string.IsNullOrEmpty(projectPath))
+                return false;
+
+            DirectoryInfo extractedFolder = FileHandler.CreateExtractFolder(unmanagedZipPath);
+            if (extractedFolder == null)
+                return false;
+
+            string commandArgs = Packager.GetExtractCommandArgs(unmanagedZipPath, managedZipPath, project, extractedFolder, crmDevExSolutionPackage);
+
+            string command = $"{toolPath} {commandArgs}";
+            if (crmDevExSolutionPackage.SaveSolutions)
+                command = command.Replace(extractedFolder.FullName, projectPath);
+
+            CommandOutput.Text = command;
+
+            bool success = Packager.ExtractPackage(_dte, toolPath, unmanagedZipPath, managedZipPath, project,
+                crmDevExSolutionPackage, extractedFolder, commandArgs);
+
+            return success;
         }
 
         private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
