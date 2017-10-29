@@ -1,12 +1,9 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xrm.Sdk.Client;
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl.Tasks
 {
     public static class Queries
     {
