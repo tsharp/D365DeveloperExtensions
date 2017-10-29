@@ -183,4 +183,7 @@
   <data name="ItemCount_Label_Content" xml:space="preserve">
     <value>Item Count</value>
   </data>
+  <data name="State_DataGridTextColumn_Header" xml:space="preserve">
+    <value>State</value>
+  </data>
 </root>

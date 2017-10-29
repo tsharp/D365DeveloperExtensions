@@ -1,4 +1,4 @@
-﻿namespace PluginTraceViewer.ViewModels
+﻿namespace CrmDeveloperExtensions2.Core.DataGrid
 {
     public interface IFilterProperty
     {

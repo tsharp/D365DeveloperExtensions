@@ -9,7 +9,7 @@
              xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
-             x:Class="WebResourceDeployer.WebResourceDeployerWindow"
+             xmlns:local="clr-namespace:WebResourceDeployer" x:Class="WebResourceDeployer.WebResourceDeployerWindow"         
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
@@ -22,7 +22,6 @@
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter" />
             <converters:AllowCompareConverter x:Key="AllowCompareConverter"/>
-            <converters:StateConverter x:Key="StateConverter"/>
             <coreConverters:InverseConverter x:Key="InverseConverter" />
             <Style x:Key="DataGridColumnHeaderNoMouseOverStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                 <Style.Triggers>
@@ -72,16 +71,10 @@
                            Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
                               DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False"/>
-                    <Label x:Name="WebResourceTypeLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled, ElementName=WebResourceType}"
-                           Content="{x:Static resources:Resource.WebResourceTypeLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}"/>
-                    <ComboBox x:Name="WebResourceType" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="WebResourceType_OnSelectionChanged" DisplayMemberPath="DisplayName"
-                              IsEnabled="False" Width="120" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding WebResourceTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Label x:Name="NameLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" 
-                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=Name}"/>
-                    <TextBox x:Name="Name" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
-                             IsEnabled="False" TextChanged="Name_OnTextChanged" />
-                    <CheckBox x:Name="ShowManaged" Content="{x:Static resources:Resource.ShowManaged_CheckBox_Content}" Margin="15,0,0,0" VerticalAlignment="Center" Checked="ShowManaged_OnChecked" 
-                              Unchecked="ShowManaged_OnChecked" IsEnabled="False" Padding="2,2,2,2" Style="{DynamicResource ToolBarCheckBoxStyle}" />
+                    <Label x:Name="NameSearchLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" 
+                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=NameSearch}"/>
+                    <TextBox x:Name="NameSearch" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
+                             IsEnabled="False" TextChanged="NameSearch_OnTextChanged" />
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}">
                         <TextBlock IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Style="{DynamicResource ToolBarTextBlockStyle}">
                             <TextBlock.Text>
@@ -96,10 +89,27 @@
                 <DataGrid x:Name="WebResourceGrid" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5,0,0,0" BorderThickness="0" Background="Transparent" 
                           Style="{DynamicResource DataGridStyle}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" 
                           CanUserAddRows="False" CellStyle="{DynamicResource DataGridCellStyle}" CanUserResizeColumns="False" IsEnabled="False" CanUserDeleteRows="False" 
-                          EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False">
+                          EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False"
+                          ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Visibility="Collapsed" Binding="{Binding WebResourceId}"/>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Binding="{Binding TypeName}" IsReadOnly="True" CanUserResize="False"/>
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False">
+                            <DataGridTemplateColumn.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="16"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByTypeName" Click="FilterByTypeName_Click" />
+                                </Grid>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TypeName}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="{x:Static resources:Resource.Publish_DataGridTemplateColumn_Header}" x:Name="PublishColumn" CanUserSort="False" 
                                                 CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.HeaderTemplate>
@@ -117,7 +127,23 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" Binding="{Binding Name}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="State" Binding="{Binding IsManaged, Converter={StaticResource StateConverter}}" IsReadOnly="True"/>
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False">
+                            <DataGridTemplateColumn.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="16"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.State_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByState" Click="FilterByState_Click" />
+                                </Grid>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding State}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" Binding="{Binding DisplayName}" IsReadOnly="True"/>
                         <DataGridTemplateColumn Header="{x:Static resources:Resource.MappedTo_DataGridTemplateColumn_Header}" x:Name="FileListColumn"
                                                 CanUserSort="True" SortMemberPath="BoundFile">
@@ -205,6 +231,8 @@
                     <Label x:Name="FolderId" Visibility="Collapsed" />
                 </StackPanel>
             </Popup>
+            <coreControls:DataGridHeaderFilterPopup x:Name="FilterTypeNamePopup" BindingPath="FilterTypeNames" />
+            <coreControls:DataGridHeaderFilterPopup x:Name="FilterStatePopup" BindingPath="FilterStates" />
         </Grid>
     </Grid>
 </UserControl>

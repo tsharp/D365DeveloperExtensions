@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace PluginTraceViewer.ViewModels
+namespace WebResourceDeployer.ViewModels
 {
     public class FilterTypeName : INotifyPropertyChanged, IFilterProperty
     {
@@ -31,9 +31,9 @@ namespace PluginTraceViewer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
+        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
         {
-            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(traces.GroupBy(t => t.TypeName).Select(x =>
+            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(webResourceItems.GroupBy(t => t.TypeName).Select(x =>
                 new FilterTypeName
                 {
                     Name = x.Key,

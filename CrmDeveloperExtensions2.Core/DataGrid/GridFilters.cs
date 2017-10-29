@@ -1,7 +1,7 @@
-﻿using PluginTraceViewer.ViewModels;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using CrmDeveloperExtensions2.Core.Models;
 
-namespace PluginTraceViewer
+namespace CrmDeveloperExtensions2.Core.DataGrid
 {
     public class GridFilters
     {
