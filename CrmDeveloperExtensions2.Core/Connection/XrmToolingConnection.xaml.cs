@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Resources;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -17,6 +8,15 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Xrm.Tooling.Connector;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 using Window = EnvDTE.Window;
 
 namespace CrmDeveloperExtensions2.Core.Connection
@@ -404,8 +404,15 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SolutionProjectsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox solutionProjectsList = (ComboBox)sender;
-            SelectedProject = (Project)solutionProjectsList.SelectedItem;
+            if (solutionProjectsList.SelectedItem == null)
+                return;
+
+            SelectedProject = solutionProjectsList.SelectedItem as Project;
             Connect.IsEnabled = SelectedProject != null;
+
+            bool isLoaded = ProjectWorker.IsProjectLoaded(SelectedProject);
+            if (!isLoaded)
+                ProjectWorker.LoadProject(SelectedProject);
 
             SelectedProjectChanged?.Invoke(this, e);
         }

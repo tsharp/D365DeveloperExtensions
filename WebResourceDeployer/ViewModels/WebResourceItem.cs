@@ -25,6 +25,7 @@ namespace WebResourceDeployer.ViewModels
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public bool IsManaged { get; set; }
+        public string State => IsManaged ? "Managed" : "Unmanaged";
         public bool AllowCompare => SetAllowCompare();
         public bool AllowPublish => SetAllowPublish();
         private string _boundFile;

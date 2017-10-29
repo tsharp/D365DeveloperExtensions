@@ -53,6 +53,25 @@ namespace CrmDeveloperExtensions2.Core.Vs
                        StringComparison.OrdinalIgnoreCase) != 0;
         }
 
+        public static bool LoadProject(Project project)
+        {
+            object service = Package.GetGlobalService(typeof(IVsSolution));
+            IVsSolution sln = (IVsSolution)service;
+            IVsSolution4 sln4 = (IVsSolution4)service;
+
+            int err = sln.GetProjectOfUniqueName(project.UniqueName, out IVsHierarchy hierarchy);
+            if (VSConstants.S_OK != err)
+                return false;
+
+            const uint itemId = (uint)VSConstants.VSITEMID.Root;
+            err = hierarchy.GetGuidProperty(itemId, (int)__VSHPROPID.VSHPROPID_ProjectIDGuid, out Guid projectGuid);
+            if (VSConstants.S_OK != err)
+                return false;
+
+            err = sln4.EnsureProjectIsLoaded(projectGuid, (uint)__VSBSLFLAGS.VSBSLFLAGS_None);
+            return VSConstants.S_OK == err;
+        }
+
         public static Project GetProjectByName(string projectName)
         {
             IList<Project> projects = GetProjects(false);

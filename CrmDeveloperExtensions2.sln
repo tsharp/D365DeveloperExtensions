@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions2", "CrmDeveloperExtensions2\CrmDeveloperExtensions2.csproj", "{EE23D830-8EB4-4313-9971-53A44900C169}"
 EndProject
@@ -56,6 +56,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpWorkflowClass", "ItemTemplates\CSharp\CSharpWorkflowClass\CSharpWorkflowClass.csproj", "{CD9BBF13-B6A5-4DC0-A698-D1C323A63CC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginTraceViewer", "PluginTraceViewer\PluginTraceViewer.csproj", "{97AA7ED6-5020-44E4-88E9-7D63F49FA766}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1FCFDED4-CC12-4275-ADDF-7E62B70743CB} = {1FCFDED4-CC12-4275-ADDF-7E62B70743CB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmIntellisense", "CrmIntellisense\CrmIntellisense.csproj", "{E616F209-2233-4DB6-9493-94184472B01C}"
 EndProject

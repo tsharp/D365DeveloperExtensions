@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace PluginTraceViewer.ViewModels
+namespace WebResourceDeployer.ViewModels
 {
-    public class FilterTypeName : INotifyPropertyChanged, IFilterProperty
+    public class FilterState : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +31,26 @@ namespace PluginTraceViewer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
+        public static ObservableCollection<FilterState> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
         {
-            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(traces.GroupBy(t => t.TypeName).Select(x =>
-                new FilterTypeName
+            ObservableCollection<FilterState> filterStates = new ObservableCollection<FilterState>(webResourceItems.GroupBy(t => t.State).Select(x =>
+                new FilterState
                 {
                     Name = x.Key,
-                    Value = x.Key,
-                    IsSelected = true
+                    Value = x.Key
                 }).ToList());
 
-            filterTypeNames = new ObservableCollection<FilterTypeName>(filterTypeNames.OrderBy(e => e.Name));
+            filterStates = new ObservableCollection<FilterState>(filterStates.OrderBy(e => e.Name));
 
-            filterTypeNames.Insert(0, new FilterTypeName
+            filterStates.Insert(0, new FilterState
             {
                 Name = "Select All",
-                Value = String.Empty,
-                IsSelected = true
+                Value = String.Empty
             });
 
-            return filterTypeNames;
+            filterStates.First(f => f.Value == "Unmanaged").IsSelected = true;
+
+            return filterStates;
         }
     }
 }

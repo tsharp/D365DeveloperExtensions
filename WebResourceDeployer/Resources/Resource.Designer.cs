@@ -232,6 +232,15 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string State_DataGridTextColumn_Header {
+            get {
+                return ResourceManager.GetString("State_DataGridTextColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm Dev: Web Resource Deployer.
         /// </summary>
         public static string ToolWindowTitle {

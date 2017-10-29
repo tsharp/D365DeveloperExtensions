@@ -2,6 +2,7 @@
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
@@ -19,6 +20,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CrmDeveloperExtensions2.Core.DataGrid;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
@@ -106,7 +108,7 @@ namespace PluginTraceViewer
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
-
+            
             _worker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -237,6 +239,7 @@ namespace PluginTraceViewer
             FilterEntities = new ObservableCollection<FilterEntity>();
             FilterMessages = new ObservableCollection<FilterMessage>();
             FilterModes = new ObservableCollection<FilterMode>();
+            FilterTypeNames = new ObservableCollection<FilterTypeName>();
 
             SetWindowCaption(_dte.ActiveWindow.Caption);
             SetButtonState(true);
@@ -267,6 +270,7 @@ namespace PluginTraceViewer
             FilterEntities = new ObservableCollection<FilterEntity>();
             FilterMessages = new ObservableCollection<FilterMessage>();
             FilterModes = new ObservableCollection<FilterMode>();
+            FilterTypeNames = new ObservableCollection<FilterTypeName>();
 
             CrmPluginTraces.ItemsSource = null;
             CrmPluginTraces.IsEnabled = false;
@@ -472,7 +476,7 @@ namespace PluginTraceViewer
             if (string.IsNullOrEmpty(crmPluginTrace.Details))
                 return false;
 
-            string search = DetailsSearch.Text;
+            string search = DetailsSearch.Text.Trim();
             if (string.IsNullOrEmpty(search))
                 return true;
 
@@ -481,7 +485,7 @@ namespace PluginTraceViewer
 
         public bool CorrelationIdCondition(CrmPluginTrace crmPluginTrace)
         {
-            string search = DetailsSearch.Text;
+            string search = DetailsSearch.Text.Trim();
             if (string.IsNullOrEmpty(search))
                 return true;
 
