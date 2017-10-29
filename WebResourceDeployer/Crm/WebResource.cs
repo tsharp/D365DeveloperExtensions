@@ -402,6 +402,10 @@ namespace WebResourceDeployer.Crm
                     return "XSL";
                 case "10":
                     return "ICO";
+                case "11":
+                    return "SVG";
+                case "12":
+                    return "RESX";
                 default:
                     return String.Empty;
             }
