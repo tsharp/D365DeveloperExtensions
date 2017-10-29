@@ -1,15 +1,11 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.CodeDom;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl.Tasks
 {
     public class DownloadPluginMetadataTask : BaseTask
     {

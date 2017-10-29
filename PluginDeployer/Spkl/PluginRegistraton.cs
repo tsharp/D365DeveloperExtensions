@@ -1,18 +1,15 @@
-﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using PluginDeployer;
-using PluginDeployer.SparkleXrm;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using PluginDeployer.Spkl.Tasks;
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl
 {
     public class PluginRegistraton
     {

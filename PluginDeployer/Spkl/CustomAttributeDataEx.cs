@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl
 {
     public static class AttributeExtensions
     {

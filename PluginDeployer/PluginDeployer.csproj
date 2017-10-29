@@ -129,21 +129,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="SparkleXrm\AssemblyContainer.cs" />
-    <Compile Include="SparkleXrm\CodeParser.cs" />
-    <Compile Include="SparkleXrm\CrmPluginRegistrationAttribute.cs" />
-    <Compile Include="SparkleXrm\CustomAttributeDataEx.cs" />
-    <Compile Include="SparkleXrm\DirectoryInfoEx.cs" />
-    <Compile Include="SparkleXrm\EntitiesTrim.cs" />
-    <Compile Include="SparkleXrm\Exceptions.cs" />
-    <Compile Include="SparkleXrm\ITrace.cs" />
-    <Compile Include="SparkleXrm\PluginRegistraton.cs" />
-    <Compile Include="SparkleXrm\Reflection.cs" />
-    <Compile Include="SparkleXrm\TargetTypeEnum.cs" />
-    <Compile Include="SparkleXrm\Tasks\DownloadPluginMetadataTask.cs" />
-    <Compile Include="SparkleXrm\Tasks\Queries.cs" />
-    <Compile Include="SparkleXrm\Tasks\Task.cs" />
-    <Compile Include="SparkleXrm\TraceLogger.cs" />
+    <Compile Include="Spkl\AssemblyContainer.cs" />
+    <Compile Include="Spkl\CodeParser.cs" />
+    <Compile Include="Spkl\CrmPluginRegistrationAttribute.cs" />
+    <Compile Include="Spkl\CustomAttributeDataEx.cs" />
+    <Compile Include="Spkl\DirectoryInfoEx.cs" />
+    <Compile Include="Spkl\EntitiesTrim.cs" />
+    <Compile Include="Spkl\Exceptions.cs" />
+    <Compile Include="Spkl\ITrace.cs" />
+    <Compile Include="Spkl\PluginRegistraton.cs" />
+    <Compile Include="Spkl\Reflection.cs" />
+    <Compile Include="Spkl\TargetTypeEnum.cs" />
+    <Compile Include="Spkl\Tasks\DownloadPluginMetadataTask.cs" />
+    <Compile Include="Spkl\Tasks\Queries.cs" />
+    <Compile Include="Spkl\Tasks\Task.cs" />
+    <Compile Include="Spkl\TraceLogger.cs" />
     <Compile Include="SpklHelpers.cs" />
     <Compile Include="ViewModels\CrmSolution.cs" />
     <Compile Include="ViewModels\CrmAssembly.cs" />
@@ -173,6 +173,9 @@
       <Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>
       <Name>TemplateWizards</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Spkl\_Credits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

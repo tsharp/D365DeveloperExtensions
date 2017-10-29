@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 [assembly: Microsoft.Xrm.Sdk.Client.ProxyTypesAssemblyAttribute()]
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl
 {
     [System.Runtime.Serialization.DataContractAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("CrmSvcUtil", "8.1.0.239")]
@@ -3017,7 +3014,7 @@ namespace SparkleXrm.Tasks
         /// Identifies if a plug-in should be executed from a parent pipeline, a child pipeline, or both.
         /// </summary>
         [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invocationsource")]
-        [System.ObsoleteAttribute()]
+        [Obsolete()]
         public Microsoft.Xrm.Sdk.OptionSetValue InvocationSource
         {
             get

@@ -1,6 +1,6 @@
-﻿using PluginDeployer.SparkleXrm;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using PluginDeployer.Spkl;
 
 namespace PluginDeployer
 {

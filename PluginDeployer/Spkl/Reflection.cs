@@ -1,14 +1,13 @@
 ﻿//using SparkleXrm.Tasks.Config;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SparkleXrm.Tasks
+namespace PluginDeployer.Spkl
 {
     public class Reflection
     {

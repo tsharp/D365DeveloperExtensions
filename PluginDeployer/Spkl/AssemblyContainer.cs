@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk;
-using SparkleXrm.Tasks;
 
-namespace PluginDeployer.SparkleXrm
+namespace PluginDeployer.Spkl
 {
     [Serializable]
     public class AssemblyContainer

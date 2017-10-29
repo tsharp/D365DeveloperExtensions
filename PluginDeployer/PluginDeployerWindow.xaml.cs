@@ -11,7 +11,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using NLog;
 using PluginDeployer.ViewModels;
-using SparkleXrm.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,6 +21,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using PluginDeployer.Spkl;
+using PluginDeployer.Spkl.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace PluginDeployer
