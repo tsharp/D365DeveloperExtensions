@@ -2,7 +2,6 @@
 using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -13,106 +12,152 @@ namespace WebResourceDeployer.Config
 {
     public static class Mapping
     {
-        public static ObservableCollection<WebResourceItem> HandleMappings(string solutionPath, Project project, ObservableCollection<WebResourceItem> webResourceItems, Guid organizationId)
+        public static ObservableCollection<WebResourceItem> HandleSpklMappings(Project project, string profile, ObservableCollection<WebResourceItem> webResourceItems)
         {
-            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
-            if (crmDevExConfigOrgMap.WebResources == null)
-                crmDevExConfigOrgMap.WebResources = new List<CrmDexExConfigWebResource>();
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
 
-            List<CrmDexExConfigWebResource> mappingsToRemove = new List<CrmDexExConfigWebResource>();
+            List<SpklConfigWebresourceFile> mappingsToRemove = new List<SpklConfigWebresourceFile>();
+
+            List<WebresourceDeployConfig> spklWebresourceDeployConfig = spklConfig.webresources;
+            if (spklWebresourceDeployConfig == null)
+                return webResourceItems;
+
+            List<SpklConfigWebresourceFile> mappedWebResources = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklWebresourceDeployConfig[0].files
+                : spklWebresourceDeployConfig.FirstOrDefault(w => w.profile == profile)?.files;
+
+            if (mappedWebResources == null)
+                return webResourceItems;
 
             //Remove mappings where CRM web resource was deleted
-            List<CrmDexExConfigWebResource> mappedWebResources = crmDevExConfigOrgMap.WebResources;
-
-            foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
+            foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
-                if (webResourceItems.Count(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId) != 0)
+                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) != 0)
                     continue;
 
-                mappingsToRemove.Add(crmDexExConfigWebResource);
-                mappedWebResources.Remove(crmDexExConfigWebResource);
+                mappingsToRemove.Add(spklConfigWebresourceFile);
             }
 
-            //Add bound file from mapping
-            foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
-            {
-                if (webResourceItems.Count(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId) > 0)
-                    webResourceItems.Where(w => w.WebResourceId == crmDexExConfigWebResource.WebResourceId).ToList()
-                        .ForEach(w => w.BoundFile = crmDexExConfigWebResource.File);
-            }
+            mappedWebResources = mappedWebResources.Except(mappingsToRemove).ToList();
 
-            //Remove mappings where project file was deleted
-            foreach (CrmDexExConfigWebResource crmDexExConfigWebResource in mappedWebResources)
+            //Add bound file & description from mapping
+            foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
-                string mappedFilePath = FileSystem.BoundFileToLocalPath(crmDexExConfigWebResource.File, project.FullName);
-                if (!File.Exists(mappedFilePath))
+                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) <= 0)
+                    continue;
+
+                List<WebResourceItem> matches = webResourceItems
+                    .Where(w => w.Name == spklConfigWebresourceFile.uniquename).ToList();
+                foreach (WebResourceItem match in matches)
                 {
-                    mappingsToRemove.Add(crmDexExConfigWebResource);
-                    webResourceItems.Where(w => w.BoundFile == crmDexExConfigWebResource.File).ToList().ForEach(w => w.BoundFile = null);
+                    match.Description = string.IsNullOrEmpty(spklConfigWebresourceFile.description)
+                        ? null
+                        : spklConfigWebresourceFile.description;
+                    match.BoundFile = spklConfigWebresourceFile.file;
                 }
             }
 
+            //Remove mappings where project file was deleted
+            foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
+            {
+                string mappedFilePath = FileSystem.BoundFileToLocalPath(spklConfigWebresourceFile.file, project.FullName);
+                if (File.Exists(mappedFilePath))
+                    continue;
+
+                mappingsToRemove.Add(spklConfigWebresourceFile);
+                webResourceItems.Where(w => w.BoundFile == spklConfigWebresourceFile.file).ToList().ForEach(w => w.BoundFile = null);
+            }
+
             if (mappingsToRemove.Count > 0)
-                RemoveMappings(solutionPath, project, mappingsToRemove, organizationId);
+                RemoveSpklMappings(spklConfig, project, profile, mappingsToRemove);
 
             return webResourceItems;
         }
 
-        public static void AddOrUpdateMapping(string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
+        public static void AddOrUpdateSpklMapping(Project project, string profile, WebResourceItem webResourceItem)
         {
-            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
 
-            List<CrmDexExConfigWebResource> crmDexExConfigWebResources = crmDevExConfigOrgMap.WebResources;
-            if (crmDexExConfigWebResources == null)
-                crmDevExConfigOrgMap.WebResources = new List<CrmDexExConfigWebResource>();
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklConfig.webresources[0].files
+                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files ??
+                                             new List<SpklConfigWebresourceFile>();
 
-            CrmDexExConfigWebResource crmDexExConfigWebResource =
-                crmDevExConfigOrgMap.WebResources.FirstOrDefault(w => w.WebResourceId == webResourceItem.WebResourceId);
+            SpklConfigWebresourceFile spklConfigWebresourceFile =
+                spklConfigWebresourceFiles.FirstOrDefault(w => w.uniquename == webResourceItem.Name);
 
-            if (crmDexExConfigWebResource == null)
-                AddMapping(crmDexExConfig, solutionPath, project, webResourceItem, organizationId);
+            if (spklConfigWebresourceFile == null)
+                AddSpklMapping(spklConfig, project, profile, webResourceItem);
             else
-                UpdateMapping(crmDexExConfig, solutionPath, project, webResourceItem, organizationId);
+                UpdateSpklMapping(spklConfig, project, profile, webResourceItem);
         }
 
-        private static void UpdateMapping(CrmDexExConfig crmDexExConfig, string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
+        private static void UpdateSpklMapping(SpklConfig spklConfig, Project project, string profile, WebResourceItem webResourceItem)
         {
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklConfig.webresources[0].files
+                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files;
 
-            List<CrmDexExConfigWebResource> crmDexExConfigWebResources = crmDevExConfigOrgMap.WebResources.Where(w => w.WebResourceId == webResourceItem.WebResourceId).ToList();
+            if (spklConfigWebresourceFiles == null)
+                return;
 
-            crmDexExConfigWebResources.ForEach(w => w.File = webResourceItem.BoundFile);
-            crmDevExConfigOrgMap.WebResources.RemoveAll(w => string.IsNullOrEmpty(w.File));
-
-            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
-        }
-
-        public static void RemoveMappings(string solutionPath, Project project, List<CrmDexExConfigWebResource> crmDexExConfigWebResources, Guid organizationId)
-        {
-            CrmDexExConfig crmDexExConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
-
-            crmDevExConfigOrgMap.WebResources.RemoveAll(
-                w => crmDexExConfigWebResources.Any(m => m.WebResourceId == w.WebResourceId));
-
-            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
-        }
-
-        private static void AddMapping(CrmDexExConfig crmDexExConfig, string solutionPath, Project project, WebResourceItem webResourceItem, Guid organizationId)
-        {
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CrmDeveloperExtensions2.Core.Config.Mapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
-
-            CrmDexExConfigWebResource crmDexExConfigWebResource = new CrmDexExConfigWebResource
+            if (!string.IsNullOrEmpty(webResourceItem.BoundFile))
             {
-                WebResourceId = webResourceItem.WebResourceId,
-                File = webResourceItem.BoundFile
+                foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in
+                    spklConfigWebresourceFiles.Where(w => w.uniquename == webResourceItem.Name))
+                {
+                    spklConfigWebresourceFile.file = webResourceItem.BoundFile;
+                    spklConfigWebresourceFile.description = webResourceItem.Description;
+                }
+            }
+            else
+                spklConfigWebresourceFiles.RemoveAll(w => w.uniquename == webResourceItem.Name);
+
+            if (profile.StartsWith(ExtensionConstants.NoProfilesText))
+                spklConfig.webresources[0].files = spklConfigWebresourceFiles;
+            else
+            {
+                WebresourceDeployConfig webresourceDeployConfig = spklConfig.webresources.FirstOrDefault(w => w.profile == profile);
+                if (webresourceDeployConfig != null)
+                    webresourceDeployConfig.files = spklConfigWebresourceFiles;
+            }
+
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
+        }
+
+        public static void RemoveSpklMappings(SpklConfig spklConfig, Project project, string profile, List<SpklConfigWebresourceFile> crmDexExConfigWebResources)
+        {
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+
+            if (profile.StartsWith(ExtensionConstants.NoProfilesText))
+                spklConfig.webresources[0].files
+                .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
+            else
+                spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files
+                    .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
+
+            ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
+        }
+
+        private static void AddSpklMapping(SpklConfig spklConfig, Project project, string profile, WebResourceItem webResourceItem)
+        {
+            SpklConfigWebresourceFile spklConfigWebresourceFile = new SpklConfigWebresourceFile
+            {
+                uniquename = webResourceItem.Name,
+                file = webResourceItem.BoundFile,
+                description = webResourceItem.Description
             };
 
-            crmDevExConfigOrgMap.WebResources.Add(crmDexExConfigWebResource);
+            if (profile.StartsWith(ExtensionConstants.NoProfilesText))
+                spklConfig.webresources[0].files.Add(spklConfigWebresourceFile);
+            else
+                spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files.Add(spklConfigWebresourceFile);
 
-            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
     }
 }

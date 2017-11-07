@@ -30,6 +30,7 @@ namespace WebResourceDeployer
         public string NewName;
         public string NewDisplayName;
         public string NewBoundFile;
+        public string NewDescription;
         public Guid NewSolutionId;
         public ObservableCollection<WebResourceType> WebResourceTypes
         {
@@ -115,6 +116,7 @@ namespace WebResourceDeployer
             if (!string.IsNullOrEmpty(displayName))
                 NewDisplayName = displayName;
             NewBoundFile = relativePath;
+            NewDescription = description;
             NewSolutionId = solution.SolutionId;
 
             Overlay.HideMessage(_dte);

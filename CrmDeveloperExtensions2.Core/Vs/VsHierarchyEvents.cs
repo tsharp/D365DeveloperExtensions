@@ -1,8 +1,8 @@
-﻿using System;
-using CrmDeveloperExtensions2.Core.Connection;
+﻿using CrmDeveloperExtensions2.Core.Connection;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
 
 namespace CrmDeveloperExtensions2.Core.Vs
 {
@@ -29,12 +29,10 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         int IVsHierarchyEvents.OnItemAdded(uint itemidParent, uint itemidSiblingPrev, uint itemidAdded)
         {
-            object itemExtObject;
-            if (_hierarchy.GetProperty(itemidAdded, (int) __VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) != VSConstants.S_OK)
+            if (_hierarchy.GetProperty(itemidAdded, (int) __VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) != VSConstants.S_OK)
                 return VSConstants.S_OK;
 
-            var projectItem = itemExtObject as ProjectItem;
-            if (projectItem == null)
+            if (!(itemExtObject is ProjectItem projectItem))
                 return VSConstants.S_OK;
 
             Guid type = new Guid(projectItem.Kind);
@@ -46,12 +44,10 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         int IVsHierarchyEvents.OnItemDeleted(uint itemid)
         {
-            object itemExtObject;
-            if (_hierarchy.GetProperty(itemid, (int) __VSHPROPID.VSHPROPID_ExtObject, out itemExtObject) !=VSConstants.S_OK)
+            if (_hierarchy.GetProperty(itemid, (int) __VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) !=VSConstants.S_OK)
                 return VSConstants.S_OK;
 
-            var projectItem = itemExtObject as ProjectItem;
-            if (projectItem == null)
+            if (!(itemExtObject is ProjectItem projectItem))
                 return VSConstants.S_OK;
 
             Guid type = new Guid(projectItem.Kind);

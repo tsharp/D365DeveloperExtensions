@@ -70,7 +70,7 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CrmDevEx.json.
+        ///   Looks up a localized string similar to spkl.json.
         /// </summary>
         public static string ConfigFileName {
             get {

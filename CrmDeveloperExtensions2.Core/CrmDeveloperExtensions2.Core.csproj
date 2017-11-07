@@ -154,6 +154,7 @@
   <ItemGroup>
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\Mapping.cs" />
+    <Compile Include="Config\Profiles.cs" />
     <Compile Include="Connection\ConnectEventArgs.cs" />
     <Compile Include="Connection\CrmLoginForm.xaml.cs">
       <DependentUpon>CrmLoginForm.xaml</DependentUpon>
@@ -188,8 +189,11 @@
     <Compile Include="Converters\WatermarkAdorner.cs" />
     <Compile Include="Converters\WatermarkService.cs" />
     <Compile Include="Crm\Publish.cs" />
+    <Compile Include="DataGrid\DataGridHelpers.cs" />
+    <Compile Include="DataGrid\DetailsRow.cs" />
     <Compile Include="DataGrid\GridFilters.cs" />
     <Compile Include="DateFormatting.cs" />
+    <Compile Include="Enums\ToolWindowType.cs" />
     <Compile Include="Models\AssemblyDeploymentType.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
@@ -205,8 +209,12 @@
     <Compile Include="Models\CrmDexExConfigWebResource.cs" />
     <Compile Include="DataGrid\IFilterProperty.cs" />
     <Compile Include="Models\MockingFramework.cs" />
+    <Compile Include="Models\MovedProjectItem.cs" />
     <Compile Include="Models\NuGetPackage.cs" />
     <Compile Include="Logging\OutputLogger.cs" />
+    <Compile Include="Models\ProjectListItem.cs" />
+    <Compile Include="Models\SpklConfig.cs" />
+    <Compile Include="Models\ToolWindow.cs" />
     <Compile Include="Models\WebResourceType.cs" />
     <Compile Include="StringFormatting.cs" />
     <Compile Include="Vs\ProjectItemWorker.cs" />

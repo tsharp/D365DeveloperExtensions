@@ -7,7 +7,9 @@ namespace WebResourceDeployer.ViewModels
 {
     public class WebResourceItem : INotifyPropertyChanged
     {
+        private string _boundFile;
         private bool _publish;
+        private string _description;
         public bool Publish
         {
             get => _publish;
@@ -28,7 +30,6 @@ namespace WebResourceDeployer.ViewModels
         public string State => IsManaged ? "Managed" : "Unmanaged";
         public bool AllowCompare => SetAllowCompare();
         public bool AllowPublish => SetAllowPublish();
-        private string _boundFile;
         public string BoundFile
         {
             get => _boundFile;
@@ -42,6 +43,18 @@ namespace WebResourceDeployer.ViewModels
             }
         }
         public Guid SolutionId { get; set; }
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                if (_description == value) return;
+
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
+        public string PreviousDescription { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -54,7 +67,7 @@ namespace WebResourceDeployer.ViewModels
             if (string.IsNullOrEmpty(BoundFile))
                 return false;
 
-            int[] noCompare = { 5, 6, 7, 8, 10 };
+            int[] noCompare = { 5, 6, 7, 8, 10, 11 };
             return !noCompare.Contains(Type);
         }
 

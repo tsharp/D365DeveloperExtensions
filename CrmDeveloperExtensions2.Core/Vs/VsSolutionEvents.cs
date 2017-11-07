@@ -56,14 +56,16 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
-            //TODO: make sure this is one of our windows
             foreach (Window window in _dte.Windows)
             {
-                if (window.Type == vsWindowType.vsWindowTypeToolWindow)
-                {
-                    OutputLogger.DeleteOutputWindow();
-                    window.Close();
-                }
+                if (window.Type != vsWindowType.vsWindowTypeToolWindow)
+                    continue;
+
+                if (!HostWindow.IsCrmDevExWindow(window))
+                    continue;
+
+                OutputLogger.DeleteOutputWindow();
+                window.Close();
             }
 
             OutputLogger.DeleteOutputWindow();

@@ -26,7 +26,16 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="DataGridTextBlocklStyle" TargetType="{x:Type TextBlock}">
+    <Style x:Key="DataGridTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextInactiveKey}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DataGridTextBoxStyle" TargetType="{x:Type TextBox}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
     </Style>
 
