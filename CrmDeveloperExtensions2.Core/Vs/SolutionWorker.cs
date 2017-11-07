@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using System.Collections.Generic;
 
 namespace CrmDeveloperExtensions2.Core.Vs
 {
@@ -32,7 +32,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
-                var project = item.Current as Project;
+                Project project = (Project)item.Current;
                 if (project == null)
                     continue;
 

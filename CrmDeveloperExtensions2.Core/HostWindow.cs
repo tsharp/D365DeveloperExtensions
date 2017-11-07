@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using CrmDeveloperExtensions2.Core.Models;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -36,8 +37,19 @@ namespace CrmDeveloperExtensions2.Core
             if (window.ObjectKind == null)
                 return false;
 
-            string windowGuid = window.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty);
-            return ExtensionConstants.CrmDevExWindows.Contains(windowGuid);
+            Guid windowGuid = new Guid(window.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty));
+
+            return ExtensionConstants.CrmDevExToolWindows.Count(w => w.ToolWindowsId == windowGuid) > 0;
+        }
+
+        public static ToolWindow GetCrmDevExWindow(EnvDTE.Window window)
+        {
+            if (window.ObjectKind == null)
+                return null;
+
+            Guid windowGuid = new Guid(window.ObjectKind.Replace("{", String.Empty).Replace("}", String.Empty));
+
+            return ExtensionConstants.CrmDevExToolWindows.FirstOrDefault(w => w.ToolWindowsId == windowGuid);
         }
     }
 }

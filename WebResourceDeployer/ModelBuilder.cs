@@ -25,6 +25,12 @@ namespace WebResourceDeployer
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
 
+                bool hasDescription = webResource.Attributes.TryGetValue("webresource.description", out var description);
+                if (hasDescription) {
+                    webResourceItem.Description = ((AliasedValue) description).Value.ToString();
+                    webResourceItem.PreviousDescription = webResourceItem.Description;
+                }
+
                 bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out var displayName);
                 if (hasDisplayName)
                     webResourceItem.DisplayName = ((AliasedValue)displayName).Value.ToString();
@@ -77,7 +83,10 @@ namespace WebResourceDeployer
                 DisplayName = newWebResource.NewDisplayName,
                 TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
                 Type = newWebResource.NewType,
-                SolutionId = solutionId
+                SolutionId = solutionId,
+                Description = newWebResource.NewDescription,
+                PreviousDescription = newWebResource.NewDescription,
+                IsManaged = false
             };
 
             return webResourceItem;

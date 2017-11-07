@@ -126,6 +126,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\SpklConfig\SpklConfig.csproj">
+      <Project>{7AA29DBF-A2E3-4565-A84A-B7694617E15E}</Project>
+      <Name>SpklConfig</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\NuGetRetriever\NuGetRetriever.csproj">
       <Project>{BD5ABC7E-6459-4CFB-82BD-39643599A285}</Project>
       <Name>NuGetRetriever</Name>

@@ -176,15 +176,15 @@ namespace CrmDeveloperExtensions2.Core.Vs
         private static ObservableCollection<string> GetFolders(ProjectItem projectItem, string path)
         {
             ObservableCollection<string> projectFolders = new ObservableCollection<string>();
-            if (new Guid(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder)
+            if (new Guid(projectItem.Kind) != VSConstants.GUID_ItemType_PhysicalFolder)
+                return projectFolders;
+
+            projectFolders.Add(path + "/" + projectItem.Name);
+            for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
             {
-                projectFolders.Add(path + "/" + projectItem.Name);
-                for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
-                {
-                    var folders = GetFolders(projectItem.ProjectItems.Item(i), path + "/" + projectItem.Name);
-                    foreach (string folder in folders)
-                        projectFolders.Add(folder);
-                }
+                var folders = GetFolders(projectItem.ProjectItems.Item(i), path + "/" + projectItem.Name);
+                foreach (string folder in folders)
+                    projectFolders.Add(folder);
             }
             return projectFolders;
         }

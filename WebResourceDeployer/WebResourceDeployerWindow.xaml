@@ -40,9 +40,11 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
-                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved"
-                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened" />
+        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" 
+                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_SelectedProjectChanged" 
+                                         ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved" ProjectItemAdded="ConnPane_OnProjectItemAdded" 
+                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened" SolutionProjectAdded="ConnPane_SolutionProjectAdded" 
+                                         ProfileChanged="ConnPane_ProfileChanged" />
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
@@ -71,10 +73,10 @@
                            Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
                               DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False"/>
-                    <Label x:Name="NameSearchLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Name" 
-                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=NameSearch}"/>
-                    <TextBox x:Name="NameSearch" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
-                             IsEnabled="False" TextChanged="NameSearch_OnTextChanged" />
+                    <Label x:Name="SearchLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Search" 
+                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=Search}"/>
+                    <TextBox x:Name="Search" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
+                             IsEnabled="False" TextChanged="Search_OnTextChanged" />
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}">
                         <TextBlock IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Style="{DynamicResource ToolBarTextBlockStyle}">
                             <TextBlock.Text>
@@ -90,9 +92,22 @@
                           Style="{DynamicResource DataGridStyle}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" 
                           CanUserAddRows="False" CellStyle="{DynamicResource DataGridCellStyle}" CanUserResizeColumns="False" IsEnabled="False" CanUserDeleteRows="False" 
                           EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False"
-                          ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" >
+                          ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Visibility="Collapsed" Binding="{Binding WebResourceId}"/>
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" Width="25">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="ShowId" Click="ShowId_Click" Style="{DynamicResource ImageButtonStyle}" Margin="-2,0,0,0">
+                                        <imaging:CrispImage x:Name="ShowIdImage" Moniker="{x:Static catalog:KnownMonikers.ExpandRight}" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding WebResourceId}" Style="{DynamicResource DataGridTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False">
                             <DataGridTemplateColumn.Header>
                                 <Grid>
@@ -100,7 +115,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Type_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}" 
+                                               IsEnabled="{Binding IsEnabled, ElementName=WebResourceGrid}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByTypeName" Click="FilterByTypeName_Click" />
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -134,7 +150,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.State_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.State_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}" 
+                                               IsEnabled="{Binding IsEnabled, ElementName=WebResourceGrid}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByState" Click="FilterByState_Click" />
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -211,7 +228,52 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTemplateColumn CanUserSort="False" Header="Description">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Description}" Style="{DynamicResource DataGridTextBlockStyle}" TextTrimming="WordEllipsis" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <Button x:Name="EditDescription" Grid.Column="3" Click="EditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}"
+                                                HorizontalAlignment="Right" Visibility="Visible">
+                                            <imaging:CrispImage x:Name="EditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
+                                                        ToolTip="Edit Description" />
+                                        </Button>
+                                        <Button x:Name="UndoEditDescription" Grid.Column="1" Click="UndoEditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
+                                                CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
+                                            <imaging:CrispImage x:Name="UndoEditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.Undo}" 
+                                                                ToolTip="Undo from server" />
+                                        </Button>
+                                        <Button x:Name="CancelEditDescription" Grid.Column="2" Click="CancelEditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
+                                                CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
+                                            <imaging:CrispImage x:Name="CancelEditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.Cancel}" 
+                                                        ToolTip="Cancel" />
+                                        </Button>
+                                        <Button x:Name="SaveDescription" Grid.Column="3" Click="SaveDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
+                                                CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
+                                            <imaging:CrispImage x:Name="SaveDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.Save}" 
+                                                        ToolTip="Save Description" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <TextBox x:Name="Description" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{DynamicResource ToolBarTextBoxStyle}"
+                                     IsEnabled="{Binding IsManaged, Converter={StaticResource InverseConverter}}"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Top" 
+                                     HorizontalContentAlignment="Left" Height="50" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Margin="10" TextWrapping="Wrap" AcceptsReturn="True" />
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
                 </DataGrid>
             </Grid>
             <coreControls:LockOverlay x:Name="Overlay" />

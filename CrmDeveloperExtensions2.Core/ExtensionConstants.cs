@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Models;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -16,10 +19,27 @@ namespace CrmDeveloperExtensions2.Core
         public static string MicrosoftXrmSdkWorkflow = "Microsoft.Xrm.Sdk.Workflow";
         public static string MicrosoftXrmToolingConnector = "Microsoft.Xrm.Tooling.Connector";
 
-        public static string[] CrmDevExWindows = { "A3479AE0-5F4F-4A14-96F4-46F39000023A", "FA0E0759-D337-4C4C-8474-217A6BDC3C06",
-            "F8BF1118-57B6-4404-9923-8A98AB710EBA", "E7A15FDA-6C33-48F8-A1E7-D78E49458A7A" };
+        public static List<ToolWindow> CrmDevExToolWindows = new List<ToolWindow>() {
+            new ToolWindow {
+                ToolWindowsId = new Guid("A3479AE0-5F4F-4A14-96F4-46F39000023A"),
+                Type = ToolWindowType.WebResourceDeployer
+            },
+            new ToolWindow {
+                ToolWindowsId = new Guid("F8BF1118-57B6-4404-9923-8A98AB710EBA"),
+                Type = ToolWindowType.SolutionPackager
+            },
+            new ToolWindow {
+                ToolWindowsId = new Guid("E7A15FDA-6C33-48F8-A1E7-D78E49458A7A"),
+                Type = ToolWindowType.PluginTraceViewer
+            },
+            new ToolWindow {
+                ToolWindowsId = new Guid("FA0E0759-D337-4C4C-8474-217A6BDC3C06"),
+                Type = ToolWindowType.PluginDeployer
+            }
+        };
 
         public static string SolutionPackagerLogFile = "SolutionPackager.log";
         public static string SolutionPackagerMapFile = "mapping.xml";
+        public static string NoProfilesText = "Unnamed Profile";
     }
 }

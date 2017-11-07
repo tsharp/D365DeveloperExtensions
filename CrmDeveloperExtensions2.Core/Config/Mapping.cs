@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using EnvDTE;
 
 namespace CrmDeveloperExtensions2.Core.Config
 {
@@ -51,6 +52,14 @@ namespace CrmDeveloperExtensions2.Core.Config
             return !ConfigFile.ConfigFileExists(solutionPath) ?
                 ConfigFile.CreateConfigFile(organizationId, projectUniqueName, solutionPath) :
                 ConfigFile.GetConfigFile(solutionPath);
+        }
+
+        public static SpklConfig GetSpklConfigFile(string projectPath, Project project)
+        {
+            //TODO: only need project parameter
+            return !ConfigFile.SpklConfigFileExists(projectPath) ?
+                ConfigFile.CreateSpklConfigFile(project) :
+                ConfigFile.GetSpklConfigFile(projectPath);
         }
 
         public static void RemoveProject(string solutionPath, string projectUniqueName)

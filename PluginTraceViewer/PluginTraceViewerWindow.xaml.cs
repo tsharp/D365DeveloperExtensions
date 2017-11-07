@@ -374,17 +374,7 @@ namespace PluginTraceViewer
 
         private void ViewDetails_OnClick(object sender, RoutedEventArgs e)
         {
-            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
-            {
-                if (!(vis is DataGridRow))
-                    continue;
-
-                var row = (DataGridRow)vis;
-                row.DetailsVisibility = row.DetailsVisibility == Visibility.Visible
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
-                break;
-            }
+            DetailsRow.ShowHideDetailsRow(sender);
         }
 
         private void SetButtonState(bool enabled)

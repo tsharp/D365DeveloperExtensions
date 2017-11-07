@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Spkl Plug-in Registration Attributes</Name>
-    <Description>Required for adding assembly registration details from CRM/365 and deploying. DO NOT RENAME!</Description>
-    <Icon>icon.png</Icon>
-    <TemplateID>2cbd34be-f54c-4cfa-bcd7-5de379c5d074</TemplateID>
+    <Name>CRM/365 Spkl configuration file</Name>
+    <Description>Creates a default spkl.json file.</Description>
+    <TemplateID>09907b4c-511a-4030-92ab-c5bb200d5527</TemplateID>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
-    <DefaultName>CrmPluginRegistrationAttribute.cs</DefaultName>
+    <DefaultName>spkl.json</DefaultName>
+    <Hidden>true</Hidden>
   </TemplateData>
   <TemplateContent>
     <References>
@@ -16,6 +16,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem ReplaceParameters="true">CrmPluginRegistrationAttribute.cs</ProjectItem>
+    <ProjectItem ReplaceParameters="true">spkl.json</ProjectItem>
   </TemplateContent>
 </VSTemplate>

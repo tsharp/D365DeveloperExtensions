@@ -1,4 +1,11 @@
-﻿//https://github.com/umbraco/Visual-Studio-Extension/blob/master/UmbracoStudio/VisualStudio/ProjectExtensions.cs
+﻿using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using EnvDTE;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -7,14 +14,6 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using EnvDTE;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Tooling.Connector;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Crm
@@ -52,7 +51,7 @@ namespace WebResourceDeployer.Crm
                         {
                             new LinkEntity
                             {
-                                Columns = new ColumnSet("name", "displayname", "webresourcetype", "ismanaged", "webresourceid"),
+                                Columns = new ColumnSet("name", "displayname", "webresourcetype", "ismanaged", "webresourceid", "description"),
                                 EntityAlias = "webresource",
                                 LinkFromEntityName = "solutioncomponent",
                                 LinkFromAttributeName = "objectid",
@@ -140,6 +139,26 @@ namespace WebResourceDeployer.Crm
             }
         }
 
+        public static string RetrieveWebResourceDescriptionFromCrm(CrmServiceClient client, Guid webResourceId)
+        {
+            try
+            {
+                Entity webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("description"));
+
+                return webResource.GetAttributeValue<string>("description");
+            }
+            catch (FaultException<OrganizationServiceFault> crmEx)
+            {
+                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                return null;
+            }
+        }
+
         public static void DeleteWebResourcetFromCrm(CrmServiceClient client, Guid webResourceId)
         {
             try
@@ -172,7 +191,7 @@ namespace WebResourceDeployer.Crm
 
             string extension = Path.GetExtension(filePath);
 
-            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG" };
+            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG", ".SVG" };
             string content;
             //TypeScript
             if (extension != null && extension.ToUpper() == ".TS" && !string.IsNullOrEmpty(filePath))
@@ -221,18 +240,22 @@ namespace WebResourceDeployer.Crm
             }
         }
 
-        public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string projectFullName)
+        public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string description, string projectFullName)
         {
-            Entity webResource = new Entity("webresource") { Id = webResourceId };
+            Entity webResource = new Entity("webresource")
+            {
+                Id = webResourceId,
+                ["description"] = description
+            };
 
             string filePath = Path.GetDirectoryName(projectFullName) + boundFile.Replace("/", "\\");
 
             string extension = Path.GetExtension(filePath);
 
-            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG" };
+            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG", ".SVG" };
             string content;
             //TypeScript
-            if ((extension.ToUpper() == ".TS"))
+            if (extension.ToUpper() == ".TS")
             {
                 content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
                 webResource["content"] = EncodeString(content);
@@ -378,6 +401,7 @@ namespace WebResourceDeployer.Crm
             return publishXml.ToString();
         }
 
+        //TODO: move to Core/models/weresourcetype.cs
         public static string GetWebResourceTypeNameByNumber(string type)
         {
             switch (type)
@@ -461,6 +485,7 @@ namespace WebResourceDeployer.Crm
                 case ".PNG":
                     format = ImageFormat.Png;
                     break;
+                    //TODO: handle SVG
             }
 
             if (format == null)
@@ -487,7 +512,7 @@ namespace WebResourceDeployer.Crm
         }
 
         public static string ConvertWebResourceNameFullToPath(string webResourceName, string rootFolder, Project project)
-        {           
+        {
             string[] folders = webResourceName.Split('/');
 
             string currentFullPath = Path.GetDirectoryName(project.FullName);
@@ -500,7 +525,7 @@ namespace WebResourceDeployer.Crm
                 bool exists = Directory.Exists(currentFullPath);
                 if (!exists)
                     Directory.CreateDirectory(currentFullPath);
-                
+
                 CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.GetProjectItems(project, currentPartialPath, true);
             }
 
