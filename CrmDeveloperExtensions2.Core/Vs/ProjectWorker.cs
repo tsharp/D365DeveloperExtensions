@@ -340,7 +340,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 Path.Combine(path, outputFileName);
         }
 
-        private static string GetOutputPath(Project project)
+        public static string GetOutputPath(Project project)
         {
             ConfigurationManager configurationManager = project.ConfigurationManager;
             if (configurationManager == null) return null;

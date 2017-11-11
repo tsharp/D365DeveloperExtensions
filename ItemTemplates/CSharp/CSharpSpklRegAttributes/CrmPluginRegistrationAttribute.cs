@@ -5,8 +5,18 @@ namespace $rootnamespace$
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class CrmPluginRegistrationAttribute : Attribute
     {
-        public CrmPluginRegistrationAttribute(string message, string entityLogicalName, StageEnum stage, ExecutionModeEnum executionMode,
-            string filteringAttributes, string stepName, int executionOrder, IsolationModeEnum isolationModel)
+
+        public CrmPluginRegistrationAttribute(
+            string message,
+            string entityLogicalName,
+            StageEnum stage,
+            ExecutionModeEnum executionMode,
+            string filteringAttributes,
+            string stepName,
+            int executionOrder,
+            IsolationModeEnum isolationModel
+
+        )
         {
             Message = message;
             EntityLogicalName = entityLogicalName;
@@ -18,6 +28,8 @@ namespace $rootnamespace$
             IsolationMode = isolationModel;
             Offline = false;
             Server = true;
+
+
         }
 
         /// <summary>
@@ -31,13 +43,20 @@ namespace $rootnamespace$
         /// <param name="stepName"></param>
         /// <param name="executionOrder"></param>
         /// <param name="isolationModel"></param>
-        public CrmPluginRegistrationAttribute(MessageNameEnum message, string entityLogicalName, StageEnum stage, ExecutionModeEnum executionMode,
-            string filteringAttributes, string stepName, int executionOrder, IsolationModeEnum isolationModel) :
-            this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName, executionOrder, isolationModel)
-        {
-        }
+        public CrmPluginRegistrationAttribute(
+            MessageNameEnum message,
+            string entityLogicalName,
+            StageEnum stage,
+            ExecutionModeEnum executionMode,
+            string filteringAttributes,
+            string stepName,
+            int executionOrder,
+            IsolationModeEnum isolationModel
 
-        /// <inheritdoc />
+        ) : this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName,
+            executionOrder, isolationModel)
+        { }
+
         /// <summary>
         /// Create workflow activity registration
         /// </summary>
@@ -45,17 +64,24 @@ namespace $rootnamespace$
         /// <param name="friendlyName">Friendly name</param>
         /// <param name="description">Description</param>
         /// <param name="groupName">Group Name</param>
-        /// <param name="isolationModel">Isolation Model</param>
-        public CrmPluginRegistrationAttribute(string name, string friendlyName, string description, string groupName, IsolationModeEnum isolationModel)
+        public CrmPluginRegistrationAttribute(
+            string name,
+            string friendlyName,
+            string description,
+            string groupName,
+            IsolationModeEnum isolationModel
+        )
         {
             Name = name;
             FriendlyName = friendlyName;
             Description = description;
             GroupName = groupName;
             IsolationMode = isolationModel;
+
         }
 
         #region Named Properties
+
         public string Id { get; set; }
         public string FriendlyName { get; set; }
         public string GroupName { get; set; }
@@ -72,35 +98,42 @@ namespace $rootnamespace$
         public ImageTypeEnum Image1Type { get; set; }
         public ImageTypeEnum Image2Type { get; set; }
         public PluginStepOperationEnum? Action { get; set; }
+
         #endregion
 
         #region Constructor Mandatory Properties
-        public IsolationModeEnum IsolationMode { get; }
-        public string Message { get; }
-        public string EntityLogicalName { get; }
-        public string FilteringAttributes { get; }
-        public string Name { get; }
-        public int ExecutionOrder { get; }
-        public StageEnum? Stage { get; }
-        public ExecutionModeEnum ExecutionMode { get; }
+
+        public IsolationModeEnum IsolationMode { get; private set; }
+        public string Message { get; private set; }
+        public string EntityLogicalName { get; private set; }
+        public string FilteringAttributes { get; private set; }
+        public string Name { get; private set; }
+        public int ExecutionOrder { get; private set; }
+        public StageEnum? Stage { get; private set; }
+        public ExecutionModeEnum ExecutionMode { get; private set; }
+
         #endregion
     }
+
     public enum ExecutionModeEnum
     {
         Asynchronous,
         Synchronous
     }
+
     public enum ImageTypeEnum
     {
         PreImage = 0,
         PostImage = 1,
         Both = 2
     }
+
     public enum IsolationModeEnum
     {
         None = 0,
         Sandbox = 1
     }
+
     public enum MessageNameEnum
     {
         AddItem,
@@ -192,11 +225,13 @@ namespace $rootnamespace$
         ValidateRecurrenceRule,
         Win
     }
+
     public enum PluginStepOperationEnum
     {
         Delete = 0,
         Deactivate = 1,
     }
+
     public enum StageEnum
     {
         PreValidation = 10,

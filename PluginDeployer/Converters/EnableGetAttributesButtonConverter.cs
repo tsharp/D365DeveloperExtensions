@@ -1,5 +1,4 @@
-﻿using PluginDeployer.ViewModels;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -16,20 +15,12 @@ namespace PluginDeployer.Converters
             if (!isConnected)
                 return false;
 
-            //CrmAssembly
-            CrmAssembly crmAssembly = null;
-            if (values[1] != null)
-                crmAssembly = (CrmAssembly)values[1];
-
             //DeploymentType
-            bool hasDeploymentType = Int32.TryParse(values[2]?.ToString(), out int deploymentType);
+            bool hasDeploymentType = Int32.TryParse(values[1]?.ToString(), out int deploymentType);
             if (!hasDeploymentType)
                 return false;
 
-            if (deploymentType == 0)
-                return false;
-
-            return crmAssembly != null && crmAssembly.AssemblyId != Guid.Empty;
+            return deploymentType != 0;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

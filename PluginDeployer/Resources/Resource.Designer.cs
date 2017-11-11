@@ -61,11 +61,20 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Assembly.
+        ///   Looks up a localized string similar to Add Registration.
         /// </summary>
-        public static string AssemblyLabel_Label_Content {
+        public static string AddRegistration_Button_Content {
             get {
-                return ResourceManager.GetString("AssemblyLabel_Label_Content", resourceCulture);
+                return ResourceManager.GetString("AddRegistration_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Spkl registration attributes.
+        /// </summary>
+        public static string AddRegistration_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("AddRegistration_Button_ToolTip", resourceCulture);
             }
         }
         
@@ -147,24 +156,6 @@ namespace PluginDeployer.Resources {
         public static string SolutionLabel_Label_Content {
             get {
                 return ResourceManager.GetString("SolutionLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Spkl.
-        /// </summary>
-        public static string SpklInstrument_Button_Content {
-            get {
-                return ResourceManager.GetString("SpklInstrument_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Spkl deployment attributes.
-        /// </summary>
-        public static string SpklInstrument_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("SpklInstrument_Button_ToolTip", resourceCulture);
             }
         }
         

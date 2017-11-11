@@ -28,12 +28,12 @@ namespace PluginDeployer.Spkl.Tasks
         public string Prefix { get; set; }
         public string Solution { get; set; }
 
-        protected virtual void ExecuteInternal(string folder, OrganizationServiceContext ctx, bool backupFiles)
+        protected virtual void ExecuteInternal(string folder, OrganizationServiceContext ctx, bool backupFiles, string customClassRegex)
         {
 
         }
         
-        public void Execute(string folder, bool backupFiles)
+        public void Execute(string folder, bool backupFiles, string customClassRegex)
         {
             if (_context == null)
             {
@@ -41,12 +41,12 @@ namespace PluginDeployer.Spkl.Tasks
                 {
                     _context = ctx;
                     ctx.MergeOption = MergeOption.NoTracking;
-                    ExecuteInternal(folder, ctx, backupFiles);
+                    ExecuteInternal(folder, ctx, backupFiles, customClassRegex);
                 }
             }
             else
             {
-                ExecuteInternal(folder, _context, backupFiles);
+                ExecuteInternal(folder, _context, backupFiles, customClassRegex);
             }
         }
     }

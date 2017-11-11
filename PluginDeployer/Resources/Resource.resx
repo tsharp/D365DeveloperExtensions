@@ -138,20 +138,17 @@
   <data name="IlMerge_Button_ToolTip" xml:space="preserve">
     <value>Toggle ILMerging Referenced Assemblies</value>
   </data>
-  <data name="SpklInstrument_Button_Content" xml:space="preserve">
-    <value>Add Spkl</value>
+  <data name="AddRegistration_Button_Content" xml:space="preserve">
+    <value>Add Registration</value>
   </data>
-  <data name="SpklInstrument_Button_ToolTip" xml:space="preserve">
-    <value>Add Spkl deployment attributes</value>
+  <data name="AddRegistration_Button_ToolTip" xml:space="preserve">
+    <value>Add Spkl registration attributes</value>
   </data>
   <data name="RegistrationTool_Button_Content" xml:space="preserve">
     <value>Registration Tool</value>
   </data>
   <data name="RegistrationTool_Button_ToolTip" xml:space="preserve">
     <value>Launch Plug-in Registrion Tool</value>
-  </data>
-  <data name="AssemblyLabel_Label_Content" xml:space="preserve">
-    <value>CRM/365 Assembly</value>
   </data>
   <data name="SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>

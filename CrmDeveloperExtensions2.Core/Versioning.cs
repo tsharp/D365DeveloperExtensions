@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using EnvDTE;
-using NLog;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -15,6 +11,7 @@ namespace CrmDeveloperExtensions2.Core
                 return new Version(0, 0, 0, 0);
 
             string cleanVersion = Regex.Replace(version, "[^0-9.]", String.Empty);
+
             return Version.Parse(cleanVersion);
         }
 

@@ -87,6 +87,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 OnPropertyChanged();
             }
         }
+        public ToolWindow ToolWindow;
 
         public event EventHandler<ConnectEventArgs> Connected;
         public event EventHandler SolutionOpened;
@@ -160,8 +161,17 @@ namespace CrmDeveloperExtensions2.Core.Connection
             if (!HostWindow.IsCrmDevExWindow(gotFocus))
                 return;
 
+            ToolWindow = HostWindow.GetCrmDevExWindow(_dte.ActiveWindow);
+
             if (Projects == null || Projects.Count == 0)
+            {
                 GetProjectsForList();
+                SolutionProjectsList.SelectionChanged += SolutionProjectsList_OnSelectionChanged;
+
+                SetConfigFile();
+
+                GetProfiles();
+            }
 
             if (!_projectEventsRegistered)
             {
@@ -234,7 +244,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SolutionEventsOnProjectRemoved(Project project)
         {
             Projects.Remove(Projects.FirstOrDefault(p => p.Project == project));
-            Profiles = new List<string>();
 
             OnSolutionProjectRemoved(new SolutionProjectRemovedEventArgs
             {
@@ -275,6 +284,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             ResetForm();
             ClearConnection();
+            ToolWindow = null;
+
+            SolutionProjectsList.SelectionChanged -= SolutionProjectsList_OnSelectionChanged;
 
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
         }
@@ -348,6 +360,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 PostMoveProjectItem = postMoveProjectItem
             });
         }
+
         private void GetProjectsForList()
         {
             Projects = new ObservableCollection<ProjectListItem>();
@@ -361,9 +374,11 @@ namespace CrmDeveloperExtensions2.Core.Connection
                     Name = project.Name
                 });
             }
-           
-            if (Projects.Any())
+
+            if (Projects.Any()) {
                 SolutionProjectsList.SelectedIndex = 0;
+                SelectedProject = ((ProjectListItem) SolutionProjectsList.SelectedItem).Project;
+            }
         }
 
         private void Connect_OnClick(object sender, RoutedEventArgs e)
@@ -436,7 +451,12 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             ComboBox solutionProjectsList = (ComboBox)sender;
             if (solutionProjectsList.SelectedItem == null)
-                return;
+            {
+                if (Projects.Count > 0)
+                    solutionProjectsList.SelectedItem = Projects[0];
+                else
+                    return;
+            }
 
             SelectedProject = ((ProjectListItem)solutionProjectsList.SelectedItem).Project;
 
@@ -456,6 +476,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void ResetForm()
         {
             Projects = new ObservableCollection<ProjectListItem>();
+            Profiles = new List<string>();
+            SelectedProject = null;
+            SelectedProfile = null;
         }
 
         private void ClearConnection()
@@ -464,9 +487,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
             IsConnected = false;
             CrmService?.Dispose();
             CrmService = null;
-            Projects = null;
-            Profiles = null;
-            SelectedProject = null;
         }
 
         private void AutoLogin_Checked(object sender, RoutedEventArgs e)
@@ -482,8 +502,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void GetProfiles()
         {
-            ToolWindow toolWindow = HostWindow.GetCrmDevExWindow(_dte.ActiveWindow);
-            Profiles = Config.Profiles.GetProfiles(ProjectWorker.GetProjectPath(SelectedProject), toolWindow.Type);
+            Profiles = new List<string>();
+            Profiles = Config.Profiles.GetProfiles(ProjectWorker.GetProjectPath(SelectedProject), ToolWindow.Type);
             if (Profiles == null || Profiles.Count == 0)
             {
                 ProfileList.IsEnabled = false;

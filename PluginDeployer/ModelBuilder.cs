@@ -52,7 +52,7 @@ namespace PluginDeployer
                 {
                     AssemblyId = assembly.Id,
                     Name = assembly.GetAttributeValue<string>("name"),
-                    Version = Version.Parse(assembly.GetAttributeValue<string>("version")),
+                    Version = assembly.GetAttributeValue<string>("version"),
                     DisplayName = assembly.GetAttributeValue<string>("name") + " (" + assembly.GetAttributeValue<string>("version") + ")",
                     SolutionId = ((EntityReference)assembly.GetAttributeValue<AliasedValue>("solutioncomponent.solutionid").Value).Id
                 };
@@ -67,7 +67,7 @@ namespace PluginDeployer
             {
                 AssemblyId = Guid.Empty,
                 Name = string.Empty,
-                Version = new Version(),
+                Version = string.Empty,
                 DisplayName = String.Empty
             });
 
