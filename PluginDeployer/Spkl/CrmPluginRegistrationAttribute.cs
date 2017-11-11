@@ -1,15 +1,17 @@
-﻿#if !SCRIPTSHARP
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PluginDeployer.Spkl {
+
+namespace PluginDeployer.Spkl
+{
     [Serializable]
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class CrmPluginRegistrationAttribute : Attribute
     {
+
         public CrmPluginRegistrationAttribute(
             string message,
             string entityLogicalName,
@@ -19,6 +21,7 @@ namespace PluginDeployer.Spkl {
             string stepName,
             int executionOrder,
             IsolationModeEnum isolationModel
+
         )
         {
             Message = message;
@@ -31,6 +34,8 @@ namespace PluginDeployer.Spkl {
             IsolationMode = isolationModel;
             Offline = false;
             Server = true;
+
+
         }
 
         /// <summary>
@@ -53,10 +58,10 @@ namespace PluginDeployer.Spkl {
             string stepName,
             int executionOrder,
             IsolationModeEnum isolationModel
-        ) : this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName, executionOrder, isolationModel)
-        {
 
-        }
+        ) : this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName,
+            executionOrder, isolationModel)
+        { }
 
         /// <summary>
         /// Create workflow activity registration
@@ -80,7 +85,9 @@ namespace PluginDeployer.Spkl {
             IsolationMode = isolationModel;
 
         }
+
         #region Named Properties
+
         public string Id { get; set; }
         public string FriendlyName { get; set; }
         public string GroupName { get; set; }
@@ -97,9 +104,11 @@ namespace PluginDeployer.Spkl {
         public ImageTypeEnum Image1Type { get; set; }
         public ImageTypeEnum Image2Type { get; set; }
         public PluginStepOperationEnum? Action { get; set; }
+
         #endregion
 
         #region Constructor Mandatory Properties
+
         public IsolationModeEnum IsolationMode { get; private set; }
         public string Message { get; private set; }
         public string EntityLogicalName { get; private set; }
@@ -108,24 +117,29 @@ namespace PluginDeployer.Spkl {
         public int ExecutionOrder { get; private set; }
         public StageEnum? Stage { get; private set; }
         public ExecutionModeEnum ExecutionMode { get; private set; }
+
         #endregion
     }
+
     public enum ExecutionModeEnum
     {
         Asynchronous,
         Synchronous
     }
+
     public enum ImageTypeEnum
     {
         PreImage = 0,
         PostImage = 1,
         Both = 2
     }
+
     public enum IsolationModeEnum
     {
         None = 0,
         Sandbox = 1
     }
+
     public enum MessageNameEnum
     {
         AddItem,
@@ -217,17 +231,17 @@ namespace PluginDeployer.Spkl {
         ValidateRecurrenceRule,
         Win
     }
+
     public enum PluginStepOperationEnum
     {
         Delete = 0,
         Deactivate = 1,
     }
+
     public enum StageEnum
     {
-        PreValidation= 10,
+        PreValidation = 10,
         PreOperation = 20,
-        PostOperation =40
+        PostOperation = 40
     }
-
-#endif
 }

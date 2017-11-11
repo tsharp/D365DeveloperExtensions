@@ -14,7 +14,7 @@ namespace PluginDeployer.Spkl
         #region Private Fields
         private string _filePath;
         private string _code;
-        private Dictionary<string, Match> _pluginClasses;
+        private Dictionary<string,Match> _pluginClasses;
         private Dictionary<string, Match> _pluginTypes;
         private Dictionary<string, Match> _workflowTypes;
         private Dictionary<string, string> _namespaces = new Dictionary<string, string>();
@@ -22,15 +22,16 @@ namespace PluginDeployer.Spkl
 
         #region Private Constants
         private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
-        private const string _attributeRegex = @"[\r\n][\r\n]([ ]*?)#region[\s\S]*([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n)).+?(?:#endregion)";
+        //private const string _attributeRegex = @"[\r\n][\r\n]([ ]*?)#region[\s\S]*([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n)).+?(?:#endregion)";
+        private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion
 
         #region Constructors
-        public CodeParser(Uri filePath) : this(filePath, null)
+        public CodeParser(Uri filePath) : this(filePath, null) 
         {
         }
-        public CodeParser(Uri filePath, string customClassRegex)
+        public CodeParser(Uri filePath, string customClassRegex) 
         {
             _filePath = filePath.OriginalString;
             _code = File.ReadAllText(_filePath);
@@ -40,7 +41,7 @@ namespace PluginDeployer.Spkl
             Init();
         }
         public CodeParser(string code) : this(code, null)
-        {
+        {  
         }
         public CodeParser(string code, string customClassRegex)
         {
@@ -133,14 +134,14 @@ namespace PluginDeployer.Spkl
             MatchEvaluator evaluator = delegate (Match match)
             {
                 count++;
-                return "";
+                return "" ;
             };
-
+            
             _code = Regex.Replace(_code, _attributeRegex, evaluator);
             return count;
         }
 
-
+       
 
         public void AddAttribute(CrmPluginRegistrationAttribute attribute, string className)
         {
@@ -148,7 +149,9 @@ namespace PluginDeployer.Spkl
             var classLocation = _pluginClasses.ContainsKey(className) ? _pluginClasses[className] : null;
             if (classLocation == null)
                 throw new Exception(String.Format("Cannot find class {0}", className));
+
             var pos = _code.IndexOf(classLocation.Value);
+
             // Find previouse line break
             var lineBreak = _code.LastIndexOf("\r\n", pos - 1);
 
@@ -160,6 +163,7 @@ namespace PluginDeployer.Spkl
 
             // Insert   
             _code = _code.Insert(lineBreak, attributeCode);
+
         }
         #endregion
     }

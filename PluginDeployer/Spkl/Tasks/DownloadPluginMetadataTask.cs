@@ -17,9 +17,9 @@ namespace PluginDeployer.Spkl.Tasks
         {
         }
 
-        protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx, bool backupFiles)
+        protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx, bool backupFiles, string customClassRegex)
         {
-            _trace.WriteLine("Searching for plugin classes in '{0}'", filePath);
+            _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
             var matches = DirectoryEx.Search(filePath, "*.cs", null);
 
@@ -33,8 +33,8 @@ namespace PluginDeployer.Spkl.Tasks
             {
                 try
                 {
-                    // Find if it contains any IPlugin files
-                    CodeParser parser = new CodeParser(new Uri(codeFile));
+                    // Find if it contains any plugin/workflow classes
+                    CodeParser parser = new CodeParser(new Uri(codeFile), customClassRegex);
 
                     if (parser.PluginCount > 0)
                     {
@@ -57,7 +57,7 @@ namespace PluginDeployer.Spkl.Tasks
                             }
                             else
                             {
-                                _trace.WriteLine("Cannot find Plugin Type Registration {0}", pluginType);
+                                _trace.WriteLine("Cannot find Type Registration {0}", pluginType);
                             }
                         }
                         // Update 
@@ -71,7 +71,7 @@ namespace PluginDeployer.Spkl.Tasks
                     throw new Exception(ex.LoaderExceptions.First().Message);
                 }
             }
-            _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
+            _trace.WriteLine("{0} classes decorated with deployment attributes!", codeFilesUpdated);
         }
 
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
@@ -109,7 +109,7 @@ namespace PluginDeployer.Spkl.Tasks
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
             if (duplicateNames.Count() > 0)
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}", pluginType, string.Join(",", duplicateNames.Select(a => a.Name))));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}",pluginType,string.Join(",",duplicateNames.Select(a=>a.Name))));
             }
 
             if (steps != null)
@@ -120,7 +120,7 @@ namespace PluginDeployer.Spkl.Tasks
                 {
                     SdkMessageFilter filter = null;
                     // If there is an entity filter then get it
-                    if (step.SdkMessageFilterId != null)
+                    if (step.SdkMessageFilterId!=null)
                     {
                         filter = ctx.GetMessageFilter(step.SdkMessageFilterId.Id);
                     }
@@ -136,13 +136,13 @@ namespace PluginDeployer.Spkl.Tasks
                     // we output the ID so that we can be independant of name - but it's not neededed for new attributes
                     CrmPluginRegistrationAttribute attribute = new CrmPluginRegistrationAttribute(
                         step.sdkmessageid_sdkmessageprocessingstep.Name,
-                        filter == null ? "none" : filter.PrimaryObjectTypeCode,
+                        filter==null ? "none" : filter.PrimaryObjectTypeCode,
                         (StageEnum)Enum.ToObject(typeof(StageEnum), step.Stage.Value),
                         step.Mode.Value == 0 ? ExecutionModeEnum.Synchronous : ExecutionModeEnum.Asynchronous,
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2 
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     { Id = step.Id.ToString() };
@@ -166,6 +166,9 @@ namespace PluginDeployer.Spkl.Tasks
                     // Add config
                     if (step.Configuration != null)
                         attribute.UnSecureConfiguration = step.Configuration;
+
+                    if (step.Description != null)
+                        attribute.Description = step.Description;
 
                     // Add attribute to code
                     parser.AddAttribute(attribute, step.plugintypeid_sdkmessageprocessingstep.TypeName);

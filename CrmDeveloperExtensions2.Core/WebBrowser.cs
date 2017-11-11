@@ -14,7 +14,7 @@ namespace CrmDeveloperExtensions2.Core
             bool useInternalBrowser = UserOptionsGrid.GetUseInternalBrowser(dte);
 
             Uri crmUri = GetBaseCrmUrlFomClient(client);
-           
+
             Uri url = new Uri(crmUri, contentUrl);
 
             if (useInternalBrowser) //Internal VS browser
@@ -31,6 +31,16 @@ namespace CrmDeveloperExtensions2.Core
             Uri crmUri = new Uri(endpoint.First().Value);
 
             return crmUri;
+        }
+
+        public static void OpenUrl(DTE dte, string contentUrl)
+        {
+            bool useInternalBrowser = UserOptionsGrid.GetUseInternalBrowser(dte);
+
+            if (useInternalBrowser) //Internal VS browser
+                dte.ItemOperations.Navigate(contentUrl);
+            else //User's default browser
+                System.Diagnostics.Process.Start(contentUrl);
         }
     }
 }

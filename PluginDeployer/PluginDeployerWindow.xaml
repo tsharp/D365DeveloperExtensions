@@ -8,6 +8,8 @@
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
              xmlns:converters="clr-namespace:PluginDeployer.Converters"
              xmlns:resources="clr-namespace:PluginDeployer.Resources"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
@@ -18,7 +20,6 @@
                 <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
-            <converters:EnablePublishConverter x:Key="EnablePublishConverter"/>
             <converters:EnableGetAttributesButtonConverter x:Key="EnableGetAttributesButtonConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -34,25 +35,17 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
                 <Button x:Name="Publish" Click="Publish_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
                         Content="{Binding Source={x:Static resources:Resource.Publish_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                        ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}">
-                    <Button.IsEnabled>
-                        <MultiBinding Converter="{StaticResource EnablePublishConverter}">
-                            <Binding ElementName="ConnPane" Path="IsConnected" Mode="TwoWay"/>
-                            <Binding ElementName="CrmAssemblyList" Path="SelectedValue" Mode="OneWay"/>
-                            <Binding ElementName="DeploymentType" Path="SelectedValue" Mode="OneWay"/>
-                        </MultiBinding>
-                    </Button.IsEnabled>
+                        ToolTip="{x:Static resources:Resource.Publish_Button_ToolTip}" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}">
                 </Button>
                 <Button x:Name="IlMerge" Click="IlMerge_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
                     Content="{Binding Source={x:Static resources:Resource.IlMerge_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.IlMerge_Button_ToolTip}" />
-                <Button x:Name="SpklInstrument" Click="SpklInstrument_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
-                        Content="{Binding Source={x:Static resources:Resource.SpklInstrument_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                        ToolTip="{x:Static resources:Resource.SpklInstrument_Button_ToolTip}">
+                <Button x:Name="AddRegistration" Click="AddRegistration_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
+                        Content="{Binding Source={x:Static resources:Resource.AddRegistration_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        ToolTip="{x:Static resources:Resource.AddRegistration_Button_ToolTip}">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource EnableGetAttributesButtonConverter}">
                             <Binding ElementName="ConnPane" Path="IsConnected" Mode="TwoWay"/>
-                            <Binding ElementName="CrmAssemblyList" Path="SelectedValue" Mode="OneWay"/>
                             <Binding ElementName="DeploymentType" Path="SelectedValue" Mode="OneWay"/>
                         </MultiBinding>
                     </Button.IsEnabled>
@@ -82,18 +75,25 @@
                            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
                     <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
                            Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
-                    <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" DisplayMemberPath="Name" Width="350"
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                        <ComboBox x:Name="SolutionList" Margin="5,5,0,0" DisplayMemberPath="Name" Width="350"
                                   Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
-                    <Label x:Name="CrmAssemblyListLabel" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="{x:Static resources:Resource.AssemblyLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=CrmAssemblyList}" />
-                    <ComboBox x:Name="CrmAssemblyList" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" DisplayMemberPath="DisplayName" Template="{DynamicResource ComboBoxControlTemplate}"
-                              Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" ItemsSource="{Binding CrmSolutions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button x:Name="OpenInCrm" VerticalAlignment="Bottom" Click="OpenInCrm_Click" Style="{DynamicResource ImageButtonStyle}" 
+                                IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Margin="2,0,0,0">
+                            <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.Open}" ToolTip="Open in CRM" />
+                        </Button>
+                    </StackPanel>
                     <Label x:Name="DeploymentTypeLabel" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
                            Content="Deployment Type" IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}"/>
-                    <ComboBox x:Name="DeploymentType" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
+                    <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                        <ComboBox x:Name="DeploymentType" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
                               SelectedValuePath="Value"  Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
+                        <Button x:Name="SpklHelp" VerticalAlignment="Bottom" Click="SpklHelp_Click" Style="{DynamicResource ImageButtonStyle}" Margin="2,0,0,0">
+                            <imaging:CrispImage x:Name="SpklHelpImage" Moniker="{x:Static catalog:KnownMonikers.StatusHelp}" ToolTip="Spkl on GitHub" />
+                        </Button>
+                    </StackPanel>
                     <Label x:Name="BackupFilesLabel" Grid.Column="0" Grid.Row="4" Content="Backup Files?" IsEnabled="{Binding IsEnabled, ElementName=SpklInstrument}"/>
-                    <CheckBox x:Name="BackupFiles" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" IsEnabled="{Binding IsEnabled, ElementName=SpklInstrument}" IsThreeState="False" />
+                    <CheckBox x:Name="BackupFiles" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" IsEnabled="{Binding IsEnabled, ElementName=AddRegistration}" IsThreeState="False" />
                 </Grid>
                 <coreControls:LockOverlay x:Name="Overlay" />
             </Grid>

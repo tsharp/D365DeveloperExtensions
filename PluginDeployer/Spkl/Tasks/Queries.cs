@@ -26,7 +26,9 @@ namespace PluginDeployer.Spkl.Tasks
                         Rank = s.Rank,
                         Stage = s.Stage,
                         SdkMessageFilterId = s.SdkMessageFilterId,
-                        sdkmessageid_sdkmessageprocessingstep = new SdkMessage
+                        Configuration = s.Configuration,
+                        Description = s.Description,
+                        sdkmessageid_sdkmessageprocessingstep =  new SdkMessage
                         {
                             SdkMessageId = m.SdkMessageId,
                             Name = m.Name
@@ -44,7 +46,7 @@ namespace PluginDeployer.Spkl.Tasks
             ).ToList();
         }
 
-        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx, Guid MessageFilterId)
+        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx,Guid MessageFilterId)
         {
             return (from f in ctx.CreateQuery<SdkMessageFilter>()
                     where f.SdkMessageFilterId == MessageFilterId
@@ -86,7 +88,8 @@ namespace PluginDeployer.Spkl.Tasks
                                       ImageType = i.ImageType, //0 : PreImage 1 : PostImage 2 : Both
                                       Attributes1 = i.Attributes1,
                                       EntityAlias = i.EntityAlias,
-                                      SdkMessageProcessingStepId = i.SdkMessageProcessingStepId
+                                      SdkMessageProcessingStepId = i.SdkMessageProcessingStepId,
+                                      Description = i.Description
                                   }).ToArray();
             return existingImages;
         }
@@ -102,7 +105,7 @@ namespace PluginDeployer.Spkl.Tasks
                    }).FirstOrDefault();
         }
 
-        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx, string entityLogicalName, string messageName)
+        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx,string entityLogicalName, string messageName)
         {
             // Get the message and message filter
             return (from m in ctx.CreateQuery<SdkMessageFilter>()
@@ -114,12 +117,12 @@ namespace PluginDeployer.Spkl.Tasks
                     {
                         SdkMessageFilterId = m.SdkMessageFilterId,
                         SdkMessageId = m.SdkMessageId
-
+                       
 
                     }).FirstOrDefault();
         }
 
-        public static List<PluginType> GetPluginTypes(this OrganizationServiceContext ctx, PluginAssembly plugin)
+        public static List<PluginType> GetPluginTypes(this OrganizationServiceContext ctx,PluginAssembly plugin)
         {
             // Get existing types
             return (from t in ctx.CreateQuery<PluginType>()

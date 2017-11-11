@@ -16,6 +16,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem ReplaceParameters="true">spkl.json</ProjectItem>
+    <ProjectItem ReplaceParameters="true" OpenInEditor="false">spkl.json</ProjectItem>
   </TemplateContent>
 </VSTemplate>
