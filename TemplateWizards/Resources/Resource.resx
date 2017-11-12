@@ -174,9 +174,6 @@
   <data name="SdkVersionPickerOKTooltipText" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="SdkVersionPickerTitle" xml:space="preserve">
-    <value>Crm DevEx</value>
-  </data>
   <data name="TestProjectPickerCreateProjectButtonText" xml:space="preserve">
     <value>Create Project</value>
   </data>

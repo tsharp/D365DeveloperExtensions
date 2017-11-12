@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace CSharpTestProject
+namespace $safeprojectname$
 {
     [TestClass]
-    public class UnitTest1
+    public class $safeitemname$
     {
         #region Test Initialization and Cleanup
         // Use ClassInitialize to run code before running the first test in the class

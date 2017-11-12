@@ -1,5 +1,4 @@
 ﻿using CrmDeveloperExtensions2.Core.Models;
-using Microsoft.VisualStudio.PlatformUI;
 using NuGetRetriever;
 using System.Collections.Generic;
 using System.Windows;
@@ -9,7 +8,7 @@ using TemplateWizards.Resources;
 
 namespace TemplateWizards
 {
-    public partial class SdkVersionPicker : DialogWindow
+    public partial class SdkVersionPicker
     {
         public string CoreVersion { get; set; }
         public string WorkflowVersion { get; set; }
@@ -32,6 +31,8 @@ namespace TemplateWizards
 
         private void GetPackage(string nuGetPackage)
         {
+            Title = $"Choose Version:  {nuGetPackage}";
+
             List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
 
             SdkVersionsGrid.Columns[0].Header = nuGetPackage;
@@ -47,9 +48,12 @@ namespace TemplateWizards
                 SdkVersions.Items.Add(item);
             }
 
-            //TODO: need to ensure a default value is picked after loading the package list
-            //string selectedVersion = ((ListViewItem)SdkVersions.SelectedItem).Content.ToString();
-            //SetSelectedVersion(selectedVersion);
+            if (SdkVersions.Items.Count <= 0)
+                return;
+
+            ((ListViewItem)SdkVersions.Items[0]).IsSelected = true;
+            string selectedVersion = ((ListViewItem)SdkVersions.Items[0]).Content.ToString();
+            SetSelectedVersion(selectedVersion);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

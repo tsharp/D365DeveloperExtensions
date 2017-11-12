@@ -8,7 +8,6 @@ using NuGet.VisualStudio;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
 using System.Windows;
 using System.Xml;
 
@@ -18,7 +17,6 @@ namespace TemplateWizards
     {
         private DTE _dte;
         private string _coreVersion;
-        private string _workflowVersion;
         private string _clientVersion;
         private string _clientPackage;
         private string _crmProjectType = "Plug-in";
@@ -26,7 +24,6 @@ namespace TemplateWizards
         private bool _needsWorkflow;
         private bool _needsClient;
         private bool _isUnitTest;
-        private bool _isUnitTestItem;
         private bool _signAssembly;
         private string _destDirectory;
         private string _unitTestFrameworkPackage;
@@ -37,7 +34,7 @@ namespace TemplateWizards
             {
                 _dte = (DTE)automationObject;
 
-                replacementsDictionary.Add("$referenceproject$", "False");
+                ProjectDataHandler.AddOrUpdateReplacements("$referenceproject$", "False", ref replacementsDictionary);
                 if (replacementsDictionary.ContainsKey("$destinationdirectory$"))
                     _destDirectory = replacementsDictionary["$destinationdirectory$"];
 
@@ -48,15 +45,10 @@ namespace TemplateWizards
                 }
 
                 if (_isUnitTest)
-                {
                     PreHandleUnitTestProjects(replacementsDictionary);
-                    return;
-                }
 
                 if (_needsCore)
-                {
                     PreHandleCrmAssemblyProjects(replacementsDictionary);
-                }
             }
             catch (WizardBackoutException)
             {
@@ -85,22 +77,17 @@ namespace TemplateWizards
         {
             var sdkVersionPicker = new SdkVersionPicker(_needsWorkflow, _needsClient);
             bool? result = sdkVersionPicker.ShowModal();
-
             if (!result.HasValue || result.Value == false)
-            {
-                //TODO: test this
                 throw new WizardBackoutException();
-            }
 
             _coreVersion = sdkVersionPicker.CoreVersion;
-            _workflowVersion = sdkVersionPicker.WorkflowVersion;
             _clientVersion = sdkVersionPicker.ClientVersion;
             _clientPackage = sdkVersionPicker.ClientPackage;
 
             if (!string.IsNullOrEmpty(_clientVersion))
             {
-                replacementsDictionary.Add("$useXrmToolingClientUsing$",
-                    Versioning.StringToVersion(_clientVersion).Major >= 8 ? "1" : "0");
+                ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
+                    Versioning.StringToVersion(_clientVersion).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
         }
 
@@ -108,10 +95,11 @@ namespace TemplateWizards
         {
             var testProjectPicker = new TestProjectPicker();
             bool? result = testProjectPicker.ShowModal();
+            if (!result.HasValue || result.Value == false)
+                throw new WizardBackoutException();
 
             if (testProjectPicker.SelectedProject != null)
             {
-                //TODO: Why am I doing this?
                 Solution solution = _dte.Solution;
                 Project project = testProjectPicker.SelectedProject;
                 string path = string.Empty;
@@ -125,18 +113,18 @@ namespace TemplateWizards
                         path = project.FullName;
                 }
 
-                replacementsDictionary["$referenceproject$"] = "True";
-                replacementsDictionary.Add("$projectPath$", path);
-                replacementsDictionary.Add("$projectId$", project.Kind);
-                replacementsDictionary.Add("$projectName$", project.Name);
+                ProjectDataHandler.AddOrUpdateReplacements("$referenceproject$", "True", ref replacementsDictionary);
+                ProjectDataHandler.AddOrUpdateReplacements("$projectPath$", path, ref replacementsDictionary);
+                ProjectDataHandler.AddOrUpdateReplacements("$projectId$", project.Kind, ref replacementsDictionary);
+                ProjectDataHandler.AddOrUpdateReplacements("$projectName$", project.Name, ref replacementsDictionary);
             }
 
             if (testProjectPicker.SelectedUnitTestFramework != null)
             {
                 _unitTestFrameworkPackage = testProjectPicker.SelectedUnitTestFramework.NugetName;
 
-                replacementsDictionary.Add("$useXrmToolingClientUsing$",
-                    testProjectPicker.SelectedUnitTestFramework.CrmMajorVersion >= 8 ? "1" : "0");
+                ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
+                    testProjectPicker.SelectedUnitTestFramework.CrmMajorVersion >= 8 ? "1" : "0", ref replacementsDictionary);
             }
             else
             {
@@ -144,8 +132,8 @@ namespace TemplateWizards
                     return;
 
                 string version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
-                replacementsDictionary.Add("$useXrmToolingClientUsing$",
-                    Versioning.StringToVersion(version).Major >= 8 ? "1" : "0");
+                ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
+                    Versioning.StringToVersion(version).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
         }
 
@@ -193,6 +181,9 @@ namespace TemplateWizards
                     PostHandleSolutionPackagerProject(project);
                     break;
             }
+
+            if (_isUnitTest)
+                PostHandleUnitTestProjects(project, installer);
         }
 
         private void PostHandleSolutionPackagerProject(Project project)
@@ -206,6 +197,7 @@ namespace TemplateWizards
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
 
             //Add the default "_Solutions" folder
+            //TODO: make this a user setting
             project.ProjectItems.AddFolder("_Solutions");
         }
 
@@ -237,13 +229,12 @@ namespace TemplateWizards
                     project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
 
                 //Install all the NuGet packages
-                project = (Project)((Array)(_dte.ActiveSolutionProjects)).GetValue(0);
+                project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
                 NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
                 if (_needsWorkflow)
                     NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
                 if (_needsClient)
                     NuGetProcessor.InstallPackage(_dte, installer, project, _clientPackage, _clientVersion);
-
 
                 ProjectWorker.ExcludeFolder(project, "bin");
                 ProjectWorker.ExcludeFolder(project, "performance");
@@ -288,9 +279,6 @@ namespace TemplateWizards
                                     break;
                                 case "IsUnitTest":
                                     _isUnitTest = bool.Parse(reader.Value);
-                                    break;
-                                case "IsUnitTestItem":
-                                    _isUnitTestItem = bool.Parse(reader.Value);
                                     break;
                                 case "SignAssembly":
                                     _signAssembly = bool.Parse(reader.Value);

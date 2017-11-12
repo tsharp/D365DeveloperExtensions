@@ -62,7 +62,7 @@
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.png" />
+    <None Include="icon.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

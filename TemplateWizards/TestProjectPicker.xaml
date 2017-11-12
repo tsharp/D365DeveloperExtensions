@@ -27,19 +27,15 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label x:Name="ProjectToTestLabel" Grid.Column="0" Grid.Row="0" Margin="0,2,0,2" Content="{x:Static resx:Resource.TestProjectPickerProjectToTestLabel}" />
-        <ComboBox x:Name="ProjectToTest" Grid.Column="1" Grid.Row="0"  Margin="0,2,0,2" SelectionChanged="ProjectToTest_OnSelectionChanged"
-                  Template="{DynamicResource ComboBoxControlTemplate}">
-            <ComboBoxItem Content="" Tag="" IsSelected="True"/>
-        </ComboBox>
+        <ComboBox x:Name="ProjectToTest" Grid.Column="1" Grid.Row="0"  Margin="0,2,0,2" Template="{DynamicResource ComboBoxControlTemplate}" 
+                  ItemsSource="{Binding Projects, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
         <Label x:Name="UnitTestFrameWorkLabel" Grid.Column="0" Grid.Row="1" Content="{x:Static resx:Resource.TestProjectPickerUnitTestFrameworkLabel}" />
-        <ComboBox x:Name="UnitTestFramework" Grid.Column="1" Grid.Row="1" SelectionChanged="UnitTestFramework_OnSelectionChanged" 
-                  Template="{DynamicResource ComboBoxControlTemplate}">
-            <ComboBoxItem Content="" Tag="" IsSelected="True"/>
-        </ComboBox>
+        <ComboBox x:Name="UnitTestFramework" Grid.Column="1" Grid.Row="1" SelectionChanged="UnitTestFramework_OnSelectionChanged" DisplayMemberPath="Name"
+                  Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding MockingFrameworks, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
             <Button x:Name="CreateProject" Content="Create Project" Margin="0,5,10,0" MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" 
-                    Click="CreateProject_OnClick" ToolTip="{x:Static resx:Resource.TestProjectPickerCreateProjectTooltipText}" Height="23"/>
-            <Button x:Name="Cancel" Content="Cancel" Margin="0,5,10,0" MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" Height="23"/>
+                    Click="CreateProject_OnClick" ToolTip="{x:Static resx:Resource.TestProjectPickerCreateProjectTooltipText}" Height="23" IsEnabled="False"/>
+            <Button x:Name="Cancel" Content="Cancel" Margin="0,5,10,0" MinWidth="70" Click="Cancel_Click" Template="{DynamicResource FormButtonControlTemplate}" Height="23"/>
         </StackPanel>
     </Grid>
 </platformUi:DialogWindow>

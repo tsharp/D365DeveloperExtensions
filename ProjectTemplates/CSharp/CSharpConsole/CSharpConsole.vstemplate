@@ -2,7 +2,10 @@
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
     <Name>CRM/365 Console Application Project</Name>
-    <Description>Dynamics CRM/365 Console Application Project</Description>
+    <Description>
+      Dynamics CRM/365 Console Application Project
+      If connecting to D365 Online - use .NET Framework v4.6.2+
+    </Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>

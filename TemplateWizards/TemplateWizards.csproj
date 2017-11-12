@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Enums\PackageValue.cs" />
     <Compile Include="NuGetProcessor.cs" />
+    <Compile Include="ProjectDataHandler.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

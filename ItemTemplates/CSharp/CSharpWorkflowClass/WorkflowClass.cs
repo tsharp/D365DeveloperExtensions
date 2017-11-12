@@ -5,7 +5,7 @@ using System.Activities;
 
 namespace $rootnamespace$
 {
-    public class $fileinputname$ : CodeActivity
+    public class $safeitemname$ : CodeActivity
     {
         protected override void Execute(CodeActivityContext executionContext)
         {         

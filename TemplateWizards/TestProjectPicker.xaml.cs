@@ -1,21 +1,57 @@
-﻿using System;
+﻿using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
-using Microsoft.VisualStudio.PlatformUI;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using CrmDeveloperExtensions2.Core.Models;
 
 namespace TemplateWizards
 {
-    public partial class TestProjectPicker : DialogWindow
+    public partial class TestProjectPicker
     {
+        private ObservableCollection<ProjectListItem> _projects;
+        private ObservableCollection<MockingFrameworkListItem> _mockingFrameworks;
+
         public MockingFramework SelectedUnitTestFramework { get; set; }
         public Project SelectedProject { get; set; }
+        public ObservableCollection<ProjectListItem> Projects
+        {
+            get => _projects;
+            set
+            {
+                if (value != null && _projects == value)
+                    return;
+
+                _projects = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<MockingFrameworkListItem> MockingFrameworks
+        {
+            get => _mockingFrameworks;
+            set
+            {
+                if (value != null && _mockingFrameworks == value)
+                    return;
+
+                _mockingFrameworks = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public TestProjectPicker()
         {
             InitializeComponent();
+            DataContext = this;
 
             GetProjects();
             GetMockingFrameworks();
@@ -23,95 +59,81 @@ namespace TemplateWizards
 
         private void CreateProject_OnClick(object sender, RoutedEventArgs e)
         {
-
             DialogResult = true;
             Close();
         }
 
         private void GetMockingFrameworks()
         {
-            List<MockingFramework> mockingFrameworks = MockingFrameworks.Frameworks;
-            foreach (MockingFramework mockingFramework in mockingFrameworks)
+            MockingFrameworks = new ObservableCollection<MockingFrameworkListItem>();
+            UnitTestFramework.SelectedIndex = -1;
+
+            string version = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
+            Version coreVerion = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(version);
+
+            foreach (MockingFramework mockingFramework in CrmDeveloperExtensions2.Core.Models.MockingFrameworks.GetMockingFrameworks())
             {
-                ComboBoxItem item = new ComboBoxItem
+                if (mockingFramework.CrmMajorVersion != coreVerion.Major)
+                    continue;
+
+                MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
                 {
-                    Content = mockingFramework.NugetName,
-                    Tag = mockingFramework
+                    Name = mockingFramework.NugetName,
+                    MockingFramework = mockingFramework
                 };
 
-                UnitTestFramework.Items.Add(item);
+                MockingFrameworks.Add(mockingFrameworkListItem);
             }
         }
 
         private void GetProjects()
         {
+            Projects = new ObservableCollection<ProjectListItem>();
             IList<Project> projects = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjects(true);
 
             foreach (Project project in projects)
             {
-                ComboBoxItem item = new ComboBoxItem
+                ProjectListItem projectListItem = new ProjectListItem
                 {
-                    Content = project.Name,
-                    Tag = project
+                    Name = project.Name,
+                    Project = project
                 };
 
-                ProjectToTest.Items.Add(item);
+                Projects.Add(projectListItem);
             }
+
+            ProjectToTest.SelectionChanged += ProjectToTest_OnSelectionChanged;
+            ProjectToTest.SelectedIndex = 0;
+            SelectedProject = Projects[0].Project;
         }
 
         private void UnitTestFramework_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItem unitTestFramework = UnitTestFramework.SelectedItem as ComboBoxItem;
-            if (unitTestFramework == null)
+            if (UnitTestFramework.SelectedItem == null)
             {
                 SelectedUnitTestFramework = null;
+                CreateProject.IsEnabled = false;
                 return;
             }
 
-            SelectedUnitTestFramework = unitTestFramework.Tag as MockingFramework;
+            SelectedUnitTestFramework = ((MockingFrameworkListItem)UnitTestFramework.SelectedItem).MockingFramework;
+            CreateProject.IsEnabled = true;
         }
 
         private void ProjectToTest_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItem projectToTest = ProjectToTest.SelectedItem as ComboBoxItem;
-            if (projectToTest == null)
+            if (ProjectToTest.SelectedItem == null)
                 return;
 
-            SelectedProject = projectToTest.Tag as Project;
+            SelectedProject = ((ProjectListItem)ProjectToTest.SelectedItem).Project;
 
-            string version = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
-            Version coreVerion = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(version);
-            SetEnabledMockingFrameworks(coreVerion);
+            GetMockingFrameworks();
         }
 
-        private void SetEnabledMockingFrameworks(Version coreVerion)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if (UnitTestFramework == null)
-                return;
-
-            if (coreVerion.Major == 0)
-            {
-                foreach (var item in UnitTestFramework.Items)
-                {
-                    ComboBoxItem frameworkItem = (ComboBoxItem)item;
-                    frameworkItem.IsEnabled = true;
-                }
-
-                return;
-            }
-
-            foreach (var item in UnitTestFramework.Items)
-            {
-                ComboBoxItem frameworkItem = (ComboBoxItem)item;
-                MockingFramework framework = frameworkItem.Tag as MockingFramework;
-                if (framework != null)
-                    frameworkItem.IsEnabled = framework.CrmMajorVersion == coreVerion.Major;
-                else
-                    frameworkItem.IsEnabled = true;
-            }
-
-            if (!((ComboBoxItem)UnitTestFramework.SelectedItem).IsEnabled)
-                UnitTestFramework.SelectedIndex = 0;
+            DialogResult = false;
+            Close();
         }
     }
 }
