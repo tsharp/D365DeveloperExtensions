@@ -213,6 +213,7 @@
     <Compile Include="Models\MovedProjectItem.cs" />
     <Compile Include="Models\NuGetPackage.cs" />
     <Compile Include="Logging\OutputLogger.cs" />
+    <Compile Include="Models\MockingFrameworkListItem.cs" />
     <Compile Include="Models\ProjectListItem.cs" />
     <Compile Include="Models\SpklConfig.cs" />
     <Compile Include="Models\ToolWindow.cs" />

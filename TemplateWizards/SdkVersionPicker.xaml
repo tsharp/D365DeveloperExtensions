@@ -5,9 +5,9 @@
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
                          xmlns:resx="clr-namespace:TemplateWizards.Resources"
-                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static resx:Resource.SdkVersionPickerTitle}"
+                         mc:Ignorable="d" WindowStyle="ToolWindow"
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
-                         Height="315" Width="350">
+                         Height="315" Width="375">
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
