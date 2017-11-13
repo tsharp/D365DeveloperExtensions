@@ -299,13 +299,13 @@ namespace PluginDeployer
                 PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
                 if (pluginDeployConfig == null)
                 {
-                    MessageBox.Show("Missing 'plugins' configuration in spkl.json");
+                    MessageBox.Show($"Missing 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(pluginDeployConfig.assemblypath))
                 {
-                    MessageBox.Show("Missing 'assemblypath' in 'plugins' configuration in spkl.json");
+                    MessageBox.Show($"Missing 'assemblypath' in 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
                     return;
                 }
 
@@ -403,7 +403,7 @@ namespace PluginDeployer
             PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
             if (pluginDeployConfig == null)
             {
-                MessageBox.Show("Missing 'plugins' configuration in spkl.json");
+                MessageBox.Show($"Missing 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
                 return;
             }
 

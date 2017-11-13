@@ -396,5 +396,22 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
             return false;
         }
+
+        public static void AddProjectReference(VSProject vsproject, string referenceName)
+        {
+            try
+            {
+                Reference existingReference = vsproject.References.Find(referenceName);
+                if (existingReference != null)
+                    return;
+
+                vsproject.References.Add(referenceName);
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow(
+                    $"Failed to add refernce {referenceName}: {Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}", MessageType.Error);
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace CrmDeveloperExtensions2.Core.Config
 {
     public static class ConfigFile
     {
-        private static readonly string ConfigFileName = Resources.Resource.ConfigFileName;
+        private static readonly string ConfigFileName = ExtensionConstants.SpklConfigFile;
 
         public static bool ConfigFileExists(string solutionPath)
         {

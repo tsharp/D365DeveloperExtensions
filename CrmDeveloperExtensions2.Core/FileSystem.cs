@@ -138,8 +138,8 @@ namespace CrmDeveloperExtensions2.Core
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(String.Format("Failed to read solution file from disk: {0}{1}{2}{3}{4}",
-                    path, Environment.NewLine, ex.Message, Environment.NewLine, ex.StackTrace), MessageType.Error);
+                OutputLogger.WriteToOutputWindow(
+                    $"Failed to read solution file from disk: {path}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}", MessageType.Error);
 
                 return null;
             }

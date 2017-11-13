@@ -22,7 +22,7 @@ namespace CrmDeveloperExtensions2.Core
         public delegate void ApplySettingsHandler(object sender, EventArgs e); //Applied on save of form -may not be required
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //Need to add entry to CrmDeveloperExtensions2017 - CrmDeveloperExtensions2017Package.cs [ProvideOptionPage]
+        //Need to add entry to CrmDeveloperExtensions2 - CrmDeveloperExtensions2Package.cs [ProvideOptionPage]
 
         [Category("Web Browser Options")]
         [DisplayName("Use internal VS web browser?")]
@@ -77,13 +77,13 @@ namespace CrmDeveloperExtensions2.Core
         //TODO: validate file path format
         [Category("External Tools Options")]
         [DisplayName("Plug-in Registration Tool path")]
-        [Description("Path to latest Plug-in Registration Tool executable")]
+        [Description("Path to the latest Plug-in Registration Tool executable")]
         public string PluginRegistrationToolPath { get; set; } = String.Empty;
 
         //TODO: validate file path format
         [Category("External Tools Options")]
         [DisplayName("Solution Packager Tool path")]
-        [Description("Path to latest Solution Packager executable")]
+        [Description("Path to the latest Solution Packager executable")]
         public string SolutionPackagerToolPath { get; set; } = String.Empty;
 
         //TODO: validate file path format
@@ -92,10 +92,15 @@ namespace CrmDeveloperExtensions2.Core
         [Description("Path to latest CrmSvcUtil executable")]
         public string CrmSvcUtilToolPath { get; set; } = String.Empty;
 
-        [Category("Intellisense Options")]
-        [DisplayName("Use Intellisense?")]
-        [Description("Get metadata from CRM and provide string completion - this will require closing and re-opening any files")]
-        public bool UseIntellisense { get; set; } = false;
+        [Category("Template Options")]
+        [DisplayName("Custom templates folder")]
+        [Description("Path to the folder containing any custom item templates")]
+        public string CustomTemplatesPath { get; set; } = String.Empty;
+
+        //[Category("Intellisense Options")]
+        //[DisplayName("Use Intellisense?")]
+        //[Description("Get metadata from CRM and provide string completion - this will require closing and re-opening any files")]
+        //public bool UseIntellisense { get; set; } = false;
 
         protected override void OnApply(PageApplyEventArgs e)
         {
@@ -171,6 +176,14 @@ namespace CrmDeveloperExtensions2.Core
                 Resources.Resource.UserOptionsToolsPage];
 
             return props.Item("CrmSvcUtilToolPath").Value.ToString();
+        }
+
+        public static string GetCustomTemplatesPath(DTE dte)
+        {
+            var props = dte.Properties[Resources.Resource.UserOptionsCategory,
+                Resources.Resource.UserOptionsTemplatesPage];
+
+            return props.Item("CustomTemplatesPath").Value.ToString();
         }
 
         public static bool GetUseIntellisense(DTE dte)

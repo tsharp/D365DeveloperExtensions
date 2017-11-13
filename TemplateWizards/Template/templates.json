@@ -1,0 +1,33 @@
+﻿{
+  "Templates": [
+    {
+      /* Name that will be shown in the template picker */
+      "DisplayName": "My Plug-in Base",
+      /* Description that will be shown in the template picker */
+      "Description": "blah, blah, blah",
+      /* Filename will override the one chosen in the Visual Studio New File dialog */
+      "FileName": "PluginBase.cs",
+      /* Relative path to the file being used for the template from template folder */
+      "RelativePath": "PluginBase.cs",
+      /* Replace template parameters - useful for Namespace & Class names
+      https://docs.microsoft.com/en-us/visualstudio/ide/template-parameters */
+      "CoreReplacements": true,
+      /*Possible values: CSharp */
+      "Language": "CSharp",
+      /* Array of project references to be included which would normally be added
+      under Project -> References */
+      "CustomTemplateReferences": [
+        {
+          "Name": "System.Net.Http"
+        }
+      ],
+      /* Array of NuGet packages to install - null version will get latest */
+      "CustomTemplateNuGetPackages": [
+        {
+          "Name": "Newtonsoft.Json",
+          "Version": "10.0.2"
+        }
+      ]
+    }
+  ]
+}

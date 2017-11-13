@@ -41,5 +41,8 @@ namespace CrmDeveloperExtensions2.Core
         public static string SolutionPackagerLogFile = "SolutionPackager.log";
         public static string SolutionPackagerMapFile = "mapping.xml";
         public static string NoProfilesText = "Unnamed Profile";
+
+        public static string SpklConfigFile = "spkl.json";
+        public static string TemplateConfigFile = "templates.json";
     }
 }

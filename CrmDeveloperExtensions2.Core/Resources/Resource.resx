@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ConfigFileName" xml:space="preserve">
-    <value>spkl.json</value>
-    <comment>Do not localize</comment>
-  </data>
   <data name="CrmSvcUtilToolPath" xml:space="preserve">
     <value>CrmSvcUtil Tool Path</value>
   </data>
@@ -225,5 +221,14 @@
   </data>
   <data name="Solutions_Button_ToolTip" xml:space="preserve">
     <value>CRM/365 Solutions Page</value>
+  </data>
+  <data name="UserOptionsTemplatesPage" xml:space="preserve">
+    <value>Templates</value>
+  </data>
+  <data name="UserOptionsTemplatesPageCategory" xml:space="preserve">
+    <value>Template Options</value>
+  </data>
+  <data name="CustomTemplatesPath" xml:space="preserve">
+    <value>Custom templates folder</value>
   </data>
 </root>

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio;
 using System;
 using System.IO;
 using System.Text;
+using CrmDeveloperExtensions2.Core;
 
 namespace SolutionPackager
 {
@@ -37,7 +38,7 @@ namespace SolutionPackager
             if (string.IsNullOrEmpty(projectPath))
                 return null;
 
-            if (!CrmDeveloperExtensions2.Core.FileSystem.ConfirmOverwrite(
+            if (!FileSystem.ConfirmOverwrite(
                 new[] { fullPath, fullPath.Replace(".zip", "_managed.zip") }, true))
                 return null;
 
@@ -165,14 +166,14 @@ namespace SolutionPackager
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                if (CrmDeveloperExtensions2.Core.StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
+                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
                 {
                     name = Path.GetFileName(name);
                     // Do not delete the mapping file
-                    if (name == CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerMapFile)
+                    if (name == ExtensionConstants.SolutionPackagerMapFile)
                         continue;
                     // Do not delete the config file
-                    if (name == CrmDeveloperExtensions2.Core.Resources.Resource.ConfigFileName)
+                    if (name == ExtensionConstants.SpklConfigFile)
                         continue;
                     if (File.Exists(Path.Combine(extractedFolder, name)))
                         continue;
@@ -181,7 +182,7 @@ namespace SolutionPackager
                     itemChanged = true;
                 }
 
-                if (CrmDeveloperExtensions2.Core.StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
+                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
                 {
                     name = new DirectoryInfo(name).Name;
                     if (name == projectFolder || name == "Properties")
@@ -253,8 +254,8 @@ namespace SolutionPackager
 
         public static string CreateToolPath(DTE dte)
         {
-            CrmDeveloperExtensions2.Core.UserOptionsGrid.GetSolutionPackagerToolPath(dte);
-            string spPath = CrmDeveloperExtensions2.Core.UserOptionsGrid.GetSolutionPackagerToolPath(dte);
+            UserOptionsGrid.GetSolutionPackagerToolPath(dte);
+            string spPath = UserOptionsGrid.GetSolutionPackagerToolPath(dte);
 
             if (string.IsNullOrEmpty(spPath))
             {
@@ -285,12 +286,12 @@ namespace SolutionPackager
             command.Append($" /folder: \"{projectPath}\"");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (File.Exists(Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerMapFile)))
-                command.Append($" /map: \"{Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerMapFile)}\"");
+            if (File.Exists(Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)))
+                command.Append($" /map: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
 
             // Write Solution Package output to a log file named SolutionPackager.log in the root folder of the project
             if (enableSolutionPackagerLogging)
-                command.Append($" /log: \"{Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerLogFile)}\"");
+                command.Append($" /log: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
 
             // Pack managed solution as well.
             if (downloadManaged)
@@ -308,12 +309,12 @@ namespace SolutionPackager
             command.Append(" /clobber");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (File.Exists(Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerMapFile)))
-                command.Append($" /map: \"{Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerMapFile)}\"");
+            if (File.Exists(Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)))
+                command.Append($" /map: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
 
             // Write Solution Package output to a log file named SolutionPackager.log in the root folder of the project
             if (enableSolutionPackagerLogging)
-                command.Append($" /log: \"{Path.Combine(projectPath, CrmDeveloperExtensions2.Core.ExtensionConstants.SolutionPackagerLogFile)}\"");
+                command.Append($" /log: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
 
             // Unpack managed solution as well.
             if (downloadManaged)

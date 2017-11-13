@@ -106,6 +106,13 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpCustom\CSharpCustom.csproj">
+      <Project>{99EAC9D1-C05D-4CAC-867E-E4862017F488}</Project>
+      <Name>CSharpCustom</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\CSharp\CSharpPluginClass\CSharpPluginClass.csproj">
       <Project>{0B7F7208-B7C4-4C79-BCBD-F5C0A46A5600}</Project>
       <Name>CSharpPluginClass</Name>

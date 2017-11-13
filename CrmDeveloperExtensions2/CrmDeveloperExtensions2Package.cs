@@ -49,7 +49,8 @@ namespace CrmDeveloperExtensions2
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Logging", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Web Browser", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "External Tools", 0, 0, true)]
-    [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Intellisense", 0, 0, true)]
+    //[ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Intellisense", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Templates", 0, 0, true)]
 
     public sealed class CrmDeveloperExtensions2Package : Package
     {

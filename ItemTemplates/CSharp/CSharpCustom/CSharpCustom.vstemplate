@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>CRM/365 Custom Template</Name>
+    <Description>Dynamics CRM/365 Custom Code Template</Description>
+    <Icon>icon.png</Icon>
+    <TemplateID>092ae839-3afe-40f5-8724-4bcbdc2f57f4</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Class.cs</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="true">Class.cs</ProjectItem>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>TemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
+  </WizardExtension>
+  <WizardData>
+    <CRMProjectType>CustomItem</CRMProjectType>
+    <NeedsCore>false</NeedsCore>
+    <NeedsWorkflow>false</NeedsWorkflow>
+    <NeedsClient>false</NeedsClient>
+    <IsUnitTest>false</IsUnitTest>
+    <IsUnitTestItem>false</IsUnitTestItem>
+    <SignAssembly>false</SignAssembly>
+  </WizardData>
+</VSTemplate>
