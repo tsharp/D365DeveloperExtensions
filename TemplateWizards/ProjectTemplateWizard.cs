@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Xml;
+using TemplateWizards.Models;
 
 namespace TemplateWizards
 {
@@ -27,6 +28,8 @@ namespace TemplateWizards
         private bool _signAssembly;
         private string _destDirectory;
         private string _unitTestFrameworkPackage;
+        private CustomTemplate _customTemplate;
+        private bool _addFile = true;
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
@@ -49,6 +52,9 @@ namespace TemplateWizards
 
                 if (_needsCore)
                     PreHandleCrmAssemblyProjects(replacementsDictionary);
+
+                if (_crmProjectType == "CustomItem")
+                    replacementsDictionary = PreHandleCustomItem(replacementsDictionary);
             }
             catch (WizardBackoutException)
             {
@@ -71,6 +77,48 @@ namespace TemplateWizards
                 MessageBox.Show($"Error occurred running wizard:\n\n{ex}");
                 throw new WizardCancelledException("Internal error", ex);
             }
+        }
+
+        private Dictionary<string, string> PreHandleCustomItem(Dictionary<string, string> replacementsDictionary)
+        {
+            string templateFolder = UserOptionsGrid.GetCustomTemplatesPath(_dte);
+            _addFile = CustomTemplateHandler.ValidateTemplateFolder(templateFolder);
+            if (!_addFile)
+                return replacementsDictionary;
+
+            _addFile = CustomTemplateHandler.ValidateTemplateFile(templateFolder);
+            if (!_addFile)
+                return replacementsDictionary;
+
+            CustomTemplates templates = CustomTemplateHandler.GetTemplateConfig(templateFolder);
+            if (templates == null)
+            {
+                _addFile = false;
+                return replacementsDictionary;
+            }
+
+            List<CustomTemplate> results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
+            if (results.Count == 0)
+            {
+                MessageBox.Show("Add custom templates to continue");
+                _addFile = false;
+                return replacementsDictionary;
+            }
+
+            CustomTemplatePicker templatePicker = CustomTemplateHandler.GetCustomTemplate(results);
+            if (templatePicker.SelectedTemplate == null)
+            {
+                _addFile = false;
+                return replacementsDictionary;
+            }
+
+            _customTemplate = templatePicker.SelectedTemplate;
+
+            string content = CustomTemplateHandler.GetTemplateContent(templateFolder, _customTemplate, replacementsDictionary);
+
+            replacementsDictionary.Add("$customtemplate$", content);
+
+            return replacementsDictionary;
         }
 
         private void PreHandleCrmAssemblyProjects(Dictionary<string, string> replacementsDictionary)
@@ -139,7 +187,8 @@ namespace TemplateWizards
 
         public bool ShouldAddProjectItem(string filePath)
         {
-            return true;
+            return _addFile;
+            //return true;
         }
 
         public void RunFinished()
@@ -148,10 +197,28 @@ namespace TemplateWizards
 
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
+
         }
 
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
+            if (!_addFile)
+                return;
+
+            if (_crmProjectType != "CustomItem")
+                return;
+
+            if (_customTemplate == null)
+                return;
+
+            Project project = projectItem.ContainingProject;
+
+            CustomTemplateHandler.AddTemplateReferences(_customTemplate, project);
+
+            CustomTemplateHandler.InstallTemplateNuGetPackages(_dte, _customTemplate, project);
+
+            if (!string.IsNullOrEmpty(_customTemplate.FileName))
+                projectItem.Name = _customTemplate.FileName;
         }
 
         public void ProjectFinishedGenerating(Project project)

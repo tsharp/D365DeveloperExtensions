@@ -70,15 +70,6 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to spkl.json.
-        /// </summary>
-        public static string ConfigFileName {
-            get {
-                return ResourceManager.GetString("ConfigFileName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
         public static string Connect_TextBlock_Text {
@@ -120,6 +111,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string Customizations_Button_ToolTip {
             get {
                 return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom templates folder.
+        /// </summary>
+        public static string CustomTemplatesPath {
+            get {
+                return ResourceManager.GetString("CustomTemplatesPath", resourceCulture);
             }
         }
         
@@ -327,6 +327,24 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptionsLoggingPageCategory {
             get {
                 return ResourceManager.GetString("UserOptionsLoggingPageCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Templates.
+        /// </summary>
+        public static string UserOptionsTemplatesPage {
+            get {
+                return ResourceManager.GetString("UserOptionsTemplatesPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Template Options.
+        /// </summary>
+        public static string UserOptionsTemplatesPageCategory {
+            get {
+                return ResourceManager.GetString("UserOptionsTemplatesPageCategory", resourceCulture);
             }
         }
         

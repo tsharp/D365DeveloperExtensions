@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
 using CrmDeveloperExtensions2.Core;
 using EnvDTE;
 using NuGet.VisualStudio;
+using System;
+using System.Windows;
 using TemplateWizards.Enums;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 
