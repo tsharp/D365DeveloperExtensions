@@ -1,14 +1,16 @@
 ﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.Win32;
 using Microsoft.Xrm.Sdk;
 using NLog;
+using SolutionPackager.Models;
 using SolutionPackager.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SolutionType = CrmDeveloperExtensions2.Core.Enums.SolutionType;
 using Task = System.Threading.Tasks.Task;
 using Window = EnvDTE.Window;
 
@@ -33,7 +36,7 @@ namespace SolutionPackager
         private readonly Solution _solution;
         private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<CrmSolution> _solutionData;
-        private ObservableCollection<string> _solutionFolders;
+        private ObservableCollection<string> _projectFolders;
 
         public bool SolutionXmlExists;
         public ObservableCollection<CrmSolution> SolutionData
@@ -45,19 +48,19 @@ namespace SolutionPackager
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<string> SolutionFolders
+        public ObservableCollection<string> ProjectFolders
         {
-            get => _solutionFolders;
+            get => _projectFolders;
             set
             {
-                _solutionFolders = value;
+                _projectFolders = value;
                 OnPropertyChanged();
             }
         }
-
+        public List<SolutionType> PackageTypes => Enum.GetValues(typeof(SolutionType)).Cast<SolutionType>().ToList();
         public string Command;
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -68,7 +71,8 @@ namespace SolutionPackager
             InitializeComponent();
             DataContext = this;
 
-            SolutionFolders = new ObservableCollection<string>();
+            SolutionData = new ObservableCollection<CrmSolution>();
+            ProjectFolders = new ObservableCollection<string>();
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -117,18 +121,34 @@ namespace SolutionPackager
 
         private async void LoadData()
         {
-            GetSolutionFolders();
+            GetProjectFolders();
             await GetCrmData();
         }
 
         private void BindPackageButton()
         {
-            SolutionXmlExists = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject) && SolutionData != null;
+            string packageFolder = "/";
+            if (PackageFolder.SelectedItem != null)
+                packageFolder = PackageFolder.SelectedItem.ToString();
+
+            SolutionXmlExists = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject, packageFolder) && SolutionData != null;
         }
 
-        private void GetSolutionFolders()
+        private void GetProjectFolders()
         {
-            SolutionFolders = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+
+            SetFormDefaults();
+        }
+
+        private void SetFormDefaults()
+        {
+            PackageType.SelectedItem = SolutionType.Unmanaged;
+            PackageFolder.SelectedItem = ProjectFolders.FirstOrDefault(p => p == $"/{ExtensionConstants.DefaultPacakgeFolder}");
+            SolutionFolder.SelectedItem = ProjectFolders.FirstOrDefault(p => p == "/");
+            EnableSolutionPackagerLog.IsChecked = false;
+            SaveSolutions.IsChecked = false;
+            PublishAll.IsChecked = false;
         }
 
         private void SetWindowCaption(string currentCaption)
@@ -141,9 +161,6 @@ namespace SolutionPackager
             SetControlState(true);
 
             LoadData();
-
-            if (!ConfigFile.ConfigFileExists(_dte.Solution.FullName))
-                ConfigFile.CreateConfigFile(ConnPane.OrganizationId, ConnPane.SelectedProject.UniqueName, _dte.Solution.FullName);
 
             SetWindowCaption(_dte.ActiveWindow.Caption);
         }
@@ -174,29 +191,16 @@ namespace SolutionPackager
                 ResetForm();
         }
 
-        private void ConnPane_OnSolutionProjectRenamed(object sender, SolutionProjectRenamedEventArgs e)
-        {
-            //Project project = e.Project;
-            //string solutionPath = Path.GetDirectoryName(_dte.Solution.FullName);
-            //if (string.IsNullOrEmpty(solutionPath))
-            //    return;
-
-            //string oldName = e.OldName.Replace(solutionPath, string.Empty).Substring(1);
-
-            //Mapping.UpdateProjectName(_dte.Solution.FullName, oldName, project.UniqueName);
-        }
-
         private void SetControlState(bool enabled)
         {
             if (enabled == false)
                 PackageSolution.IsEnabled = false;
-            //UnpackageSolution.IsEnabled = enabled;
             SolutionList.IsEnabled = enabled;
             SaveSolutions.IsEnabled = enabled;
-            ProjectFolder.IsEnabled = enabled;
+            PackageFolder.IsEnabled = enabled;
+            PackageType.IsEnabled = enabled;
             EnableSolutionPackagerLog.IsEnabled = enabled;
-            DownloadManaged.IsEnabled = enabled;
-            CreateManaged.IsEnabled = enabled;
+            SolutionName.IsEnabled = enabled;
             VersionMajor.IsEnabled = enabled;
             VersionMinor.IsEnabled = enabled;
             VersionBuild.IsEnabled = enabled;
@@ -208,8 +212,9 @@ namespace SolutionPackager
         private void ResetForm()
         {
             RemoveEventHandlers();
-            SolutionData = null;
-            SolutionFolders = new ObservableCollection<string>();
+            SolutionData = new ObservableCollection<CrmSolution>();
+            ProjectFolders = new ObservableCollection<string>();
+            SaveSolutions.IsChecked = false;
             SetControlState(false);
         }
 
@@ -248,58 +253,82 @@ namespace SolutionPackager
             SolutionData = ModelBuilder.CreateCrmSolutionView(results);
             SolutionList.DisplayMemberPath = "NameVersion";
 
-            CrmDevExSolutionPackage crmDevExSolutionPackage =
-                Config.Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject,
-                    SolutionData, ConnPane.OrganizationId);
-
-            if (crmDevExSolutionPackage == null)
-            {
-                ProjectFolder.SelectedItem = SolutionFolders.FirstOrDefault(s => s == "/_Solutions");
+            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile, SolutionData);
+            if (solutionPackageConfig == null)
                 return true;
-            }
 
-            SetControlStateForItem(crmDevExSolutionPackage);
+            SetControlStateForItem(solutionPackageConfig);
 
             return true;
         }
 
-        private void SetControlStateForItem(CrmDevExSolutionPackage crmDevExSolutionPackage)
+        private void SetControlStateForItem(SolutionPackageConfig solutionPackageConfig)
         {
-            SolutionList.SelectedItem = SolutionData.FirstOrDefault(s => s.SolutionId == crmDevExSolutionPackage.SolutionId);
-            SaveSolutions.IsChecked = crmDevExSolutionPackage.SaveSolutions;
-            ProjectFolder.SelectedItem = SolutionFolders.FirstOrDefault(s => s == crmDevExSolutionPackage.ProjectFolder);
-            EnableSolutionPackagerLog.IsChecked = crmDevExSolutionPackage.EnableSolutionPackagerLog;
-            DownloadManaged.IsChecked = crmDevExSolutionPackage.DownloadManaged;
-            CreateManaged.IsChecked = crmDevExSolutionPackage.CreateManaged;
-            PublishAll.IsChecked = crmDevExSolutionPackage.PublishAll;
+            string projectFolder = ProjectFolders.FirstOrDefault(s => s == $"/{solutionPackageConfig.packagepath}");
+            SolutionList.SelectedItem = SolutionData.FirstOrDefault(s => s.UniqueName == solutionPackageConfig.solution_uniquename);
+            PackageFolder.SelectedItem = projectFolder;
+            PackageType.SelectedItem = PackageTypes.FirstOrDefault(s => s.ToString().Equals(solutionPackageConfig.packagetype, StringComparison.InvariantCultureIgnoreCase));
+            SolutionName.Text = SetSolutionName(solutionPackageConfig);
 
-            PackageSolution.IsEnabled = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject);
+            PackageSolution.IsEnabled = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject, projectFolder);
             if (PackageSolution.IsEnabled)
                 SetFormVersionNumbers();
         }
 
-        private void PublishSolution_OnClick(object sender, RoutedEventArgs e)
+        private string SetSolutionName(SolutionPackageConfig solutionPackageConfig)
+        {
+            if (string.IsNullOrEmpty(solutionPackageConfig.solutionpath))
+            {
+                return SolutionList.SelectedItem != null
+                    ? ((CrmSolution)SolutionList.SelectedItem).Name
+                    : string.Empty;
+            }
+
+            string[] nameParts = solutionPackageConfig.solutionpath.Split('_');
+            return nameParts.Length > 0
+                ? nameParts[0]
+                : string.Empty;
+        }
+
+        private void ImportSolution_OnClick(object sender, RoutedEventArgs e)
         {
             PublishSolutionToCrm();
         }
 
         private async void PublishSolutionToCrm()
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to publish solution?", "Ok to publish?",
+            string latestSolutionPath =
+                SolutionXml.GetLatestSolutionPath(ConnPane.SelectedProject, SolutionFolder.SelectedItem.ToString());
+
+            if (string.IsNullOrEmpty(latestSolutionPath))
+            {
+                OpenFileDialog fileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
+                    Filter = "Solution Files|*.zip;"
+                };
+                bool? fileResult = fileDialog.ShowDialog();
+                if (!fileResult.HasValue || fileResult.Value == false)
+                    return;
+
+                latestSolutionPath = fileDialog.FileName;
+            }
+
+            bool publishAll = PublishAll.IsChecked == true;
+            string publishMesasge = publishAll ? " & publish" : String.Empty;
+
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to import{publishMesasge} solution?", $"Ok to import{publishMesasge}?",
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             if (result == MessageBoxResult.No)
                 return;
 
-            string latestSolutionPath =
-                SolutionXml.GetLatestSolutionPath(ConnPane.SelectedProject, ProjectFolder.SelectedItem.ToString());
-
             if (string.IsNullOrEmpty(latestSolutionPath))
             {
-                MessageBox.Show("Unable to find latest solution.");
+                MessageBox.Show("Unable to find solution.");
                 return;
             }
-            bool publishAll = PublishAll.IsChecked == true;
+
             bool success;
             try
             {
@@ -311,6 +340,7 @@ namespace SolutionPackager
             {
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
             }
+
             if (!success)
                 MessageBox.Show("Error importing or publishing solution. See output window for details.");
 
@@ -331,47 +361,56 @@ namespace SolutionPackager
             return success;
         }
 
-        private CrmDevExSolutionPackage CreateMappingObject()
+        private SolutionPackageConfig CreateMappingObject()
         {
             if (SolutionList.SelectedItem == null)
                 return null;
 
-            return new CrmDevExSolutionPackage
+            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject,
+                    ConnPane.SelectedProfile, SolutionData);
+
+            return new SolutionPackageConfig
             {
-                SolutionId = ((CrmSolution)SolutionList.SelectedItem).SolutionId,
-                SaveSolutions = SaveSolutions.IsChecked ?? false,
-                EnableSolutionPackagerLog = EnableSolutionPackagerLog.IsChecked ?? false,
-                ProjectFolder = ProjectFolder.SelectedItem.ToString(),
-                DownloadManaged = DownloadManaged.IsChecked ?? false,
-                CreateManaged = CreateManaged.IsChecked ?? false,
-                PublishAll = PublishAll.IsChecked ?? false
+                increment_on_import = solutionPackageConfig.increment_on_import,
+                map = solutionPackageConfig.map,
+                packagepath = PackageFolder.SelectedItem?.ToString().Replace("/", String.Empty) ?? "",
+                profile = ConnPane.SelectedProfile,
+                solutionpath = SolutionName.Text,
+                packagetype = (SolutionType)PackageType.SelectedItem == SolutionType.Unmanaged
+                    ? SolutionType.Unmanaged.ToString().ToLower()
+                    : SolutionType.Managed.ToString().ToLower(),
+                solution_uniquename = ((CrmSolution)SolutionList.SelectedItem).UniqueName
             };
         }
 
         private void AddEventHandlers()
         {
             SolutionList.SelectionChanged += SolutionList_OnSelectionChanged;
-            DownloadManaged.Checked += DownloadManaged_OnChecked;
-            DownloadManaged.Unchecked += DownloadManaged_OnChecked;
-            SaveSolutions.Checked += SaveSolutions_OnChecked;
-            SaveSolutions.Unchecked += SaveSolutions_OnChecked;
-            CreateManaged.Checked += CreateManaged_OnChecked;
-            CreateManaged.Unchecked += CreateManaged_OnChecked;
-            PublishAll.Checked += PublishAll_OnChecked;
-            PublishAll.Unchecked += PublishAll_OnChecked;
+            PackageFolder.SelectionChanged += PackageFolderOnSelectionChanged;
+            PackageType.SelectionChanged += PackageTypeOnSelectionChanged;
+            SolutionName.TextChanged += SolutionNameOnTextChanged;
+        }
+        private void SolutionNameOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
+        {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void PackageTypeOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            TriggerMappingUpdate(sender);
+        }
+
+        private void PackageFolderOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            TriggerMappingUpdate(sender);
         }
 
         private void RemoveEventHandlers()
         {
             SolutionList.SelectionChanged -= SolutionList_OnSelectionChanged;
-            DownloadManaged.Checked -= DownloadManaged_OnChecked;
-            DownloadManaged.Unchecked -= DownloadManaged_OnChecked;
-            SaveSolutions.Checked -= SaveSolutions_OnChecked;
-            SaveSolutions.Unchecked -= SaveSolutions_OnChecked;
-            CreateManaged.Checked -= CreateManaged_OnChecked;
-            CreateManaged.Unchecked -= CreateManaged_OnChecked;
-            PublishAll.Checked -= PublishAll_OnChecked;
-            PublishAll.Unchecked -= PublishAll_OnChecked;
+            PackageFolder.SelectionChanged -= PackageFolderOnSelectionChanged;
+            PackageType.SelectionChanged -= PackageTypeOnSelectionChanged;
+            SolutionName.TextChanged -= SolutionNameOnTextChanged;
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -381,15 +420,13 @@ namespace SolutionPackager
 
             if (SolutionList.SelectedItem == null)
             {
-                SetControlState(false);
-
-                Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, null, ConnPane.OrganizationId);
+                Config.Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, null);
                 return;
             }
 
             SetControlState(true);
             SetFormVersionNumbers();
-            Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, CreateMappingObject(), ConnPane.OrganizationId);
+            Config.Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, CreateMappingObject());
         }
 
         private void TriggerMappingUpdate(object sender)
@@ -398,27 +435,7 @@ namespace SolutionPackager
             if (!c.IsLoaded)
                 return;
 
-            Config.Mapping.AddOrUpdateMapping(_dte.Solution.FullName, ConnPane.SelectedProject, CreateMappingObject(), ConnPane.OrganizationId);
-        }
-
-        private void DownloadManaged_OnChecked(object sender, RoutedEventArgs e)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
-        private void SaveSolutions_OnChecked(object sender, RoutedEventArgs e)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
-        private void CreateManaged_OnChecked(object sender, RoutedEventArgs e)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
-        private void PublishAll_OnChecked(object sender, RoutedEventArgs e)
-        {
-            TriggerMappingUpdate(sender);
+            Config.Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, CreateMappingObject());
         }
 
         private void ConnPane_OnSelectedProjectChanged(object sender, SelectionChangedEventArgs e)
@@ -427,8 +444,28 @@ namespace SolutionPackager
             if (!solutionProjectsList.IsLoaded || ConnPane.SelectedProject == null)
                 return;
 
-            Config.Mapping.HandleMappings(_dte.Solution.FullName, ConnPane.SelectedProject, SolutionData,
-                ConnPane.OrganizationId);
+            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile, SolutionData);
+            if (solutionPackageConfig == null)
+                return;
+
+            GetProjectFolders();
+
+            SetControlStateForItem(solutionPackageConfig);
+        }
+
+        private void ConnPane_ProfileChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox solutionProjectsList = (ComboBox)e.Source;
+            if (!solutionProjectsList.IsLoaded || ConnPane.SelectedProject == null)
+                return;
+
+            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile, SolutionData);
+            if (solutionPackageConfig == null)
+                return;
+
+            GetProjectFolders();
+
+            SetControlStateForItem(solutionPackageConfig);
         }
 
         private void PackageSolution_OnClick(object sender, RoutedEventArgs e)
@@ -440,31 +477,25 @@ namespace SolutionPackager
         {
             try
             {
-                if (SolutionList.SelectedItem == null)
-                    return;
+                PackSettings packSettings = GetValuesForPack();
 
-                Version version = SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject);
-                if (version == null)
+                if (packSettings.Version == null)
                 {
                     MessageBox.Show("Invalid Solution.xml version number. See the Output Window for additional details.");
                     return;
                 }
 
-                CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
-                CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
-
                 Overlay.ShowMessage(_dte, "Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
 
                 CommandOutput.Text = String.Empty;
 
-                bool success = ExecutePackage(selectedSolution.UniqueName, version, ConnPane.SelectedProject,
-                    crmDevExSolutionPackage);
+                bool success = ExecutePackage(packSettings);
 
-                if (!success)
-                {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                    MessageBox.Show("Error Packaging Solution. See the Output Window for additional details.");
-                }
+                if (success)
+                    return;
+
+                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
+                MessageBox.Show("Error Packaging Solution. See the Output Window for additional details.");
             }
             finally
             {
@@ -472,31 +503,90 @@ namespace SolutionPackager
             }
         }
 
-        private bool ExecutePackage(string solutionName, Version version, Project project, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        private PackSettings GetValuesForPack()
+        {
+            PackSettings packSettings = new PackSettings
+            {
+                Project = ConnPane.SelectedProject,
+                CrmSolution = (CrmSolution)SolutionList.SelectedItem,
+                SolutionPackageConfig = CreateMappingObject(),
+                EnablePackagerLogging = EnableSolutionPackagerLog.IsChecked ?? false,
+                SaveSolutions = SaveSolutions.IsChecked ?? false,
+                SolutionFolder = SolutionFolder.SelectedItem.ToString(),
+                ProjectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
+                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
+            };
+
+            packSettings.Version =
+                SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject, packSettings.PackageFolder.Replace("/", string.Empty));
+
+            packSettings.ProjectSolutionFolder = Path.Combine(packSettings.ProjectPath,
+                packSettings.SolutionFolder.Replace("/", string.Empty));
+
+            packSettings.ProjectPackageFolder =
+                Path.Combine(packSettings.ProjectPath, packSettings.PackageFolder.Replace("/", string.Empty));
+
+            string solutionName = SolutionName.Text != string.Empty ? SolutionName.Text : "solution";
+            packSettings.FileName =
+                FileHandler.FormatSolutionVersionString(solutionName, packSettings.Version, false);
+
+            packSettings.FullFilePath = Path.Combine(packSettings.ProjectPackageFolder, packSettings.FileName);
+
+            return packSettings;
+        }
+
+        private UnpackSettings GetValuesForUnpack()
+        {
+            UnpackSettings unpackSettings = new UnpackSettings
+            {
+                Project = ConnPane.SelectedProject,
+                ProjectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
+                CrmSolution = (CrmSolution)SolutionList.SelectedItem,
+                SolutionPackageConfig = CreateMappingObject(),
+                EnablePackagerLogging = EnableSolutionPackagerLog.IsChecked ?? false,
+                SaveSolutions = SaveSolutions.IsChecked ?? false,
+                SolutionFolder = SolutionFolder.SelectedItem.ToString(),
+                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
+            };
+
+            unpackSettings.ProjectPackageFolder = Path.Combine(unpackSettings.ProjectPath,
+                unpackSettings.PackageFolder.Replace("/", string.Empty));
+
+            unpackSettings.ProjectSolutionFolder = Path.Combine(unpackSettings.ProjectPath,
+                unpackSettings.SolutionFolder.Replace("/", string.Empty));
+
+            return unpackSettings;
+        }
+
+        private string GetToolPath()
         {
             string toolPath = Packager.CreateToolPath(_dte);
+            if (!string.IsNullOrEmpty(toolPath))
+                return toolPath;
+
+            OutputLogger.WriteToOutputWindow("Unable to find Solution Packager path", MessageType.Error);
+            return null;
+        }
+
+        private bool ExecutePackage(PackSettings packSettings)
+        {
+            string toolPath = GetToolPath();
             if (string.IsNullOrEmpty(toolPath))
                 return false;
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            if (string.IsNullOrEmpty(projectPath))
-                return false;
-
-            string filename = FileHandler.FormatSolutionVersionString(solutionName, version, false);
-
-            string solutionProjectFolder = Packager.GetProjectSolutionFolder(project, crmDevExSolutionPackage.ProjectFolder);
-
-            string fullPath = Path.Combine(solutionProjectFolder, filename);
-
-            string commandArgs = Packager.GetPackageCommandArgs(project, filename, solutionProjectFolder, fullPath, crmDevExSolutionPackage);
+            string commandArgs = Packager.GetPackageCommandArgs(packSettings);
             if (string.IsNullOrEmpty(commandArgs))
+            {
+                OutputLogger.WriteToOutputWindow("Error creating command arguments", MessageType.Error);
                 return false;
+            }
 
             CommandOutput.Text = $"{toolPath} {commandArgs}";
 
-            bool success = Packager.CreatePackage(_dte, toolPath, solutionName, project, crmDevExSolutionPackage, fullPath, commandArgs);
+            if (packSettings.SaveSolutions)
+                packSettings.FullFilePath = Path.Combine(packSettings.ProjectSolutionFolder, packSettings.FileName);
 
-            return success;
+            return Packager.CreatePackage(_dte, toolPath, packSettings, commandArgs);
         }
 
         private void UnpackageSolution_OnClick(object sender, RoutedEventArgs e)
@@ -508,49 +598,29 @@ namespace SolutionPackager
         {
             try
             {
-                if (SolutionList.SelectedItem == null)
-                    return;
-
-                CrmSolution selectedSolution = (CrmSolution)SolutionList.SelectedItem;
-                CrmDevExSolutionPackage crmDevExSolutionPackage = CreateMappingObject();
+                UnpackSettings unpackSettings = GetValuesForUnpack();
 
                 Overlay.ShowMessage(_dte, "Connecting to CRM/365 and getting unmanaged solution...", vsStatusAnimation.vsStatusAnimationSync);
 
                 List<Task> tasks = new List<Task>();
-                var getUmanagedSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, selectedSolution, false);
-                tasks.Add(getUmanagedSolution);
-
-                Task<string> getManagedSolution = null;
-                if (crmDevExSolutionPackage.DownloadManaged)
-                {
-                    getManagedSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, selectedSolution, true);
-                    tasks.Add(getManagedSolution);
-                }
+                var getSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, unpackSettings.CrmSolution, unpackSettings.SolutionPackageConfig.packagetype == "managed");
+                tasks.Add(getSolution);
 
                 await Task.WhenAll(tasks);
 
-                if (string.IsNullOrEmpty(getUmanagedSolution.Result))
+                unpackSettings.DownloadedZipPath = getSolution.Result;
+
+                if (string.IsNullOrEmpty(getSolution.Result))
                 {
                     Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                    MessageBox.Show("Error Retrieving Unmanaged Solution. See the Output Window for additional details.");
+                    MessageBox.Show("Error Retrieving Solution. See the Output Window for additional details.");
                     return;
-                }
-
-                if (crmDevExSolutionPackage.DownloadManaged && getManagedSolution != null)
-                {
-                    if (string.IsNullOrEmpty(getManagedSolution.Result))
-                    {
-                        Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                        MessageBox.Show("Error Retrieving Managed Solution. See the Output Window for additional details.");
-                        return;
-                    }
                 }
 
                 OutputLogger.WriteToOutputWindow("Retrieved Unmanaged Solution From CRM", MessageType.Info);
                 Overlay.ShowMessage(_dte, "Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
 
-                bool success = ExecuteExtract(ConnPane.SelectedProject, getUmanagedSolution.Result,
-                    getManagedSolution?.Result, crmDevExSolutionPackage);
+                bool success = ExecuteExtract(unpackSettings);
 
                 if (!success)
                     MessageBox.Show("Error Extracting Solution. See the Output Window for additional details.");
@@ -564,30 +634,25 @@ namespace SolutionPackager
             }
         }
 
-        private bool ExecuteExtract(Project project, string unmanagedZipPath, string managedZipPath, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        private bool ExecuteExtract(UnpackSettings unpackSettings)
         {
-            string toolPath = Packager.CreateToolPath(_dte);
+            string toolPath = GetToolPath();
             if (string.IsNullOrEmpty(toolPath))
                 return false;
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            if (string.IsNullOrEmpty(projectPath))
+            unpackSettings.ExtractedFolder = FileHandler.CreateExtractFolder(unpackSettings.DownloadedZipPath);
+            if (unpackSettings.ExtractedFolder == null)
                 return false;
 
-            DirectoryInfo extractedFolder = FileHandler.CreateExtractFolder(unmanagedZipPath);
-            if (extractedFolder == null)
-                return false;
-
-            string commandArgs = Packager.GetExtractCommandArgs(unmanagedZipPath, managedZipPath, project, extractedFolder, crmDevExSolutionPackage);
+            string commandArgs = Packager.GetExtractCommandArgs(unpackSettings);
 
             string command = $"{toolPath} {commandArgs}";
-            if (crmDevExSolutionPackage.SaveSolutions)
-                command = command.Replace(extractedFolder.FullName, projectPath);
+            if (unpackSettings.SaveSolutions)
+                command = command.Replace(unpackSettings.ExtractedFolder.FullName, unpackSettings.ProjectPath);
 
             CommandOutput.Text = command;
 
-            bool success = Packager.ExtractPackage(_dte, toolPath, unmanagedZipPath, managedZipPath, project,
-                crmDevExSolutionPackage, extractedFolder, commandArgs);
+            bool success = Packager.ExtractPackage(_dte, toolPath, unpackSettings, commandArgs);
 
             return success;
         }
@@ -605,10 +670,10 @@ namespace SolutionPackager
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
             if (projectPath == null) return;
 
-            string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-            SolutionFolders.Add(newItemName);
+            string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]).TrimEnd('/');
+            ProjectFolders.Add(newItemName);
 
-            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
         }
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
@@ -627,9 +692,9 @@ namespace SolutionPackager
 
             var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
 
-            SolutionFolders.Remove(itemName);
+            ProjectFolders.Remove(itemName);
 
-            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
         }
 
         private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
@@ -637,10 +702,13 @@ namespace SolutionPackager
             BindPackageButton();
 
             ProjectItem projectItem = e.ProjectItem;
-            if (projectItem.Name == null) return;
+            if (projectItem.Name == null)
+                return;
 
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
+            if (projectPath == null)
+                return;
+
             string oldName = e.OldName;
             Guid itemType = new Guid(projectItem.Kind);
 
@@ -654,14 +722,17 @@ namespace SolutionPackager
 
             var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
 
-            SolutionFolders.Remove(oldItemPath);
+            ProjectFolders.Remove(oldItemPath);
 
-            SolutionFolders = new ObservableCollection<string>(SolutionFolders.OrderBy(s => s));
+            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
         }
 
         private void SetFormVersionNumbers()
         {
-            Version version = SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject);
+            if (PackageFolder.SelectedItem == null)
+                return;
+
+            Version version = SolutionXml.GetSolutionXmlVersion(ConnPane.SelectedProject, PackageFolder.SelectedItem.ToString());
             if (version == null)
             {
                 VersionMajor.Text = String.Empty;
@@ -686,7 +757,7 @@ namespace SolutionPackager
         {
             try
             {
-                Version version = ValidateVersionInput(VersionMajor.Text, VersionMinor.Text,
+                Version version = Versioning.ValidateVersionInput(VersionMajor.Text, VersionMinor.Text,
                     VersionBuild.Text, VersionRevision.Text);
                 if (version == null)
                 {
@@ -696,7 +767,7 @@ namespace SolutionPackager
 
                 Overlay.ShowMessage(_dte, "Updating");
 
-                bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version);
+                bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version, PackageFolder.SelectedItem.ToString());
                 if (!success)
                 {
                     Overlay.HideMessage(_dte);
@@ -714,22 +785,6 @@ namespace SolutionPackager
             }
         }
 
-        private Version ValidateVersionInput(string majorIn, string minorIn, string buildIn, string revisionIn)
-        {
-            bool isMajorInt = int.TryParse(majorIn, out int major);
-            bool isMinorInt = int.TryParse(minorIn, out int minor);
-            bool isBuildInt = int.TryParse(buildIn, out int build);
-            bool isRevisionInt = int.TryParse(revisionIn, out int revision);
-
-            if (!isMajorInt || !isMinorInt)
-                return null;
-
-            string v = string.Concat(major, ".", minor, (isBuildInt) ? $".{build}" : null,
-                isRevisionInt ? $".{revision}" : null);
-
-            return new Version(v);
-        }
-
         private void Version_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text);
@@ -741,7 +796,7 @@ namespace SolutionPackager
             return !regex.IsMatch(text);
         }
 
-        private void TextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        private static void TextBoxPasting(object sender, DataObjectPastingEventArgs e)
         {
             if (e.DataObject.GetDataPresent(typeof(String)))
             {

@@ -263,9 +263,7 @@ namespace TemplateWizards
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//bin", true);
             Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
 
-            //Add the default "_Solutions" folder
-            //TODO: make this a user setting
-            project.ProjectItems.AddFolder("_Solutions");
+            project.ProjectItems.AddFolder("package");
         }
 
         private void PostHandleWebResourceProjects(Project project)
