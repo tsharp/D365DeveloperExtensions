@@ -4,7 +4,6 @@ using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -15,41 +14,11 @@ namespace CrmDeveloperExtensions2.Core.Config
     {
         private static readonly string ConfigFileName = ExtensionConstants.SpklConfigFile;
 
-        public static bool ConfigFileExists(string solutionPath)
-        {
-            DirectoryInfo directory = FileSystem.GetDirectory(solutionPath);
-
-            string path = $"{directory.FullName}\\{ConfigFileName}";
-
-            return File.Exists(path);
-        }
-
         public static bool SpklConfigFileExists(string projectPath)
         {
             string path = Path.Combine(projectPath, ConfigFileName);
 
             return File.Exists(path);
-        }
-
-        public static CrmDexExConfig GetConfigFile(string solutionPath)
-        {
-            DirectoryInfo directory = FileSystem.GetDirectory(solutionPath);
-
-            try
-            {
-                CrmDexExConfig config;
-                using (StreamReader file = File.OpenText($"{directory.FullName}\\{ConfigFileName}"))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    config = (CrmDexExConfig)serializer.Deserialize(file, typeof(CrmDexExConfig));
-                }
-
-                return config;
-            }
-            catch
-            {
-                throw new Exception("Unable to read or deserialize config file");
-            }
         }
 
         public static SpklConfig GetSpklConfigFile(string projectPath)
@@ -70,27 +39,6 @@ namespace CrmDeveloperExtensions2.Core.Config
             {
                 throw new Exception("Unable to read or deserialize config file");
             }
-        }
-
-        public static CrmDexExConfig CreateConfigFile(Guid organizationId, string projectUniqueName, string solutionPath)
-        {
-            CrmDexExConfig crmDexExConfig = new CrmDexExConfig
-            {
-                CrmDevExConfigOrgMaps = new List<CrmDevExConfigOrgMap>
-                {
-                    new CrmDevExConfigOrgMap
-                    {
-                        OrganizationId = organizationId,
-                        ProjectUniqueName = projectUniqueName
-                    }
-                }
-            };
-
-            string text = JsonConvert.SerializeObject(crmDexExConfig, Formatting.Indented);
-
-            WriteConfigFile(solutionPath, text);
-
-            return crmDexExConfig;
         }
 
         public static SpklConfig CreateSpklConfigFile(Project project)
@@ -127,27 +75,6 @@ namespace CrmDeveloperExtensions2.Core.Config
             string text = JsonConvert.SerializeObject(spklConfig, Formatting.Indented);
 
             WriteSpklConfigFile(projectPath, text);
-        }
-
-        public static void UpdateConfigFile(string solutionPath, CrmDexExConfig crmDexExConfig)
-        {
-            string text = JsonConvert.SerializeObject(crmDexExConfig, Formatting.Indented);
-
-            WriteConfigFile(solutionPath, text);
-        }
-
-        private static void WriteConfigFile(string solutionPath, string text)
-        {
-            DirectoryInfo directory = FileSystem.GetDirectory(solutionPath);
-
-            try
-            {
-                File.WriteAllText($"{directory.FullName}\\{ConfigFileName}", text);
-            }
-            catch
-            {
-                MessageBox.Show("Error writing config file");
-            }
         }
 
         private static void WriteSpklConfigFile(string projectPath, string text)

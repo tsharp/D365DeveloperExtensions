@@ -4,10 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using WebResourceDeployer.ViewModels;
 
-namespace PluginTraceViewer.ViewModels
+namespace WebResourceDeployer.Models
 {
-    public class FilterEntity : INotifyPropertyChanged, IFilterProperty
+    public class FilterTypeName : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +32,26 @@ namespace PluginTraceViewer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterEntity> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
+        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
         {
-            ObservableCollection<FilterEntity> filterEntities = new ObservableCollection<FilterEntity>(traces.GroupBy(t => t.Entity).Select(x =>
-                new FilterEntity
+            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(webResourceItems.GroupBy(t => t.TypeName).Select(x =>
+                new FilterTypeName
                 {
                     Name = x.Key,
                     Value = x.Key,
                     IsSelected = true
                 }).ToList());
 
-            filterEntities = new ObservableCollection<FilterEntity>(filterEntities.OrderBy(e => e.Name));
+            filterTypeNames = new ObservableCollection<FilterTypeName>(filterTypeNames.OrderBy(e => e.Name));
 
-            filterEntities.Insert(0, new FilterEntity
+            filterTypeNames.Insert(0, new FilterTypeName
             {
                 Name = "Select All",
                 Value = String.Empty,
                 IsSelected = true
             });
 
-            return filterEntities;
+            return filterTypeNames;
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Models;
+using System;
+using System.Collections.Generic;
 
 namespace CrmDeveloperExtensions2.Core
 {
@@ -19,7 +19,7 @@ namespace CrmDeveloperExtensions2.Core
         public static string MicrosoftXrmSdkWorkflow = "Microsoft.Xrm.Sdk.Workflow";
         public static string MicrosoftXrmToolingConnector = "Microsoft.Xrm.Tooling.Connector";
 
-        public static List<ToolWindow> CrmDevExToolWindows = new List<ToolWindow>() {
+        public static List<ToolWindow> CrmDevExToolWindows = new List<ToolWindow> {
             new ToolWindow {
                 ToolWindowsId = new Guid("A3479AE0-5F4F-4A14-96F4-46F39000023A"),
                 Type = ToolWindowType.WebResourceDeployer
@@ -39,10 +39,11 @@ namespace CrmDeveloperExtensions2.Core
         };
 
         public static string SolutionPackagerLogFile = "SolutionPackager.log";
-        public static string SolutionPackagerMapFile = "mapping.xml";
+        public static string SolutionPackagerMapFile = "packager_map.xml";
         public static string NoProfilesText = "Unnamed Profile";
 
         public static string SpklConfigFile = "spkl.json";
         public static string TemplateConfigFile = "templates.json";
+        public static string DefaultPacakgeFolder = "package";
     }
 }

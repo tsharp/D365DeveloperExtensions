@@ -147,10 +147,10 @@
   <data name="CreateManagedLabel_Label_Content" xml:space="preserve">
     <value>Create Managed Solution?</value>
   </data>
-  <data name="PublishSolution_Button_Content" xml:space="preserve">
-    <value>Publish</value>
+  <data name="ImportSolution_Button_Content" xml:space="preserve">
+    <value>Import</value>
   </data>
-  <data name="PublishSolution_Button_ToolTip" xml:space="preserve">
-    <value>Import and publish latest unmanaged solution to CRM/365</value>
+  <data name="ImportSolution_Button_ToolTip" xml:space="preserve">
+    <value>Import Solution</value>
   </data>
 </root>

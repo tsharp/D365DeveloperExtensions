@@ -1,13 +1,14 @@
 ﻿using CrmDeveloperExtensions2.Core.DataGrid;
+using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebResourceDeployer.ViewModels
+namespace PluginTraceViewer.Models
 {
-    public class FilterState : INotifyPropertyChanged, IFilterProperty
+    public class FilterMessage : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +32,26 @@ namespace WebResourceDeployer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterState> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
+        public static ObservableCollection<FilterMessage> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
         {
-            ObservableCollection<FilterState> filterStates = new ObservableCollection<FilterState>(webResourceItems.GroupBy(t => t.State).Select(x =>
-                new FilterState
+            ObservableCollection<FilterMessage> filterMessages = new ObservableCollection<FilterMessage>(traces.GroupBy(t => t.MessageName).Select(x =>
+                new FilterMessage
                 {
                     Name = x.Key,
-                    Value = x.Key
+                    Value = x.Key,
+                    IsSelected = true
                 }).ToList());
 
-            filterStates = new ObservableCollection<FilterState>(filterStates.OrderBy(e => e.Name));
+            filterMessages = new ObservableCollection<FilterMessage>(filterMessages.OrderBy(e => e.Name));
 
-            filterStates.Insert(0, new FilterState
+            filterMessages.Insert(0, new FilterMessage
             {
                 Name = "Select All",
-                Value = String.Empty
+                Value = String.Empty,
+                IsSelected = true
             });
 
-            filterStates.First(f => f.Value == "Unmanaged").IsSelected = true;
-
-            return filterStates;
+            return filterMessages;
         }
     }
 }

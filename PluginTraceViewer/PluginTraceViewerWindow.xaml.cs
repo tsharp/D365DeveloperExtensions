@@ -21,6 +21,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using CrmDeveloperExtensions2.Core.DataGrid;
+using PluginTraceViewer.Models;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 

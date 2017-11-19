@@ -194,6 +194,8 @@
     <Compile Include="DataGrid\DetailsRow.cs" />
     <Compile Include="DataGrid\GridFilters.cs" />
     <Compile Include="DateFormatting.cs" />
+    <Compile Include="Enums\MapTypes.cs" />
+    <Compile Include="Enums\SolutionType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />
     <Compile Include="Models\AssemblyDeploymentType.cs" />
     <Compile Include="ExtensionConstants.cs" />
@@ -203,11 +205,6 @@
     <Compile Include="HostWindow.cs" />
     <Compile Include="Logging\ExtensionLogger.cs" />
     <Compile Include="Logging\XrmToolingLogging.cs" />
-    <Compile Include="Models\CrmDevExAssembly.cs" />
-    <Compile Include="Models\CrmDevExConfigOrgMap.cs" />
-    <Compile Include="Models\CrmDevExSolutionPackage.cs" />
-    <Compile Include="Models\CrmDexExConfig.cs" />
-    <Compile Include="Models\CrmDexExConfigWebResource.cs" />
     <Compile Include="DataGrid\IFilterProperty.cs" />
     <Compile Include="Models\MockingFramework.cs" />
     <Compile Include="Models\MovedProjectItem.cs" />

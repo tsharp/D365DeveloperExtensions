@@ -1,13 +1,14 @@
-﻿using CrmDeveloperExtensions2.Core.DataGrid;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using CrmDeveloperExtensions2.Core.DataGrid;
+using WebResourceDeployer.ViewModels;
 
-namespace PluginTraceViewer.ViewModels
+namespace WebResourceDeployer.Models
 {
-    public class FilterMode : INotifyPropertyChanged, IFilterProperty
+    public class FilterState : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +32,26 @@ namespace PluginTraceViewer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterMode> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
+        public static ObservableCollection<FilterState> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
         {
-            ObservableCollection<FilterMode> filterModes = new ObservableCollection<FilterMode>(traces.GroupBy(t => t.Mode).Select(x =>
-                new FilterMode
+            ObservableCollection<FilterState> filterStates = new ObservableCollection<FilterState>(webResourceItems.GroupBy(t => t.State).Select(x =>
+                new FilterState
                 {
                     Name = x.Key,
-                    Value = x.Key,
-                    IsSelected = true
+                    Value = x.Key
                 }).ToList());
 
-            filterModes = new ObservableCollection<FilterMode>(filterModes.OrderBy(e => e.Name));
+            filterStates = new ObservableCollection<FilterState>(filterStates.OrderBy(e => e.Name));
 
-            filterModes.Insert(0, new FilterMode
+            filterStates.Insert(0, new FilterState
             {
                 Name = "Select All",
-                Value = String.Empty,
-                IsSelected = true
+                Value = String.Empty
             });
 
-            return filterModes;
+            filterStates.First(f => f.Value == "Unmanaged").IsSelected = true;
+
+            return filterStates;
         }
     }
 }

@@ -375,9 +375,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 });
             }
 
-            if (Projects.Any()) {
+            if (Projects.Any())
+            {
                 SolutionProjectsList.SelectedIndex = 0;
-                SelectedProject = ((ProjectListItem) SolutionProjectsList.SelectedItem).Project;
+                SelectedProject = ((ProjectListItem)SolutionProjectsList.SelectedItem).Project;
             }
         }
 
@@ -512,8 +513,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             ProfileList.SelectedIndex = 0;
 
-            if (Profiles.Count == 1)
-                ProfileList.IsEnabled = false;
+            ProfileList.IsEnabled = Profiles.Count > 1;
         }
 
         private void ProfileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
