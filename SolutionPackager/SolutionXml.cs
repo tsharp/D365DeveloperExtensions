@@ -9,17 +9,17 @@ namespace SolutionPackager
 {
     public class SolutionXml
     {
-        public static bool ValidateSolutionXml(Project project)
+        public static bool ValidateSolutionXml(Project project, string projectFolder)
         {
             try
             {
-                if (!SolutionXmlExists(project))
+                if (!SolutionXmlExists(project, projectFolder))
                 {
                     OutputLogger.WriteToOutputWindow("Solution.xml does not exist at: " + Path.GetDirectoryName(project.FullName) + "\\Other", MessageType.Error);
                     return false;
                 }
 
-                string solutionXmlPath = GetSolutionXmlPath(project);
+                string solutionXmlPath = GetSolutionXmlPath(project, projectFolder);
                 XmlDocument doc = new XmlDocument();
                 doc.Load(solutionXmlPath);
 
@@ -30,8 +30,7 @@ namespace SolutionPackager
                     return false;
                 }
 
-                Version version;
-                bool validVersion = Version.TryParse(versionNodes[0].InnerText, out version);
+                bool validVersion = Version.TryParse(versionNodes[0].InnerText, out var version);
                 if (!validVersion)
                 {
                     OutputLogger.WriteToOutputWindow("Invalid Solutions.xml: invalid version", MessageType.Error);
@@ -47,13 +46,13 @@ namespace SolutionPackager
             }
         }
 
-        public static Version GetSolutionXmlVersion(Project project)
+        public static Version GetSolutionXmlVersion(Project project, string projectFolder)
         {
-            bool isValid = ValidateSolutionXml(project);
+            bool isValid = ValidateSolutionXml(project, projectFolder);
             if (!isValid)
                 return null;
 
-            string solutionXmlPath = GetSolutionXmlPath(project);
+            string solutionXmlPath = GetSolutionXmlPath(project, projectFolder);
             XmlDocument doc = new XmlDocument();
             doc.Load(solutionXmlPath);
 
@@ -62,22 +61,22 @@ namespace SolutionPackager
             return Version.Parse(versionNodes[0].InnerText);
         }
 
-        public static bool SetSolutionXmlVersion(Project project, Version newVersion)
+        public static bool SetSolutionXmlVersion(Project project, Version newVersion, string projectFolder)
         {
             try
             {
-                bool isValid = ValidateSolutionXml(project);
+                bool isValid = ValidateSolutionXml(project, projectFolder);
                 if (!isValid)
                     return false;
 
-                Version oldVersion = GetSolutionXmlVersion(project);
+                Version oldVersion = GetSolutionXmlVersion(project, projectFolder);
                 if (newVersion < oldVersion)
                 {
                     OutputLogger.WriteToOutputWindow("Unexpected error setting Solution.xml version: new version cannot be lower than old version", MessageType.Error);
                     return false;
                 }
 
-                string solutionXmlPath = GetSolutionXmlPath(project);
+                string solutionXmlPath = GetSolutionXmlPath(project, projectFolder);
                 XmlDocument doc = new XmlDocument();
                 doc.Load(solutionXmlPath);
 
@@ -96,28 +95,30 @@ namespace SolutionPackager
             }
         }
 
-        public static bool SolutionXmlExists(Project project)
+        public static bool SolutionXmlExists(Project project, string packageFolder)
         {
-            string solutionXmlPath = GetSolutionXmlPath(project);
-
-            //TODO: check it's included in the project - not excluded but present on disk
+            string solutionXmlPath = GetSolutionXmlPath(project, packageFolder);
 
             return File.Exists(solutionXmlPath);
         }
 
-        private static string GetSolutionXmlPath(Project project)
+        private static string GetSolutionXmlPath(Project project, string packageFolder)
         {
             string projectPath = Path.GetDirectoryName(project.FullName);
             if (String.IsNullOrEmpty(projectPath))
                 return null;
 
-            return Path.Combine(projectPath, "Other", "Solution.xml");
+            packageFolder = packageFolder.Replace("/", String.Empty);
+
+            return Path.Combine(projectPath, packageFolder, "Other", "Solution.xml");
         }
 
-        public static string GetLatestSolutionPath(Project project, string projectFolder)
+        public static string GetLatestSolutionPath(Project project, string solutionFolder)
         {
             string latestSolutionPath = null;
-            string solutionProjectFolder = Packager.GetProjectSolutionFolder(project, projectFolder);
+
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string solutionProjectFolder = Path.Combine(projectPath, solutionFolder.Replace("/", String.Empty));
 
             DirectoryInfo d = new DirectoryInfo(solutionProjectFolder);
             FileInfo[] files = d.GetFiles("*.zip");

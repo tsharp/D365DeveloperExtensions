@@ -26,9 +26,10 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" SolutionProjectRenamed="ConnPane_OnSolutionProjectRenamed"
-                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_OnSelectedProjectChanged" ProjectItemAdded="ConnPane_OnProjectItemAdded"
-                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" SolutionOpened="ConnPane_OnSolutionOpened"/>
+        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"
+                                         SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_OnSelectedProjectChanged" 
+                                         ProjectItemAdded="ConnPane_OnProjectItemAdded" ProfileChanged="ConnPane_ProfileChanged" SolutionOpened="ConnPane_OnSolutionOpened"
+                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" />
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
@@ -40,9 +41,9 @@
                             Style="{DynamicResource ToolBarButtonStyle}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.PackageSolution_Button_Content}}" 
                             ToolTip="{x:Static resources:Resource.PackageSolution_Button_ToolTip}" />
-                    <Button x:Name="PublishSolution" Click="PublishSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
-                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.PublishSolution_Button_Content}}" 
-                            ToolTip="{x:Static resources:Resource.PublishSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                    <Button x:Name="ImportSolution" Click="ImportSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
+                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.ImportSolution_Button_Content}}" 
+                            ToolTip="{x:Static resources:Resource.ImportSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
@@ -51,7 +52,6 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-
                     <Grid HorizontalAlignment="Left" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -77,29 +77,30 @@
                               ToolTip="{x:Static resources:Resource.SolutionList_ComboBox_ToolTip}" 
                               IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                               ItemsSource="{Binding SolutionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                        <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="Package Type"/>
+                        <ComboBox x:Name="PackageType" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" VerticalAlignment="Top"
+                                  IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding PackageTypes}" />
+                        <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="2" Content="Enable Solution Packager Log?"/>
+                        <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                                  IsThreeState="False" IsEnabled="False" />
+                        <Label x:Name="ExtractOptionsLabel" Content="Extract Options" Grid.Column="0" Grid.Row="3" FontWeight="Bold"/>
+                        <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Top" 
                            Content="{x:Static resources:Resource.SaveSolutionsLabel_Label_Content}" />
-                        <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" Width="200" HorizontalAlignment="Left" 
+                        <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                               IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="ProjectFolderLabel" Grid.Column="0" Grid.Row="2" Content="Download Project Folder"/>
-                        <ComboBox x:Name="ProjectFolder" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" VerticalAlignment="Top"
+                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="5" Content="Solution Folder"/>
+                        <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" VerticalAlignment="Top"
+                                  IsEnabled="{Binding IsEnabled, ElementName=SaveSolutions}" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
+                                  ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="6" Content="Package Folder"/>
+                        <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
                               IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
-                              ItemsSource="{Binding SolutionFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="3" Content="Enable Solution Packager Log?"/>
-                        <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Width="200" HorizontalAlignment="Left" 
-                              IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="ExtractOptionsLabel" Content="Extract Options" Grid.Column="0" Grid.Row="4" FontWeight="Bold"/>
-                        <Label x:Name="DownloadManagedLabel" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                           Content="{x:Static resources:Resource.DownloadManagedLabel_Label_Content}" />
-                        <CheckBox x:Name="DownloadManaged" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" Width="200" HorizontalAlignment="Left" 
-                              IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="PackOptionsLabel" Content="Pack Options" Grid.Column="0" Grid.Row="6" FontWeight="Bold"/>
-                        <Label x:Name="CreateManagedLabel" Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                           Content="{x:Static resources:Resource.CreateManagedLabel_Label_Content}"/>
-                        <CheckBox x:Name="CreateManaged" Grid.Column="1" Grid.Row="7" Margin="5,5,0,0" Width="200" HorizontalAlignment="Left" 
-                              IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="VersionLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Set Version"/>
+                              ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label x:Name="PackOptionsLabel" Content="Pack Options" Grid.Column="0" Grid.Row="7" FontWeight="Bold"/>
+                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Solution Name"/>
                         <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBox x:Name="SolutionName" Margin="5,5,0,0" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                                     TextAlignment="Right" Style="{DynamicResource TextBoxStyle}"/>
                             <TextBox x:Name="VersionMajor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                  TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
                             <TextBox x:Name="VersionMinor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
@@ -118,7 +119,7 @@
                         </StackPanel>
                         <Label x:Name="ImportOptionsLabel" Content="Import Options" Grid.Column="0" Grid.Row="9" FontWeight="Bold"/>
                         <Label x:Name="PublishAllLabel" Content="Publish All?" Grid.Column="0" Grid.Row="10"/>
-                        <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="10" Margin="5,5,0,0" Width="200" HorizontalAlignment="Left" 
+                        <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="10" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                               IsThreeState="False" IsEnabled="False" />
                     </Grid>
                     <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">

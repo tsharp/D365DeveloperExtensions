@@ -108,6 +108,7 @@
     <Compile Include="Config\Mapping.cs" />
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="FileHandler.cs" />
+    <Compile Include="MapFile.cs" />
     <Compile Include="ModelBuilder.cs" />
     <Compile Include="Packager.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
@@ -122,6 +123,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionXml.cs" />
     <Compile Include="ViewModels\CrmSolution.cs" />
+    <Compile Include="Models\UnpackSettings.cs" />
+    <Compile Include="Models\PackSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="SolutionPackagerWindow.xaml">

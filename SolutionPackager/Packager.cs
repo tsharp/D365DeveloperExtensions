@@ -1,19 +1,18 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Microsoft.VisualStudio;
+using SolutionPackager.Models;
 using System;
 using System.IO;
 using System.Text;
-using CrmDeveloperExtensions2.Core;
 
 namespace SolutionPackager
 {
     public static class Packager
     {
-        public static bool CreatePackage(DTE dte, string toolPath, string solutionName, Project project,
-            CrmDevExSolutionPackage crmDevExSolutionPackage, string fullPath, string commandArgs)
+        public static bool CreatePackage(DTE dte, string toolPath, PackSettings packSettings, string commandArgs)
         {
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
@@ -21,86 +20,67 @@ namespace SolutionPackager
             //TODO: Better way?
             System.Threading.Thread.Sleep(5000);
 
-            if (!crmDevExSolutionPackage.SaveSolutions)
+            if (!packSettings.SaveSolutions)
                 return true;
 
-            project.ProjectItems.AddFromFile(fullPath);
-
-            if (crmDevExSolutionPackage.CreateManaged)
-                project.ProjectItems.AddFromFile(fullPath.Replace(".zip", "_managed.zip"));
+            packSettings.Project.ProjectItems.AddFromFile(packSettings.FullFilePath);
 
             return true;
         }
 
-        public static string GetPackageCommandArgs(Project project, string filename, string solutionProjectFolder, string fullPath, CrmDevExSolutionPackage crmDevExSolutionPackage)
+        public static string GetPackageCommandArgs(PackSettings packSettings)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            if (string.IsNullOrEmpty(projectPath))
-                return null;
-
             if (!FileSystem.ConfirmOverwrite(
-                new[] { fullPath, fullPath.Replace(".zip", "_managed.zip") }, true))
+                new[] { packSettings.FullFilePath, packSettings.FullFilePath.Replace(".zip", "_managed.zip") }, true))
                 return null;
 
-            string commandArgs = CreatePackCommandArgs(projectPath, solutionProjectFolder, filename,
-                crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.CreateManaged);
+            string commandArgs = CreatePackCommandArgs(packSettings);
 
             return commandArgs;
         }
 
-        public static string GetExtractCommandArgs(string unmanagedZipPath, string managedZipPath, Project project, DirectoryInfo extractedFolder , 
-            CrmDevExSolutionPackage crmDevExSolutionPackage)
+        public static string GetExtractCommandArgs(UnpackSettings unpackSettings)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            if (string.IsNullOrEmpty(projectPath))
-                return null;
-
-            string commandArgs = CreateExtractCommandArgs(unmanagedZipPath, extractedFolder, projectPath,
-                crmDevExSolutionPackage.EnableSolutionPackagerLog, crmDevExSolutionPackage.DownloadManaged);
+            string commandArgs = CreateExtractCommandArgs(unpackSettings);
 
             return commandArgs;
         }
 
-        public static bool ExtractPackage(DTE dte, string toolPath, string unmanagedZipPath, string managedZipPath, Project project,
-            CrmDevExSolutionPackage crmDevExSolutionPackage, DirectoryInfo extractedFolder, string commandArgs)
+        public static bool ExtractPackage(DTE dte, string toolPath, UnpackSettings unpackSettings, string commandArgs)
         {
-            string solutionProjectFolder = GetProjectSolutionFolder(project, crmDevExSolutionPackage.ProjectFolder);
-
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
             //Need this. Extend to allow bigger solutions to unpack
             //TODO: Better way?
             System.Threading.Thread.Sleep(10000);
 
-            bool solutionFileDelete = RemoveDeletedItems(extractedFolder.FullName, project.ProjectItems, crmDevExSolutionPackage.ProjectFolder);
-            bool solutionFileAddChange = ProcessDownloadedSolution(extractedFolder, Path.GetDirectoryName(project.FullName), project.ProjectItems);
+            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName, unpackSettings.Project.ProjectItems, unpackSettings.SolutionPackageConfig.packagepath);
+            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder, unpackSettings.ProjectPackageFolder, unpackSettings.Project.ProjectItems);
 
-            Directory.Delete(extractedFolder.FullName, true);
+            Directory.Delete(unpackSettings.ExtractedFolder.FullName, true);
 
-            if (!crmDevExSolutionPackage.SaveSolutions)
+            if (!unpackSettings.SaveSolutions)
                 return true;
 
             //Solution change or file not present
             bool solutionChange = solutionFileDelete || solutionFileAddChange;
-            bool solutionStored = StoreSolutionFile(unmanagedZipPath, project, solutionProjectFolder, solutionChange);
-            if (crmDevExSolutionPackage.DownloadManaged && !string.IsNullOrEmpty(managedZipPath))
-                solutionStored = StoreSolutionFile(managedZipPath, project, solutionProjectFolder, solutionChange);
+            bool solutionStored = StoreSolutionFile(unpackSettings, solutionChange);
 
             return solutionStored;
         }
 
-        private static bool StoreSolutionFile(string zipPath, Project project, string solutionProjectFolder, bool solutionChange)
+        private static bool StoreSolutionFile(UnpackSettings unpackSettings, bool solutionChange)
         {
             try
             {
-                string filename = Path.GetFileName(zipPath);
+                string filename = Path.GetFileName(unpackSettings.DownloadedZipPath);
                 if (string.IsNullOrEmpty(filename))
                 {
-                    OutputLogger.WriteToOutputWindow("Error getting file name from temp path: " + zipPath, MessageType.Error);
+                    OutputLogger.WriteToOutputWindow("Error getting file name from temp path: " + unpackSettings.DownloadedZipPath, MessageType.Error);
                     return false;
                 }
 
-                string newSolutionFile = Path.Combine(solutionProjectFolder, filename);
+                string newSolutionFile = Path.Combine(unpackSettings.ProjectSolutionFolder, filename);
 
                 if (!solutionChange && File.Exists(newSolutionFile))
                     return true;
@@ -108,15 +88,15 @@ namespace SolutionPackager
                 if (File.Exists(newSolutionFile))
                     File.Delete(newSolutionFile);
 
-                File.Move(zipPath, newSolutionFile);
+                File.Move(unpackSettings.DownloadedZipPath, newSolutionFile);
 
-                project.ProjectItems.AddFromFile(newSolutionFile);
+                unpackSettings.Project.ProjectItems.AddFromFile(newSolutionFile);
 
                 return true;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error adding solution file to project: " + zipPath +
+                OutputLogger.WriteToOutputWindow("Error adding solution file to project: " + unpackSettings.DownloadedZipPath +
                     Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
                 return false;
             }
@@ -131,7 +111,7 @@ namespace SolutionPackager
             {
                 if (File.Exists(Path.Combine(baseFolder, file.Name)))
                 {
-                    if (FileEquals(Path.Combine(baseFolder, file.Name), file.FullName))
+                    if (FileSystem.FileEquals(Path.Combine(baseFolder, file.Name), file.FullName))
                         continue;
                 }
 
@@ -209,7 +189,7 @@ namespace SolutionPackager
             return itemChanged;
         }
 
-        public static string GetProjectSolutionFolder(Project project, string projectFolder)
+        public static string GetProjectPackageFolder(Project project, string projectFolder)
         {
             if (projectFolder.StartsWith("/"))
                 projectFolder = projectFolder.Substring(1);
@@ -221,35 +201,6 @@ namespace SolutionPackager
                 project.ProjectItems.AddFolder(projectFolder);
 
             return projectPath;
-        }
-
-        private static bool FileEquals(string path1, string path2)
-        {
-            FileInfo first = new FileInfo(path1);
-            FileInfo second = new FileInfo(path2);
-
-            if (first.Length != second.Length)
-                return false;
-
-            int iterations = (int)Math.Ceiling((double)first.Length / sizeof(Int64));
-
-            using (FileStream fs1 = first.OpenRead())
-            using (FileStream fs2 = second.OpenRead())
-            {
-                byte[] one = new byte[sizeof(Int64)];
-                byte[] two = new byte[sizeof(Int64)];
-
-                for (int i = 0; i < iterations; i++)
-                {
-                    fs1.Read(one, 0, sizeof(Int64));
-                    fs2.Read(two, 0, sizeof(Int64));
-
-                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
-                        return false;
-                }
-            }
-
-            return true;
         }
 
         public static string CreateToolPath(DTE dte)
@@ -268,57 +219,64 @@ namespace SolutionPackager
 
             string toolPath = @"""" + spPath + "SolutionPackager.exe" + @"""";
 
-            if (!File.Exists(spPath + "SolutionPackager.exe"))
-            {
-                OutputLogger.WriteToOutputWindow($"SolutionPackager.exe not found at: {spPath}", MessageType.Error);
-                return null;
-            }
+            if (File.Exists(spPath + "SolutionPackager.exe"))
+                return toolPath;
 
-            return toolPath;
+            OutputLogger.WriteToOutputWindow($"SolutionPackager.exe not found at: {spPath}", MessageType.Error);
+            return null;
         }
 
-        private static string CreatePackCommandArgs(string projectPath, string solutionProjectFolder, string filename,
-            bool enableSolutionPackagerLogging, bool downloadManaged)
+        private static string CreatePackCommandArgs(PackSettings packSettings)
         {
+            var zipFolder = packSettings.SaveSolutions
+                ? packSettings.ProjectSolutionFolder
+                : packSettings.ProjectPackageFolder;
+
             StringBuilder command = new StringBuilder();
             command.Append(" /action: Pack");
-            command.Append($" /zipfile: \"{Path.Combine(solutionProjectFolder, filename)}\"");
-            command.Append($" /folder: \"{projectPath}\"");
+            command.Append($" /zipfile: \"{Path.Combine(zipFolder, packSettings.FileName)}\"");
+            command.Append($" /folder: \"{packSettings.ProjectPackageFolder}\"");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (File.Exists(Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)))
-                command.Append($" /map: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
+            if (packSettings.SolutionPackageConfig.map != null)
+            {
+                MapFile.Create(packSettings.SolutionPackageConfig, Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
+                if (File.Exists(Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
+                    command.Append($" /map: \"{Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
+            }
 
             // Write Solution Package output to a log file named SolutionPackager.log in the root folder of the project
-            if (enableSolutionPackagerLogging)
-                command.Append($" /log: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
+            if (packSettings.EnablePackagerLogging)
+                command.Append($" /log: \"{Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
 
-            // Pack managed solution as well.
-            if (downloadManaged)
-                command.Append(" /packagetype:Both");
+            // Pack managed or unmanaged
+            command.Append($" /packagetype:{packSettings.SolutionPackageConfig.packagetype}");
 
             return command.ToString();
         }
 
-        private static string CreateExtractCommandArgs(string unmanagedZipPath, DirectoryInfo extractFolder, string projectPath, bool enableSolutionPackagerLogging, bool downloadManaged)
+        private static string CreateExtractCommandArgs(UnpackSettings unpackSettings)
         {
             StringBuilder command = new StringBuilder();
             command.Append(" /action: Extract");
-            command.Append($" /zipfile: \"{unmanagedZipPath}\"");
-            command.Append($" /folder: \"{extractFolder.FullName}\"");
+            command.Append($" /zipfile: \"{unpackSettings.DownloadedZipPath}\"");
+            command.Append($" /folder: \"{unpackSettings.ExtractedFolder.FullName}\"");
             command.Append(" /clobber");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (File.Exists(Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)))
-                command.Append($" /map: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
+            if (unpackSettings.SolutionPackageConfig.map != null)
+            {
+                MapFile.Create(unpackSettings.SolutionPackageConfig, Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
+                if (File.Exists(Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
+                    command.Append($" /map: \"{Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)}\"");
+            }
 
             // Write Solution Package output to a log file named SolutionPackager.log in the root folder of the project
-            if (enableSolutionPackagerLogging)
-                command.Append($" /log: \"{Path.Combine(projectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
+            if (unpackSettings.EnablePackagerLogging)
+                command.Append($" /log: \"{Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerLogFile)}\"");
 
-            // Unpack managed solution as well.
-            if (downloadManaged)
-                command.Append(" /packagetype:Both");
+            // Unpack managed or unmanaged
+            command.Append($" /packagetype:{unpackSettings.SolutionPackageConfig.packagetype}");
 
             return command.ToString();
         }

@@ -117,8 +117,8 @@
       <DependentUpon>NewWebResource.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CrmSolution.cs" />
-    <Compile Include="ViewModels\FilterState.cs" />
-    <Compile Include="ViewModels\FilterTypeName.cs" />
+    <Compile Include="Models\FilterState.cs" />
+    <Compile Include="Models\FilterTypeName.cs" />
     <Compile Include="ViewModels\NewWebResource.cs" />
     <Compile Include="ViewModels\WebResourceItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

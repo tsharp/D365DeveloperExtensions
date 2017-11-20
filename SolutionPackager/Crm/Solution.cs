@@ -6,10 +6,8 @@ using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using SolutionPackager.ViewModels;
 using System;
-using System.IO;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using EnvDTE;
 using Task = System.Threading.Tasks.Task;
 
 namespace SolutionPackager.Crm
@@ -121,19 +119,18 @@ namespace SolutionPackager.Crm
             byte[] solutionBytes = CrmDeveloperExtensions2.Core.FileSystem.GetFileBytes(path);
             if (solutionBytes == null)
                 return false;
-
+            
             try
             {
                 ImportSolutionRequest request = new ImportSolutionRequest
                 {
-                    //TODO: make configurable
                     CustomizationFile = solutionBytes,
                     OverwriteUnmanagedCustomizations = true,
                     PublishWorkflows = true, 
                     ImportJobId = Guid.NewGuid()                  
                 };
 
-                ImportSolutionResponse response = (ImportSolutionResponse)client.Execute(request);
+                client.Execute(request);
 
                 return true;
             }

@@ -1,13 +1,14 @@
 ﻿using CrmDeveloperExtensions2.Core.DataGrid;
+using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebResourceDeployer.ViewModels
+namespace PluginTraceViewer.Models
 {
-    public class FilterTypeName : INotifyPropertyChanged, IFilterProperty
+    public class FilterMode : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +32,26 @@ namespace WebResourceDeployer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
+        public static ObservableCollection<FilterMode> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
         {
-            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(webResourceItems.GroupBy(t => t.TypeName).Select(x =>
-                new FilterTypeName
+            ObservableCollection<FilterMode> filterModes = new ObservableCollection<FilterMode>(traces.GroupBy(t => t.Mode).Select(x =>
+                new FilterMode
                 {
                     Name = x.Key,
                     Value = x.Key,
                     IsSelected = true
                 }).ToList());
 
-            filterTypeNames = new ObservableCollection<FilterTypeName>(filterTypeNames.OrderBy(e => e.Name));
+            filterModes = new ObservableCollection<FilterMode>(filterModes.OrderBy(e => e.Name));
 
-            filterTypeNames.Insert(0, new FilterTypeName
+            filterModes.Insert(0, new FilterMode
             {
                 Name = "Select All",
                 Value = String.Empty,
                 IsSelected = true
             });
 
-            return filterTypeNames;
+            return filterModes;
         }
     }
 }

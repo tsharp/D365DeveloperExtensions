@@ -108,6 +108,8 @@ namespace PluginDeployer
             _crmAssemblies = new ObservableCollection<CrmAssembly>();
             LoadData();
             ProjectName.Content = ConnPane.SelectedProject.Name;
+
+            SetWindowCaption(_dte.ActiveWindow.Caption);
         }
 
         private async void LoadData()

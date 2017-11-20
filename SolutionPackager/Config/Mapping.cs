@@ -1,44 +1,62 @@
-﻿using CrmDeveloperExtensions2.Core.Config;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Config;
 using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
-using System;
-using System.Collections.ObjectModel;
 using SolutionPackager.ViewModels;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using CoreMapping = CrmDeveloperExtensions2.Core.Config.Mapping;
 
 namespace SolutionPackager.Config
 {
     public static class Mapping
     {
-        public static CrmDevExSolutionPackage HandleMappings(string solutionPath, Project project, ObservableCollection<CrmSolution> crmSolutions, Guid organizationId)
+        public static SolutionPackageConfig GetSolutionPackageConfig(Project project, string profile, ObservableCollection<CrmSolution> crmSolutions)
         {
-            CrmDexExConfig crmDexExConfig = CoreMapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CoreMapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
 
-            if (crmDevExConfigOrgMap.SolutionPackage == null)
+            List<SolutionPackageConfig> spklSolutionPackageConfigs = spklConfig.solutions;
+            if (spklSolutionPackageConfigs == null)
                 return null;
 
-            foreach (CrmSolution crmSolution in crmSolutions)
-            {
-                if (crmSolution.SolutionId == crmDevExConfigOrgMap.SolutionPackage.SolutionId)
-                    return crmDevExConfigOrgMap.SolutionPackage;
-            }
+            SolutionPackageConfig solutionPackageConfig = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklSolutionPackageConfigs[0]
+                : spklSolutionPackageConfigs.FirstOrDefault(p => p.profile == profile);
 
-            crmDevExConfigOrgMap.SolutionPackage = null;
-
-            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
-
-            return null;
+            return solutionPackageConfig;
         }
 
-        public static void AddOrUpdateMapping(string solutionPath, Project project, CrmDevExSolutionPackage solutionPackage, Guid organizationId)
+        public static void AddOrUpdateSpklMapping(Project project, string profile, SolutionPackageConfig solutionPackageConfig)
         {
-            CrmDexExConfig crmDexExConfig = CoreMapping.GetConfigFile(solutionPath, project.UniqueName, organizationId);
-            CrmDevExConfigOrgMap crmDevExConfigOrgMap = CoreMapping.GetOrgMap(ref crmDexExConfig, organizationId, project.UniqueName);
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
 
-            crmDevExConfigOrgMap.SolutionPackage = solutionPackage;
+            if (profile.StartsWith(ExtensionConstants.NoProfilesText))
+                spklConfig.solutions[0] = solutionPackageConfig;
+            else
+            {
+                SolutionPackageConfig existingSolutionPackageConfig = spklConfig.solutions.FirstOrDefault(s => s.profile == profile);
+                if (existingSolutionPackageConfig != null && solutionPackageConfig != null)
+                {
+                    existingSolutionPackageConfig.increment_on_import = solutionPackageConfig.increment_on_import;
+                    existingSolutionPackageConfig.map = solutionPackageConfig.map;
+                    existingSolutionPackageConfig.packagetype = solutionPackageConfig.packagetype;
+                    existingSolutionPackageConfig.packagepath = solutionPackageConfig.packagepath.Replace("/", string.Empty);
+                    existingSolutionPackageConfig.solution_uniquename = solutionPackageConfig.solution_uniquename;
+                    existingSolutionPackageConfig.solutionpath = FormatSolutionName(solutionPackageConfig.solutionpath);
+                }
+            }
 
-            ConfigFile.UpdateConfigFile(solutionPath, crmDexExConfig);
+            ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
+        }
+
+        private static string FormatSolutionName(string solutionName)
+        {
+            return string.IsNullOrEmpty(solutionName)
+                ? string.Empty :
+                $"{solutionName}_{{0}}_{{1}}_{{2}}_{{3}}.zip";
         }
     }
 }

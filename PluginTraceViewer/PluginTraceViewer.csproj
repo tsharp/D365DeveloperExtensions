@@ -116,10 +116,10 @@
       <DependentUpon>PluginTraceViewerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CrmPluginTrace.cs" />
-    <Compile Include="ViewModels\FilterEntity.cs" />
-    <Compile Include="ViewModels\FilterMessage.cs" />
-    <Compile Include="ViewModels\FilterTypeName.cs" />
-    <Compile Include="ViewModels\FilterMode.cs" />
+    <Compile Include="Models\FilterEntity.cs" />
+    <Compile Include="Models\FilterMessage.cs" />
+    <Compile Include="Models\FilterTypeName.cs" />
+    <Compile Include="Models\FilterMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.resx">

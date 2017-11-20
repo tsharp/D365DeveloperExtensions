@@ -26,6 +26,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using WebResourceDeployer.Models;
 using WebResourceDeployer.ViewModels;
 using static CrmDeveloperExtensions2.Core.FileSystem;
 using Mapping = WebResourceDeployer.Config.Mapping;

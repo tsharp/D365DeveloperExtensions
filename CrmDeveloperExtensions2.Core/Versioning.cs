@@ -31,5 +31,21 @@ namespace CrmDeveloperExtensions2.Core
             return aVersion.Major == bVersion.Major &&
                    aVersion.Minor == bVersion.Minor;
         }
+
+        public static Version ValidateVersionInput(string majorIn, string minorIn, string buildIn, string revisionIn)
+        {
+            bool isMajorInt = int.TryParse(majorIn, out int major);
+            bool isMinorInt = int.TryParse(minorIn, out int minor);
+            bool isBuildInt = int.TryParse(buildIn, out int build);
+            bool isRevisionInt = int.TryParse(revisionIn, out int revision);
+
+            if (!isMajorInt || !isMinorInt)
+                return null;
+
+            string v = string.Concat(major, ".", minor, isBuildInt ? $".{build}" : null,
+                isRevisionInt ? $".{revision}" : null);
+
+            return new Version(v);
+        }
     }
 }

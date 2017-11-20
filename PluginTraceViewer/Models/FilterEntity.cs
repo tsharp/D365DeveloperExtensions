@@ -1,13 +1,14 @@
 ﻿using CrmDeveloperExtensions2.Core.DataGrid;
+using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace PluginTraceViewer.ViewModels
+namespace PluginTraceViewer.Models
 {
-    public class FilterTypeName : INotifyPropertyChanged, IFilterProperty
+    public class FilterEntity : INotifyPropertyChanged, IFilterProperty
     {
         private bool _isSelected;
 
@@ -31,26 +32,26 @@ namespace PluginTraceViewer.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
+        public static ObservableCollection<FilterEntity> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
         {
-            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(traces.GroupBy(t => t.TypeName).Select(x =>
-                new FilterTypeName
+            ObservableCollection<FilterEntity> filterEntities = new ObservableCollection<FilterEntity>(traces.GroupBy(t => t.Entity).Select(x =>
+                new FilterEntity
                 {
                     Name = x.Key,
                     Value = x.Key,
                     IsSelected = true
                 }).ToList());
 
-            filterTypeNames = new ObservableCollection<FilterTypeName>(filterTypeNames.OrderBy(e => e.Name));
+            filterEntities = new ObservableCollection<FilterEntity>(filterEntities.OrderBy(e => e.Name));
 
-            filterTypeNames.Insert(0, new FilterTypeName
+            filterEntities.Insert(0, new FilterEntity
             {
                 Name = "Select All",
                 Value = String.Empty,
                 IsSelected = true
             });
 
-            return filterTypeNames;
+            return filterEntities;
         }
     }
 }

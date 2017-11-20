@@ -144,5 +144,34 @@ namespace CrmDeveloperExtensions2.Core
                 return null;
             }
         }
+
+        public static bool FileEquals(string path1, string path2)
+        {
+            FileInfo first = new FileInfo(path1);
+            FileInfo second = new FileInfo(path2);
+
+            if (first.Length != second.Length)
+                return false;
+
+            int iterations = (int)Math.Ceiling((double)first.Length / sizeof(Int64));
+
+            using (FileStream fs1 = first.OpenRead())
+            using (FileStream fs2 = second.OpenRead())
+            {
+                byte[] one = new byte[sizeof(Int64)];
+                byte[] two = new byte[sizeof(Int64)];
+
+                for (int i = 0; i < iterations; i++)
+                {
+                    fs1.Read(one, 0, sizeof(Int64));
+                    fs2.Read(two, 0, sizeof(Int64));
+
+                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
+                        return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

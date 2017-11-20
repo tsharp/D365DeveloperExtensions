@@ -79,6 +79,24 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string ImportSolution_Button_Content {
+            get {
+                return ResourceManager.GetString("ImportSolution_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import Solution.
+        /// </summary>
+        public static string ImportSolution_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("ImportSolution_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Package.
         /// </summary>
         public static string PackageSolution_Button_Content {
@@ -93,24 +111,6 @@ namespace SolutionPackager.Resources {
         public static string PackageSolution_Button_ToolTip {
             get {
                 return ResourceManager.GetString("PackageSolution_Button_ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Publish.
-        /// </summary>
-        public static string PublishSolution_Button_Content {
-            get {
-                return ResourceManager.GetString("PublishSolution_Button_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Import and publish latest unmanaged solution to CRM/365.
-        /// </summary>
-        public static string PublishSolution_Button_ToolTip {
-            get {
-                return ResourceManager.GetString("PublishSolution_Button_ToolTip", resourceCulture);
             }
         }
         
