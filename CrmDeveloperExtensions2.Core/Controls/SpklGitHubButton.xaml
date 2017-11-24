@@ -1,0 +1,19 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="CrmDeveloperExtensions2.Core.Controls.SpklGitHubButton"
+             mc:Ignorable="d"
+             d:DesignHeight="24" d:DesignWidth="24" SnapsToDevicePixels="True">
+    <UserControl.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Button x:Name="OpenGitHub" Click="OpenGitHub_Click" Style="{DynamicResource ToolBarImageButtonStyle}" ToolTip="Check out the Spkl project on GitHub">
+        <Image x:Name="SpklGithub" Source="/CrmDeveloperExtensions2.Core;component/Images/spkl_20.png" Height="20" Width="20" />
+    </Button>
+</UserControl>

@@ -167,6 +167,15 @@
     <Compile Include="Connection\SolutionProjectRenamedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectRemovedEventArgs.cs" />
     <Compile Include="Connection\SolutionProjectAddedEventArgs.cs" />
+    <Compile Include="Controls\PayPalButton.xaml.cs">
+      <DependentUpon>PayPalButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SpklGitHubButton.xaml.cs">
+      <DependentUpon>SpklGitHubButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProjectGitHubButton.xaml.cs">
+      <DependentUpon>ProjectGitHubButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataGridHeaderClearFilterButton.xaml.cs">
       <DependentUpon>DataGridHeaderClearFilterButton.xaml</DependentUpon>
     </Compile>
@@ -240,6 +249,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Connection\CrmLoginForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PayPalButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SpklGitHubButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ProjectGitHubButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -339,6 +360,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\poll_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\github_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\spkl_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\paypal_20.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

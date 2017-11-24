@@ -61,6 +61,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string About_Menu_Header {
+            get {
+                return ResourceManager.GetString("About_Menu_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-login to last connected org?.
         /// </summary>
         public static string AutoLogin_Button_ToolTip {
