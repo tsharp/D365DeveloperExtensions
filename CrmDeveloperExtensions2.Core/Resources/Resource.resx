@@ -231,4 +231,7 @@
   <data name="CustomTemplatesPath" xml:space="preserve">
     <value>Custom templates folder</value>
   </data>
+  <data name="About_Menu_Header" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
              xmlns:local="clr-namespace:CrmDeveloperExtensions2.Core.Connection"
+             xmlns:controls="clr-namespace:CrmDeveloperExtensions2.Core.Controls"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="190" d:DesignWidth="200">
@@ -28,7 +29,11 @@
             </TextBlock>
         </Expander.Header>
         <StackPanel>
-            <StackPanel Style="{DynamicResource StacKPanelToolbar}" Margin="5, 0, 0, 0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="200" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
+                <controls:ProjectGitHubButton Margin="5,0,3,0" />
+                <controls:SpklGitHubButton Margin="0,0,3,0"/>
+                <controls:PayPalButton/>
+            </StackPanel>
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.Project_Label_Content}" />
             <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" 
                       ItemsSource="{Binding Path=Projects, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"
