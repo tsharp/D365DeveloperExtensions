@@ -1,5 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
@@ -8,9 +9,8 @@ using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -76,7 +76,8 @@ namespace WebResourceDeployer.Crm
 
                     moreRecords = partialResults.MoreRecords;
 
-                    if (partialResults.Entities == null) continue;
+                    if (partialResults.Entities == null)
+                        continue;
 
                     if (results == null)
                         results = new EntityCollection();
@@ -189,33 +190,35 @@ namespace WebResourceDeployer.Crm
             if (type == 8)
                 webResource["silverlightversion"] = "4.0";
 
-            string extension = Path.GetExtension(filePath);
-
-            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG", ".SVG" };
-            string content;
-            //TypeScript
-            if (extension != null && extension.ToUpper() == ".TS" && !string.IsNullOrEmpty(filePath))
-            {
-                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
-                webResource["content"] = EncodeString(content);
-            }
-            //Images
-            else if (extension != null && imageExs.Any(s => extension.ToUpper().EndsWith(s)))
-            {
-                content = EncodedImage(filePath, extension);
-                webResource["content"] = content;
-            }
-            //Everything else
-            else
-            {
-                if (filePath == null)
-                    return webResource;
-
-                content = File.ReadAllText(filePath);
-                webResource["content"] = EncodeString(content);
-            }
+            webResource["content"] = GetFileContent(filePath);
 
             return webResource;
+        }
+
+        private static string GetFileContent(string filePath)
+        {
+            FileExtensionType extension = WebResourceTypes.GetExtensionType(filePath);
+
+            string content;
+
+            //TypeScript
+            if (extension == FileExtensionType.Ts)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute
+                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
+                return EncodeString(content);
+            }
+
+            //Images
+            if (WebResourceTypes.IsImageType(extension))
+            {
+                content = EncodedImage(filePath, extension);
+                return content;
+            }
+
+            //Everything else
+            content = File.ReadAllText(filePath);
+            return EncodeString(content);
         }
 
         public static Guid CreateWebResourceInCrm(CrmServiceClient client, Entity webResource)
@@ -250,28 +253,7 @@ namespace WebResourceDeployer.Crm
 
             string filePath = Path.GetDirectoryName(projectFullName) + boundFile.Replace("/", "\\");
 
-            string extension = Path.GetExtension(filePath);
-
-            List<string> imageExs = new List<string> { ".ICO", ".PNG", ".GIF", ".JPG", ".SVG" };
-            string content;
-            //TypeScript
-            if (extension.ToUpper() == ".TS")
-            {
-                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
-                webResource["content"] = EncodeString(content);
-            }
-            //Images
-            else if (imageExs.Any(s => extension.ToUpper().EndsWith(s)))
-            {
-                content = EncodedImage(filePath, extension);
-                webResource["content"] = content;
-            }
-            //Everything else
-            else
-            {
-                content = File.ReadAllText(filePath);
-                webResource["content"] = EncodeString(content);
-            }
+            webResource["content"] = GetFileContent(filePath);
 
             return webResource;
         }
@@ -401,40 +383,6 @@ namespace WebResourceDeployer.Crm
             return publishXml.ToString();
         }
 
-        //TODO: move to Core/models/weresourcetype.cs
-        public static string GetWebResourceTypeNameByNumber(string type)
-        {
-            switch (type)
-            {
-                case "1":
-                    return "HTML";
-                case "2":
-                    return "CSS";
-                case "3":
-                    return "JS";
-                case "4":
-                    return "XML";
-                case "5":
-                    return "PNG";
-                case "6":
-                    return "JPG";
-                case "7":
-                    return "GIF";
-                case "8":
-                    return "XAP";
-                case "9":
-                    return "XSL";
-                case "10":
-                    return "ICO";
-                case "11":
-                    return "SVG";
-                case "12":
-                    return "RESX";
-                default:
-                    return String.Empty;
-            }
-        }
-
         public static string GetWebResourceContent(Entity webResource)
         {
             bool hasContent = webResource.Attributes.TryGetValue("content", out var contentObj);
@@ -453,51 +401,21 @@ namespace WebResourceDeployer.Crm
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
         }
 
-        public static string EncodedImage(string filePath, string extension)
+        public static string EncodedImage(string filePath, FileExtensionType extension)
         {
-            string encodedImage;
-
-            if (extension.ToUpper() == ".ICO")
+            switch (extension)
             {
-                System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    icon?.Save(ms);
-                    byte[] imageBytes = ms.ToArray();
-                    encodedImage = Convert.ToBase64String(imageBytes);
-                }
-
-                return encodedImage;
+                case FileExtensionType.Ico:
+                    return ImageEncoding.EncodeIco(filePath);
+                case FileExtensionType.Gif:
+                case FileExtensionType.Jpg:
+                case FileExtensionType.Png:
+                    return ImageEncoding.EncodeImage(filePath, extension);
+                case FileExtensionType.Svg:
+                    return ImageEncoding.EncodeSvg(filePath);
+                default:
+                    return null;
             }
-
-            System.Drawing.Image image = System.Drawing.Image.FromFile(filePath, true);
-
-            ImageFormat format = null;
-            switch (extension.ToUpper())
-            {
-                case ".GIF":
-                    format = ImageFormat.Gif;
-                    break;
-                case ".JPG":
-                    format = ImageFormat.Jpeg;
-                    break;
-                case ".PNG":
-                    format = ImageFormat.Png;
-                    break;
-                    //TODO: handle SVG
-            }
-
-            if (format == null)
-                return null;
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                image.Save(ms, format);
-                byte[] imageBytes = ms.ToArray();
-                encodedImage = Convert.ToBase64String(imageBytes);
-            }
-            return encodedImage;
         }
 
         public static string ConvertWebResourceNameToPath(string webResourceName, string folder, string projectFullName)
@@ -511,6 +429,7 @@ namespace WebResourceDeployer.Crm
             return path;
         }
 
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public static string ConvertWebResourceNameFullToPath(string webResourceName, string rootFolder, Project project)
         {
             string[] folders = webResourceName.Split('/');
@@ -529,9 +448,7 @@ namespace WebResourceDeployer.Crm
                 CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.GetProjectItems(project, currentPartialPath, true);
             }
 
-            string path = Path.Combine(currentFullPath, folders[folders.Length - 1]);
-
-            return path;
+            return Path.Combine(currentFullPath, folders[folders.Length - 1]);
         }
 
         public static string AddMissingExtension(string name, int webResourceType)
@@ -539,8 +456,7 @@ namespace WebResourceDeployer.Crm
             if (!string.IsNullOrEmpty(Path.GetExtension(name)))
                 return name;
 
-            string ext =
-                GetWebResourceTypeNameByNumber(webResourceType.ToString()).ToLower();
+            string ext = WebResourceTypes.GetWebResourceTypeNameByNumber(webResourceType.ToString()).ToLower();
             name += "." + ext;
 
             return name;
@@ -564,10 +480,7 @@ namespace WebResourceDeployer.Crm
             if (!r.IsMatch(name))
                 return false;
 
-            if (name.Contains("//"))
-                return false;
-
-            return true;
+            return !name.Contains("//");
         }
     }
 }

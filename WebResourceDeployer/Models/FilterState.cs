@@ -1,10 +1,9 @@
-﻿using System;
+﻿using CrmDeveloperExtensions2.Core.DataGrid;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using CrmDeveloperExtensions2.Core.DataGrid;
-using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Models
 {
@@ -32,14 +31,12 @@ namespace WebResourceDeployer.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterState> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
+        public static ObservableCollection<FilterState> CreateFilterList()
         {
-            ObservableCollection<FilterState> filterStates = new ObservableCollection<FilterState>(webResourceItems.GroupBy(t => t.State).Select(x =>
-                new FilterState
-                {
-                    Name = x.Key,
-                    Value = x.Key
-                }).ToList());
+            ObservableCollection<FilterState> filterStates = new ObservableCollection<FilterState> {
+                new FilterState {Name = "Managed", Value = "Managed", IsSelected = false},
+                new FilterState {Name = "Unmanaged", Value = "Unmanaged", IsSelected = true}
+            };
 
             filterStates = new ObservableCollection<FilterState>(filterStates.OrderBy(e => e.Name));
 
@@ -48,8 +45,6 @@ namespace WebResourceDeployer.Models
                 Name = "Select All",
                 Value = String.Empty
             });
-
-            filterStates.First(f => f.Value == "Unmanaged").IsSelected = true;
 
             return filterStates;
         }

@@ -203,6 +203,7 @@
     <Compile Include="DataGrid\DetailsRow.cs" />
     <Compile Include="DataGrid\GridFilters.cs" />
     <Compile Include="DateFormatting.cs" />
+    <Compile Include="Enums\FileExtensionType.cs" />
     <Compile Include="Enums\MapTypes.cs" />
     <Compile Include="Enums\SolutionType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />

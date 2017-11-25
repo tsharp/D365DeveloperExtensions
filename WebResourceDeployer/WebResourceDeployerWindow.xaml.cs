@@ -251,8 +251,7 @@ namespace WebResourceDeployer
             List<WebResourceItem> selectedItems = new List<WebResourceItem>();
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
 
-            //Check for unsaved & missing files
-            List<ProjectItem> dirtyItems = new List<ProjectItem>();
+            //Check for missing files
             foreach (var selectedItem in WebResourceItems.Where(w => w.Publish && w.SolutionId == solutionId))
             {
                 selectedItems.Add(selectedItem);
@@ -260,26 +259,12 @@ namespace WebResourceDeployer
                 ComboBoxItem item = ProjectFiles.FirstOrDefault(c => c.Content.ToString() == selectedItem.BoundFile);
                 if (item == null) continue;
 
-                ProjectItem projectItem = (ProjectItem)item.Tag;
-                if (!projectItem.IsDirty) continue;
-
                 string filePath = Path.GetDirectoryName(ConnPane.SelectedProject.FullName) + selectedItem.BoundFile.Replace("/", "\\");
                 if (!File.Exists(filePath))
                 {
                     MessageBox.Show($"Could not find file: {selectedItem.BoundFile}");
                     return;
                 }
-
-                dirtyItems.Add(projectItem);
-            }
-
-            if (dirtyItems.Count > 0)
-            {
-                var result = MessageBox.Show("Save item(s) and publish?", "Unsaved Item(s)", MessageBoxButton.YesNo);
-                if (result != MessageBoxResult.Yes) return;
-
-                foreach (var projectItem in dirtyItems)
-                    projectItem.Save();
             }
 
             //Build TypeScript project
@@ -334,11 +319,6 @@ namespace WebResourceDeployer
         {
             if (WebResourceItems != null)
                 ResetForm();
-        }
-
-        private void ConnPane_SolutionProjectAdded(object sender, SolutionProjectAddedEventArgs e)
-        {
-
         }
 
         private void ConnPane_OnSolutionProjectRemoved(object sender, SolutionProjectRemovedEventArgs e)
@@ -812,8 +792,7 @@ namespace WebResourceDeployer
                 Guid webResourceId = new Guid(((Button)sender).CommandParameter.ToString());
                 await Task.Run(() => Crm.WebResource.DeleteWebResourcetFromCrm(ConnPane.CrmService, webResourceId));
 
-                foreach (WebResourceItem webResourceItem in WebResourceItems.Where(w => w.WebResourceId == webResourceId))
-                    WebResourceItems.Remove(webResourceItem);
+                WebResourceItems = new ObservableCollection<WebResourceItem>(WebResourceItems.Where(w => w.WebResourceId != webResourceId));
 
                 WebResourceItems = Mapping.HandleSpklMappings(ConnPane.SelectedProject, ConnPane.SelectedProfile, WebResourceItems);
 
@@ -957,26 +936,23 @@ namespace WebResourceDeployer
 
         private void CreateFilterTypeNameList()
         {
-            FilterTypeNames = FilterTypeName.CreateFilterList(WebResourceItems);
+            FilterTypeNames = FilterTypeName.CreateFilterList(ConnPane.CrmService.ConnectedOrgVersion.Major);
 
             foreach (FilterTypeName filterTypeName in FilterTypeNames)
             {
                 filterTypeName.PropertyChanged += FilterTypeName_PropertyChanged;
             }
 
-            FilterByTypeName.IsEnabled = FilterTypeNames.Count > 2;
         }
 
         private void CreateFilterStateList()
         {
-            FilterStates = FilterState.CreateFilterList(WebResourceItems);
+            FilterStates = FilterState.CreateFilterList();
 
             foreach (FilterState filterTypeState in FilterStates)
             {
                 filterTypeState.PropertyChanged += FilterState_PropertyChanged;
             }
-
-            FilterByState.IsEnabled = FilterStates.Count > 2;
         }
 
         private void FilterTypeName_PropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -999,7 +975,8 @@ namespace WebResourceDeployer
                 return;
 
             ICollectionView icv = CollectionViewSource.GetDefaultView(WebResourceGrid.ItemsSource);
-            if (icv == null) return;
+            if (icv == null)
+                return;
 
             icv.Filter = GetFilteredView;
 
@@ -1229,12 +1206,12 @@ namespace WebResourceDeployer
 
         private async void ExecuteSaveDescription(List<Entity> webResources, WebResourceItem webResourceItem)
         {
-            await Task.Run(() => SaveDescription(webResources, webResourceItem));
+            await Task.Run(() => SaveDescription(webResources));
 
             Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, webResourceItem);
         }
 
-        private void SaveDescription(List<Entity> webResources, WebResourceItem webResourceItem)
+        private void SaveDescription(List<Entity> webResources)
         {
             try
             {
@@ -1297,7 +1274,7 @@ namespace WebResourceDeployer
         {
             var width = WebResourceGrid.Columns[0].Width;
 
-            int scaleX = -1;
+            int scaleX;
             if (width.UnitType == DataGridLengthUnitType.SizeToCells)
             {
                 WebResourceGrid.Columns[0].Width = new DataGridLength(25, DataGridLengthUnitType.Pixel);
@@ -1320,18 +1297,19 @@ namespace WebResourceDeployer
 
         private void ConnPane_ProfileChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            if (ConnPane.CrmService == null || !ConnPane.CrmService.IsReady)
+                return;
+
+            foreach (WebResourceItem webResourceItem in WebResourceItems)
             {
-                foreach (WebResourceItem webResourceItem in WebResourceItems)
-                {
-                    webResourceItem.PropertyChanged -= WebResourceItem_PropertyChanged;
-                    webResourceItem.BoundFile = null;
-                    webResourceItem.Description = null;
-                    webResourceItem.PreviousDescription = null;
-                    webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
-                }
-                WebResourceItems = Mapping.HandleSpklMappings(ConnPane.SelectedProject, ConnPane.SelectedProfile, WebResourceItems);
+                webResourceItem.PropertyChanged -= WebResourceItem_PropertyChanged;
+                webResourceItem.BoundFile = null;
+                webResourceItem.Description = null;
+                webResourceItem.PreviousDescription = null;
+                webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
             }
+
+            WebResourceItems = Mapping.HandleSpklMappings(ConnPane.SelectedProject, ConnPane.SelectedProfile, WebResourceItems);
         }
     }
 }

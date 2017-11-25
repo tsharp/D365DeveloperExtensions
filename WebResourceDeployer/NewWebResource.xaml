@@ -44,7 +44,7 @@
             <TextBox x:Name="Name" Grid.Column="1" Grid.Row="2" Margin="60,2,0,2" TextWrapping="NoWrap" VerticalContentAlignment="Center"
                      MaxLength="200" Template="{DynamicResource TextBoxControlTemplate}"/>
             <Label Content="Display Name" Grid.Column="0" Grid.Row="3" Margin="0,2,0,2" />
-            <TextBox x:Name="DisplayName" Grid.Column="1" Grid.Row="3" Margin="0,2,0,2" TextWrapping="NoWrap" IsEnabled="False" MaxLength="249" 
+            <TextBox x:Name="DisplayName" Grid.Column="1" Grid.Row="3" Margin="0,2,0,2" TextWrapping="NoWrap" MaxLength="249" 
                      VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
             <Label x:Name="TypeLabel" Grid.Column="0" Grid.Row="4" Margin="0,2,0,2" Content="Type" />
             <ComboBox x:Name="Type" Grid.Column="1" Grid.Row="4" Margin="0,2,0,2" SelectedValuePath="Content" DisplayMemberPath="DisplayName"

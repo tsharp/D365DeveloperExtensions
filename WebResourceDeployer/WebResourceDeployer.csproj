@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Converters\AllowCompareConverter.cs" />
     <Compile Include="Converters\NewWebResourceCreateConverter.cs" />
+    <Compile Include="ImageEncoding.cs" />
     <Compile Include="ModelBuilder.cs" />
     <Compile Include="Crm\Solution.cs" />
     <Compile Include="Crm\WebResource.cs" />
