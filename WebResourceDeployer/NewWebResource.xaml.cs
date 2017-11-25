@@ -163,8 +163,11 @@ namespace WebResourceDeployer
 
             if (extension.ToUpper() == ".TS")
             {
-                DisplayName.Text = Path.ChangeExtension(DisplayName.Text, ".js");
-                Name.Text = Path.ChangeExtension(fileName, ".js");
+                string newName = Path.ChangeExtension(DisplayName.Text, ".js");
+                if (!string.IsNullOrEmpty(newName)) {
+                    DisplayName.Text = newName;
+                    Name.Text = newName;
+                }
             }
             else
                 Name.Text = fileName;
