@@ -1274,23 +1274,15 @@ namespace WebResourceDeployer
         {
             var width = WebResourceGrid.Columns[0].Width;
 
-            int scaleX;
-            if (width.UnitType == DataGridLengthUnitType.SizeToCells)
-            {
-                WebResourceGrid.Columns[0].Width = new DataGridLength(25, DataGridLengthUnitType.Pixel);
-                scaleX = 1;
-            }
-            else
-            {
-                WebResourceGrid.Columns[0].Width = DataGridLength.SizeToCells;
-                scaleX = -1;
-            }
+            WebResourceGrid.Columns[0].Width = width.UnitType == DataGridLengthUnitType.SizeToCells
+                ? new DataGridLength(25, DataGridLengthUnitType.Pixel)
+                : DataGridLength.SizeToCells;
 
             Button showId = (Button)sender;
             showId.RenderTransformOrigin = new Point(0.5, 0.5);
             ScaleTransform flipTrans = new ScaleTransform
             {
-                ScaleX = scaleX
+                ScaleX = width.UnitType == DataGridLengthUnitType.SizeToCells ? 1 : -1
             };
             showId.RenderTransform = flipTrans;
         }
@@ -1300,9 +1292,12 @@ namespace WebResourceDeployer
             if (ConnPane.CrmService == null || !ConnPane.CrmService.IsReady)
                 return;
 
-            foreach (WebResourceItem webResourceItem in WebResourceItems)
+            foreach (WebResourceItem webResourceItem in WebResourceItems
+                .Where(w => w.Publish || w.BoundFile != null || w.Description != null
+                || w.PreviousDescription != null))
             {
                 webResourceItem.PropertyChanged -= WebResourceItem_PropertyChanged;
+                webResourceItem.Publish = false;
                 webResourceItem.BoundFile = null;
                 webResourceItem.Description = null;
                 webResourceItem.PreviousDescription = null;
