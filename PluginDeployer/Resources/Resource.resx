@@ -153,4 +153,7 @@
   <data name="SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>
+  <data name="DeploymentType_Label_Toolip" xml:space="preserve">
+    <value>Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file</value>
+  </data>
 </root>

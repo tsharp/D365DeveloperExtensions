@@ -45,5 +45,6 @@ namespace CrmDeveloperExtensions2.Core
         public static string SpklConfigFile = "spkl.json";
         public static string TemplateConfigFile = "templates.json";
         public static string DefaultPacakgeFolder = "package";
+        public static string SpklRegAttrClassName = "CrmPluginRegistrationAttribute";
     }
 }

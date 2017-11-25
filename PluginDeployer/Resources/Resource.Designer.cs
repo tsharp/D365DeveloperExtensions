@@ -79,6 +79,15 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file.
+        /// </summary>
+        public static string DeploymentType_Label_Toolip {
+            get {
+                return ResourceManager.GetString("DeploymentType_Label_Toolip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IlMerge.
         /// </summary>
         public static string IlMerge_Button_Content {

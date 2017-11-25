@@ -409,6 +409,13 @@ namespace PluginDeployer
                 return;
             }
 
+            bool hasRegAttributeClass = SpklHelpers.RegAttributeDefinitionExists(_dte, ConnPane.SelectedProject);
+            if (!hasRegAttributeClass)
+            {
+                TemplateHandler.AddFileFromTemplate(ConnPane.SelectedProject,
+                    "CSharpSpklRegAttributes\\CSharpSpklRegAttributes", $"{ExtensionConstants.SpklRegAttrClassName}.cs");
+            }
+
             GetRegistrationDetails(pluginDeployConfig.classRegex);
         }
 
@@ -474,16 +481,16 @@ namespace PluginDeployer
             ProjectName.Content = ConnPane.SelectedProject.Name;
         }
 
-        private void SpklHelp_Click(object sender, RoutedEventArgs e)
-        {
-            CrmDeveloperExtensions2.Core.WebBrowser.OpenUrl(_dte, "https://github.com/scottdurow/SparkleXrm/wiki/spkl");
-        }
-
         private void OpenInCrm_Click(object sender, RoutedEventArgs e)
         {
             CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
 
             CrmDeveloperExtensions2.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
+        }
+
+        private void check_Click(object sender, RoutedEventArgs e)
+        {
+            bool r = SpklHelpers.RegAttributeDefinitionExists(_dte, ConnPane.SelectedProject);
         }
     }
 }
