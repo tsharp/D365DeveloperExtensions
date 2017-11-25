@@ -498,7 +498,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SetConfigFile()
         {
             if (!Config.ConfigFile.SpklConfigFileExists(ProjectWorker.GetProjectPath(SelectedProject)))
-                Config.ConfigFile.CreateSpklConfigFile(SelectedProject);
+                Config.ConfigFile.CreateSpklConfigFile(SelectedProject);     
         }
 
         private void GetProfiles()

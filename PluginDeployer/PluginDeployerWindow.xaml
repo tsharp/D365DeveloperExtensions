@@ -57,7 +57,7 @@
                 <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
             </StackPanel>
 
-            <Grid HorizontalAlignment="Stretch" Margin="5, 30, 0,0">
+            <Grid HorizontalAlignment="Stretch" Margin="5,30,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -70,11 +70,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="ProjectNameLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                    <Label x:Name="ProjectNameLabel" Grid.Column="0" Grid.Row="0"
                            Content="Project Name" IsEnabled="{Binding IsEnabled, ElementName=ProjectName}" />
-                    <Label x:Name="ProjectName" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Margin="5,0,0,0"
+                    <Label x:Name="ProjectName" Grid.Column="1" Grid.Row="0"
                            IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
-                    <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
+                    <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1"
                            Content="{x:Static resources:Resource.SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
                     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                         <ComboBox x:Name="SolutionList" Margin="5,5,0,0" DisplayMemberPath="Name" Width="350"
@@ -84,11 +84,15 @@
                             <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.Open}" ToolTip="Open in CRM" />
                         </Button>
                     </StackPanel>
-                    <Label x:Name="DeploymentTypeLabel" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" 
-                           Content="Deployment Type" IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}"/>
-                    <ComboBox x:Name="DeploymentType" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
-                              SelectedValuePath="Value"  Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
-                    <Label x:Name="BackupFilesLabel" Grid.Column="0" Grid.Row="4" Content="Backup Files?" IsEnabled="{Binding IsEnabled, ElementName=SpklInstrument}"/>
+                    <Label x:Name="DeploymentTypeLabel" Grid.Column="0" Grid.Row="3"
+                           Content="Deployment Type" IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}" ToolTip="{x:Static resources:Resource.DeploymentType_Label_Toolip}" />
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" >
+                        <ComboBox x:Name="DeploymentType" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
+                                  SelectedValuePath="Value" Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" HorizontalAlignment="Left" />
+                        <Button x:Name="check" Click="check_Click"></Button>
+                    </StackPanel>
+
+                    <Label x:Name="BackupFilesLabel" Grid.Column="0" Grid.Row="4" Content="Backup Files?" IsEnabled="{Binding IsEnabled, ElementName=AddRegistration}"/>
                     <CheckBox x:Name="BackupFiles" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" IsEnabled="{Binding IsEnabled, ElementName=AddRegistration}" IsThreeState="False" />
                 </Grid>
                 <coreControls:LockOverlay x:Name="Overlay" />

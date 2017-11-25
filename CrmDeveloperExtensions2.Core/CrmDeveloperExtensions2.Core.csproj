@@ -225,6 +225,7 @@
     <Compile Include="Models\ToolWindow.cs" />
     <Compile Include="Models\WebResourceType.cs" />
     <Compile Include="StringFormatting.cs" />
+    <Compile Include="TemplateHandler.cs" />
     <Compile Include="Vs\ProjectItemWorker.cs" />
     <Compile Include="Vs\ProjectWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

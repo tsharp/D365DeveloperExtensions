@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace CrmDeveloperExtensions2.Core.Config
@@ -41,33 +42,9 @@ namespace CrmDeveloperExtensions2.Core.Config
             }
         }
 
-        public static SpklConfig CreateSpklConfigFile(Project project)
+        public static void CreateSpklConfigFile(Project project)
         {
-            SpklConfig spklConfig = null;
-            try
-            {
-                string codebase = Assembly.GetExecutingAssembly().CodeBase;
-                var uri = new Uri(codebase, UriKind.Absolute);
-                string path = Path.GetDirectoryName(uri.LocalPath);
-
-                if (string.IsNullOrEmpty(path))
-                {
-                    OutputLogger.WriteToOutputWindow("Error finding extension template directory", MessageType.Error);
-                    return null;
-                }
-
-                var templatePath = Path.Combine(path, @"ItemTemplates\CSharp\Crm DevEx\1033\SpklConfig\SpklConfig.vstemplate");
-
-                project.ProjectItems.AddFromTemplate(templatePath, ConfigFileName);
-
-                spklConfig = GetSpklConfigFile(Vs.ProjectWorker.GetProjectPath(project));
-            }
-            catch
-            {
-                MessageBox.Show("Error creating config file");
-            }
-
-            return spklConfig;
+            TemplateHandler.AddFileFromTemplate(project, "SpklConfig\\SpklConfig", ConfigFileName);
         }
 
         public static void UpdateSpklConfigFile(string projectPath, SpklConfig spklConfig)

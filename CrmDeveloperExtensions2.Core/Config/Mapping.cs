@@ -7,9 +7,11 @@ namespace CrmDeveloperExtensions2.Core.Config
     {
         public static SpklConfig GetSpklConfigFile(string projectPath, Project project)
         {
-            return !ConfigFile.SpklConfigFileExists(projectPath) ?
-                ConfigFile.CreateSpklConfigFile(project) :
-                ConfigFile.GetSpklConfigFile(projectPath);
+            if (ConfigFile.SpklConfigFileExists(projectPath))
+                return ConfigFile.GetSpklConfigFile(projectPath);
+
+            ConfigFile.CreateSpklConfigFile(project);
+            return ConfigFile.GetSpklConfigFile(Vs.ProjectWorker.GetProjectPath(project));
         }
     }
 }

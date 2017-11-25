@@ -1,4 +1,5 @@
 ﻿using CrmDeveloperExtensions2.Core;
+using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using PluginDeployer.Spkl;
@@ -89,11 +90,36 @@ namespace PluginDeployer
 
             if (!Directory.Exists(assemblyPath))
             {
-                MessageBox.Show("Error locating assembly path");
+                MessageBox.Show($"Error locating assembly path: {assemblyPath}");
                 return false;
             }
 
             return true;
+        }
+
+        public static bool RegAttributeDefinitionExists(DTE dte, Project project)
+        {
+            foreach (CodeElement codeElement in project.CodeModel.CodeElements)
+            {
+                if (codeElement.Kind != vsCMElement.vsCMElementNamespace)
+                    continue;
+
+                CodeNamespace codeNamespace = codeElement as CodeNamespace;
+                if (codeNamespace?.Members == null)
+                    continue;
+
+                foreach (CodeElement codeNamespaceMember in codeNamespace?.Members)
+                {
+                    if (codeNamespaceMember.Kind != vsCMElement.vsCMElementClass)
+                        continue;
+
+                    CodeClass codeClass = codeNamespaceMember as CodeClass;
+                    if (codeClass != null && codeClass.FullName.Contains(ExtensionConstants.SpklRegAttrClassName))
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
