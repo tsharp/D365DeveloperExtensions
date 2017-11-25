@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using CrmDeveloperExtensions2.Core.Models;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -20,7 +21,7 @@ namespace WebResourceDeployer
                     WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
                     Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
-                    TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
+                    TypeName = WebResourceTypes.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
@@ -81,7 +82,7 @@ namespace WebResourceDeployer
                 WebResourceId = newWebResource.NewId,
                 Name = newWebResource.NewName,
                 DisplayName = newWebResource.NewDisplayName,
-                TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
+                TypeName = WebResourceTypes.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
                 Type = newWebResource.NewType,
                 SolutionId = solutionId,
                 Description = newWebResource.NewDescription,

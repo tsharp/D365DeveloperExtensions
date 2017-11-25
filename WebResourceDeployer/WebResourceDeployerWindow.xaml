@@ -43,8 +43,7 @@
         <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing" 
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_SelectedProjectChanged" 
                                          ProjectItemRenamed="ConnPane_OnProjectItemRenamed" ProjectItemMoved="ConnPane_OnProjectItemMoved" ProjectItemAdded="ConnPane_OnProjectItemAdded" 
-                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened" SolutionProjectAdded="ConnPane_SolutionProjectAdded" 
-                                         ProfileChanged="ConnPane_ProfileChanged" />
+                                         ProjectItemRemoved="ConnPane_OnProjectItemRemoved" SolutionOpened="ConnPane_OnSolutionOpened" ProfileChanged="ConnPane_ProfileChanged" />
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
