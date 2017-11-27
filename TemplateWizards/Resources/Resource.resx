@@ -126,6 +126,27 @@
   <data name="GeneratingKeyStatusBarMessage" xml:space="preserve">
     <value>Generating Key...</value>
   </data>
+  <data name="NpmPackageInstallFailureMessage" xml:space="preserve">
+    <value>Error Processing Template: Error Installing NPM Package</value>
+  </data>
+  <data name="NpmPackageInstallingStatusBarMessage" xml:space="preserve">
+    <value>Installing NPM Package</value>
+  </data>
+  <data name="NpmPickerCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NpmPickerCancelTooltipText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NpmPickerOKButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NpmPickerOKTooltipText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NpmPickerTitle" xml:space="preserve">
+    <value>Crm DevEx</value>
+  </data>
   <data name="NuGetPackageInstallFailureMessage" xml:space="preserve">
     <value>Error Processing Template: Error Installing NuGet Package</value>
   </data>

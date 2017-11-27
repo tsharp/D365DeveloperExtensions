@@ -194,6 +194,20 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpTypeScriptProject\CSharpTypeScriptProject.csproj">
+      <Project>{968A8896-7E98-4BD9-9D27-2B28FCF6CC67}</Project>
+      <Name>CSharpTypeScriptProject</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWebResourceProject\CSharpWebResourceProject.csproj">
+      <Project>{1010F340-28A3-44BA-93E7-77CC68A18E23}</Project>
+      <Name>CSharpWebResourceProject</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowProject\CSharpWorkflowProject.csproj">
       <Project>{657F7CD2-9A6D-440D-AA39-A629E5190021}</Project>
       <Name>CSharpWorkflowProject</Name>
@@ -204,13 +218,6 @@
     <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowTestProject\CSharpWorkflowTestProject.csproj">
       <Project>{86938D85-3B55-47FF-97FC-225764B987A8}</Project>
       <Name>CSharpWorkflowTestProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\WebResourceProject\WebResourceProject.csproj">
-      <Project>{7CE66502-12F6-4768-8EAF-EBCFD6288456}</Project>
-      <Name>WebResourceProject</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>

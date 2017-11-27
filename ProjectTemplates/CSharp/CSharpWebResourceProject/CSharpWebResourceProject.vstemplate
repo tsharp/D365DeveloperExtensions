@@ -1,20 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>CRM/365 Web Resource / TypeScript Project</Name>
-    <Description>Dynamics CRM/365 Web Resource / TypeScript Project</Description>
+    <Name>CRM/365 Web Resource Project</Name>
+    <Description>Dynamics CRM/365 Web Resource Project</Description>
     <Icon>icon.png</Icon>
+    <TemplateID>4feef2e3-885b-4be6-aff3-dfe832468b7d</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
-    <TemplateID>851c467a-8cd9-4da1-b533-21aabe46e07a</TemplateID>
+    <RequiredFrameworkVersion>4.5</RequiredFrameworkVersion>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>WebResourceProject</DefaultName>
+    <DefaultName>CSharpWebResourceProject</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="ProjectTemplate.csproj" File="ProjectTemplate.csproj" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+    <Project File="ProjectTemplate.webproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="ProjectTemplate.webproj">ProjectTemplate.webproj</ProjectItem>
+      <Folder Name="css"/>
+      <Folder Name="js"/>
+      <Folder Name="images"/>
     </Project>
   </TemplateContent>
   <WizardExtension>

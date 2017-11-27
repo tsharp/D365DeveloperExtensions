@@ -25,17 +25,25 @@
                   ItemContainerStyle="{DynamicResource PickerListViewItemStyle}" SelectionChanged="SdkVersions_OnSelectionChanged">
             <ListView.View>
                 <GridView x:Name="SdkVersionsGrid" AllowsColumnReorder="False" ColumnHeaderContainerStyle="{DynamicResource ListViewGridHeaderHiddenStyle}">
-                    <GridViewColumn/>
+                    <GridViewColumn Width="300"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
-            <Button x:Name="Ok" Content="{x:Static resx:Resource.SdkVersionPickerOKButtonText}" Margin="0,5,10,0" MinWidth="70"
-              Template="{DynamicResource FormButtonControlTemplate}"
-              Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Height="23"/>
-            <Button x:Name="Cancel" Content="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}" Margin="0,5,10,0" MinWidth="70"
-              Template="{DynamicResource FormButtonControlTemplate}" Height="23"
-              Click="Cancel_Click"/>
-        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox x:Name="LimitVersions" Grid.Column="0" Content="Latest Versions Only" Height="18" Margin="10,10,0,0" 
+                      Checked="LimitVersions_Checked" Unchecked="LimitVersions_Checked" IsChecked="True" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
+                <Button x:Name="Ok" Content="{x:Static resx:Resource.SdkVersionPickerOKButtonText}" Margin="0,5,10,0" MinWidth="70"
+                        Template="{DynamicResource FormButtonControlTemplate}"
+                        Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.SdkVersionPickerOKTooltipText}" Height="23"/>
+                <Button x:Name="Cancel" Content="{x:Static resx:Resource.SdkVersionPickerCancelButtonText}" Margin="0,5,0,0" MinWidth="70"
+                        Template="{DynamicResource FormButtonControlTemplate}" Height="23"
+                        Click="Cancel_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </platformUi:DialogWindow>

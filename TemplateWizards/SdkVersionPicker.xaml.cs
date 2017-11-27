@@ -1,5 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core.Models;
 using NuGetRetriever;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,9 @@ namespace TemplateWizards
 {
     public partial class SdkVersionPicker
     {
+        private List<NuGetPackage> _packageVersions;
+        private string _currentPackage;
+
         public string CoreVersion { get; set; }
         public string WorkflowVersion { get; set; }
         public string ClientPackage { get; set; }
@@ -31,9 +35,17 @@ namespace TemplateWizards
 
         private void GetPackage(string nuGetPackage)
         {
+            SdkVersions.Items.Clear();
+
             Title = $"Choose Version:  {nuGetPackage}";
 
             List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
+
+            _packageVersions = versions;
+            _currentPackage = nuGetPackage;
+
+            if (LimitVersions.IsChecked != null && LimitVersions.IsChecked.Value)
+                versions = FilterLatestVersions(versions);
 
             SdkVersionsGrid.Columns[0].Header = nuGetPackage;
 
@@ -48,12 +60,7 @@ namespace TemplateWizards
                 SdkVersions.Items.Add(item);
             }
 
-            if (SdkVersions.Items.Count <= 0)
-                return;
-
-            ((ListViewItem)SdkVersions.Items[0]).IsSelected = true;
-            string selectedVersion = ((ListViewItem)SdkVersions.Items[0]).Content.ToString();
-            SetSelectedVersion(selectedVersion);
+            SdkVersions.SelectedIndex = 0;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -105,8 +112,57 @@ namespace TemplateWizards
         private void SdkVersions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView sdkVersions = (ListView)sender;
+            ListBoxItem item = sdkVersions.SelectedItem as ListViewItem;
+            if (item == null)
+                return;
+
             string selectedVersion = ((ListViewItem)sdkVersions.SelectedItem).Content.ToString();
             SetSelectedVersion(selectedVersion);
+        }
+
+        private static List<NuGetPackage> FilterLatestVersions(List<NuGetPackage> versions)
+        {
+            List<NuGetPackage> filteredVersions = new List<NuGetPackage>();
+
+            Version firstVersion = versions[0].Version;
+            var currentMajor = firstVersion.Major;
+            var currentMinor = firstVersion.Minor;
+            var currentPackage = versions[0];
+
+            for (int i = 0; i < versions.Count; i++)
+            {
+                if (i == versions.Count - 1)
+                {
+                    filteredVersions.Add(currentPackage);
+                    continue;
+                }
+
+                Version ver = versions[i].Version;
+
+                if (ver.Major < currentMajor)
+                {
+                    currentMajor = ver.Major;
+                    currentMinor = ver.Minor;
+                    filteredVersions.Add(currentPackage);
+                    currentPackage = versions[i];
+                    continue;
+                }
+
+                if (ver.Minor < currentMinor)
+                {
+                    currentMinor = ver.Minor;
+                    filteredVersions.Add(currentPackage);
+                    currentPackage = versions[i];
+                }
+            }
+
+            return filteredVersions;
+        }
+
+        private void LimitVersions_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_packageVersions != null)
+                GetPackage(_currentPackage);
         }
     }
 }

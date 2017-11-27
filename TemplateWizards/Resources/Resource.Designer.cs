@@ -88,6 +88,69 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error Processing Template: Error Installing NPM Package.
+        /// </summary>
+        public static string NpmPackageInstallFailureMessage {
+            get {
+                return ResourceManager.GetString("NpmPackageInstallFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing NPM Package.
+        /// </summary>
+        public static string NpmPackageInstallingStatusBarMessage {
+            get {
+                return ResourceManager.GetString("NpmPackageInstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NpmPickerCancelButtonText {
+            get {
+                return ResourceManager.GetString("NpmPickerCancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NpmPickerCancelTooltipText {
+            get {
+                return ResourceManager.GetString("NpmPickerCancelTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NpmPickerOKButtonText {
+            get {
+                return ResourceManager.GetString("NpmPickerOKButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NpmPickerOKTooltipText {
+            get {
+                return ResourceManager.GetString("NpmPickerOKTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crm DevEx.
+        /// </summary>
+        public static string NpmPickerTitle {
+            get {
+                return ResourceManager.GetString("NpmPickerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error Processing Template: Error Installing NuGet Package.
         /// </summary>
         public static string NuGetPackageInstallFailureMessage {

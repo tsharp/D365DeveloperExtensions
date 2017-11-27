@@ -47,6 +47,7 @@ namespace CRMSimpleConsole
     class Program
     {
         private static OrganizationService _orgService;
+		
         static void Main(string[] args)
         {
             try
