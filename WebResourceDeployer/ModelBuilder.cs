@@ -1,9 +1,9 @@
 ﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Models;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CrmDeveloperExtensions2.Core.Models;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer

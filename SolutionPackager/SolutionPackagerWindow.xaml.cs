@@ -136,7 +136,7 @@ namespace SolutionPackager
 
         private void GetProjectFolders()
         {
-            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject, ProjectType.SolutionPackage);
 
             SetFormDefaults();
         }

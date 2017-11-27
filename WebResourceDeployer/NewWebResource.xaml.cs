@@ -156,21 +156,9 @@ namespace WebResourceDeployer
             }
 
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
-
             DisplayName.Text = FileNameToDisplayName(fileName);
-
             string extension = Path.GetExtension(fileName);
-
-            if (extension.ToUpper() == ".TS")
-            {
-                string newName = Path.ChangeExtension(DisplayName.Text, ".js");
-                if (!string.IsNullOrEmpty(newName)) {
-                    DisplayName.Text = newName;
-                    Name.Text = newName;
-                }
-            }
-            else
-                Name.Text = fileName;
+            Name.Text = fileName;
 
             if (string.IsNullOrEmpty(extension))
             {
@@ -178,7 +166,11 @@ namespace WebResourceDeployer
                 return;
             }
 
-            Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == extension.Replace(".", string.Empty).ToUpper());
+            FileExtensionType extensionType = CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetExtensionType(fileName);
+            Type.SelectedItem = extensionType == FileExtensionType.Map 
+                ? WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper()) 
+                : WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());
+
         }
 
         private string FileNameToDisplayName(string fileName)
