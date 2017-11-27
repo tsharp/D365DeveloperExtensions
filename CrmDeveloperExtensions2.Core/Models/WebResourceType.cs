@@ -115,6 +115,8 @@ namespace CrmDeveloperExtensions2.Core.Models
                     return FileExtensionType.Resx;
                 case "TS":
                     return FileExtensionType.Ts;
+                case "MAP":
+                    return FileExtensionType.Map;
                 default:
                     return FileExtensionType.None;
             }

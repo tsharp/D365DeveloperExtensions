@@ -18,8 +18,9 @@ namespace CrmDeveloperExtensions2.Core.Vs
 {
     public static class ProjectWorker
     {
-        private static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "TS", "SVG", "RESX" };
+        private static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "SVG", "RESX", "MAP" };
         private static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
+        private static readonly string[] IgnoreFolders = { "/TYPINGS", "/NODE_MODULES" };
 
         public static void ExcludeFolder(Project project, string folderName)
         {
@@ -138,7 +139,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             return list;
         }
 
-        public static ObservableCollection<string> GetProjectFolders(Project project)
+        public static ObservableCollection<string> GetProjectFolders(Project project, ProjectType projectType)
         {
             ObservableCollection<string> folders = new ObservableCollection<string>();
             if (project == null)
@@ -149,6 +150,20 @@ namespace CrmDeveloperExtensions2.Core.Vs
             foreach (string projectFolder in projectFolders)
             {
                 folders.Add(projectFolder);
+            }
+
+            if (projectType != ProjectType.WebResource)
+                return folders;
+
+            List<string> removeFolders = new List<string>();
+            foreach (string ignoreFolder in IgnoreFolders)
+            {
+                removeFolders.AddRange(folders.Where(f => f.StartsWith(ignoreFolder, StringComparison.InvariantCultureIgnoreCase)).ToList());
+            }
+
+            foreach (string removeFolder in removeFolders)
+            {
+                folders.Remove(removeFolder);
             }
 
             return folders;
@@ -206,6 +221,17 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (projectFiles.Count > 0)
                 projectFiles.Insert(0, new ComboBoxItem { Content = String.Empty });
 
+            ObservableCollection<ComboBoxItem> copy = new ObservableCollection<ComboBoxItem>(projectFiles);
+            foreach (ComboBoxItem comboBoxItem in copy)
+            {
+                foreach (string ignoreFolder in IgnoreFolders)
+                {
+                    if (comboBoxItem.Content.ToString().StartsWith(ignoreFolder, StringComparison.InvariantCultureIgnoreCase))
+                        projectFiles.Remove(comboBoxItem);
+                }
+            }
+
+
             return projectFiles;
         }
 
@@ -215,14 +241,15 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (projectItem.Kind.ToUpper() != "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}") // VS Folder 
             {
                 string ex = Path.GetExtension(projectItem.Name);
-                if (ex == null || !Extensions.Contains(ex.Replace(".", String.Empty).ToUpper()) && !string.IsNullOrEmpty(ex) && !FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
+                if (ex == null || !Extensions.Contains(ex.Replace(".", String.Empty).ToUpper()) &&
+                    !string.IsNullOrEmpty(ex) && !FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
                     return projectFiles;
 
                 //Don't add file extensions that act as folders
                 if (!FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
                     projectFiles.Add(new ComboBoxItem { Content = path + "/" + projectItem.Name, Tag = projectItem });
 
-                if (projectItem.ProjectItems.Count <= 0)
+                if (projectItem.ProjectItems == null || projectItem.ProjectItems.Count <= 0)
                     return projectFiles;
 
                 //Handle minified/bundled files that appear under other files in the project
@@ -237,14 +264,12 @@ namespace CrmDeveloperExtensions2.Core.Vs
             {
                 for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
                 {
-                    //Ignore TypeScript typings folders
-                    if (projectItem.Name.ToUpper() == "TYPINGS") continue;
-
                     var files = GetFiles(projectItem.ProjectItems.Item(i), path + "/" + projectItem.Name);
                     foreach (var comboBoxItem in files)
                         projectFiles.Add(comboBoxItem);
                 }
             }
+
             return projectFiles;
         }
 

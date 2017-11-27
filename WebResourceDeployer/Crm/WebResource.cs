@@ -202,12 +202,12 @@ namespace WebResourceDeployer.Crm
             string content;
 
             //TypeScript
-            if (extension == FileExtensionType.Ts)
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
-                return EncodeString(content);
-            }
+            //if (extension == FileExtensionType.Ts)
+            //{
+            //    // ReSharper disable once AssignNullToNotNullAttribute
+            //    content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
+            //    return EncodeString(content);
+            //}
 
             //Images
             if (WebResourceTypes.IsImageType(extension))

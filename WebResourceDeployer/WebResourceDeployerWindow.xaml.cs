@@ -189,7 +189,7 @@ namespace WebResourceDeployer
             WebResourceItems = new ObservableCollection<WebResourceItem>();
             ProjectFiles = new ObservableCollection<ComboBoxItem>();
             ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
-            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+            ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject, ProjectType.WebResource);
             FilterTypeNames = new ObservableCollection<FilterTypeName>();
             FilterStates = new ObservableCollection<FilterState>();
 
@@ -435,7 +435,7 @@ namespace WebResourceDeployer
             }
 
             if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
-                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject, ProjectType.WebResource);
         }
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
@@ -504,7 +504,7 @@ namespace WebResourceDeployer
 
                 UpdateProjectFilesPathsAfterChange(oldItemName, newItemPath);
 
-                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject);
+                ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject, ProjectType.WebResource);
             }
         }
 

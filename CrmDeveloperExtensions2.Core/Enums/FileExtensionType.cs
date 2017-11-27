@@ -15,6 +15,7 @@
         Svg,
         Resx,
         Ts,
+        Map,
         None
     }
 }
