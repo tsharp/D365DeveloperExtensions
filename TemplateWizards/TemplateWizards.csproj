@@ -74,6 +74,10 @@
     <Compile Include="Enums\PackageValue.cs" />
     <Compile Include="Models\CustomTemplate.cs" />
     <Compile Include="Models\CustomTemplateListItem.cs" />
+    <Compile Include="NpmProcessor.cs" />
+    <Compile Include="NpmPicker.xaml.cs">
+      <DependentUpon>NpmPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NuGetProcessor.cs" />
     <Compile Include="ProjectDataHandler.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
@@ -103,6 +107,10 @@
     <Resource Include="Template\templates.json" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="NpmPicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="NuGetPicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,11 +1,11 @@
-﻿<platformUi:DialogWindow x:Class="TemplateWizards.NuGetPicker"
+﻿<platformUi:DialogWindow x:Class="TemplateWizards.NpmPicker"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
                          xmlns:resx="clr-namespace:TemplateWizards.Resources"
-                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static resx:Resource.NuGetPickerTitle}"
+                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static resx:Resource.NpmPickerTitle}"
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
                          Height="315" Width="350">
     <Window.Resources>
@@ -34,15 +34,15 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox x:Name="LimitVersions" Content="Latest Versions Only" Height="18" Margin="10,10,0,0" 
+            <CheckBox x:Name="LimitVersions" Content="Latest Versions Only" Height="18" Margin="10,10,0,0"
                       Checked="LimitVersions_Checked" Unchecked="LimitVersions_Checked" IsChecked="True" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
-                <Button x:Name="Ok" Content="{x:Static resx:Resource.NuGetPickerOKButtonText}" Margin="0,5,10,0" MinWidth="70" 
+                <Button x:Name="Ok" Content="{x:Static resx:Resource.NpmPickerOKButtonText}" Margin="0,5,10,0" MinWidth="70" 
                         Template="{DynamicResource FormButtonControlTemplate}" Height="23"
-                        Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.NuGetPickerOKTooltipText}" />
-                <Button x:Name="Cancel" Content="{x:Static resx:Resource.NuGetPickerCancelButtonText}" Margin="0,5,0,0" MinWidth="70" 
+                        Click="Ok_OnClick" ToolTip="{x:Static resx:Resource.NpmPickerOKTooltipText}" />
+                <Button x:Name="Cancel" Content="{x:Static resx:Resource.NpmPickerCancelButtonText}" Margin="0,5,0,0" MinWidth="70" 
                         Template="{DynamicResource FormButtonControlTemplate}" Height="23"
-                        Click="Cancel_Click" ToolTip="{x:Static resx:Resource.NuGetPickerCancelTooltipText}"/>
+                        Click="Cancel_Click" ToolTip="{x:Static resx:Resource.NpmPickerCancelTooltipText}"/>
             </StackPanel>
         </Grid>
     </Grid>

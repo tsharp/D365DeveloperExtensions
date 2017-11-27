@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.0.3" Language="en-US" Publisher="Jason Lattimer" />
+        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.0.4" Language="en-US" Publisher="Jason Lattimer" />
         <DisplayName>Crm Developer Extensions 2 - BETA</DisplayName>
         <Description xml:space="preserve">Dynamics CRM &amp; 365 2011/2013/2015/2016 Developer Extensions - 2nd Edition</Description>
         <MoreInfo>https://github.com/jlattimer/CrmDeveloperExtensions2/wiki</MoreInfo>
@@ -35,9 +35,10 @@
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginTraceViewer" Path="|PluginTraceViewer|" AssemblyName="|PluginTraceViewer;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSolutionPackagerMap" d:TargetPath="|CSharpSolutionPackagerMap;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSpklRegAttributes" d:TargetPath="|CSharpSpklRegAttributes;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
-        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="WebResourceProject" d:TargetPath="|WebResourceProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="SpklConfig" d:TargetPath="|SpklConfig;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpCustom" d:TargetPath="|CSharpCustom;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpWebResourceProject" d:TargetPath="|CSharpWebResourceProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpTypeScriptProject" d:TargetPath="|CSharpTypeScriptProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
