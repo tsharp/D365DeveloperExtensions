@@ -808,7 +808,11 @@ namespace WebResourceDeployer
 
         private void ProjectFileList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ProjectFileList.SelectedIndex == -1) return;
+            if (ProjectFileList.SelectedIndex == -1)
+            {
+                FilePopup.IsOpen = false;
+                return;
+            }
 
             WebResourceItem webResourceItem =
                 WebResourceItems.FirstOrDefault(w => w.WebResourceId == new Guid(FileId.Content.ToString()));
@@ -1104,9 +1108,16 @@ namespace WebResourceDeployer
         {
             ComboBox projectFolderList = (ComboBox)sender;
             string folder = projectFolderList.SelectedValue?.ToString();
-            if (string.IsNullOrEmpty(folder)) return;
+
+            if (string.IsNullOrEmpty(folder))
+            {
+                FolderPopup.IsOpen = false;
+                return;
+            }
+
             Guid webResourceId = new Guid(FolderId.Content.ToString());
             DownloadWebResourceToFolder(folder, webResourceId);
+            FolderPopup.IsOpen = false;
         }
 
         private void GetWebResource_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

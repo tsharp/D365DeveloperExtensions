@@ -46,5 +46,7 @@ namespace CrmDeveloperExtensions2.Core
         public static string TemplateConfigFile = "templates.json";
         public static string DefaultPacakgeFolder = "package";
         public static string SpklRegAttrClassName = "CrmPluginRegistrationAttribute";
+
+        public static string VsProjectTypeWebSite = "{E24C65DC-7377-472B-9ABA-BC803B73C61A}";
     }
 }

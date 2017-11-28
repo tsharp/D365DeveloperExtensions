@@ -289,15 +289,33 @@
         </Border>
 
         <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+            </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsEnabled" Value="True"/>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsEnabled" Value="False"/>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
                 <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
-            </Trigger>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
+            </MultiTrigger>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

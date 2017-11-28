@@ -39,7 +39,7 @@
             <ComboBox x:Name="Files" Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" SelectedValuePath="Content" SelectionChanged="Files_OnSelectionChanged" 
                       Template="{DynamicResource ComboBoxControlTemplate}" />
             <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="2" Margin="0,2,0,2" Content="Name" />
-            <TextBox x:Name="Prefix" Grid.Column="1" Grid.Row="2" Margin="0,2,0,2" HorizontalAlignment="Left" Text="new_" Width="60"
+            <TextBox x:Name="Prefix" Grid.Column="1" Grid.Row="2" Margin="0,2,0,2" HorizontalAlignment="Left" Text="new_" Width="60" IsEnabled="False"
                      TextAlignment="Right" VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
             <TextBox x:Name="Name" Grid.Column="1" Grid.Row="2" Margin="60,2,0,2" TextWrapping="NoWrap" VerticalContentAlignment="Center"
                      MaxLength="200" Template="{DynamicResource TextBoxControlTemplate}"/>
