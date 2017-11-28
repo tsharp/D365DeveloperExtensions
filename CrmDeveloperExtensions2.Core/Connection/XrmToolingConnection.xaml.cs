@@ -204,6 +204,13 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         public void ProjectItemMoveDeleted(ProjectItem projectItem)
         {
+            /*Web site projects are not triggering the same project item added/removed event
+            but rather are triggering the hierarchy added/removed events instead - calling the
+            existing events here fixes the issue*/
+            Project p = projectItem.ContainingProject;
+            if (p.Kind.ToUpper() == ExtensionConstants.VsProjectTypeWebSite)
+                ProjectItemsEvents_ItemRemoved(projectItem);
+
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
             if (projectPath == null) return;
 
@@ -218,6 +225,13 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         public void ProjectItemMoveAdded(ProjectItem projectItem)
         {
+            /*Web site projects are not triggering the same project item added/removed event
+            but rather are triggering the hierarchy added/removed events instead - calling the
+            existing events here fixes the issue*/
+            Project p = projectItem.ContainingProject;
+            if (p.Kind.ToUpper() == ExtensionConstants.VsProjectTypeWebSite)
+                ProjectItemsEvents_ItemAdded(projectItem);
+
             if (SelectedProject == null)
                 return;
 
@@ -498,7 +512,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void SetConfigFile()
         {
             if (!Config.ConfigFile.SpklConfigFileExists(ProjectWorker.GetProjectPath(SelectedProject)))
-                Config.ConfigFile.CreateSpklConfigFile(SelectedProject);     
+                Config.ConfigFile.CreateSpklConfigFile(SelectedProject);
         }
 
         private void GetProfiles()
