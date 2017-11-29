@@ -89,7 +89,6 @@
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" >
                         <ComboBox x:Name="DeploymentType" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
                                   SelectedValuePath="Value" Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" HorizontalAlignment="Left" />
-                        <Button x:Name="check" Click="check_Click"></Button>
                     </StackPanel>
 
                     <Label x:Name="BackupFilesLabel" Grid.Column="0" Grid.Row="4" Content="Backup Files?" IsEnabled="{Binding IsEnabled, ElementName=AddRegistration}"/>

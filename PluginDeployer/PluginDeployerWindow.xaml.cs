@@ -487,10 +487,5 @@ namespace PluginDeployer
 
             CrmDeveloperExtensions2.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
         }
-
-        private void check_Click(object sender, RoutedEventArgs e)
-        {
-            bool r = SpklHelpers.RegAttributeDefinitionExists(_dte, ConnPane.SelectedProject);
-        }
     }
 }
