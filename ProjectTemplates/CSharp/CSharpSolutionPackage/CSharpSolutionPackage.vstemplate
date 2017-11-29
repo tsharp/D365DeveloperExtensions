@@ -9,7 +9,7 @@
     <SortOrder>1000</SortOrder>
     <TemplateID>084f19e1-039c-453c-aa8b-cd6ca6e9f2d1</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>CrmSolutionPackage</DefaultName>
+    <DefaultName>CSharpSolutionPackage</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
