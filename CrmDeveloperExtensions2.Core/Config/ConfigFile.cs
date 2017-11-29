@@ -44,7 +44,7 @@ namespace CrmDeveloperExtensions2.Core.Config
 
         public static void CreateSpklConfigFile(Project project)
         {
-            TemplateHandler.AddFileFromTemplate(project, "SpklConfig\\SpklConfig", ConfigFileName);
+            TemplateHandler.AddFileFromTemplate(project, "CSharpSpklConfig\\CSharpSpklConfig", ConfigFileName);
         }
 
         public static void UpdateSpklConfigFile(string projectPath, SpklConfig spklConfig)

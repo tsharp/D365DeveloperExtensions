@@ -141,7 +141,7 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\SpklConfig\SpklConfig.csproj">
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSpklConfig\CSharpSpklConfig.csproj">
       <Project>{7AA29DBF-A2E3-4565-A84A-B7694617E15E}</Project>
       <Name>SpklConfig</Name>
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
@@ -166,9 +166,9 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CrmSolutionPackage\CrmSolutionPackage.csproj">
+    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpSolutionPackage\CSharpSolutionPackage.csproj">
       <Project>{C9AD3DE3-3F37-4949-8586-E59672F78922}</Project>
-      <Name>CrmSolutionPackage</Name>
+      <Name>CSharpSolutionPackage</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>

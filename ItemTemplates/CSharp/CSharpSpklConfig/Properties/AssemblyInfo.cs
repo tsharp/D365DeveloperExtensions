@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SpklConfig")]
+[assembly: AssemblyTitle("CSharpSpklConfig")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jason Lattimer")]
-[assembly: AssemblyProduct("SpklConfig")]
+[assembly: AssemblyProduct("CSharpSpklConfig")]
 [assembly: AssemblyCopyright("Copyright © Jason Lattimer 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
