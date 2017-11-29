@@ -329,43 +329,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\connect_16.png" />
-    <Resource Include="Images\customizations_16.png" />
-    <Resource Include="Images\new_16.png" />
-    <Resource Include="Images\publish_16.png" />
-    <Resource Include="Images\solutions_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\compare_16.png" />
-    <Resource Include="Images\download_16.png" />
-    <Resource Include="Images\open_16.png" />
-    <Resource Include="Images\remove_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\exportsolution_16.png" />
-    <Resource Include="Images\importsolution_16.png" />
-    <Resource Include="Images\package_16.png" />
-    <Resource Include="Images\unpackage_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\merge_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\instrument_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\registrationtool_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\refresh_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\details_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\poll_16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\github_20.png" />
   </ItemGroup>
   <ItemGroup>
