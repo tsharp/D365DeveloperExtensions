@@ -1317,5 +1317,11 @@ namespace WebResourceDeployer
 
             WebResourceItems = Mapping.HandleSpklMappings(ConnPane.SelectedProject, ConnPane.SelectedProfile, WebResourceItems);
         }
+
+        private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.SelectAll();
+        }
     }
 }

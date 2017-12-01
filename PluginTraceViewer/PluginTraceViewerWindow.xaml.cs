@@ -1,12 +1,13 @@
 ﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.DataGrid;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using NLog;
+using PluginTraceViewer.Models;
 using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core.DataGrid;
-using PluginTraceViewer.Models;
 using Task = System.Threading.Tasks.Task;
 using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
 
@@ -553,6 +552,12 @@ namespace PluginTraceViewer
         private void DetailsSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             FilterTraces();
+        }
+
+        private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.SelectAll();
         }
     }
 }
