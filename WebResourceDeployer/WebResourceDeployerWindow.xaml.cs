@@ -2,6 +2,7 @@
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.DataGrid;
 using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.ExtensionMethods;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -1013,19 +1014,19 @@ namespace WebResourceDeployer
 
             if (!string.IsNullOrEmpty(webResourceItem.Name))
             {
-                if (webResourceItem.Name.Contains(search))
+                if (webResourceItem.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
             if (!string.IsNullOrEmpty(webResourceItem.DisplayName))
             {
-                if (webResourceItem.DisplayName.Contains(search))
+                if (webResourceItem.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
             if (!string.IsNullOrEmpty(webResourceItem.Description))
             {
-                if (webResourceItem.Description.Contains(search))
+                if (webResourceItem.Description.Contains(search, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
