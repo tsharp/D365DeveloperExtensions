@@ -33,6 +33,19 @@
             <Style x:Key="DataGridImageButtonCellStyle" BasedOn="{StaticResource DataGridCellStyle}" TargetType="{x:Type DataGridCell}">
                 <Setter Property="Padding" Value="0"/>
             </Style>
+            <Style x:Key="DataGridTextBoxOverflowStyle" BasedOn="{StaticResource DataGridTextBoxStyle}" TargetType="{x:Type TextBox}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TextBox">
+                                    <TextBlock Text="{TemplateBinding Text}" TextTrimming="CharacterEllipsis" Margin="2,0,0,0" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -93,7 +106,7 @@
                           EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False"
                           ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" Width="25">
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" Width="25" SortMemberPath="WebResourceId">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Button x:Name="ShowId" Click="ShowId_Click" Style="{DynamicResource ImageButtonStyle}" Margin="-2,0,0,0">
@@ -103,11 +116,12 @@
                             </DataGridTemplateColumn.HeaderTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding WebResourceId}" Style="{DynamicResource DataGridTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBox Text="{Binding WebResourceId}" Style="{StaticResource DataGridTextBoxOverflowStyle}"
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" SortMemberPath="TypeName">
                             <DataGridTemplateColumn.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -141,8 +155,15 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" Binding="{Binding Name}" IsReadOnly="True"/>
-                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False">
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" SortMemberPath="Name">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Name}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" SortMemberPath="State">
                             <DataGridTemplateColumn.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -160,7 +181,14 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" Binding="{Binding DisplayName}" IsReadOnly="True"/>
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" SortMemberPath="DisplayName">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding DisplayName}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="{x:Static resources:Resource.MappedTo_DataGridTemplateColumn_Header}" x:Name="FileListColumn"
                                                 CanUserSort="True" SortMemberPath="BoundFile">
                             <DataGridTemplateColumn.CellTemplate>
@@ -227,7 +255,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" Header="Description">
+                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Description" Header="Description">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -237,8 +265,8 @@
                                             <ColumnDefinition Width="20"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Description}" Style="{DynamicResource DataGridTextBlockStyle}" TextTrimming="WordEllipsis" 
-                                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <TextBox Grid.Column="0" Text="{Binding Description}" Style="{DynamicResource DataGridTextBoxStyle}" MouseDoubleClick="TextBox_MouseDoubleClick"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" />
                                         <Button x:Name="EditDescription" Grid.Column="3" Click="EditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}"
                                                 HorizontalAlignment="Right" Visibility="Visible">
                                             <imaging:CrispImage x:Name="EditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 

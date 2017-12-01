@@ -103,7 +103,14 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.CreatonOn_DataGridTextColumn_Header}" Binding="{Binding CreatedOn}"/>
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.CreatonOn_DataGridTextColumn_Header}" SortMemberPath="CreatedOn">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding CreatedOn}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Entity">
                             <DataGridTemplateColumn.Header>
                                 <Grid>
@@ -138,7 +145,14 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.CorrelationId_DataGridTextColumn_Header}" Binding="{Binding CorrelationId}"/>
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.CorrelationId_DataGridTextColumn_Header}" SortMemberPath="CorrelationId">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding CorrelationId}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="{x:Static resources:Resource.Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
