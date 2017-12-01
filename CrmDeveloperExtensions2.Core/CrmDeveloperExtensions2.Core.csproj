@@ -207,6 +207,7 @@
     <Compile Include="Enums\MapTypes.cs" />
     <Compile Include="Enums\SolutionType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />
+    <Compile Include="ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Models\AssemblyDeploymentType.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />

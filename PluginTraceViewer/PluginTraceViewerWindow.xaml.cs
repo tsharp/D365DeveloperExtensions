@@ -2,6 +2,7 @@
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.DataGrid;
 using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.ExtensionMethods;
 using CrmDeveloperExtensions2.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
@@ -108,7 +109,7 @@ namespace PluginTraceViewer
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
-            
+
             _worker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -470,7 +471,10 @@ namespace PluginTraceViewer
             if (string.IsNullOrEmpty(search))
                 return true;
 
-            return crmPluginTrace.Details.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
+            if (crmPluginTrace.Details.Contains(search, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return false;
         }
 
         public bool CorrelationIdCondition(CrmPluginTrace crmPluginTrace)
@@ -479,9 +483,12 @@ namespace PluginTraceViewer
             if (string.IsNullOrEmpty(search))
                 return true;
 
-            return crmPluginTrace.CorrelationId.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
+            if (crmPluginTrace.CorrelationId.Contains(search, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return false;       
         }
-  
+
         public bool IsStringFilterValid(ObservableCollection<IFilterProperty> list, string name)
         {
             return list.Count(e => e.IsSelected) != 0 &&
