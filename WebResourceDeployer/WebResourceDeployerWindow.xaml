@@ -85,10 +85,6 @@
                            Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
                               DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False"/>
-                    <Label x:Name="SearchLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Search" 
-                           Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=Search}"/>
-                    <TextBox x:Name="Search" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Width="120" Style="{DynamicResource ToolBarTextBoxStyle}"
-                             IsEnabled="False" TextChanged="Search_OnTextChanged" />
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}">
                         <TextBlock IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Style="{DynamicResource ToolBarTextBlockStyle}">
                             <TextBlock.Text>
@@ -102,7 +98,7 @@
                 </StackPanel>
                 <DataGrid x:Name="WebResourceGrid" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5,0,0,0" BorderThickness="0" Background="Transparent" 
                           Style="{DynamicResource DataGridStyle}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeRows="False" EnableRowVirtualization="true" 
-                          CanUserAddRows="False" CellStyle="{DynamicResource DataGridCellStyle}" CanUserResizeColumns="False" IsEnabled="False" CanUserDeleteRows="False" 
+                          CanUserAddRows="False" CellStyle="{DynamicResource DataGridCellStyle}" IsEnabled="False" CanUserDeleteRows="False" 
                           EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False"
                           ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
@@ -155,7 +151,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" SortMemberPath="Name">
+                        <DataGridTemplateColumn CanUserResize="True" CanUserSort="True" Header="{x:Static resources:Resource.Name_DataGridTextColumn_Header}" SortMemberPath="Name">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding Name}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
@@ -181,7 +177,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" SortMemberPath="DisplayName">
+                        <DataGridTemplateColumn CanUserResize="True" CanUserSort="True" Header="{x:Static resources:Resource.DisplayName_DataGridTextColumn_Header}" SortMemberPath="DisplayName">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding DisplayName}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
@@ -255,20 +251,20 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Description" Header="Description">
+                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Description" Header="Description" CanUserResize="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="200"/>
                                             <ColumnDefinition Width="20"/>
                                             <ColumnDefinition Width="20"/>
                                             <ColumnDefinition Width="20"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Grid.Column="0" Text="{Binding Description}" Style="{DynamicResource DataGridTextBoxStyle}" MouseDoubleClick="TextBox_MouseDoubleClick"
+                                        <TextBox Grid.Column="0" Text="{Binding Description}" Style="{DynamicResource DataGridTextBoxOverflowStyle}" MouseDoubleClick="TextBox_MouseDoubleClick"
                                                    HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" />
                                         <Button x:Name="EditDescription" Grid.Column="3" Click="EditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}"
-                                                HorizontalAlignment="Right" Visibility="Visible">
+                                                HorizontalAlignment="Right" Visibility="Visible" IsEnabled="{Binding IsManaged, Converter={StaticResource InverseConverter}}">
                                             <imaging:CrispImage x:Name="EditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
                                                         ToolTip="Edit Description" />
                                         </Button>
@@ -290,6 +286,20 @@
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel Background="Transparent" Orientation="Horizontal">
+                                    <AdornerDecorator>
+                                        <TextBox x:Name="Search" Width="200" Height="20" TextChanged="Search_OnTextChanged" Style="{DynamicResource ToolBarTextBoxStyle}">
+                                            <coreConverters:WatermarkService.Watermark>
+                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="Search web resources"/>
+                                            </coreConverters:WatermarkService.Watermark>
+                                        </TextBox>
+                                    </AdornerDecorator>
+                                    <coreControls:DataGridHeaderClearFilterButton x:Name="ClearFilters" Click="ClearFilters_Click" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                     <DataGrid.RowDetailsTemplate>
