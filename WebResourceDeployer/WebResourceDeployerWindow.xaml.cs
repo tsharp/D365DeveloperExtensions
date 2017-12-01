@@ -525,8 +525,6 @@ namespace WebResourceDeployer
             SolutionList.IsEnabled = false;
             SolutionList.ItemsSource = null;
             WebResourceGrid.IsEnabled = false;
-            Search.Text = String.Empty;
-            Search.IsEnabled = false;
             SetButtonState(false);
 
             ClearConnection();
@@ -891,7 +889,6 @@ namespace WebResourceDeployer
             }
 
             WebResourceGrid.IsEnabled = true;
-            Search.IsEnabled = true;
             FilterWebResourceItems();
 
             return true;
@@ -1323,6 +1320,20 @@ namespace WebResourceDeployer
         {
             TextBox textBox = (TextBox)sender;
             textBox.SelectAll();
+        }
+
+        private void ClearFilters_Click(object sender, RoutedEventArgs e)
+        {
+            if (FilterStates[0].IsSelected)
+                FilterStates[0].IsSelected = false;
+            if (FilterStates[1].IsSelected)
+                FilterStates[1].IsSelected = false;
+            if (FilterStates[2].IsSelected != true)
+                FilterStates[2].IsSelected = true;
+            if (FilterTypeNames[0].IsSelected != true)
+                FilterTypeNames[0].IsSelected = true;
+
+            Search.Text = string.Empty;
         }
     }
 }
