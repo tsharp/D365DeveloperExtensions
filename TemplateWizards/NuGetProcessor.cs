@@ -39,7 +39,7 @@ namespace TemplateWizards
 
                 uninstaller.UninstallPackage(project, package, true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 //MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
