@@ -9,7 +9,7 @@ namespace CrmDeveloperExtensions2.Core.Tests.Config
     [TestClass]
     public class ConfigFileTests
     {
-        private static string _testFilepath;
+        //private static string _testFilepath;
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {

@@ -78,7 +78,7 @@ namespace WebResourceDeployer
                 return;
 
             string relativePath = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
-            string name = Name.Text.Trim();
+            string name = UniqueName.Text.Trim();
             string prefix = Prefix.Text;
             int type = ((WebResourceType)Type.SelectedItem).Type;
             string displayName = DisplayName.Text.Trim();
@@ -138,11 +138,11 @@ namespace WebResourceDeployer
 
         private bool ValidateForm()
         {
-            if (Crm.WebResource.ValidateName(Name.Text))
+            if (Crm.WebResource.ValidateName(UniqueName.Text))
                 return true;
 
             MessageBox.Show("Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters");
-            Name.Focus();
+            UniqueName.Focus();
             return false;
         }
 
@@ -150,7 +150,7 @@ namespace WebResourceDeployer
         {
             if (Files.SelectedItem == null)
             {
-                Name.Text = String.Empty;
+                UniqueName.Text = String.Empty;
                 DisplayName.Text = String.Empty;
                 return;
             }
@@ -158,7 +158,7 @@ namespace WebResourceDeployer
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
             DisplayName.Text = FileNameToDisplayName(fileName);
             string extension = Path.GetExtension(fileName);
-            Name.Text = fileName;
+            UniqueName.Text = fileName;
 
             if (string.IsNullOrEmpty(extension))
             {

@@ -41,7 +41,7 @@
             <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="2" Margin="0,2,0,2" Content="Name" />
             <TextBox x:Name="Prefix" Grid.Column="1" Grid.Row="2" Margin="0,2,0,2" HorizontalAlignment="Left" Text="new_" Width="60" IsEnabled="False"
                      TextAlignment="Right" VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
-            <TextBox x:Name="Name" Grid.Column="1" Grid.Row="2" Margin="60,2,0,2" TextWrapping="NoWrap" VerticalContentAlignment="Center"
+            <TextBox x:Name="UniqueName" Grid.Column="1" Grid.Row="2" Margin="60,2,0,2" TextWrapping="NoWrap" VerticalContentAlignment="Center"
                      MaxLength="200" Template="{DynamicResource TextBoxControlTemplate}"/>
             <Label Content="Display Name" Grid.Column="0" Grid.Row="3" Margin="0,2,0,2" />
             <TextBox x:Name="DisplayName" Grid.Column="1" Grid.Row="3" Margin="0,2,0,2" TextWrapping="NoWrap" MaxLength="249" 
@@ -60,7 +60,7 @@
                             <Binding ElementName="Solutions" Path="SelectedIndex" />
                             <Binding ElementName="Files" Path="SelectedIndex" />
                             <Binding ElementName="Type" Path="SelectedIndex" />
-                            <Binding ElementName="Name" Path="Text" />
+                            <Binding ElementName="UniqueName" Path="Text" />
                         </MultiBinding>
                     </Button.IsEnabled>
                 </Button>

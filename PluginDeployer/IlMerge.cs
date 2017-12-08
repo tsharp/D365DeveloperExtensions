@@ -29,7 +29,7 @@ namespace PluginDeployer
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show("Error installing MSBuild.ILMerge.Task" + Environment.NewLine + Environment.NewLine + ex.Message);
                 return false;
@@ -52,7 +52,7 @@ namespace PluginDeployer
                 //_isIlMergeInstalled = false;
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show("Error uninstalling MSBuild.ILMerge.Task" + Environment.NewLine + Environment.NewLine + ex.Message);
                 return false;
