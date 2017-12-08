@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDeveloperExtensions2", "CrmDeveloperExtensions2\CrmDeveloperExtensions2.csproj", "{EE23D830-8EB4-4313-9971-53A44900C169}"
 EndProject
@@ -67,6 +67,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpWebResourceProject", "ProjectTemplates\CSharp\CSharpWebResourceProject\CSharpWebResourceProject.csproj", "{1010F340-28A3-44BA-93E7-77CC68A18E23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpTypeScriptProject", "ProjectTemplates\CSharp\CSharpTypeScriptProject\CSharpTypeScriptProject.csproj", "{968A8896-7E98-4BD9-9D27-2B28FCF6CC67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{17FB32CC-EFEE-45F7-8713-05580A14332D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{275B3502-533C-454F-A86C-4B6657687AAA}"
+	ProjectSection(SolutionItems) = preProject
+		Build\lib\Ionic.Zip.DLL = Build\lib\Ionic.Zip.DLL
+		Build\lib\MSBuild.ExtensionPack.dll = Build\lib\MSBuild.ExtensionPack.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -202,6 +210,7 @@ Global
 		{99EAC9D1-C05D-4CAC-867E-E4862017F488} = {82F6B320-0999-4183-B6E4-C0097A6E331C}
 		{1010F340-28A3-44BA-93E7-77CC68A18E23} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
 		{968A8896-7E98-4BD9-9D27-2B28FCF6CC67} = {F19ED035-AFA0-40A2-984E-CC3B56172015}
+		{275B3502-533C-454F-A86C-4B6657687AAA} = {17FB32CC-EFEE-45F7-8713-05580A14332D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C31DE056-8008-4AC7-906A-748294E11C0E}
