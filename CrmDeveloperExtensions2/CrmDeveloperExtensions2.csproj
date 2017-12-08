@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Label="VsixCompress">
+    <VsixCompressTargets Condition=" '$(VsixCompressTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\VsixCompress.1.0.1\tools\vsix-compress.targets ))</VsixCompressTargets>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="CrmDeveloperExtensions2.cs" />
     <Compile Include="CrmDeveloperExtensions2Package.cs" />
@@ -306,52 +309,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.14\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.14\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets'))" />
   </Target>
-  <!-- VSIX Compression http://sedodream.com/2013/05/13/HowToCompressAVisualStudioExtensionVSIXDuringBuild.aspx -->
-  <PropertyGroup>
-    <EnableCompressVsix Condition=" '$(EnableCompressVsix)'=='' ">true</EnableCompressVsix>
-    <BuildLib Condition=" '$(BuildLib)'=='' ">$(MSBuildProjectDirectory)\..\Build\Lib\</BuildLib>
-  </PropertyGroup>
-  <UsingTask AssemblyFile="$(BuildLib)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.Zip"/>
-  <Target Name="CompressVsix"
-          AfterTargets="CreateVsixContainer"
-          DependsOnTargets="PrepareReplceVsixTemp"
-          Condition=" '$(EnableCompressVsix)'=='true' ">
-    <!-- copy the file to the obj folder and then party on it -->
-    <MakeDir Directories="$(_TmpVsixDir);$(_TmpVsixDir)\Extracted\"/>
-    <Copy SourceFiles="$(TargetVsixContainer)"
-          DestinationFolder="$(_TmpVsixDir)">
-      <Output TaskParameter="CopiedFiles" ItemName="_TmpVsixCopy"/>
-    </Copy>
-    <!-- extract out the .zip file -->
-    <MSBuild.ExtensionPack.Compression.Zip
-      TaskAction="Extract"
-      ExtractPath="$(_TmpVsixDir)Extracted\"
-      ZipFileName="@(_TmpVsixCopy->'%(FullPath)')"/>
-    <ItemGroup>
-      <_FilesToZip Remove="@(_FilesToZip)"/>
-      <_FilesToZip Include="$(_TmpVsixDir)Extracted\**\*"/>
-    </ItemGroup>
-    <MSBuild.ExtensionPack.Compression.Zip
-      TaskAction="Create"
-      CompressFiles="@(_FilesToZip)"
-      ZipFileName="%(_TmpVsixCopy.FullPath)"
-      RemoveRoot="$(_TmpVsixDir)Extracted\"
-      CompressionLevel="BestCompression" />
-    <Delete Files ="$(TargetVsixContainer)"/>
-    <Copy SourceFiles="%(_TmpVsixCopy.FullPath)" DestinationFiles="$(TargetVsixContainer)" />
-  </Target>
-  <Target Name="PrepareReplceVsixTemp" DependsOnTargets="CreateVsixContainer">
-    <ItemGroup>
-      <_VsixItem Remove="@(_VsixItem)"/>
-      <_VsixItem Include="$(TargetVsixContainer)" />
-      <_TmpVsixPathItem Include="$(IntermediateOutputPath)VsixTemp\%(_VsixItem.Filename)%(_VsixItem.Extension)"/>
-    </ItemGroup>
-    <PropertyGroup>
-      <_TmpVsixDir>%(_TmpVsixPathItem.RootDir)%(_TmpVsixPathItem.Directory)</_TmpVsixDir>
-    </PropertyGroup>
-    <RemoveDir Directories="$(_TmpVsixDir)"/>
-  </Target>
-  <!-- End VISX Compressions-->
+  <Import Project="$(VsixCompressTargets)" Condition="Exists('$(VsixCompressTargets)')" Label="VsixCompress" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
