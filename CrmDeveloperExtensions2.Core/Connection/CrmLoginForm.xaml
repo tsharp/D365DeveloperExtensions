@@ -20,6 +20,6 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <crmLoginCtrl:CrmServerLoginControl Name="CrmLoginCtrl" Grid.Row="1" ShowTitle="False"  Margin="10,5" VerticalAlignment="Bottom" />
+        <crmLoginCtrl:CrmServerLoginControl Name="CrmLoginCtrl" Grid.Row="0" ShowTitle="False"  Margin="10,5" VerticalAlignment="Bottom" />
     </Grid>
 </Window>

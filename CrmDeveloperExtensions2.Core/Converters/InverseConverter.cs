@@ -6,8 +6,9 @@ namespace CrmDeveloperExtensions2.Core.Converters
 {
     public class InverseConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return !bool.Parse(value.ToString());
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value != null && !bool.Parse(value.ToString());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

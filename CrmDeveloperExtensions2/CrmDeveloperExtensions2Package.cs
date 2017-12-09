@@ -67,8 +67,8 @@ namespace CrmDeveloperExtensions2
 
             StartupTasks.Run(_dte);
 
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (mcs == null) return;
+            if (!(GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs))
+                return;
 
             //Plug-in Deployer
             CommandID pdWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidPluginDeployerWindow);

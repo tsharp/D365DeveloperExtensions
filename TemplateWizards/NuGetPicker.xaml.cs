@@ -107,7 +107,6 @@ namespace TemplateWizards
                     currentMinor = ver.Minor;
                     filteredNuGetPackages.Add(currentPackage);
                     currentPackage = packageVersions[i];
-                    continue;
                 }
             }
 

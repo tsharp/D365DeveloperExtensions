@@ -16,7 +16,7 @@ namespace CrmDeveloperExtensions2.Core.Crm
             {
                 PublishAllXmlRequest request = new PublishAllXmlRequest();
 
-                PublishAllXmlResponse response = (PublishAllXmlResponse)client.Execute(request);
+                client.Execute(request);
 
                 return true;
             }

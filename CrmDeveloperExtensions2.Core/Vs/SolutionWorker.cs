@@ -26,7 +26,9 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         public static IList<Project> GetProjects()
         {
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                return null;
+
             Projects projects = dte.Solution.Projects;
             List<Project> list = new List<Project>();
             var item = projects.GetEnumerator();
