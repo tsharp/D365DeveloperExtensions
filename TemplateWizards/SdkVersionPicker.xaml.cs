@@ -18,7 +18,7 @@ namespace TemplateWizards
         public string WorkflowVersion { get; set; }
         public string ClientPackage { get; set; }
         public string ClientVersion { get; set; }
-        private bool GetWorkflow { get; set; }
+        private bool GetWorkflow { get; }
         public bool GetClient { get; set; }
         public PackageValue Package = PackageValue.Core;
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EnvDTE;
+using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using EnvDTE;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 
 namespace TemplateWizards
@@ -35,8 +31,7 @@ namespace TemplateWizards
 
                 try
                 {
-                    uint buffSize;
-                    if (0 != StrongNameKeyGen(IntPtr.Zero, 0, out buffer, out buffSize))
+                    if (0 != StrongNameKeyGen(IntPtr.Zero, 0, out buffer, out var buffSize))
                         Marshal.ThrowExceptionForHR(StrongNameErrorInfo());
                     if (buffer == IntPtr.Zero)
                         throw new InvalidOperationException();

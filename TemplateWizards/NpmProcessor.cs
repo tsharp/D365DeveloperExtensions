@@ -32,6 +32,11 @@ namespace TemplateWizards
                     UseShellExecute = false
                 };
                 var process = Process.Start(processStartInfo);
+                if (process == null)
+                {
+                    MessageBox.Show($"{Resources.Resource.NpmPackageInstallFailureMessage}");
+                    return;
+                }
 
                 process.StandardInput.WriteLine($"npm install --save {package}{version}");
                 process.StandardInput.Flush();
@@ -59,6 +64,11 @@ namespace TemplateWizards
                 UseShellExecute = false
             };
             var process = Process.Start(processStartInfo);
+            if (process == null)
+            {
+                MessageBox.Show($"{Resources.Resource.NpmPackageInstallFailureMessage}");
+                return null;
+            }
 
             process.StandardInput.WriteLine($"npm view {package}");
             process.StandardInput.Flush();

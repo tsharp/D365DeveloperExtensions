@@ -10,9 +10,7 @@ namespace CrmDeveloperExtensions2.Core
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(ms);
 
-            var parts = string
-                .Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                    ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds)
+            var parts = $"{ts.Days:D2}d:{ts.Hours:D2}h:{ts.Minutes:D2}m:{ts.Seconds:D2}s:{ts.Milliseconds:D3}ms"
                 .Split(':')
                 .SkipWhile(s => Regex.Match(s, @"00\w").Success)
                 .ToArray();

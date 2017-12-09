@@ -5,7 +5,6 @@
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
-             xmlns:local="clr-namespace:CrmDeveloperExtensions2.Core.Connection"
              xmlns:controls="clr-namespace:CrmDeveloperExtensions2.Core.Controls"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"

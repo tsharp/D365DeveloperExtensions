@@ -8,7 +8,6 @@
     xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
     xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
     xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
-    xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
     xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
     x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
     mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">

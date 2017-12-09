@@ -1,12 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Reflection;
-using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace CrmDeveloperExtensions2.Core.Config

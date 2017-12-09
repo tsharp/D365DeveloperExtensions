@@ -20,14 +20,14 @@ namespace CrmDeveloperExtensions2.Core.Converters
            "Watermark",
            typeof(object),
            typeof(WatermarkService),
-           new FrameworkPropertyMetadata((object)null, new PropertyChangedCallback(OnWatermarkChanged)));
+           new FrameworkPropertyMetadata(null, OnWatermarkChanged));
 
         #region Private Fields
 
         /// <summary>
         /// Dictionary of ItemsControls
         /// </summary>
-        private static readonly Dictionary<object, ItemsControl> itemsControls = new Dictionary<object, ItemsControl>();
+        private static readonly Dictionary<object, ItemsControl> ItemsControls = new Dictionary<object, ItemsControl>();
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace CrmDeveloperExtensions2.Core.Converters
         /// <returns>The value of the Watermark property</returns>
         public static object GetWatermark(DependencyObject d)
         {
-            return (object)d.GetValue(WatermarkProperty);
+            return d.GetValue(WatermarkProperty);
         }
 
         /// <summary>
@@ -61,30 +61,29 @@ namespace CrmDeveloperExtensions2.Core.Converters
             Control control = (Control)d;
             control.Loaded += Control_Loaded;
 
-            if (d is ComboBox)
+            switch (d)
             {
-                control.GotKeyboardFocus += Control_GotKeyboardFocus;
-                control.LostKeyboardFocus += Control_Loaded;
-            }
-            else if (d is TextBox)
-            {
-                control.GotKeyboardFocus += Control_GotKeyboardFocus;
-                control.LostKeyboardFocus += Control_Loaded;
-                ((TextBox)control).TextChanged += Control_GotKeyboardFocus;
+                case ComboBox _:
+                    control.GotKeyboardFocus += Control_GotKeyboardFocus;
+                    control.LostKeyboardFocus += Control_Loaded;
+                    break;
+                case TextBox _:
+                    control.GotKeyboardFocus += Control_GotKeyboardFocus;
+                    control.LostKeyboardFocus += Control_Loaded;
+                    ((TextBox)control).TextChanged += Control_GotKeyboardFocus;
+                    break;
             }
 
-            if (d is ItemsControl && !(d is ComboBox))
-            {
-                ItemsControl i = (ItemsControl)d;
+            if (!(d is ItemsControl i) || i is ComboBox)
+                return;
 
-                // for Items property  
-                i.ItemContainerGenerator.ItemsChanged += ItemsChanged;
-                itemsControls.Add(i.ItemContainerGenerator, i);
+            // for Items property  
+            i.ItemContainerGenerator.ItemsChanged += ItemsChanged;
+            ItemsControls.Add(i.ItemContainerGenerator, i);
 
-                // for ItemsSource property  
-                DependencyPropertyDescriptor prop = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, i.GetType());
-                prop.AddValueChanged(i, ItemsSourceChanged);
-            }
+            // for ItemsSource property  
+            DependencyPropertyDescriptor prop = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, i.GetType());
+            prop.AddValueChanged(i, ItemsSourceChanged);
         }
 
         #region Event Handlers
@@ -98,13 +97,9 @@ namespace CrmDeveloperExtensions2.Core.Converters
         {
             Control c = (Control)sender;
             if (ShouldShowWatermark(c))
-            {
                 ShowWatermark(c);
-            }
             else
-            {
                 RemoveWatermark(c);
-            }
         }
 
         /// <summary>
@@ -116,9 +111,7 @@ namespace CrmDeveloperExtensions2.Core.Converters
         {
             Control control = (Control)sender;
             if (ShouldShowWatermark(control))
-            {
                 ShowWatermark(control);
-            }
         }
 
         /// <summary>
@@ -132,18 +125,12 @@ namespace CrmDeveloperExtensions2.Core.Converters
             if (c.ItemsSource != null)
             {
                 if (ShouldShowWatermark(c))
-                {
                     ShowWatermark(c);
-                }
                 else
-                {
                     RemoveWatermark(c);
-                }
             }
             else
-            {
                 ShowWatermark(c);
-            }
         }
 
         /// <summary>
@@ -153,18 +140,13 @@ namespace CrmDeveloperExtensions2.Core.Converters
         /// <param name="e">A <see cref="ItemsChangedEventArgs"/> that contains the event data.</param>
         private static void ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            ItemsControl control;
-            if (itemsControls.TryGetValue(sender, out control))
-            {
-                if (ShouldShowWatermark(control))
-                {
-                    ShowWatermark(control);
-                }
-                else
-                {
-                    RemoveWatermark(control);
-                }
-            }
+            if (!ItemsControls.TryGetValue(sender, out var control))
+                return;
+
+            if (ShouldShowWatermark(control))
+                ShowWatermark(control);
+            else
+                RemoveWatermark(control);
         }
 
         #endregion
@@ -180,22 +162,18 @@ namespace CrmDeveloperExtensions2.Core.Converters
             AdornerLayer layer = AdornerLayer.GetAdornerLayer(control);
 
             // layer could be null if control is no longer in the visual tree
-            if (layer != null)
-            {
-                Adorner[] adorners = layer.GetAdorners(control);
-                if (adorners == null)
-                {
-                    return;
-                }
 
-                foreach (Adorner adorner in adorners)
-                {
-                    if (adorner is WatermarkAdorner)
-                    {
-                        adorner.Visibility = Visibility.Hidden;
-                        layer.Remove(adorner);
-                    }
-                }
+            Adorner[] adorners = layer?.GetAdorners(control);
+            if (adorners == null)
+                return;
+
+            foreach (Adorner adorner in adorners)
+            {
+                if (!(adorner is WatermarkAdorner))
+                    continue;
+
+                adorner.Visibility = Visibility.Hidden;
+                layer.Remove(adorner);
             }
         }
 
@@ -208,10 +186,7 @@ namespace CrmDeveloperExtensions2.Core.Converters
             AdornerLayer layer = AdornerLayer.GetAdornerLayer(control);
 
             // layer could be null if control is no longer in the visual tree
-            if (layer != null)
-            {
-                layer.Add(new WatermarkAdorner(control, GetWatermark(control)));
-            }
+            layer?.Add(new WatermarkAdorner(control, GetWatermark(control)));
         }
 
         /// <summary>
@@ -221,21 +196,16 @@ namespace CrmDeveloperExtensions2.Core.Converters
         /// <returns>true if the watermark should be shown; false otherwise</returns>
         private static bool ShouldShowWatermark(Control c)
         {
-            if (c is ComboBox)
+            switch (c)
             {
-                return (c as ComboBox).Text == string.Empty;
-            }
-            else if (c is TextBoxBase)
-            {
-                return (c as TextBox).Text == string.Empty;
-            }
-            else if (c is ItemsControl)
-            {
-                return (c as ItemsControl).Items.Count == 0;
-            }
-            else
-            {
-                return false;
+                case ComboBox _:
+                    return (c as ComboBox)?.Text == string.Empty;
+                case TextBoxBase _:
+                    return (c as TextBox)?.Text == string.Empty;
+                case ItemsControl _:
+                    return ((ItemsControl)c).Items.Count == 0;
+                default:
+                    return false;
             }
         }
 

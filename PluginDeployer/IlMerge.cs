@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EnvDTE;
+﻿using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using NuGet.VisualStudio;
+using System;
+using System.Linq;
 using TemplateWizards;
 using VSLangProj;
 
@@ -72,8 +69,7 @@ namespace PluginDeployer
             };
 
 
-            var vsproject = project.Object as VSProject;
-            if (vsproject == null)
+            if (!(project.Object is VSProject vsproject))
                 return;
 
             foreach (Reference reference in vsproject.References)

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CrmDeveloperExtensions2.Core.Models;
 
 namespace CrmDeveloperExtensions2.Core.DataGrid
 {

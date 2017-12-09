@@ -1,17 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using CrmDeveloperExtensions2.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Tooling.CrmConnectControl;
-using Window = System.Windows.Window;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace CrmDeveloperExtensions2.Core.Connection
 {
-    public partial class CrmLoginForm : Window
+    public partial class CrmLoginForm
     {
         #region Vars
         /// <summary>
@@ -31,7 +30,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         /// </summary>
         private bool _resetUiFlag;
 
-        private bool _autoLogin;
+        private readonly bool _autoLogin;
         #endregion
 
         #region Properties

@@ -5,7 +5,7 @@ namespace CrmDeveloperExtensions2
     /// <summary>
     /// Helper class that exposes all GUIDs used across VS Package.
     /// </summary>
-    internal sealed partial class PackageGuids
+    internal sealed class PackageGuids
     {
         public const string GuidCrmDeveloperExtensionsPkgString = "A4FA8F78-98AF-4633-8621-BBDD7792A6AC";
         public const string GuidCrmDevExCmdSetString = "95CD7B0B-0592-4683-B42C-A79A41380FFE";
@@ -16,7 +16,7 @@ namespace CrmDeveloperExtensions2
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
     /// </summary>
-    internal sealed partial class PackageIds
+    internal sealed class PackageIds
     {
         public const int ProjectMenuGroup = 0x1020;
         public const int CmdidPluginDeployerWindow = 0x0101;
