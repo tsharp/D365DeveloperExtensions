@@ -8,6 +8,7 @@ namespace CrmDeveloperExtensions2.Core.Crm
         public static string RetrieveOrganizationId(CrmServiceClient service)
         {
             WhoAmIResponse response = (WhoAmIResponse)service.Execute(new WhoAmIRequest());
+
             return response.OrganizationId.ToString();
         }
     }

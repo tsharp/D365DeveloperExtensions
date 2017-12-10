@@ -41,7 +41,7 @@ namespace WebResourceDeployer
         private readonly DTE _dte;
         private readonly Solution _solution;
         private readonly FieldInfo _menuDropAlignmentField;
-        private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<WebResourceItem> _webResourceItems;
         private ObservableCollection<ComboBoxItem> _projectFiles;
         private ObservableCollection<string> _projectFolders;

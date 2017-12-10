@@ -1,5 +1,7 @@
 ﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -11,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Xml;
-using CrmDeveloperExtensions2.Core.Enums;
 using TemplateWizards.Models;
 using WizardCancelledException = Microsoft.VisualStudio.TemplateWizard.WizardCancelledException;
 
@@ -88,7 +89,7 @@ namespace TemplateWizards
 
         private Dictionary<string, string> PreHandleCustomItem(Dictionary<string, string> replacementsDictionary)
         {
-            string templateFolder = UserOptionsGrid.GetCustomTemplatesPath(_dte);
+            string templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
             _addFile = CustomTemplateHandler.ValidateTemplateFolder(templateFolder);
             if (!_addFile)
                 return replacementsDictionary;
@@ -194,7 +195,7 @@ namespace TemplateWizards
 
         private void PreHandleTypeScriptProjects()
         {
-            NpmHistory history = NpmProcessor.GetPackageHistory(_dte, "@types/xrm");
+            NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
 
             NpmPicker npmPicker = new NpmPicker(history);
             bool? result = npmPicker.ShowModal();
@@ -284,7 +285,7 @@ namespace TemplateWizards
 
         private void PostHandleTypeScriptProject(Project project)
         {
-            NpmProcessor.InstallPackage(_dte, "@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project));
+            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project));
 
             _dte.ExecuteCommand("ProjectandSolutionContextMenus.CrossProjectMultiItem.RefreshFolder");
         }
@@ -292,11 +293,11 @@ namespace TemplateWizards
         private void PostHandleUnitTestProjects(Project project, IVsPackageInstaller installer)
         {
             //TODO: use latest?
-            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestAdapter", null);
-            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestFramework", null);
+            NuGetProcessor.InstallPackage(installer, project, "MSTest.TestAdapter", null);
+            NuGetProcessor.InstallPackage(installer, project, "MSTest.TestFramework", null);
 
             if (_unitTestFrameworkPackage != null)
-                NuGetProcessor.InstallPackage(_dte, installer, project, _unitTestFrameworkPackage, null);
+                NuGetProcessor.InstallPackage(installer, project, _unitTestFrameworkPackage, null);
         }
 
         private void PostHandleCrmAssemblyProjects(Project project, IVsPackageInstaller installer)
@@ -311,17 +312,17 @@ namespace TemplateWizards
 
                 //Install all the NuGet packages
                 project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
-                NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
+                NuGetProcessor.InstallPackage(installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
                 if (_needsWorkflow)
-                    NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
+                    NuGetProcessor.InstallPackage(installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
                 if (_needsClient)
-                    NuGetProcessor.InstallPackage(_dte, installer, project, _clientPackage, _clientVersion);
+                    NuGetProcessor.InstallPackage(installer, project, _clientPackage, _clientVersion);
 
                 ProjectWorker.ExcludeFolder(project, "bin");
                 ProjectWorker.ExcludeFolder(project, "performance");
 
                 if (_signAssembly)
-                    Signing.GenerateKey(_dte, project, _destDirectory);
+                    Signing.GenerateKey(project, _destDirectory);
             }
             catch (Exception ex)
             {

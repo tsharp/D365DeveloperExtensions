@@ -89,7 +89,7 @@ namespace TemplateWizards
 
             try
             {
-                NuGetProcessor.InstallPackage(dte, installer, project, package.Name, packageVersion);
+                NuGetProcessor.InstallPackage(installer, project, package.Name, packageVersion);
             }
             catch (Exception ex)
             {

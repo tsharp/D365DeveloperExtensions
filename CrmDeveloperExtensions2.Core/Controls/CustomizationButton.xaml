@@ -18,6 +18,6 @@
     </UserControl.Resources>
     <Button x:Name="Customizations" Click="Customizations_OnClick" Style="{DynamicResource ToolBarButtonStyle}" Loaded="Customizations_OnLoaded"
             IsEnabled="{Binding Path=IsConnected, FallbackValue=false, Mode=TwoWay}"
-            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.Customizations_Button_Content}}"
-            ToolTip="{x:Static resources:Resource.Customizations_Button_ToolTip}"/>
+            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.CustomizationsButton_Customizations_Button_Content}}"
+            ToolTip="{x:Static resources:Resource.CustomizationsButton_Customizations_Button_ToolTip}"/>
 </UserControl>

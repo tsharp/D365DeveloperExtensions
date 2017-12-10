@@ -1,6 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core.Logging;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
+using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Tooling.CrmConnectControl;
 using System;
@@ -230,12 +230,11 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void EnableXrmToolingLogging()
         {
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (!UserOptionsGrid.GetLoggingOptionBoolean(dte, "ExtensionLoggingEnabled"))
+            if (!UserOptionsHelper.GetOption<bool>(UserOptionProperties.XrmToolingLoggingEnabled))
                 return;
 
             TraceControlSettings.TraceLevel = SourceLevels.All;
-            string logPath = XrmToolingLogging.GetLogFilePath(dte);
+            string logPath = XrmToolingLogging.GetLogFilePath();
             TraceControlSettings.AddTraceListener(new TextWriterTraceListener(logPath));
         }
     }

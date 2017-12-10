@@ -1,15 +1,15 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using CrmDeveloperExtensions2.Core.Resources;
 using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using System;
-using System.ServiceModel;
 
 namespace CrmDeveloperExtensions2.Core.Crm
 {
     public class Publish
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static bool PublishAllCustomizations(CrmServiceClient client)
         {
             try
@@ -20,14 +20,10 @@ namespace CrmDeveloperExtensions2.Core.Crm
 
                 return true;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Publishing Customizations To CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return false;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Publishing Customizations To CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorPublishing, ex);
+
                 return false;
             }
         }

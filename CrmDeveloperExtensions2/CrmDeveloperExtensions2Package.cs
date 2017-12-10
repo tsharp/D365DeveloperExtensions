@@ -7,6 +7,8 @@ using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.UserOptions;
+using CrmDeveloperExtensions2.Resources;
 using CrmIntellisense;
 using PluginDeployer;
 using PluginTraceViewer;
@@ -35,6 +37,7 @@ namespace CrmDeveloperExtensions2
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
+    //TODO: Add pre-build step to update to actual version
     [InstalledProductRegistration("#110", "#112", "2.0.0.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
@@ -46,6 +49,7 @@ namespace CrmDeveloperExtensions2
     [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
 
     //User Settings - Sections
+    //TODO: find way to replace strings
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Logging", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Web Browser", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "External Tools", 0, 0, true)]
@@ -54,18 +58,16 @@ namespace CrmDeveloperExtensions2
 
     public sealed class CrmDeveloperExtensions2Package : Package
     {
-        private DTE _dte;
-        private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            _dte = GetGlobalService(typeof(DTE)) as DTE;
+            DTE dte = GetGlobalService(typeof(DTE)) as DTE;
+            StartupTasks.Run(dte);
 
-            ExLogger.LogToFile(_dte, ExtensionLogger, "Initializing extension", LogLevel.Info);
-
-            StartupTasks.Run(_dte);
+            ExLogger.LogToFile(Logger, Resource.TraceInfo_InitializingExtension, LogLevel.Info);
 
             if (!(GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs))
                 return;
@@ -95,7 +97,7 @@ namespace CrmDeveloperExtensions2
         {
             ToolWindowPane window = FindToolWindow(typeof(T), 0, true);
             if (window?.Frame == null)
-                throw new NotSupportedException("Cannot create tool window.");
+                throw new NotSupportedException(Resource.ErrorMessage_CannotCreateToolWindow);
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());

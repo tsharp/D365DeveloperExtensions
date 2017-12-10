@@ -1,6 +1,8 @@
 ﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using SolutionPackager.Models;
@@ -146,7 +148,7 @@ namespace SolutionPackager
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
+                if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
                 {
                     name = Path.GetFileName(name);
                     // Do not delete the mapping file
@@ -162,7 +164,7 @@ namespace SolutionPackager
                     itemChanged = true;
                 }
 
-                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
+                if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
                 {
                     name = new DirectoryInfo(name).Name;
                     if (name == projectFolder || name == "Properties")
@@ -203,11 +205,9 @@ namespace SolutionPackager
             return projectPath;
         }
 
-        public static string CreateToolPath(DTE dte)
+        public static string CreateToolPath()
         {
-            UserOptionsGrid.GetSolutionPackagerToolPath(dte);
-            string spPath = UserOptionsGrid.GetSolutionPackagerToolPath(dte);
-
+            string spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
             if (string.IsNullOrEmpty(spPath))
             {
                 OutputLogger.WriteToOutputWindow("Please set the Solution Packager path in options", MessageType.Error);

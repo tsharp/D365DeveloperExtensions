@@ -46,7 +46,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
                     continue;
 
                 if (projectHierarchy.ParseCanonicalName(fileFullName, out var itemId) == VSConstants.S_OK)
-                    MessageBox.Show("File: " + fileFullName + "\r\n" + "Item Id: 0x" + itemId.ToString("X"));
+                    MessageBox.Show($"File: {fileFullName}\r\nItem Id: 0x{itemId:X}");
             }
         }
 

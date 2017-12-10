@@ -10,8 +10,7 @@ namespace PluginDeployer.Config
     {
         public static PluginDeployConfig GetSpklPluginConfig(Project project, string profile)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
 
             List<PluginDeployConfig> spklPluginDeployConfigs = spklConfig.plugins;
             if (spklPluginDeployConfigs == null)

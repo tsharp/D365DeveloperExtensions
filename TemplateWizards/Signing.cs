@@ -16,7 +16,7 @@ namespace TemplateWizards
         [DllImport("mscoree.dll", CharSet = CharSet.Unicode)]
         internal static extern int StrongNameErrorInfo();
 
-        public static void GenerateKey(DTE dte, Project project, string destDirectory)
+        public static void GenerateKey(Project project, string destDirectory)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace TemplateWizards
                     return;
 
                 //Generate new key
-                StatusBar.SetStatusBarValue(dte, Resources.Resource.GeneratingKeyStatusBarMessage);
+                StatusBar.SetStatusBarValue(Resources.Resource.GeneratingKeyStatusBarMessage);
 
                 string keyFilePath = Path.Combine(destDirectory, Resources.Resource.DefaultKeyName);
                 IntPtr buffer = IntPtr.Zero;
@@ -66,7 +66,7 @@ namespace TemplateWizards
             }
             finally
             {
-                dte.StatusBar.Clear();
+                StatusBar.ClearStatusBarValue();
             }
         }
     }

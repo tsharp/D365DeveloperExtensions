@@ -21,7 +21,7 @@ namespace PluginDeployer
 
                 var installer = componentModel.GetService<IVsPackageInstaller>();
 
-                NuGetProcessor.InstallPackage(dte, installer, project,
+                NuGetProcessor.InstallPackage(installer, project,
                     CrmDeveloperExtensions2.Core.ExtensionConstants.IlMergeNuGet, null);
 
                 return true;
@@ -43,7 +43,7 @@ namespace PluginDeployer
 
                 var uninstaller = componentModel.GetService<IVsPackageUninstaller>();
 
-                NuGetProcessor.UnInstallPackage(dte, uninstaller, project, CrmDeveloperExtensions2.Core.ExtensionConstants.IlMergeNuGet);
+                NuGetProcessor.UnInstallPackage(uninstaller, project, CrmDeveloperExtensions2.Core.ExtensionConstants.IlMergeNuGet);
 
                 //SetIlMergeTooltip(false);
                 //_isIlMergeInstalled = false;

@@ -21,7 +21,7 @@
     </UserControl.Resources>
     <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
         <Expander.Header>
-            <TextBlock Text="{x:Static resources:Resource.Connect_TextBlock_Text}">
+            <TextBlock Text="{x:Static resources:Resource.XrmToolingConnection_Connect_TextBlock_Text}">
                 <TextBlock.LayoutTransform>
                     <RotateTransform Angle="90"/>
                 </TextBlock.LayoutTransform>
@@ -33,20 +33,20 @@
                 <controls:SpklGitHubButton Margin="0,0,3,0"/>
                 <controls:PayPalButton/>
             </StackPanel>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.Project_Label_Content}" />
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.XrmToolingConnection_SolutionProjectsList_Label_Content}" />
             <ComboBox x:Name="SolutionProjectsList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" 
                       ItemsSource="{Binding Path=Projects, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"
-                       Initialized="SolutionProjectsList_Initialized" Template="{DynamicResource ComboBoxControlTemplate}" />
-            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="Profile" />
+                      Template="{DynamicResource ComboBoxControlTemplate}" />
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.XrmToolingConnection_ProfileList_Label_Content}" />
             <ComboBox x:Name="ProfileList" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Height="22" Width="170" 
                       ItemsSource="{Binding Profiles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectionChanged="ProfileList_SelectionChanged" Template="{DynamicResource ComboBoxControlTemplate}" />
-            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="Connect" />
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.XrmToolingConnection_Connect_Label_Content}" />
             <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
                 <Button x:Name="Connect" IsEnabled="True" Click="Connect_OnClick" VerticalAlignment="Bottom" Style="{DynamicResource ImageButtonStyle}">
-                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="{x:Static resources:Resource.ConnectImage_Button_Tooltip}" />
+                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="{x:Static resources:Resource.XrmToolingConnection_ConnectImage_Button_Tooltip}" />
                 </Button>
-                <CheckBox x:Name="AutoLogin" Margin="5,0,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.AutoLogin_Button_ToolTip}" IsChecked="True"
+                <CheckBox x:Name="AutoLogin" Margin="5,0,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.XrmToolingConnection_AutoLogin_Button_ToolTip}" IsChecked="True"
                           Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked" VerticalAlignment="Center" />
             </StackPanel>
         </StackPanel>

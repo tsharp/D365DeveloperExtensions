@@ -1,4 +1,6 @@
-﻿using EnvDTE;
+﻿using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
+using EnvDTE;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -11,16 +13,11 @@ namespace CrmDeveloperExtensions2.Core
     {
         public static void OpenCrmPage(DTE dte, CrmServiceClient client, string contentUrl)
         {
-            bool useInternalBrowser = UserOptionsGrid.GetUseInternalBrowser(dte);
-
             Uri crmUri = GetBaseCrmUrlFomClient(client);
 
             Uri url = new Uri(crmUri, contentUrl);
 
-            if (useInternalBrowser) //Internal VS browser
-                dte.ItemOperations.Navigate(url.ToString());
-            else //User's default browser
-                System.Diagnostics.Process.Start(url.ToString());
+            OpenPage(dte, url.ToString());
         }
 
         public static Uri GetBaseCrmUrlFomClient(CrmServiceClient client)
@@ -35,11 +32,16 @@ namespace CrmDeveloperExtensions2.Core
 
         public static void OpenUrl(DTE dte, string contentUrl)
         {
-            bool useInternalBrowser = UserOptionsGrid.GetUseInternalBrowser(dte);
+            OpenPage(dte, contentUrl);
+        }
+
+        private static void OpenPage(DTE dte, string contentUrl)
+        {
+            bool useInternalBrowser = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseInternalBrowser);
 
             if (useInternalBrowser) //Internal VS browser
                 dte.ItemOperations.Navigate(contentUrl);
-            else //User's default browser
+            else                   //User's default browser
                 System.Diagnostics.Process.Start(contentUrl);
         }
     }

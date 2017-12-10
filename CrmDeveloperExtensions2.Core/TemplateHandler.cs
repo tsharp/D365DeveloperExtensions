@@ -1,6 +1,8 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Resources;
 using EnvDTE;
+using NLog;
 using System;
 using System.IO;
 using System.Reflection;
@@ -10,6 +12,8 @@ namespace CrmDeveloperExtensions2.Core
 {
     public class TemplateHandler
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static void AddFileFromTemplate(Project project, string templatePartialPath, string filename)
         {
             try
@@ -20,7 +24,7 @@ namespace CrmDeveloperExtensions2.Core
 
                 if (string.IsNullOrEmpty(path))
                 {
-                    OutputLogger.WriteToOutputWindow($"Error finding extension template directory: {path}", MessageType.Error);
+                    OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_FindTemplateDirectory}: {path}", MessageType.Error);
                     return;
                 }
 
@@ -29,9 +33,10 @@ namespace CrmDeveloperExtensions2.Core
 
                 project.ProjectItems.AddFromTemplate(templatePath, filename);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error creating file: {filename} from template");
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_CreateFileFromTemplate}: {filename}", ex);
+                MessageBox.Show($"{Resource.ErrorMessage_CreateFileFromTemplate}: {filename}");
             }
         }
     }

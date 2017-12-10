@@ -9,6 +9,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,18 +25,25 @@ namespace CrmDeveloperExtensions2.Core.Connection
 {
     public partial class XrmToolingConnection : INotifyPropertyChanged
     {
+        #region Private
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly DTE _dte;
         private readonly Solution _solution;
         private ObservableCollection<ProjectListItem> _projects;
         private List<string> _profiles;
         private bool _projectEventsRegistered;
-        private readonly IVsSolution _vsSolution;
-        private readonly IVsSolutionEvents _vsSolutionEvents;
+        private IVsSolution _vsSolution;
+        private IVsSolutionEvents _vsSolutionEvents;
         private readonly List<MovedProjectItem> _movedProjectItems;
         private bool _autoLogin;
         private bool _isConnected;
         private Project _selectedProject;
         private string _selectedProfile;
+
+        #endregion
+
+        #region Public
 
         public CrmServiceClient CrmService;
         public Guid OrganizationId;
@@ -89,6 +97,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         public ToolWindow ToolWindow;
 
+        #endregion
+
+        #region Event Handlers
+
         public event EventHandler<ConnectEventArgs> Connected;
         public event EventHandler SolutionOpened;
         public event EventHandler SolutionBeforeClosing;
@@ -102,6 +114,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<SelectionChangedEventArgs> SelectedProjectChanged;
         public event EventHandler<SelectionChangedEventArgs> ProfileChanged;
+
+        #endregion
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -121,26 +135,14 @@ namespace CrmDeveloperExtensions2.Core.Connection
             if (_solution == null)
                 return;
 
-            _vsSolutionEvents = new VsSolutionEvents(_dte, this);
-            _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out uint solutionEventsCookie);
+            AdviseSolutionEvents();
 
             var events = _dte.Events;
-            var windowEvents = events.WindowEvents;
-            windowEvents.WindowActivated += WindowEventsOnWindowActivated;
+            BindWindowEvents(events);
 
-            var events2 = (Events2)_dte.Events;
-            var projectItemsEvents = events2.ProjectItemsEvents;
-            projectItemsEvents.ItemRenamed += ProjectItemsEventsOnItemRenamed;
-            projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
-            projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
+            BindProjectItemEvents();
 
-            var solutionEvents = events.SolutionEvents;
-            solutionEvents.ProjectAdded += SolutionEventsOnProjectAdded;
-            solutionEvents.ProjectRemoved += SolutionEventsOnProjectRemoved;
-            solutionEvents.ProjectRenamed += SolutionEventsOnProjectRenamed;
-            solutionEvents.BeforeClosing += SolutionEventsOnBeforeClosing;
-            solutionEvents.Opened += SolutionEventsOnOpened;
+            BindSolutionEvents(events);
 
             _movedProjectItems = new List<MovedProjectItem>();
             Projects = new ObservableCollection<ProjectListItem>();
@@ -190,6 +192,39 @@ namespace CrmDeveloperExtensions2.Core.Connection
             _isConnected = true;
         }
 
+        #region Event Binding
+        private void AdviseSolutionEvents()
+        {
+            _vsSolutionEvents = new VsSolutionEvents(_dte, this);
+            _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
+            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out uint solutionEventsCookie);
+        }
+
+        private void BindSolutionEvents(Events events)
+        {
+            var solutionEvents = events.SolutionEvents;
+            solutionEvents.ProjectAdded += SolutionEventsOnProjectAdded;
+            solutionEvents.ProjectRemoved += SolutionEventsOnProjectRemoved;
+            solutionEvents.ProjectRenamed += SolutionEventsOnProjectRenamed;
+            solutionEvents.BeforeClosing += SolutionEventsOnBeforeClosing;
+            solutionEvents.Opened += SolutionEventsOnOpened;
+        }
+
+        private void BindProjectItemEvents()
+        {
+            var events2 = (Events2)_dte.Events;
+            var projectItemsEvents = events2.ProjectItemsEvents;
+            projectItemsEvents.ItemRenamed += ProjectItemsEventsOnItemRenamed;
+            projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+            projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
+        }
+
+        private void BindWindowEvents(Events events)
+        {
+            var windowEvents = events.WindowEvents;
+            windowEvents.WindowActivated += WindowEventsOnWindowActivated;
+        }
+
         private void RegisterProjectEvents()
         {
             //Manually register the OnAfterOpenProject event on the existing projects 
@@ -202,6 +237,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 _vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
             }
         }
+
+        #endregion
+
+        #region Events
         public void ProjectItemMoveDeleted(ProjectItem projectItem)
         {
             /*Web site projects are not triggering the same project item added/removed event
@@ -212,7 +251,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 ProjectItemsEvents_ItemRemoved(projectItem);
 
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
+            if (projectPath == null)
+                return;
 
             MovedProjectItem movedProjectItem = new MovedProjectItem
             {
@@ -375,6 +415,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
             });
         }
 
+        #endregion
+
         private void GetProjectsForList()
         {
             Projects = new ObservableCollection<ProjectListItem>();
@@ -400,7 +442,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         {
             try
             {
-                StatusBar.SetStatusBarValue(_dte, Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
+                StatusBar.SetStatusBarValue(Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
 
                 CrmLoginForm ctrl = new CrmLoginForm(_autoLogin);
                 ctrl.ConnectionToCrmCompleted += ConnectionToCrmCompleted;
@@ -412,23 +454,18 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 if (ctrl.CrmConnectionMgr?.CrmSvc == null || !ctrl.CrmConnectionMgr.CrmSvc.IsReady)
                 {
                     if (ctrl.CrmConnectionMgr != null)
-                        OutputLogger.WriteToOutputWindow(Resource.OutputLogger_ErrorConnecting_Error + ": " +
-                                                         ctrl.CrmConnectionMgr.LastError + Environment.NewLine +
-                                                         Resource.OutputLogger_ErrorConnecting_Exception + ": " +
-                                                         ctrl.CrmConnectionMgr.LastException.Message +
-                                                         Environment.NewLine +
-                                                         ctrl.CrmConnectionMgr.LastException.StackTrace,
-                            MessageType.Error);
+                        ExceptionHandler.LogCrmConnectionError(Logger, Resource.ErrorMessage_ErrorCrmConnection, ctrl.CrmConnectionMgr);
+
                     MessageBox.Show(Resource.MessageBox_CannotConnect, Resource.MessageBox_CannotConnect_Title);
                     return;
                 }
 
-                OutputLogger.WriteToOutputWindow(Resource.OutputLogger_SuccessConnecting + " | " +
-                    ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion + " | " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, MessageType.Info);
+                OutputLogger.WriteToOutputWindow($@"{Resource.Message_SuccessConnecting}|{ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion}|{ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName}",
+                     MessageType.Info);
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(_dte, vsStatusAnimation.vsStatusAnimationGeneral);
+                StatusBar.ClearStatusBarValue(vsStatusAnimation.vsStatusAnimationGeneral);
             }
         }
 
@@ -484,10 +521,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
             SelectedProjectChanged?.Invoke(this, e);
         }
 
-        private void SolutionProjectsList_Initialized(object sender, EventArgs e)
-        {
-        }
-
         private void ResetForm()
         {
             Projects = new ObservableCollection<ProjectListItem>();
@@ -518,7 +551,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
         private void GetProfiles()
         {
             Profiles = new List<string>();
-            Profiles = Config.Profiles.GetProfiles(ProjectWorker.GetProjectPath(SelectedProject), ToolWindow.Type);
+            Profiles = Config.Profiles.GetProfiles(SelectedProject, ToolWindow.Type);
             if (Profiles == null || Profiles.Count == 0)
             {
                 ProfileList.IsEnabled = false;

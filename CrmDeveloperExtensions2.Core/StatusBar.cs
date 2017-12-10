@@ -2,28 +2,35 @@
 
 namespace CrmDeveloperExtensions2.Core
 {
-    public static class StatusBar
+    public class StatusBar
     {
-        public static void SetStatusBarValue(DTE dte, string text)
+        private static DTE _dte;
+
+        public StatusBar(DTE dte)
         {
-            dte.StatusBar.Text = text;
+            _dte = dte;
         }
 
-        public static void SetStatusBarValue(DTE dte, string text, vsStatusAnimation animation)
+        public static void SetStatusBarValue(string text)
         {
-            dte.StatusBar.Text = text;
-            dte.StatusBar.Animate(true, animation);
+            _dte.StatusBar.Text = text;
         }
 
-        public static void ClearStatusBarValue(DTE dte)
+        public static void SetStatusBarValue(string text, vsStatusAnimation animation)
         {
-            dte.StatusBar.Clear();
+            _dte.StatusBar.Text = text;
+            _dte.StatusBar.Animate(true, animation);
         }
 
-        public static void ClearStatusBarValue(DTE dte, vsStatusAnimation animation)
+        public static void ClearStatusBarValue()
         {
-            dte.StatusBar.Clear();
-            dte.StatusBar.Animate(false, animation);
+            _dte.StatusBar.Clear();
+        }
+
+        public static void ClearStatusBarValue(vsStatusAnimation animation)
+        {
+            _dte.StatusBar.Clear();
+            _dte.StatusBar.Animate(false, animation);
         }
     }
 }
