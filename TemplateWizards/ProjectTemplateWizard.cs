@@ -7,6 +7,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
+using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,14 @@ using System.IO;
 using System.Windows;
 using System.Xml;
 using TemplateWizards.Models;
+using TemplateWizards.Resources;
 using WizardCancelledException = Microsoft.VisualStudio.TemplateWizard.WizardCancelledException;
 
 namespace TemplateWizards
 {
     public class ProjectTemplateWizard : IWizard
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private DTE _dte;
         private string _coreVersion;
         private string _clientVersion;
@@ -82,7 +85,8 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error occurred running wizard:\n\n{ex}");
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_TemplateWizardError, ex);
+                MessageBox.Show(Resource.ErrorMessage_TemplateWizardError);
                 throw new WizardCancelledException("Internal error", ex);
             }
         }
@@ -108,7 +112,7 @@ namespace TemplateWizards
             List<CustomTemplate> results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
             if (results.Count == 0)
             {
-                MessageBox.Show("Add custom templates to continue");
+                MessageBox.Show(Resource.MessageBox_AddCustomTemplate);
                 _addFile = false;
                 return replacementsDictionary;
             }
@@ -242,7 +246,8 @@ namespace TemplateWizards
         public void ProjectFinishedGenerating(Project project)
         {
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-            if (componentModel == null) return;
+            if (componentModel == null)
+                return;
 
             var installer = componentModel.GetService<IVsPackageInstaller>();
 
@@ -292,9 +297,8 @@ namespace TemplateWizards
 
         private void PostHandleUnitTestProjects(Project project, IVsPackageInstaller installer)
         {
-            //TODO: use latest?
-            NuGetProcessor.InstallPackage(installer, project, "MSTest.TestAdapter", null);
-            NuGetProcessor.InstallPackage(installer, project, "MSTest.TestFramework", null);
+            NuGetProcessor.InstallPackage(installer, project, ExtensionConstants.MsTestTestAdapter, null);
+            NuGetProcessor.InstallPackage(installer, project, ExtensionConstants.MsTestTestFramework, null);
 
             if (_unitTestFrameworkPackage != null)
                 NuGetProcessor.InstallPackage(installer, project, _unitTestFrameworkPackage, null);
@@ -312,9 +316,9 @@ namespace TemplateWizards
 
                 //Install all the NuGet packages
                 project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
-                NuGetProcessor.InstallPackage(installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
+                NuGetProcessor.InstallPackage(installer, project, Resource.SdkAssemblyCore, _coreVersion);
                 if (_needsWorkflow)
-                    NuGetProcessor.InstallPackage(installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
+                    NuGetProcessor.InstallPackage(installer, project, Resource.SdkAssemblyWorkflow, _coreVersion);
                 if (_needsClient)
                     NuGetProcessor.InstallPackage(installer, project, _clientPackage, _clientVersion);
 
@@ -326,7 +330,8 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Processing Template: " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorProcessingTemplate, ex);
+                MessageBox.Show(Resource.ErrorMessage_ErrorProcessingTemplate);
             }
         }
 

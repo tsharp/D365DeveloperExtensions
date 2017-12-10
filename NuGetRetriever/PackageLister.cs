@@ -11,11 +11,7 @@ namespace NuGetRetriever
     {
         public static List<NuGetPackage> GetPackagesbyId(string packageId)
         {
-            //TODO: Change to use NuGet API to get sources
-            //https://docs.microsoft.com/en-us/nuget/visual-studio-extensibility/nuget-api-in-visual-studio
-
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-            List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
+            var packages = GetPackages(packageId);
 
             List<NuGetPackage> results = new List<NuGetPackage>();
             foreach (IPackage package in packages)
@@ -23,17 +19,30 @@ namespace NuGetRetriever
                 if (package.Published != null && package.Published.Value.Year == 1900)
                     continue;
 
-                results.Add(new NuGetPackage
-                {
-                    Id = package.Id,
-                    Name = package.Title,
-                    Version = package.Version.Version,
-                    VersionText = package.Version.ToOriginalString(),
-                    XrmToolingClient = UsesXrmToolingClient(package)
-                });
+                results.Add(CreateNuGetPackage(package));
             }
 
             return new List<NuGetPackage>(results.OrderByDescending(v => v.Version.ToString()));
+        }
+
+        private static List<IPackage> GetPackages(string packageId)
+        {
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
+
+            return packages;
+        }
+
+        private static NuGetPackage CreateNuGetPackage(IPackage package)
+        {
+            return new NuGetPackage
+            {
+                Id = package.Id,
+                Name = package.Title,
+                Version = package.Version.Version,
+                VersionText = package.Version.ToOriginalString(),
+                XrmToolingClient = UsesXrmToolingClient(package)
+            };
         }
 
         private static bool UsesXrmToolingClient(IPackageMetadata package)

@@ -390,4 +390,13 @@
   <data name="SpklGitHubButton_OpenGitHub_Button_Tooltip" xml:space="preserve">
     <value>Check out the Spkl project on GitHub</value>
   </data>
+  <data name="DefaultKeyName" xml:space="preserve">
+    <value>MyKey</value>
+  </data>
+  <data name="UserOptions_Description_DefaultKeyFileName" xml:space="preserve">
+    <value>On projects that require signing, this is the name given to the newly generated key file</value>
+  </data>
+  <data name="UserOptions_DisplayName_DefaultKeyFileName" xml:space="preserve">
+    <value>Default key file name</value>
+  </data>
 </root>

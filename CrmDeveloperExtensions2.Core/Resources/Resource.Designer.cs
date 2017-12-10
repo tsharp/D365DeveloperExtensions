@@ -187,6 +187,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MyKey.
+        /// </summary>
+        public static string DefaultKeyName {
+            get {
+                return ResourceManager.GetString("DefaultKeyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error creating file from template.
         /// </summary>
         public static string ErrorMessage_CreateFileFromTemplate {
@@ -565,6 +574,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to On projects that require signing, this is the name given to the newly generated key file.
+        /// </summary>
+        public static string UserOptions_Description_DefaultKeyFileName {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_DefaultKeyFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detailed extension logging records extension specific data to a file.
         /// </summary>
         public static string UserOptions_Description_ExtensionLogging {
@@ -651,6 +669,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptions_DisplayName_CrmSvcToolPath {
             get {
                 return ResourceManager.GetString("UserOptions_DisplayName_CrmSvcToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default key file name.
+        /// </summary>
+        public static string UserOptions_DisplayName_DefaultKeyFileName {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_DefaultKeyFileName", resourceCulture);
             }
         }
         

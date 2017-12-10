@@ -35,20 +35,27 @@ namespace TemplateWizards
 
             foreach (string version in versions)
             {
-                ListViewItem item = new ListViewItem
-                {
-                    Content = version,
-                    Tag = new NpmPackage
-                    {
-                        Name = history.name,
-                        Version = version
-                    }
-                };
+                var item = CreateItem(history, version);
 
                 Versions.Items.Add(item);
             }
 
             Versions.SelectedIndex = 0;
+        }
+
+        private static ListViewItem CreateItem(NpmHistory history, string version)
+        {
+            ListViewItem item = new ListViewItem
+            {
+                Content = version,
+                Tag = new NpmPackage
+                {
+                    Name = history.name,
+                    Version = version
+                }
+            };
+
+            return item;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

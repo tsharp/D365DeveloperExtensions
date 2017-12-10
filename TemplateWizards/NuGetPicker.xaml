@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox x:Name="LimitVersions" Content="Latest Versions Only" Height="18" Margin="10,10,0,0" 
+            <CheckBox x:Name="LimitVersions" Content="{x:Static resx:Resource.NuGetPicker_LimitVersions_CheckBox_Content}" Height="18" Margin="10,10,0,0" 
                       Checked="LimitVersions_Checked" Unchecked="LimitVersions_Checked" IsChecked="True" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
                 <Button x:Name="Ok" Content="{x:Static resx:Resource.NuGetPickerOKButtonText}" Margin="0,5,10,0" MinWidth="70" 
