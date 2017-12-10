@@ -1,10 +1,10 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Models;
 using NuGetRetriever;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using TemplateWizards.Enums;
 using TemplateWizards.Resources;
 
 namespace TemplateWizards
@@ -20,11 +20,10 @@ namespace TemplateWizards
         public string ClientVersion { get; set; }
         private bool GetWorkflow { get; }
         public bool GetClient { get; set; }
-        public PackageValue Package = PackageValue.Core;
+        public TemplatePackageType TemplatePackage = TemplatePackageType.Core;
 
         public SdkVersionPicker(bool getWorkflow, bool getClient)
         {
-            //Resource.Culture = new System.Globalization.CultureInfo("it-IT");
             InitializeComponent();
 
             GetWorkflow = getWorkflow;
@@ -36,8 +35,7 @@ namespace TemplateWizards
         private void GetPackage(string nuGetPackage)
         {
             SdkVersions.Items.Clear();
-
-            Title = $"Choose Version:  {nuGetPackage}";
+            Title = $"{Resource.SdkVersionPicker_Window_Title}:  {nuGetPackage}";
 
             List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
 
@@ -51,16 +49,23 @@ namespace TemplateWizards
 
             foreach (NuGetPackage package in versions)
             {
-                ListViewItem item = new ListViewItem
-                {
-                    Content = package.VersionText,
-                    Tag = package
-                };
+                var item = CreateItem(package);
 
                 SdkVersions.Items.Add(item);
             }
 
             SdkVersions.SelectedIndex = 0;
+        }
+
+        private static ListViewItem CreateItem(NuGetPackage package)
+        {
+            ListViewItem item = new ListViewItem
+            {
+                Content = package.VersionText,
+                Tag = package
+            };
+
+            return item;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -70,15 +75,15 @@ namespace TemplateWizards
 
         private void SetSelectedVersion(string selectedVersion)
         {
-            switch (Package)
+            switch (TemplatePackage)
             {
-                case PackageValue.Core:
+                case TemplatePackageType.Core:
                     CoreVersion = selectedVersion;
                     break;
-                case PackageValue.Workflow:
+                case TemplatePackageType.Workflow:
                     WorkflowVersion = selectedVersion;
                     break;
-                case PackageValue.Client:
+                case TemplatePackageType.Client:
                     ClientVersion = selectedVersion;
                     break;
             }
@@ -86,14 +91,14 @@ namespace TemplateWizards
 
         private void Ok_OnClick(object sender, RoutedEventArgs e)
         {
-            Package = (PackageValue)NuGetProcessor.GetNextPackage(Package, GetWorkflow, GetClient);
+            TemplatePackage = (TemplatePackageType)NuGetProcessor.GetNextPackage(TemplatePackage, GetWorkflow, GetClient);
 
-            switch (Package)
+            switch (TemplatePackage)
             {
-                case PackageValue.Workflow:
+                case TemplatePackageType.Workflow:
                     GetPackage(Resource.SdkAssemblyWorkflow);
                     break;
-                case PackageValue.Client:
+                case TemplatePackageType.Client:
                     ClientPackage = NuGetProcessor.DetermineClientType(CoreVersion);
                     GetPackage(ClientPackage);
                     break;

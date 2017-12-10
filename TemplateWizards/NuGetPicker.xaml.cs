@@ -14,7 +14,6 @@ namespace TemplateWizards
 
         public NuGetPicker(string packageName, List<NuGetPackage> packageVersions)
         {
-            //Resource.Culture = new System.Globalization.CultureInfo("it-IT");
             InitializeComponent();
 
             _packageName = packageName;
@@ -30,22 +29,27 @@ namespace TemplateWizards
             if (LimitVersions.IsChecked != null && LimitVersions.IsChecked.Value)
                 packageVersions = FilterLatestVersions(packageVersions);
 
-            //List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
-
             VersionsGrid.Columns[0].Header = packageName;
 
             foreach (NuGetPackage package in packageVersions)
             {
-                ListViewItem item = new ListViewItem
-                {
-                    Content = package.VersionText,
-                    Tag = package
-                };
+                var item = CreateItem(package);
 
                 Versions.Items.Add(item);
             }
 
             Versions.SelectedIndex = 0;
+        }
+
+        private static ListViewItem CreateItem(NuGetPackage package)
+        {
+            ListViewItem item = new ListViewItem
+            {
+                Content = package.VersionText,
+                Tag = package
+            };
+
+            return item;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

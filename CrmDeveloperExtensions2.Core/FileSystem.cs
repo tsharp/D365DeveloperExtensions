@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
-using CrmDeveloperExtensions2.Core.Logging;
 using MessageBox = System.Windows.MessageBox;
 
 namespace CrmDeveloperExtensions2.Core
@@ -189,6 +188,13 @@ namespace CrmDeveloperExtensions2.Core
             }
 
             return true;
+        }
+
+        public static bool IsValidFilename(string fileName, string sourceFolder)
+        {
+            return !string.IsNullOrEmpty(fileName) &&
+                          fileName.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 &&
+                          !File.Exists(Path.Combine(sourceFolder, fileName));
         }
     }
 }

@@ -99,6 +99,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="NuGet.VisualStudio">
       <HintPath>..\packages\NuGet.VisualStudio.4.5.0\lib\net46\NuGet.VisualStudio.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -128,7 +131,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomTemplateHandler.cs" />
-    <Compile Include="Enums\PackageValue.cs" />
     <Compile Include="Models\CustomTemplate.cs" />
     <Compile Include="Models\CustomTemplateListItem.cs" />
     <Compile Include="NpmProcessor.cs" />
@@ -199,6 +201,7 @@
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -1,6 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core.Models;
-using EnvDTE;
 using Newtonsoft.Json;
+using NLog;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -11,6 +11,8 @@ namespace TemplateWizards
 {
     public class NpmProcessor
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static void InstallPackage(string package, string version, string path)
         {
             try
@@ -20,16 +22,9 @@ namespace TemplateWizards
 
                 StatusBar.SetStatusBarValue($"{Resources.Resource.NpmPackageInstallingStatusBarMessage}: {package}{version}");
 
-                var processStartInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd",
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = path,
-                    UseShellExecute = false
-                };
+                var processStartInfo = CreateProcessStartInfo();
+                processStartInfo.WorkingDirectory = path;
+
                 var process = Process.Start(processStartInfo);
                 if (process == null)
                 {
@@ -53,15 +48,8 @@ namespace TemplateWizards
 
         public static NpmHistory GetPackageHistory(string package)
         {
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = "cmd",
-                RedirectStandardInput = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-                UseShellExecute = false
-            };
+            var processStartInfo = CreateProcessStartInfo();
+
             var process = Process.Start(processStartInfo);
             if (process == null)
             {
@@ -83,6 +71,20 @@ namespace TemplateWizards
             NpmHistory history = JsonConvert.DeserializeObject<NpmHistory>(json);
 
             return history;
+        }
+
+        private static ProcessStartInfo CreateProcessStartInfo()
+        {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd",
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            return processStartInfo;
         }
     }
 }

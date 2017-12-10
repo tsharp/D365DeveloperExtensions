@@ -95,6 +95,11 @@ namespace CrmDeveloperExtensions2.Core.UserOptions
         [LocalizedDescription("UserOptions_Description_TemplatesPath", typeof(Resource))]
         public string CustomTemplatesPath { get; set; } = String.Empty;
 
+        [LocalizedCategory("UserOptions_Category_Templates", typeof(Resource))]
+        [LocalizedDisplayName("UserOptions_DisplayName_DefaultKeyFileName", typeof(Resource))]
+        [LocalizedDescription("UserOptions_Description_DefaultKeyFileName", typeof(Resource))]
+        public string DefaultKeyFileName { get; set; } = Resource.DefaultKeyName;
+
         //[LocalizedCategory("UserOptions_Category_Intellisense", typeof(Resource))]
         //[LocalizedDisplayName("UserOptions_DisplayName_Intellisense", typeof(Resource))]
         //[LocalizedDescription("UserOptions_Description_Intellisense", typeof(Resource))]

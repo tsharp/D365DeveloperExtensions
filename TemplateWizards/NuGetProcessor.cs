@@ -1,16 +1,17 @@
 using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using EnvDTE;
+using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Windows;
-using TemplateWizards.Enums;
 using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
 
 namespace TemplateWizards
 {
     public static class NuGetProcessor
     {
-
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static void InstallPackage(IVsPackageInstaller installer, Project project, string package, string version)
         {
@@ -22,9 +23,8 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
-
-                //TODO: handle this error better if unable to connect - displays large error detail otherwise
-                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resources.Resource.NuGetPackageInstallFailureMessage, ex);
+                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage);
             }
             finally
             {
@@ -40,10 +40,10 @@ namespace TemplateWizards
 
                 uninstaller.UninstallPackage(project, package, true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                //MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resources.Resource.NuGetPackageInstallFailureMessage, ex);
+                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
             }
             finally
             {
@@ -59,16 +59,19 @@ namespace TemplateWizards
                                : Resources.Resource.SdkAssemblyExtensions;
         }
 
-        public static int GetNextPackage(PackageValue package, bool getWorkflow, bool getClient)
+        public static int GetNextPackage(TemplatePackageType templatePackage, bool getWorkflow, bool getClient)
         {
-            switch (package)
+            switch (templatePackage)
             {
-                case PackageValue.Core:
-                    if (getWorkflow) return 2;
-                    if (getClient) return 3;
+                case TemplatePackageType.Core:
+                    if (getWorkflow)
+                        return 2;
+                    if (getClient)
+                        return 3;
                     return 0;
-                case PackageValue.Workflow:
-                    if (getClient) return 3;
+                case TemplatePackageType.Workflow:
+                    if (getClient)
+                        return 3;
                     return 0;
                 default:
                     return 0;

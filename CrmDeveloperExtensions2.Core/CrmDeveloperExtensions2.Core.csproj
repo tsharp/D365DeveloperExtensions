@@ -220,6 +220,7 @@
     <Compile Include="Enums\ProjectType.cs" />
     <Compile Include="Enums\MapTypes.cs" />
     <Compile Include="Enums\SolutionType.cs" />
+    <Compile Include="Enums\TemplatePackageType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />

@@ -76,14 +76,21 @@ namespace TemplateWizards
                 if (mockingFramework.CrmMajorVersion != coreVerion.Major)
                     continue;
 
-                MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
-                {
-                    Name = mockingFramework.NugetName,
-                    MockingFramework = mockingFramework
-                };
+                var mockingFrameworkListItem = CreateMockingFrameworkItem(mockingFramework);
 
                 MockingFrameworks.Add(mockingFrameworkListItem);
             }
+        }
+
+        private static MockingFrameworkListItem CreateMockingFrameworkItem(MockingFramework mockingFramework)
+        {
+            MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
+            {
+                Name = mockingFramework.NugetName,
+                MockingFramework = mockingFramework
+            };
+
+            return mockingFrameworkListItem;
         }
 
         private void GetProjects()
@@ -93,11 +100,7 @@ namespace TemplateWizards
 
             foreach (Project project in projects)
             {
-                ProjectListItem projectListItem = new ProjectListItem
-                {
-                    Name = project.Name,
-                    Project = project
-                };
+                var projectListItem = CreateProjectItem(project);
 
                 Projects.Add(projectListItem);
             }
@@ -105,6 +108,17 @@ namespace TemplateWizards
             ProjectToTest.SelectionChanged += ProjectToTest_OnSelectionChanged;
             ProjectToTest.SelectedIndex = 0;
             SelectedProject = Projects[0].Project;
+        }
+
+        private static ProjectListItem CreateProjectItem(Project project)
+        {
+            ProjectListItem projectListItem = new ProjectListItem
+            {
+                Name = project.Name,
+                Project = project
+            };
+
+            return projectListItem;
         }
 
         private void UnitTestFramework_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

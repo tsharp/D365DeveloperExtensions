@@ -50,6 +50,11 @@ namespace CrmDeveloperExtensions2.Core.Models
             Name = "CustomTemplatesPath",
             Page = Resource.UserOptions_Page_Templates
         };
+        public static UserOptionProperty DefaultKeyFileName => new UserOptionProperty
+        {
+            Name = "DefaultKeyFileName",
+            Page = Resource.UserOptions_Page_Templates
+        };
         public static UserOptionProperty UseIntellisense => new UserOptionProperty
         {
             Name = "UseIntellisense",

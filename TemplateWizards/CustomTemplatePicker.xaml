@@ -4,7 +4,8 @@
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="Choose custom template"
+                         xmlns:Resources="clr-namespace:TemplateWizards.Resources"
+                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static Resources:Resource.CustomTemplatePicker_Window_Title}"
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
                          Height="315" Width="375">
     <Window.Resources>
@@ -39,11 +40,11 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
-            <Button x:Name="Ok" Content="OK" Margin="0,5,10,0" MinWidth="70"
+            <Button x:Name="Ok" Content="{x:Static Resources:Resource.CustomTemplateWindow_Ok_Button_Content}" Margin="0,5,10,0" MinWidth="70"
               Template="{DynamicResource FormButtonControlTemplate}" IsEnabled="False"
-              Click="Ok_OnClick" ToolTip="Create item" Height="23"/>
-            <Button x:Name="Cancel" Content="Cancel" Margin="0,5,10,0" MinWidth="70"
-              Template="{DynamicResource FormButtonControlTemplate}" Height="23" ToolTip="Cancel"
+              Click="Ok_OnClick" ToolTip="{x:Static Resources:Resource.CustomTemplateWindow_Ok_Button_Tooltip}" Height="23"/>
+            <Button x:Name="Cancel" Content="{x:Static Resources:Resource.CustomTemplateWindow_Canel_Button_Content}" Margin="0,5,10,0" MinWidth="70"
+              Template="{DynamicResource FormButtonControlTemplate}" Height="23" ToolTip="{x:Static Resources:Resource.CustomTemplateWindow_Cancel_Button_Tooltip}"
               Click="Cancel_Click"/>
         </StackPanel>
     </Grid>

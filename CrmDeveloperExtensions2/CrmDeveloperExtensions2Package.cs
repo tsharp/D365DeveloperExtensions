@@ -6,7 +6,6 @@ using NLog;
 using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.UserOptions;
 using CrmDeveloperExtensions2.Resources;
 using CrmIntellisense;
