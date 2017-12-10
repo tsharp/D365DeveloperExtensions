@@ -70,29 +70,83 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-login to last connected org?.
+        ///   Looks up a localized string similar to OK to overwrite file(s)?.
         /// </summary>
-        public static string AutoLogin_Button_ToolTip {
+        public static string ConfirmMessage_OverwriteFiles {
             get {
-                return ResourceManager.GetString("AutoLogin_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("ConfirmMessage_OverwriteFiles", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect.
+        ///   Looks up a localized string similar to Confirm Overwrite.
         /// </summary>
-        public static string Connect_TextBlock_Text {
+        public static string ConfirmMessage_OverwriteFiles_Title {
             get {
-                return ResourceManager.GetString("Connect_TextBlock_Text", resourceCulture);
+                return ResourceManager.GetString("ConfirmMessage_OverwriteFiles_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect To CRM/D365.
+        ///   Looks up a localized string similar to MY PROJECT.
         /// </summary>
-        public static string ConnectImage_Button_Tooltip {
+        public static string Constant_MyProjectFolder {
             get {
-                return ResourceManager.GetString("ConnectImage_Button_Tooltip", resourceCulture);
+                return ResourceManager.GetString("Constant_MyProjectFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        public static string Constant_ProjectBuildConfig_Debug {
+            get {
+                return ResourceManager.GetString("Constant_ProjectBuildConfig_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release.
+        /// </summary>
+        public static string Constant_ProjectBuildConfig_Release {
+            get {
+                return ResourceManager.GetString("Constant_ProjectBuildConfig_Release", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullPath.
+        /// </summary>
+        public static string Constant_ProjectProperties_FullPath {
+            get {
+                return ResourceManager.GetString("Constant_ProjectProperties_FullPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputFileName.
+        /// </summary>
+        public static string Constant_ProjectProperties_OutputFileName {
+            get {
+                return ResourceManager.GetString("Constant_ProjectProperties_OutputFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputPath.
+        /// </summary>
+        public static string Constant_ProjectProperties_OutputPath {
+            get {
+                return ResourceManager.GetString("Constant_ProjectProperties_OutputPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PROPERTIES.
+        /// </summary>
+        public static string Constant_PropertiesFolder {
+            get {
+                return ResourceManager.GetString("Constant_PropertiesFolder", resourceCulture);
             }
         }
         
@@ -108,18 +162,18 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Customizations.
         /// </summary>
-        public static string Customizations_Button_Content {
+        public static string CustomizationsButton_Customizations_Button_Content {
             get {
-                return ResourceManager.GetString("Customizations_Button_Content", resourceCulture);
+                return ResourceManager.GetString("CustomizationsButton_Customizations_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Customizations Page.
+        ///   Looks up a localized string similar to Organization customizations page.
         /// </summary>
-        public static string Customizations_Button_ToolTip {
+        public static string CustomizationsButton_Customizations_Button_ToolTip {
             get {
-                return ResourceManager.GetString("Customizations_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("CustomizationsButton_Customizations_Button_ToolTip", resourceCulture);
             }
         }
         
@@ -129,6 +183,159 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string CustomTemplatesPath {
             get {
                 return ResourceManager.GetString("CustomTemplatesPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating file from template.
+        /// </summary>
+        public static string ErrorMessage_CreateFileFromTemplate {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CreateFileFromTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get directory from string.
+        /// </summary>
+        public static string ErrorMessage_DirectoryFromString {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DirectoryFromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to add project reference.
+        /// </summary>
+        public static string ErrorMessage_ErrorAddProjectReference {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorAddProjectReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last error.
+        /// </summary>
+        public static string ErrorMessage_ErrorConnecting_LastError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorConnecting_LastError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last exception.
+        /// </summary>
+        public static string ErrorMessage_ErrorConnecting_LastException {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorConnecting_LastException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error connecting to CRM/365.
+        /// </summary>
+        public static string ErrorMessage_ErrorCrmConnection {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorCrmConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get path from project.
+        /// </summary>
+        public static string ErrorMessage_ErrorGetProjectPath {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorGetProjectPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error publishing customizations.
+        /// </summary>
+        public static string ErrorMessage_ErrorPublishing {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorPublishing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error finding extension template directory.
+        /// </summary>
+        public static string ErrorMessage_FindTemplateDirectory {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FindTemplateDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not connected to an organization.
+        /// </summary>
+        public static string ErrorMessage_NotConnectedOrg {
+            get {
+                return ResourceManager.GetString("ErrorMessage_NotConnectedOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to read file from disk.
+        /// </summary>
+        public static string ErrorMessage_ReadFile {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ReadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error recreating configuration file.
+        /// </summary>
+        public static string ErrorMessage_RecreateConfigFile {
+            get {
+                return ResourceManager.GetString("ErrorMessage_RecreateConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read or deserialize configuration file.
+        /// </summary>
+        public static string ErrorMessage_UnableReadDeserializeConfig {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnableReadDeserializeConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to rename file.
+        /// </summary>
+        public static string ErrorMessage_UnableRenameFile {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnableRenameFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error writing to configuration file.
+        /// </summary>
+        public static string ErrorMessage_UnableWriteConfig {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnableWriteConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error writing file.
+        /// </summary>
+        public static string ErrorMessage_WriteFile {
+            get {
+                return ResourceManager.GetString("ErrorMessage_WriteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error writing temp file.
+        /// </summary>
+        public static string ErrorMessage_WriteTempFile {
+            get {
+                return ResourceManager.GetString("ErrorMessage_WriteTempFile", resourceCulture);
             }
         }
         
@@ -151,11 +358,47 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Working....
+        ///   Looks up a localized string similar to Connected to.
         /// </summary>
-        public static string LockMessage_Label_DefaultContent {
+        public static string HostWindow_SetCaption_ConnectedTo {
             get {
-                return ResourceManager.GetString("LockMessage_Label_DefaultContent", resourceCulture);
+                return ResourceManager.GetString("HostWindow_SetCaption_ConnectedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        public static string HostWindow_SetCaption_NotConnected {
+            get {
+                return ResourceManager.GetString("HostWindow_SetCaption_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string HostWindow_SetCaption_Version {
+            get {
+                return ResourceManager.GetString("HostWindow_SetCaption_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Working.
+        /// </summary>
+        public static string LockOverlay_LockMessage_Label_DefaultContent {
+            get {
+                return ResourceManager.GetString("LockOverlay_LockMessage_Label_DefaultContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected to CRM/365.
+        /// </summary>
+        public static string Message_SuccessConnecting {
+            get {
+                return ResourceManager.GetString("Message_SuccessConnecting", resourceCulture);
             }
         }
         
@@ -178,56 +421,11 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error connecting to CRM/365: Last error.
+        ///   Looks up a localized string similar to Backed up and recreated configuration file.
         /// </summary>
-        public static string OutputLogger_ErrorConnecting_Error {
+        public static string MessageBox_RecreatedConfig {
             get {
-                return ResourceManager.GetString("OutputLogger_ErrorConnecting_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Last exception.
-        /// </summary>
-        public static string OutputLogger_ErrorConnecting_Exception {
-            get {
-                return ResourceManager.GetString("OutputLogger_ErrorConnecting_Exception", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Connected to CRM/365.
-        /// </summary>
-        public static string OutputLogger_SuccessConnecting {
-            get {
-                return ResourceManager.GetString("OutputLogger_SuccessConnecting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error.
-        /// </summary>
-        public static string OutputLoggerMessageTypeError {
-            get {
-                return ResourceManager.GetString("OutputLoggerMessageTypeError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Info.
-        /// </summary>
-        public static string OutputLoggerMessageTypeInfo {
-            get {
-                return ResourceManager.GetString("OutputLoggerMessageTypeInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Warning.
-        /// </summary>
-        public static string OutputLoggerMessageTypeWarning {
-            get {
-                return ResourceManager.GetString("OutputLoggerMessageTypeWarning", resourceCulture);
+                return ResourceManager.GetString("MessageBox_RecreatedConfig", resourceCulture);
             }
         }
         
@@ -241,6 +439,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feel free to make a donation on PayPal.
+        /// </summary>
+        public static string PayPalButton_OpenPayPal_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("PayPalButton_OpenPayPal_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plug-in Registraion Tool Path.
         /// </summary>
         public static string PluginRegistraionToolPath {
@@ -250,11 +457,11 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project.
+        ///   Looks up a localized string similar to Check out the project on GitHub.
         /// </summary>
-        public static string Project_Label_Content {
+        public static string ProjectGitHubButton_OpenGitHub_Button_Tooltip {
             get {
-                return ResourceManager.GetString("Project_Label_Content", resourceCulture);
+                return ResourceManager.GetString("ProjectGitHubButton_OpenGitHub_Button_Tooltip", resourceCulture);
             }
         }
         
@@ -270,18 +477,27 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Solutions.
         /// </summary>
-        public static string Solutions_Button_Content {
+        public static string SolutionsButton_Solutions_Button_Content {
             get {
-                return ResourceManager.GetString("Solutions_Button_Content", resourceCulture);
+                return ResourceManager.GetString("SolutionsButton_Solutions_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CRM/365 Solutions Page.
+        ///   Looks up a localized string similar to Organization solutions page.
         /// </summary>
-        public static string Solutions_Button_ToolTip {
+        public static string SolutionsButton_Solutions_Button_ToolTip {
             get {
-                return ResourceManager.GetString("Solutions_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("SolutionsButton_Solutions_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check out the Spkl project on GitHub.
+        /// </summary>
+        public static string SpklGitHubButton_OpenGitHub_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("SpklGitHubButton_OpenGitHub_Button_Tooltip", resourceCulture);
             }
         }
         
@@ -295,6 +511,276 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Intellisense Options.
+        /// </summary>
+        public static string UserOptions_Category_Intellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_Category_Intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging Options.
+        /// </summary>
+        public static string UserOptions_Category_Logging {
+            get {
+                return ResourceManager.GetString("UserOptions_Category_Logging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Template Options.
+        /// </summary>
+        public static string UserOptions_Category_Templates {
+            get {
+                return ResourceManager.GetString("UserOptions_Category_Templates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External Tools Options.
+        /// </summary>
+        public static string UserOptions_Category_Tools {
+            get {
+                return ResourceManager.GetString("UserOptions_Category_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Browser Options.
+        /// </summary>
+        public static string UserOptions_Category_WebBrowser {
+            get {
+                return ResourceManager.GetString("UserOptions_Category_WebBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to latest CrmSvcUtil executable.
+        /// </summary>
+        public static string UserOptions_Description_CrmSvcToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_CrmSvcToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detailed extension logging records extension specific data to a file.
+        /// </summary>
+        public static string UserOptions_Description_ExtensionLogging {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_ExtensionLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to extension log file storage.
+        /// </summary>
+        public static string UserOptions_Description_ExtensionLoggingPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_ExtensionLoggingPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get organization metadata and provide string completion - this will require closing and re-opening any files.
+        /// </summary>
+        public static string UserOptions_Description_Intellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_Intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to the latest Plug-in Registration Tool executable.
+        /// </summary>
+        public static string UserOptions_Description_RegToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_RegToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to the latest Solution Packager executable.
+        /// </summary>
+        public static string UserOptions_Description_SolutionPackToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_SolutionPackToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to the folder containing any custom item templates.
+        /// </summary>
+        public static string UserOptions_Description_TemplatesPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_TemplatesPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the internal Visual Studio browser or your default browser for web content.
+        /// </summary>
+        public static string UserOptions_Description_WebBrowser {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_WebBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xrm.Tooling logging records organization connect data to a file - this requires reconnecting to the organization.
+        /// </summary>
+        public static string UserOptions_Description_XrmToolingLogging {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_XrmToolingLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to Xrm.Tooling log file storage.
+        /// </summary>
+        public static string UserOptions_Description_XrmToolingLoggingPath {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_XrmToolingLoggingPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CrmSvcUtil tool path.
+        /// </summary>
+        public static string UserOptions_DisplayName_CrmSvcToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_CrmSvcToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable detailed extension logging?.
+        /// </summary>
+        public static string UserOptions_DisplayName_ExtensionLogging {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_ExtensionLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extension log file path.
+        /// </summary>
+        public static string UserOptions_DisplayName_ExtensionLoggingPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_ExtensionLoggingPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Intellisense?.
+        /// </summary>
+        public static string UserOptions_DisplayName_Intellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_Intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plug-in Registration tool path.
+        /// </summary>
+        public static string UserOptions_DisplayName_RegToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_RegToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution Packager tool path.
+        /// </summary>
+        public static string UserOptions_DisplayName_SolutionPackToolPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_SolutionPackToolPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to custom templates folder.
+        /// </summary>
+        public static string UserOptions_DisplayName_TemplatesPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_TemplatesPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use internal VS web browser?.
+        /// </summary>
+        public static string UserOptions_DisplayName_WebBrowser {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_WebBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Xrm.Tooling logging?.
+        /// </summary>
+        public static string UserOptions_DisplayName_XrmToolingLogging {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_XrmToolingLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xrm.Tooling log file path.
+        /// </summary>
+        public static string UserOptions_DisplayName_XrmToolingLoggingPath {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_XrmToolingLoggingPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intellisense.
+        /// </summary>
+        public static string UserOptions_Page_Intellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_Page_Intellisense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging.
+        /// </summary>
+        public static string UserOptions_Page_Logging {
+            get {
+                return ResourceManager.GetString("UserOptions_Page_Logging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Templates.
+        /// </summary>
+        public static string UserOptions_Page_Templates {
+            get {
+                return ResourceManager.GetString("UserOptions_Page_Templates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External Tools.
+        /// </summary>
+        public static string UserOptions_Page_Tools {
+            get {
+                return ResourceManager.GetString("UserOptions_Page_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Browser.
+        /// </summary>
+        public static string UserOptions_Page_WebBrowser {
+            get {
+                return ResourceManager.GetString("UserOptions_Page_WebBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crm DevEx.
         /// </summary>
         public static string UserOptionsCategory {
@@ -304,92 +790,74 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Intellisense.
+        ///   Looks up a localized string similar to Missing &quot;Extension log file path&quot; in user options, logging to output window instead.
         /// </summary>
-        public static string UserOptionsIntellisensePage {
+        public static string WarningMessage_MissingExtensionLogPath {
             get {
-                return ResourceManager.GetString("UserOptionsIntellisensePage", resourceCulture);
+                return ResourceManager.GetString("WarningMessage_MissingExtensionLogPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Intellisense Options.
+        ///   Looks up a localized string similar to Missing &quot;Xrm.Tooling log file path&quot; in user options, logging to output window instead.
         /// </summary>
-        public static string UserOptionsIntellisensePageCategory {
+        public static string WarningMessage_MissingXrmToolingLogPath {
             get {
-                return ResourceManager.GetString("UserOptionsIntellisensePageCategory", resourceCulture);
+                return ResourceManager.GetString("WarningMessage_MissingXrmToolingLogPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging.
+        ///   Looks up a localized string similar to Auto-login to last connected organization?.
         /// </summary>
-        public static string UserOptionsLoggingPage {
+        public static string XrmToolingConnection_AutoLogin_Button_ToolTip {
             get {
-                return ResourceManager.GetString("UserOptionsLoggingPage", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_AutoLogin_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logging Options.
+        ///   Looks up a localized string similar to Connect.
         /// </summary>
-        public static string UserOptionsLoggingPageCategory {
+        public static string XrmToolingConnection_Connect_Label_Content {
             get {
-                return ResourceManager.GetString("UserOptionsLoggingPageCategory", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_Connect_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Templates.
+        ///   Looks up a localized string similar to Connect.
         /// </summary>
-        public static string UserOptionsTemplatesPage {
+        public static string XrmToolingConnection_Connect_TextBlock_Text {
             get {
-                return ResourceManager.GetString("UserOptionsTemplatesPage", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_Connect_TextBlock_Text", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Template Options.
+        ///   Looks up a localized string similar to Connect To CRM/D365.
         /// </summary>
-        public static string UserOptionsTemplatesPageCategory {
+        public static string XrmToolingConnection_ConnectImage_Button_Tooltip {
             get {
-                return ResourceManager.GetString("UserOptionsTemplatesPageCategory", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_ConnectImage_Button_Tooltip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to External Tools.
+        ///   Looks up a localized string similar to Profile.
         /// </summary>
-        public static string UserOptionsToolsPage {
+        public static string XrmToolingConnection_ProfileList_Label_Content {
             get {
-                return ResourceManager.GetString("UserOptionsToolsPage", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_ProfileList_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to External Tools Options.
+        ///   Looks up a localized string similar to Project.
         /// </summary>
-        public static string UserOptionsToolsPageCategory {
+        public static string XrmToolingConnection_SolutionProjectsList_Label_Content {
             get {
-                return ResourceManager.GetString("UserOptionsToolsPageCategory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Web Browser.
-        /// </summary>
-        public static string UserOptionsWebBrowserPage {
-            get {
-                return ResourceManager.GetString("UserOptionsWebBrowserPage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Web Browser Options.
-        /// </summary>
-        public static string UserOptionsWebBrowserPageCategory {
-            get {
-                return ResourceManager.GetString("UserOptionsWebBrowserPageCategory", resourceCulture);
+                return ResourceManager.GetString("XrmToolingConnection_SolutionProjectsList_Label_Content", resourceCulture);
             }
         }
         

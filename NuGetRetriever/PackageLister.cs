@@ -1,10 +1,12 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Models;
 using NuGet;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NuGetRetriever
 {
+
     public static class PackageLister
     {
         public static List<NuGetPackage> GetPackagesbyId(string packageId)
@@ -40,7 +42,7 @@ namespace NuGetRetriever
                 return false;
 
             foreach (PackageDependency dependency in package.DependencySets.First().Dependencies)
-                if (dependency.Id == "Microsoft.CrmSdk.XrmTooling.CoreAssembly")
+                if (dependency.Id == ExtensionConstants.MicrosoftCrmSdkXrmToolingCoreAssembly)
                     return true;
 
             return false;

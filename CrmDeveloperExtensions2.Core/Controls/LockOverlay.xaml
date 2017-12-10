@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="1100" SnapsToDevicePixels="True">
     <Grid x:Name="Overlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Panel.ZIndex="10" Background="DarkGray" Opacity="0.5" Visibility="Hidden">
-        <Label x:Name="LockMessage" Content="{x:Static resources:Resource.LockMessage_Label_DefaultContent}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"/>
+        <Label x:Name="LockMessage" Content="{x:Static resources:Resource.LockOverlay_LockMessage_Label_DefaultContent}" VerticalAlignment="Center" 
+               HorizontalAlignment="Center" FontSize="36"/>
     </Grid>
 </UserControl>

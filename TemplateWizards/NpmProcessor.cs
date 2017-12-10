@@ -11,15 +11,14 @@ namespace TemplateWizards
 {
     public class NpmProcessor
     {
-        public static void InstallPackage(DTE dte, string package, string version, string path)
+        public static void InstallPackage(string package, string version, string path)
         {
             try
             {
                 if (!string.IsNullOrEmpty(version))
                     version = $"@{version}";
 
-                StatusBar.SetStatusBarValue(dte,
-                    $"{Resources.Resource.NpmPackageInstallingStatusBarMessage}: {package}{version}");
+                StatusBar.SetStatusBarValue($"{Resources.Resource.NpmPackageInstallingStatusBarMessage}: {package}{version}");
 
                 var processStartInfo = new ProcessStartInfo
                 {
@@ -48,11 +47,11 @@ namespace TemplateWizards
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue();
             }
         }
 
-        public static NpmHistory GetPackageHistory(DTE dte, string package)
+        public static NpmHistory GetPackageHistory(string package)
         {
             var processStartInfo = new ProcessStartInfo
             {

@@ -18,6 +18,7 @@ namespace CrmDeveloperExtensions2.Core
         public static string MicrosoftXrmPortal = "Microsoft.Xrm.Portal";
         public static string MicrosoftXrmSdkWorkflow = "Microsoft.Xrm.Sdk.Workflow";
         public static string MicrosoftXrmToolingConnector = "Microsoft.Xrm.Tooling.Connector";
+        public static string MicrosoftCrmSdkXrmToolingCoreAssembly = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
 
         public static List<ToolWindow> CrmDevExToolWindows = new List<ToolWindow> {
             new ToolWindow {

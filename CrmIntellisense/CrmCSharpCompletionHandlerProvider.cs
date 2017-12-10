@@ -32,9 +32,9 @@ namespace CrmIntellisense
             if (!(GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
-            bool useIntellisense = UserOptionsGrid.GetUseIntellisense(dte);
-            if (!useIntellisense)
-                return;
+            //bool useIntellisense = UserOptionsGrid.GetUseIntellisense(dte);
+            //if (!useIntellisense)
+            //    return;
 
             if (!(SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client))
                 return;

@@ -3,6 +3,7 @@ using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
@@ -445,7 +446,7 @@ namespace PluginDeployer
 
         private void RegistrationTool_OnClick(object sender, RoutedEventArgs e)
         {
-            string path = UserOptionsGrid.GetPluginRegistraionToolPath(_dte);
+            string path = UserOptionsHelper.GetOption<string>(UserOptionProperties.PluginRegistrationToolPath);
 
             if (string.IsNullOrEmpty(path))
             {

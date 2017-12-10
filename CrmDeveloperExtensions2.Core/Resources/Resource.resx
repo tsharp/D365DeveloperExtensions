@@ -126,15 +126,6 @@
   <data name="ExtensionLoggingEnabled" xml:space="preserve">
     <value>Extension Logging Enabled</value>
   </data>
-  <data name="OutputLoggerMessageTypeError" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="OutputLoggerMessageTypeInfo" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="OutputLoggerMessageTypeWarning" xml:space="preserve">
-    <value>Warning</value>
-  </data>
   <data name="OutputLoggerWindowTitle" xml:space="preserve">
     <value>Crm DevEx</value>
   </data>
@@ -150,28 +141,28 @@
   <data name="UserOptionsCategory" xml:space="preserve">
     <value>Crm DevEx</value>
   </data>
-  <data name="UserOptionsIntellisensePage" xml:space="preserve">
+  <data name="UserOptions_Page_Intellisense" xml:space="preserve">
     <value>Intellisense</value>
   </data>
-  <data name="UserOptionsIntellisensePageCategory" xml:space="preserve">
+  <data name="UserOptions_Category_Intellisense" xml:space="preserve">
     <value>Intellisense Options</value>
   </data>
-  <data name="UserOptionsLoggingPage" xml:space="preserve">
+  <data name="UserOptions_Page_Logging" xml:space="preserve">
     <value>Logging</value>
   </data>
-  <data name="UserOptionsLoggingPageCategory" xml:space="preserve">
+  <data name="UserOptions_Category_Logging" xml:space="preserve">
     <value>Logging Options</value>
   </data>
-  <data name="UserOptionsToolsPage" xml:space="preserve">
+  <data name="UserOptions_Page_Tools" xml:space="preserve">
     <value>External Tools</value>
   </data>
-  <data name="UserOptionsToolsPageCategory" xml:space="preserve">
+  <data name="UserOptions_Category_Tools" xml:space="preserve">
     <value>External Tools Options</value>
   </data>
-  <data name="UserOptionsWebBrowserPage" xml:space="preserve">
+  <data name="UserOptions_Page_WebBrowser" xml:space="preserve">
     <value>Web Browser</value>
   </data>
-  <data name="UserOptionsWebBrowserPageCategory" xml:space="preserve">
+  <data name="UserOptions_Category_WebBrowser" xml:space="preserve">
     <value>Web Browser Options</value>
   </data>
   <data name="XrmToolingLoggingDisabled" xml:space="preserve">
@@ -180,20 +171,20 @@
   <data name="XrmToolingLoggingEnabled" xml:space="preserve">
     <value>Xrm.Tooling Logging Enabled</value>
   </data>
-  <data name="Connect_TextBlock_Text" xml:space="preserve">
+  <data name="XrmToolingConnection_Connect_TextBlock_Text" xml:space="preserve">
     <value>Connect</value>
   </data>
-  <data name="ConnectImage_Button_Tooltip" xml:space="preserve">
+  <data name="XrmToolingConnection_ConnectImage_Button_Tooltip" xml:space="preserve">
     <value>Connect To CRM/D365</value>
   </data>
-  <data name="AutoLogin_Button_ToolTip" xml:space="preserve">
-    <value>Auto-login to last connected org?</value>
+  <data name="XrmToolingConnection_AutoLogin_Button_ToolTip" xml:space="preserve">
+    <value>Auto-login to last connected organization?</value>
   </data>
-  <data name="Project_Label_Content" xml:space="preserve">
+  <data name="XrmToolingConnection_SolutionProjectsList_Label_Content" xml:space="preserve">
     <value>Project</value>
   </data>
-  <data name="LockMessage_Label_DefaultContent" xml:space="preserve">
-    <value>Working...</value>
+  <data name="LockOverlay_LockMessage_Label_DefaultContent" xml:space="preserve">
+    <value>Working</value>
   </data>
   <data name="MessageBox_CannotConnect" xml:space="preserve">
     <value>Cannot connect to CRM/365 - see Output window for details</value>
@@ -201,31 +192,31 @@
   <data name="MessageBox_CannotConnect_Title" xml:space="preserve">
     <value>Connection Status</value>
   </data>
-  <data name="OutputLogger_ErrorConnecting_Error" xml:space="preserve">
-    <value>Error connecting to CRM/365: Last error</value>
+  <data name="ErrorMessage_ErrorConnecting_LastError" xml:space="preserve">
+    <value>Last error</value>
   </data>
-  <data name="OutputLogger_ErrorConnecting_Exception" xml:space="preserve">
+  <data name="ErrorMessage_ErrorConnecting_LastException" xml:space="preserve">
     <value>Last exception</value>
   </data>
-  <data name="OutputLogger_SuccessConnecting" xml:space="preserve">
+  <data name="Message_SuccessConnecting" xml:space="preserve">
     <value>Connected to CRM/365</value>
   </data>
-  <data name="Customizations_Button_Content" xml:space="preserve">
+  <data name="CustomizationsButton_Customizations_Button_Content" xml:space="preserve">
     <value>Customizations</value>
   </data>
-  <data name="Customizations_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Customizations Page</value>
+  <data name="CustomizationsButton_Customizations_Button_ToolTip" xml:space="preserve">
+    <value>Organization customizations page</value>
   </data>
-  <data name="Solutions_Button_Content" xml:space="preserve">
+  <data name="SolutionsButton_Solutions_Button_Content" xml:space="preserve">
     <value>Solutions</value>
   </data>
-  <data name="Solutions_Button_ToolTip" xml:space="preserve">
-    <value>CRM/365 Solutions Page</value>
+  <data name="SolutionsButton_Solutions_Button_ToolTip" xml:space="preserve">
+    <value>Organization solutions page</value>
   </data>
-  <data name="UserOptionsTemplatesPage" xml:space="preserve">
+  <data name="UserOptions_Page_Templates" xml:space="preserve">
     <value>Templates</value>
   </data>
-  <data name="UserOptionsTemplatesPageCategory" xml:space="preserve">
+  <data name="UserOptions_Category_Templates" xml:space="preserve">
     <value>Template Options</value>
   </data>
   <data name="CustomTemplatesPath" xml:space="preserve">
@@ -233,5 +224,170 @@
   </data>
   <data name="About_Menu_Header" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="ErrorMessage_ErrorPublishing" xml:space="preserve">
+    <value>Error publishing customizations</value>
+  </data>
+  <data name="ErrorMessage_ErrorCrmConnection" xml:space="preserve">
+    <value>Error connecting to CRM/365</value>
+  </data>
+  <data name="Constant_PropertiesFolder" xml:space="preserve">
+    <value>PROPERTIES</value>
+  </data>
+  <data name="Constant_MyProjectFolder" xml:space="preserve">
+    <value>MY PROJECT</value>
+  </data>
+  <data name="Constant_ProjectProperties_FullPath" xml:space="preserve">
+    <value>FullPath</value>
+  </data>
+  <data name="Constant_ProjectProperties_OutputPath" xml:space="preserve">
+    <value>OutputPath</value>
+  </data>
+  <data name="Constant_ProjectProperties_OutputFileName" xml:space="preserve">
+    <value>OutputFileName</value>
+  </data>
+  <data name="ErrorMessage_ErrorGetProjectPath" xml:space="preserve">
+    <value>Unable to get path from project</value>
+  </data>
+  <data name="ErrorMessage_ErrorAddProjectReference" xml:space="preserve">
+    <value>Failed to add project reference</value>
+  </data>
+  <data name="Constant_ProjectBuildConfig_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Constant_ProjectBuildConfig_Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="ErrorMessage_DirectoryFromString" xml:space="preserve">
+    <value>Unable to get directory from string</value>
+  </data>
+  <data name="ErrorMessage_WriteTempFile" xml:space="preserve">
+    <value>Error writing temp file</value>
+  </data>
+  <data name="ErrorMessage_WriteFile" xml:space="preserve">
+    <value>Error writing file</value>
+  </data>
+  <data name="ConfirmMessage_OverwriteFiles" xml:space="preserve">
+    <value>OK to overwrite file(s)?</value>
+  </data>
+  <data name="ConfirmMessage_OverwriteFiles_Title" xml:space="preserve">
+    <value>Confirm Overwrite</value>
+  </data>
+  <data name="ErrorMessage_ReadFile" xml:space="preserve">
+    <value>Failed to read file from disk</value>
+  </data>
+  <data name="HostWindow_SetCaption_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="HostWindow_SetCaption_ConnectedTo" xml:space="preserve">
+    <value>Connected to</value>
+  </data>
+  <data name="HostWindow_SetCaption_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="ErrorMessage_FindTemplateDirectory" xml:space="preserve">
+    <value>Error finding extension template directory</value>
+  </data>
+  <data name="ErrorMessage_CreateFileFromTemplate" xml:space="preserve">
+    <value>Error creating file from template</value>
+  </data>
+  <data name="UserOptions_Description_CrmSvcToolPath" xml:space="preserve">
+    <value>Path to latest CrmSvcUtil executable</value>
+  </data>
+  <data name="UserOptions_Description_ExtensionLogging" xml:space="preserve">
+    <value>Detailed extension logging records extension specific data to a file</value>
+  </data>
+  <data name="UserOptions_Description_ExtensionLoggingPath" xml:space="preserve">
+    <value>Path to extension log file storage</value>
+  </data>
+  <data name="UserOptions_Description_Intellisense" xml:space="preserve">
+    <value>Get organization metadata and provide string completion - this will require closing and re-opening any files</value>
+  </data>
+  <data name="UserOptions_Description_RegToolPath" xml:space="preserve">
+    <value>Path to the latest Plug-in Registration Tool executable</value>
+  </data>
+  <data name="UserOptions_Description_SolutionPackToolPath" xml:space="preserve">
+    <value>Path to the latest Solution Packager executable</value>
+  </data>
+  <data name="UserOptions_Description_TemplatesPath" xml:space="preserve">
+    <value>Path to the folder containing any custom item templates</value>
+  </data>
+  <data name="UserOptions_Description_WebBrowser" xml:space="preserve">
+    <value>Use the internal Visual Studio browser or your default browser for web content</value>
+  </data>
+  <data name="UserOptions_Description_XrmToolingLogging" xml:space="preserve">
+    <value>Xrm.Tooling logging records organization connect data to a file - this requires reconnecting to the organization</value>
+  </data>
+  <data name="UserOptions_Description_XrmToolingLoggingPath" xml:space="preserve">
+    <value>Path to Xrm.Tooling log file storage</value>
+  </data>
+  <data name="UserOptions_DisplayName_CrmSvcToolPath" xml:space="preserve">
+    <value>CrmSvcUtil tool path</value>
+  </data>
+  <data name="UserOptions_DisplayName_ExtensionLogging" xml:space="preserve">
+    <value>Enable detailed extension logging?</value>
+  </data>
+  <data name="UserOptions_DisplayName_ExtensionLoggingPath" xml:space="preserve">
+    <value>Extension log file path</value>
+  </data>
+  <data name="UserOptions_DisplayName_Intellisense" xml:space="preserve">
+    <value>Use Intellisense?</value>
+  </data>
+  <data name="UserOptions_DisplayName_RegToolPath" xml:space="preserve">
+    <value>Plug-in Registration tool path</value>
+  </data>
+  <data name="UserOptions_DisplayName_SolutionPackToolPath" xml:space="preserve">
+    <value>Solution Packager tool path</value>
+  </data>
+  <data name="UserOptions_DisplayName_TemplatesPath" xml:space="preserve">
+    <value>Path to custom templates folder</value>
+  </data>
+  <data name="UserOptions_DisplayName_WebBrowser" xml:space="preserve">
+    <value>Use internal VS web browser?</value>
+  </data>
+  <data name="UserOptions_DisplayName_XrmToolingLogging" xml:space="preserve">
+    <value>Enable Xrm.Tooling logging?</value>
+  </data>
+  <data name="UserOptions_DisplayName_XrmToolingLoggingPath" xml:space="preserve">
+    <value>Xrm.Tooling log file path</value>
+  </data>
+  <data name="WarningMessage_MissingExtensionLogPath" xml:space="preserve">
+    <value>Missing "Extension log file path" in user options, logging to output window instead</value>
+  </data>
+  <data name="WarningMessage_MissingXrmToolingLogPath" xml:space="preserve">
+    <value>Missing "Xrm.Tooling log file path" in user options, logging to output window instead</value>
+  </data>
+  <data name="ErrorMessage_UnableReadDeserializeConfig" xml:space="preserve">
+    <value>Unable to read or deserialize configuration file</value>
+  </data>
+  <data name="ErrorMessage_UnableWriteConfig" xml:space="preserve">
+    <value>Error writing to configuration file</value>
+  </data>
+  <data name="ErrorMessage_UnableRenameFile" xml:space="preserve">
+    <value>Unable to rename file</value>
+  </data>
+  <data name="ErrorMessage_RecreateConfigFile" xml:space="preserve">
+    <value>Error recreating configuration file</value>
+  </data>
+  <data name="MessageBox_RecreatedConfig" xml:space="preserve">
+    <value>Backed up and recreated configuration file</value>
+  </data>
+  <data name="XrmToolingConnection_Connect_Label_Content" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="XrmToolingConnection_ProfileList_Label_Content" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="ErrorMessage_NotConnectedOrg" xml:space="preserve">
+    <value>Not connected to an organization</value>
+  </data>
+  <data name="PayPalButton_OpenPayPal_Button_Tooltip" xml:space="preserve">
+    <value>Feel free to make a donation on PayPal</value>
+  </data>
+  <data name="ProjectGitHubButton_OpenGitHub_Button_Tooltip" xml:space="preserve">
+    <value>Check out the project on GitHub</value>
+  </data>
+  <data name="SpklGitHubButton_OpenGitHub_Button_Tooltip" xml:space="preserve">
+    <value>Check out the Spkl project on GitHub</value>
   </data>
 </root>

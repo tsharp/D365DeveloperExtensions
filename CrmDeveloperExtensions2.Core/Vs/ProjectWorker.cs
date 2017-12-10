@@ -1,10 +1,12 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Resources;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +20,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 {
     public static class ProjectWorker
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "SVG", "RESX", "MAP" };
         private static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
         private static readonly string[] IgnoreFolders = { "/TYPINGS", "/NODE_MODULES" };
@@ -43,7 +46,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
             var dirName = new DirectoryInfo(path).Name;
             var fileName = new FileInfo(projectFullName).Name;
-            string folderProjectFileName = dirName + "\\" + fileName;
+            string folderProjectFileName = $"{dirName}\\{fileName}";
 
             return folderProjectFileName;
         }
@@ -99,7 +102,8 @@ namespace CrmDeveloperExtensions2.Core.Vs
             while (item.MoveNext())
             {
                 var project = item.Current as Project;
-                if (project == null) continue;
+                if (project == null)
+                    continue;
 
                 if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
                     list.AddRange(GetSolutionFolderProjects(project));
@@ -117,6 +121,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             {
                 if (IsUnitTestProject(project))
                     continue;
+
                 filteredList.Add(project);
             }
 
@@ -129,7 +134,8 @@ namespace CrmDeveloperExtensions2.Core.Vs
             for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
             {
                 var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
-                if (subProject == null) continue;
+                if (subProject == null)
+                    continue;
 
                 if (subProject.Kind == ProjectKinds.vsProjectKindSolutionFolder)
                     list.AddRange(GetSolutionFolderProjects(subProject));
@@ -178,8 +184,8 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 var folders = GetFolders(projectItems.Item(i), String.Empty);
                 foreach (string folder in folders)
                 {
-                    if (folder.ToUpper() == "/PROPERTIES") continue; //Don't add the project Properties folder
-                    if (folder.ToUpper().StartsWith("/MY PROJECT")) continue; //Don't add the VB project My Project folders
+                    if (folder.ToUpper() == $"/{Resource.Constant_PropertiesFolder.ToUpper()}") continue; //Don't add the project Properties folder
+                    if (folder.ToUpper().StartsWith($"/{Resource.Constant_MyProjectFolder.ToUpper()}")) continue; //Don't add the VB project My Project folders
                     projectFolders.Add(folder);
                 }
             }
@@ -194,10 +200,10 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (new Guid(projectItem.Kind) != VSConstants.GUID_ItemType_PhysicalFolder)
                 return projectFolders;
 
-            projectFolders.Add(path + "/" + projectItem.Name);
+            projectFolders.Add($"{path}/{projectItem.Name}");
             for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
             {
-                var folders = GetFolders(projectItem.ProjectItems.Item(i), path + "/" + projectItem.Name);
+                var folders = GetFolders(projectItem.ProjectItems.Item(i), $"{path}/{projectItem.Name}");
                 foreach (string folder in folders)
                     projectFolders.Add(folder);
             }
@@ -231,14 +237,13 @@ namespace CrmDeveloperExtensions2.Core.Vs
                 }
             }
 
-
             return projectFiles;
         }
 
         private static ObservableCollection<ComboBoxItem> GetFiles(ProjectItem projectItem, string path)
         {
             ObservableCollection<ComboBoxItem> projectFiles = new ObservableCollection<ComboBoxItem>();
-            if (projectItem.Kind.ToUpper() != "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}") // VS Folder 
+            if (new Guid(projectItem.Kind) != VSConstants.GUID_ItemType_PhysicalFolder)
             {
                 string ex = Path.GetExtension(projectItem.Name);
                 if (ex == null || !Extensions.Contains(ex.Replace(".", String.Empty).ToUpper()) &&
@@ -247,7 +252,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
                 //Don't add file extensions that act as folders
                 if (!FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
-                    projectFiles.Add(new ComboBoxItem { Content = path + "/" + projectItem.Name, Tag = projectItem });
+                    projectFiles.Add(new ComboBoxItem { Content = $"{path}/{projectItem.Name}", Tag = projectItem });
 
                 if (projectItem.ProjectItems == null || projectItem.ProjectItems.Count <= 0)
                     return projectFiles;
@@ -314,7 +319,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (string.IsNullOrEmpty(projectTypeGuids))
                 return false;
 
-            projectTypeGuids = projectTypeGuids.Replace("{", String.Empty).Replace("}", String.Empty);
+            projectTypeGuids = StringFormatting.RemoveBracesToUpper(projectTypeGuids);
             string[] guids = projectTypeGuids.Split(';');
 
             return guids.Contains(ExtensionConstants.UnitTestProjectType.ToString(), StringComparer.InvariantCultureIgnoreCase);
@@ -322,10 +327,10 @@ namespace CrmDeveloperExtensions2.Core.Vs
 
         public static string GetAssemblyPath(Project project)
         {
-            string fullPath = project.Properties.Item("FullPath").Value.ToString();
-            string outputPath = project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+            string fullPath = project.Properties.Item(Resource.Constant_ProjectProperties_FullPath).Value.ToString();
+            string outputPath = project.ConfigurationManager.ActiveConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
             string outputDir = Path.Combine(fullPath, outputPath);
-            string outputFileName = project.Properties.Item("OutputFileName").Value.ToString();
+            string outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
             string assemblyPath = Path.Combine(outputDir, outputFileName);
 
             return assemblyPath;
@@ -352,13 +357,13 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (!string.IsNullOrEmpty(path))
                 return path;
 
-            OutputLogger.WriteToOutputWindow("Unable to get path from project", MessageType.Error);
+            OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ErrorGetProjectPath, MessageType.Error);
             return null;
         }
 
         public static string GetOutputFile(Project project)
         {
-            string outputFileName = project.Properties.Item("OutputFileName").Value.ToString();
+            string outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
             string path = GetOutputPath(project);
             return path == null ?
                 null :
@@ -371,7 +376,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             if (configurationManager == null) return null;
 
             Configuration activeConfiguration = configurationManager.ActiveConfiguration;
-            string outputPath = activeConfiguration.Properties.Item("OutputPath").Value.ToString();
+            string outputPath = activeConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
             string absoluteOutputPath = String.Empty;
             string projectFolder;
 
@@ -434,8 +439,7 @@ namespace CrmDeveloperExtensions2.Core.Vs
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    $"Failed to add refernce {referenceName}: {Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}", MessageType.Error);
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_ErrorAddProjectReference}: {referenceName}", ex);
             }
         }
     }

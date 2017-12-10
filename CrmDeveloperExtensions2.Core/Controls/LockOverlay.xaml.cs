@@ -16,7 +16,7 @@ namespace CrmDeveloperExtensions2.Core.Controls
         private void Show(string message = null)
         {
             if (string.IsNullOrEmpty(message))
-                message = Resource.LockMessage_Label_DefaultContent;
+                message = $"{Resource.LockOverlay_LockMessage_Label_DefaultContent}...";
 
             Overlay.Visibility = Visibility.Visible;
             LockMessage.Content = message;
@@ -33,7 +33,8 @@ namespace CrmDeveloperExtensions2.Core.Controls
                 new Action(() =>
                     {
                         if (animation != null)
-                            StatusBar.SetStatusBarValue(dte, "Working...", (vsStatusAnimation)animation);
+                            StatusBar.SetStatusBarValue($"{Resource.LockOverlay_LockMessage_Label_DefaultContent}...",
+                                (vsStatusAnimation)animation);
                         Show(message);
                     }
                 ));
@@ -45,7 +46,7 @@ namespace CrmDeveloperExtensions2.Core.Controls
                 new Action(() =>
                     {
                         if (animation != null)
-                            StatusBar.ClearStatusBarValue(dte, (vsStatusAnimation)animation);
+                            StatusBar.ClearStatusBarValue((vsStatusAnimation)animation);
                         Hide();
                     }
                 ));

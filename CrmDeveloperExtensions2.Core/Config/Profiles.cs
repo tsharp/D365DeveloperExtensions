@@ -1,14 +1,18 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.Vs;
+using EnvDTE;
 using System.Collections.Generic;
 
 namespace CrmDeveloperExtensions2.Core.Config
 {
     public static class Profiles
     {
-        public static List<string> GetProfiles(string projectPath, ToolWindowType toolWindowType)
+        public static List<string> GetProfiles(Project project, ToolWindowType toolWindowType)
         {
-            SpklConfig spklConfig = ConfigFile.GetSpklConfigFile(projectPath);
+            SpklConfig spklConfig = ConfigFile.GetSpklConfigFile(project);
+            string projectPath = ProjectWorker.GetProjectPath(project);
+
             switch (toolWindowType)
             {
                 case ToolWindowType.PluginDeployer:
@@ -26,6 +30,9 @@ namespace CrmDeveloperExtensions2.Core.Config
 
         public static List<string> GetConfigProfiles<T>(string projectPath, List<T> configs)
         {
+            if (configs == null)
+                return new List<string>();
+
             List<string> profiles = new List<string>();
 
             int i = 1;

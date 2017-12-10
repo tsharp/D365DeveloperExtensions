@@ -221,7 +221,11 @@
     <Compile Include="Enums\MapTypes.cs" />
     <Compile Include="Enums\SolutionType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />
+    <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
+    <Compile Include="Localization\LocalizedCategoryAttribute.cs" />
+    <Compile Include="Localization\LocalizedDescriptionAttribute.cs" />
+    <Compile Include="Localization\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Models\AssemblyDeploymentType.cs" />
     <Compile Include="ExtensionConstants.cs" />
     <Compile Include="Crm\Connection.cs" />
@@ -244,6 +248,9 @@
     <Compile Include="Models\WebResourceType.cs" />
     <Compile Include="StringFormatting.cs" />
     <Compile Include="TemplateHandler.cs" />
+    <Compile Include="Models\UserOptionProperties.cs" />
+    <Compile Include="Models\UserOptionProperty.cs" />
+    <Compile Include="UserOptions\UserOptionsHelper.cs" />
     <Compile Include="Vs\ProjectItemWorker.cs" />
     <Compile Include="Vs\ProjectWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -255,7 +262,7 @@
     <Compile Include="SharedGlobals.cs" />
     <Compile Include="Vs\SolutionWorker.cs" />
     <Compile Include="StatusBar.cs" />
-    <Compile Include="UserOptionsGrid.cs">
+    <Compile Include="UserOptions\UserOptionsGrid.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Versioning.cs" />
@@ -352,5 +359,6 @@
   <ItemGroup>
     <Resource Include="Images\paypal_20.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

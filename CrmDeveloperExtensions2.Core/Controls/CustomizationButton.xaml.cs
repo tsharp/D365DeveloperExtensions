@@ -1,5 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Resources;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;
@@ -57,8 +58,7 @@ namespace CrmDeveloperExtensions2.Core.Controls
 
             if (!(SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client))
             {
-
-                OutputLogger.WriteToOutputWindow("Not connected to CRM/365.", MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_NotConnectedOrg, MessageType.Error);
                 return;
             }
 

@@ -14,8 +14,7 @@ namespace WebResourceDeployer.Config
     {
         public static ObservableCollection<WebResourceItem> HandleSpklMappings(Project project, string profile, ObservableCollection<WebResourceItem> webResourceItems)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
 
             List<SpklConfigWebresourceFile> mappingsToRemove = new List<SpklConfigWebresourceFile>();
 
@@ -77,8 +76,7 @@ namespace WebResourceDeployer.Config
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, WebResourceItem webResourceItem)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
 
             List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
                 ? spklConfig.webresources[0].files

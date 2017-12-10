@@ -560,7 +560,7 @@ namespace SolutionPackager
 
         private string GetToolPath()
         {
-            string toolPath = Packager.CreateToolPath(_dte);
+            string toolPath = Packager.CreateToolPath();
             if (!string.IsNullOrEmpty(toolPath))
                 return toolPath;
 

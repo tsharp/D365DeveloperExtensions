@@ -10,13 +10,14 @@ namespace TemplateWizards
 {
     public static class NuGetProcessor
     {
-        public static void InstallPackage(DTE dte, IVsPackageInstaller installer, Project project, string package, string version)
+
+
+        public static void InstallPackage(IVsPackageInstaller installer, Project project, string package, string version)
         {
             try
             {
                 string nuGetSource = "https://www.nuget.org/api/v2/";
-                StatusBar.SetStatusBarValue(dte,
-                    Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
+                StatusBar.SetStatusBarValue(Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
                 installer.InstallPackage(nuGetSource, project, package, version, false);
             }
             catch (Exception ex)
@@ -27,15 +28,15 @@ namespace TemplateWizards
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue();
             }
         }
 
-        public static void UnInstallPackage(DTE dte, IVsPackageUninstaller uninstaller, Project project, string package)
+        public static void UnInstallPackage(IVsPackageUninstaller uninstaller, Project project, string package)
         {
             try
             {
-                StatusBar.SetStatusBarValue(dte, Resources.Resource.NuGetPackageUninstallingStatusBarMessage + ": " + package);
+                StatusBar.SetStatusBarValue(Resources.Resource.NuGetPackageUninstallingStatusBarMessage + ": " + package);
 
                 uninstaller.UninstallPackage(project, package, true);
             }
@@ -46,7 +47,7 @@ namespace TemplateWizards
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue();
             }
         }
 

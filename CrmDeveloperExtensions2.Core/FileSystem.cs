@@ -1,16 +1,19 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using CrmDeveloperExtensions2.Core.Resources;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
+using CrmDeveloperExtensions2.Core.Logging;
 using MessageBox = System.Windows.MessageBox;
 
 namespace CrmDeveloperExtensions2.Core
 {
     public static class FileSystem
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static bool IsDirectoryEmpty(string path)
         {
             IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
@@ -22,11 +25,11 @@ namespace CrmDeveloperExtensions2.Core
         {
             string path = Path.GetDirectoryName(input);
             if (path == null)
-                throw new Exception("Unable to get directory from string");
+                throw new Exception(Resource.ErrorMessage_DirectoryFromString);
 
             DirectoryInfo directory = new DirectoryInfo(path);
             if (!directory.Exists)
-                throw new Exception("Unable to get directory from string");
+                throw new Exception(Resource.ErrorMessage_DirectoryFromString);
 
             return directory;
         }
@@ -39,16 +42,18 @@ namespace CrmDeveloperExtensions2.Core
                 string fileName = Path.GetFileName(name);
                 if (String.IsNullOrEmpty(fileName))
                     fileName = Guid.NewGuid().ToString();
+
                 var tempFile = Path.Combine(tempFolder, fileName);
                 if (File.Exists(tempFile))
                     File.Delete(tempFile);
+
                 File.WriteAllBytes(tempFile, content);
 
                 return tempFile;
             }
             catch (Exception)
             {
-                MessageBox.Show("Error writing temp file");
+                MessageBox.Show(Resource.ErrorMessage_WriteTempFile);
                 throw;
             }
         }
@@ -61,7 +66,7 @@ namespace CrmDeveloperExtensions2.Core
             }
             catch (Exception)
             {
-                MessageBox.Show("Error writing file");
+                MessageBox.Show(Resource.ErrorMessage_WriteFile);
                 throw;
             }
         }
@@ -101,6 +106,19 @@ namespace CrmDeveloperExtensions2.Core
             return checkAll;
         }
 
+        public static void RenameFile(string path)
+        {
+            try
+            {
+                File.Move(path, $"{path}.{DateTime.Now:MMddyyyyHHmmss}");
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_UnableRenameFile}: {path}", ex);
+                throw;
+            }
+        }
+
         public static bool ConfirmOverwrite(string[] files, bool checkAll)
         {
             List<string> existingFiles = new List<string>();
@@ -116,7 +134,7 @@ namespace CrmDeveloperExtensions2.Core
                 return true;
 
             StringBuilder messsage = new StringBuilder();
-            messsage.Append("OK to overwrite the following file(s)?");
+            messsage.Append(Resource.ConfirmMessage_OverwriteFiles);
 
             foreach (string existingFile in existingFiles)
             {
@@ -124,7 +142,8 @@ namespace CrmDeveloperExtensions2.Core
                 messsage.Append(existingFile);
             }
 
-            MessageBoxResult result = MessageBox.Show(messsage.ToString(), "Ok to overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            MessageBoxResult result = MessageBox.Show(messsage.ToString(), Resource.ConfirmMessage_OverwriteFiles_Title,
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             return result == MessageBoxResult.Yes;
         }
@@ -134,12 +153,10 @@ namespace CrmDeveloperExtensions2.Core
             try
             {
                 return File.ReadAllBytes(path);
-
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    $"Failed to read solution file from disk: {path}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}", MessageType.Error);
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_ReadFile}: {path}", ex);
 
                 return null;
             }

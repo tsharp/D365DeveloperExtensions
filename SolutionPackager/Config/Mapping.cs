@@ -14,8 +14,7 @@ namespace SolutionPackager.Config
     {
         public static SolutionPackageConfig GetSolutionPackageConfig(Project project, string profile, ObservableCollection<CrmSolution> crmSolutions)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
 
             List<SolutionPackageConfig> spklSolutionPackageConfigs = spklConfig.solutions;
             if (spklSolutionPackageConfigs == null)
@@ -30,8 +29,7 @@ namespace SolutionPackager.Config
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, SolutionPackageConfig solutionPackageConfig)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.solutions[0] = solutionPackageConfig;
@@ -49,6 +47,7 @@ namespace SolutionPackager.Config
                 }
             }
 
+            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 

@@ -1,6 +1,8 @@
-﻿using EnvDTE;
+﻿using CrmDeveloperExtensions2.Core.Resources;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using System;
 using System.Collections.Generic;
 
 namespace CrmDeveloperExtensions2.Core.Vs
@@ -11,8 +13,8 @@ namespace CrmDeveloperExtensions2.Core.Vs
         {
             foreach (SolutionConfiguration buildConfiguration in buildConfigurations)
             {
-                //Localize these?
-                if (buildConfiguration.Name != "Debug" && buildConfiguration.Name != "Release")
+                if (!string.Equals(buildConfiguration.Name, Resource.Constant_ProjectBuildConfig_Debug, StringComparison.CurrentCultureIgnoreCase) &&
+                    !string.Equals(buildConfiguration.Name, Resource.Constant_ProjectBuildConfig_Release, StringComparison.CurrentCultureIgnoreCase))
                     continue;
 
                 SolutionContexts contexts = buildConfiguration.SolutionContexts;

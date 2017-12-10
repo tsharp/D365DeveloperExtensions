@@ -1,6 +1,9 @@
 ﻿using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.Resources;
+using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.IO;
 using System.Windows;
@@ -9,18 +12,20 @@ namespace CrmDeveloperExtensions2.Core.Config
 {
     public static class ConfigFile
     {
-        private static readonly string ConfigFileName = ExtensionConstants.SpklConfigFile;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static bool SpklConfigFileExists(string projectPath)
         {
-            string path = Path.Combine(projectPath, ConfigFileName);
+            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
 
             return File.Exists(path);
         }
 
-        public static SpklConfig GetSpklConfigFile(string projectPath)
+        public static SpklConfig GetSpklConfigFile(Project project, bool isRetry = false)
         {
-            string path = Path.Combine(projectPath, ConfigFileName);
+            string projectPath = ProjectWorker.GetProjectPath(project);
+            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+
             try
             {
                 SpklConfig spklConfig;
@@ -32,15 +37,21 @@ namespace CrmDeveloperExtensions2.Core.Config
 
                 return spklConfig;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("Unable to read or deserialize config file");
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_UnableReadDeserializeConfig}: {path}", ex);
+                MessageBox.Show($"{Resource.ErrorMessage_UnableReadDeserializeConfig}: {path}");
+
+                if (!isRetry)
+                    return RecreateConfig(project, path);
+
+                throw;
             }
         }
 
         public static void CreateSpklConfigFile(Project project)
         {
-            TemplateHandler.AddFileFromTemplate(project, "CSharpSpklConfig\\CSharpSpklConfig", ConfigFileName);
+            TemplateHandler.AddFileFromTemplate(project, "CSharpSpklConfig\\CSharpSpklConfig", ExtensionConstants.SpklConfigFile);
         }
 
         public static void UpdateSpklConfigFile(string projectPath, SpklConfig spklConfig)
@@ -50,16 +61,41 @@ namespace CrmDeveloperExtensions2.Core.Config
             WriteSpklConfigFile(projectPath, text);
         }
 
-        private static void WriteSpklConfigFile(string projectPath, string text)
+        private static SpklConfig RecreateConfig(Project project, string configPath)
         {
             try
             {
-                string path = Path.Combine(projectPath, ConfigFileName);
+                bool fileExists = FileSystem.DoesFileExist(new[] { configPath }, true);
+                if (fileExists)
+                    FileSystem.RenameFile(configPath);
+
+                CreateSpklConfigFile(project);
+
+                SpklConfig recreateConfig = GetSpklConfigFile(project, true);
+
+                MessageBox.Show(Resource.MessageBox_RecreatedConfig);
+
+                return recreateConfig;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_RecreateConfigFile, ex);
+                throw;
+            }
+        }
+
+        private static void WriteSpklConfigFile(string projectPath, string text)
+        {
+            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+
+            try
+            {
                 File.WriteAllText(path, text);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Error writing config file");
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_UnableWriteConfig}: {path}", ex);
+                MessageBox.Show($"{Resource.ErrorMessage_UnableWriteConfig}: {path}");
             }
         }
     }
