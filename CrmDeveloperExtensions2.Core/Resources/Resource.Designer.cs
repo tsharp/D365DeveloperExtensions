@@ -430,6 +430,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error retrieving plug-in trace logs.
+        /// </summary>
+        public static string MessageBox_ErrorRetrieving {
+            get {
+                return ResourceManager.GetString("MessageBox_ErrorRetrieving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backed up and recreated configuration file.
         /// </summary>
         public static string MessageBox_RecreatedConfig {

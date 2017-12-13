@@ -8,7 +8,7 @@ namespace PluginTraceViewer
     {
         public PluginTraceViewerHost() : base(null)
         {
-            Caption = Resources.Resource.ToolWindowTitle;
+            Caption = Resources.Resource.PluginTraceViewerWindow_Window_Title;
             BitmapResourceID = 301;
             BitmapIndex = 1;
             Content = new PluginTraceViewerWindow();

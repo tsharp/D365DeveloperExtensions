@@ -44,11 +44,11 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
                     <Button x:Name="Poll" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Source={x:Static resources:Resource.Poll_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                            ToolTip="{x:Static resources:Resource.Poll_Button_ToolTip}" />
+                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_ToolTip}" />
                     <Button x:Name="PollOff" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Source={x:Static resources:Resource.PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                            ToolTip="{x:Static resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
+                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_ToolTip}" Visibility="Collapsed"/>
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
@@ -63,7 +63,7 @@
                                 <StackPanel Background="Transparent">
                                     <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
-                                                        ToolTip="{x:Static resources:Resource.RefreshImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_RefreshImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>
                             </DataGridTemplateColumn.Header>
@@ -71,7 +71,7 @@
                                 <DataTemplate>
                                     <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
-                                                        ToolTip="{x:Static resources:Resource.ViewDetailsImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip}" />
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -81,7 +81,7 @@
                                 <DataTemplate>
                                     <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" CommandParameter="{Binding PluginTraceLogidId}">
                                         <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
-                                                        ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip}" />
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -91,7 +91,7 @@
                                 <StackPanel>
                                     <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
-                                                        ToolTip="{x:Static resources:Resource.DeleteLogsImage_Button_ToolTip}" />
+                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>
                             </DataGridTemplateColumn.Header>
@@ -102,7 +102,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.CreatonOn_DataGridTextColumn_Header}" SortMemberPath="CreatedOn">
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.PluginTraceViewerWindow_CreatonOn_DataGridTextColumn_Header}" 
+                                                SortMemberPath="CreatedOn">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding CreatedOn}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
@@ -117,7 +118,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Entity_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Entity_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByEntity" Click="FilterByEntity_Click"/>
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -134,7 +136,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Message_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Message_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMessage" Click="FilterByMessage_Click"/>
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -144,7 +147,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.CorrelationId_DataGridTextColumn_Header}" SortMemberPath="CorrelationId">
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header}" 
+                                                SortMemberPath="CorrelationId">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding CorrelationId}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
@@ -152,7 +156,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
+                        <DataGridTextColumn Header="{x:Static resources:Resource.PluginTraceViewerWindow_Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
@@ -166,7 +170,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Mode_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Mode_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMode" Click="FilterByMode_Click"/>
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -183,7 +188,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="16"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.TypeName_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_TypeName_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
                                     <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByTypeName" Click="FilterByTypeName_Click"/>
                                 </Grid>
                             </DataGridTemplateColumn.Header>
@@ -193,7 +199,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.ExecutionDuration_DataGridTextColumn_Header}" Binding="{Binding ExecutionDuration}">
+                        <DataGridTextColumn Header="{x:Static resources:Resource.PluginTraceViewerWindow_ExecutionDuration_DataGridTextColumn_Header}" 
+                                            Binding="{Binding ExecutionDuration}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="HorizontalAlignment" Value="Right" />
@@ -207,7 +214,7 @@
                                     <AdornerDecorator>
                                         <TextBox x:Name="DetailsSearch" Width="200" Height="20" TextChanged="DetailsSearch_TextChanged" Style="{DynamicResource ToolBarTextBoxStyle}">
                                             <coreConverters:WatermarkService.Watermark>
-                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="Search trace details"/>
+                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="{x:Static resources:Resource.PluginTraceViewerWindow_DetailsSearch_TextBlock_Text}"/>
                                             </coreConverters:WatermarkService.Watermark>
                                         </TextBox>
                                     </AdornerDecorator>

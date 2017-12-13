@@ -1,17 +1,21 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
+using PluginTraceViewer.Resources;
 using System;
 using System.Collections.Generic;
-using System.ServiceModel;
-using Microsoft.Xrm.Sdk.Messages;
 
 namespace PluginTraceViewer.Crm
 {
     public static class PluginTrace
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static EntityCollection RetrievePluginTracesFromCrm(CrmServiceClient client, DateTime afterDate)
         {
             try
@@ -40,16 +44,10 @@ namespace PluginTraceViewer.Crm
 
                 return traceLogs;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Plug-in Trace Logs From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Plug-in Trace Logs From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingTraces, ex);
+
                 return null;
             }
         }
@@ -83,31 +81,30 @@ namespace PluginTraceViewer.Crm
                 ExecuteMultipleResponse executeMultipleResponse =
                     (ExecuteMultipleResponse)client.Execute(executeMultipleRequest);
 
-                foreach (var responseItem in executeMultipleResponse.Responses)
-                {
-                    if (responseItem.Response != null)
-                    {
-                        deletedPluginTraceLogIds.Add(pluginTraceLogIds[responseItem.RequestIndex]);
-                        continue;
-                    }
-
-                    if (responseItem.Fault != null)
-                        OutputLogger.WriteToOutputWindow(
-                            "Error Deleting Plug-in Trace Log From CRM: " + responseItem.Fault, MessageType.Error);
-                }
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Deleting Plug-in Trace Log(s) From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                CheckForDeletionErrors(pluginTraceLogIds, executeMultipleResponse, deletedPluginTraceLogIds);
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Deleting Plug-in Trace Log(s) From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorDeletingTraces, ex);
             }
 
             return deletedPluginTraceLogIds;
+        }
+
+        private static void CheckForDeletionErrors(Guid[] pluginTraceLogIds, ExecuteMultipleResponse executeMultipleResponse,
+            List<Guid> deletedPluginTraceLogIds)
+        {
+            foreach (var responseItem in executeMultipleResponse.Responses)
+            {
+                if (responseItem.Response != null)
+                {
+                    deletedPluginTraceLogIds.Add(pluginTraceLogIds[responseItem.RequestIndex]);
+                    continue;
+                }
+
+                if (responseItem.Fault != null)
+                    OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_ErrorDeletingTrace}: {responseItem.Fault}", MessageType.Error);
+            }
         }
     }
 }

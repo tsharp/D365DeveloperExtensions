@@ -1,37 +1,13 @@
-﻿using CrmDeveloperExtensions2.Core.DataGrid;
+﻿using PluginTraceViewer.Resources;
 using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace PluginTraceViewer.Models
 {
-    public class FilterEntity : INotifyPropertyChanged, IFilterProperty
+    public class FilterEntity : FilterBase
     {
-        private bool _isSelected;
-
-        public string Name { get; set; }
-        public string Value { get; set; }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                _isSelected = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public static ObservableCollection<FilterEntity> CreateFilterList(ObservableCollection<CrmPluginTrace> traces)
         {
             ObservableCollection<FilterEntity> filterEntities = new ObservableCollection<FilterEntity>(traces.GroupBy(t => t.Entity).Select(x =>
@@ -46,7 +22,7 @@ namespace PluginTraceViewer.Models
 
             filterEntities.Insert(0, new FilterEntity
             {
-                Name = "Select All",
+                Name = Resource.FilterEntity_Select_All,
                 Value = String.Empty,
                 IsSelected = true
             });
