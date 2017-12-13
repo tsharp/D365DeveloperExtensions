@@ -225,9 +225,6 @@
   <data name="About_Menu_Header" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="ErrorMessage_ErrorPublishing" xml:space="preserve">
-    <value>Error publishing customizations</value>
-  </data>
   <data name="ErrorMessage_ErrorCrmConnection" xml:space="preserve">
     <value>Error connecting to CRM/365</value>
   </data>
@@ -398,5 +395,11 @@
   </data>
   <data name="UserOptions_DisplayName_DefaultKeyFileName" xml:space="preserve">
     <value>Default key file name</value>
+  </data>
+  <data name="MessageBox_ErrorRetrieving" xml:space="preserve">
+    <value>Error retrieving plug-in trace logs</value>
+  </data>
+  <data name="ErrorMessage_ErrorPublishing" xml:space="preserve">
+    <value>Error publishing customizations</value>
   </data>
 </root>
