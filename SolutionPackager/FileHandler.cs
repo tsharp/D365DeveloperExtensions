@@ -1,5 +1,6 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using CrmDeveloperExtensions2.Core;
+using NLog;
+using SolutionPackager.Resources;
 using System;
 using System.IO;
 using System.Text;
@@ -8,6 +9,8 @@ namespace SolutionPackager
 {
     public static class FileHandler
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static string FormatSolutionVersionString(string solutionName, Version version, bool managed)
         {
             StringBuilder result = new StringBuilder();
@@ -39,7 +42,8 @@ namespace SolutionPackager
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Writing Solution To Temp Directory: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorWritingTemp, ex);
+
                 return null;
             }
         }
@@ -49,17 +53,18 @@ namespace SolutionPackager
             try
             {
                 string tempDirectory = Path.GetDirectoryName(unmanagedPath);
-                if (Directory.Exists(tempDirectory + "\\" + Path.GetFileNameWithoutExtension(unmanagedPath)))
-                    Directory.Delete(tempDirectory + "\\" + Path.GetFileNameWithoutExtension(unmanagedPath), true);
+                if (Directory.Exists($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}"))
+                    Directory.Delete($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}", true);
                 DirectoryInfo extractedFolder =
-                    Directory.CreateDirectory(tempDirectory + "\\" + Path.GetFileNameWithoutExtension(unmanagedPath));
+                    Directory.CreateDirectory($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}");
 
                 return extractedFolder;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Creating Temp Directory To Extract Files: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
-                throw;
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorCreatingTemp, ex);
+
+                return null;
             }
         }
     }

@@ -9,7 +9,7 @@
              xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
              xmlns:resources="clr-namespace:SolutionPackager.Resources"
-             xmlns:local="clr-namespace:SolutionPackager" x:Class="SolutionPackager.SolutionPackagerWindow"
+             x:Class="SolutionPackager.SolutionPackagerWindow"
              mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -33,17 +33,16 @@
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                    <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.UnpackageSolution_Button_Content}}" 
-                            ToolTip="{x:Static resources:Resource.UnpackageSolution_Button_ToolTip}" />
+                    <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
+                            IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" ToolTip="{x:Static resources:Resource.SolutionPackager_UnpackageSolution_Button_ToolTip}"
+                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_UnpackageSolution_Button_Content}}" />
                     <Button x:Name="PackageSolution" Click="PackageSolution_OnClick" 
                             IsEnabled="{Binding SolutionXmlExists, FallbackValue=false, Mode=OneWay, TargetNullValue=false, UpdateSourceTrigger=PropertyChanged}" 
-                            Style="{DynamicResource ToolBarButtonStyle}"
-                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.PackageSolution_Button_Content}}" 
-                            ToolTip="{x:Static resources:Resource.PackageSolution_Button_ToolTip}" />
+                            Style="{DynamicResource ToolBarButtonStyle}" ToolTip="{x:Static resources:Resource.SolutionPackager_PackageSolution_Button_ToolTip}"
+                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_PackageSolution_Button_Content}}" />
                     <Button x:Name="ImportSolution" Click="ImportSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
-                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.ImportSolution_Button_Content}}" 
-                            ToolTip="{x:Static resources:Resource.ImportSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_ImportSolution_Button_Content}}" 
+                            ToolTip="{x:Static resources:Resource.SolutionPackager_ImportSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 </StackPanel>
@@ -72,32 +71,36 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                           Content="{x:Static resources:Resource.SolutionsLabel_Label_Content}" />
+                           Content="{x:Static resources:Resource.SolutionPackager_SolutionsLabel_Label_Content}" />
                         <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" VerticalAlignment="Top" 
                               ToolTip="{x:Static resources:Resource.SolutionList_ComboBox_ToolTip}" 
                               IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                               ItemsSource="{Binding SolutionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="Package Type"/>
+                        <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="{x:Static resources:Resource.SolutionPackager_PackageTypeLabel_Label_Content}"/>
                         <ComboBox x:Name="PackageType" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding PackageTypes}" />
-                        <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="2" Content="Enable Solution Packager Log?"/>
+                        <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="2" 
+                               Content="{x:Static resources:Resource.SolutionPackager_EnableSolutionPackagerLogLabel_Label_Content}"/>
                         <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="ExtractOptionsLabel" Content="Extract Options" Grid.Column="0" Grid.Row="3" FontWeight="Bold"/>
+                        <Label x:Name="ExtractOptionsLabel"  Grid.Column="0" Grid.Row="3" FontWeight="Bold" 
+                               Content="{x:Static resources:Resource.SolutionPackager_ExtractOptionsLabel_Label_Content}" />
                         <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                           Content="{x:Static resources:Resource.SaveSolutionsLabel_Label_Content}" />
+                           Content="{x:Static resources:Resource.SolutionPackager_SaveSolutionsLabel_Label_Content}" />
                         <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                               IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="5" Content="Solution Folder"/>
+                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="5" Content="{x:Static resources:Resource.SolutionPackager_SolutionFolderLabe_Label_Content}"/>
                         <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="{Binding IsEnabled, ElementName=SaveSolutions}" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="6" Content="Package Folder"/>
+                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="6" Content="{x:Static resources:Resource.SolutionPackager_PackageFolderLabel_Label_Content}"/>
                         <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
                               IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                               ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackOptionsLabel" Content="Pack Options" Grid.Column="0" Grid.Row="7" FontWeight="Bold"/>
-                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Solution Name"/>
+                        <Label x:Name="PackOptionsLabel" Grid.Column="0" Grid.Row="7" FontWeight="Bold" 
+                               Content="{x:Static resources:Resource.SolutionPackager_PackOptionsLabel_Label_Content}" />
+                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                               Content="{x:Static resources:Resource.SolutionPackager_SolutionNameLabel_Label_Content}"/>
                         <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Stretch">
                             <TextBox x:Name="SolutionName" Margin="5,5,0,0" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" Style="{DynamicResource TextBoxStyle}"/>
@@ -113,12 +116,13 @@
                                 <Button x:Name="UpdateVersion" Style="{DynamicResource ImageButtonStyle}" 
                                IsEnabled="false" Click="UpdateVersion_OnClick">
                                     <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.Version}"                                           
-                                                ToolTip="Update the version number in the local project's Solution.xml" />
+                                                ToolTip="{x:Static resources:Resource.SolutionPackager_UpdateVersionImage_Button_ToolTip}" />
                                 </Button>
                             </StackPanel>
                         </StackPanel>
-                        <Label x:Name="ImportOptionsLabel" Content="Import Options" Grid.Column="0" Grid.Row="9" FontWeight="Bold"/>
-                        <Label x:Name="PublishAllLabel" Content="Publish All?" Grid.Column="0" Grid.Row="10"/>
+                        <Label x:Name="ImportOptionsLabel" Grid.Column="0" Grid.Row="9" FontWeight="Bold" 
+                               Content="{x:Static resources:Resource.SolutionPackager_ImportOptionsLabel_Label_Content}"/>
+                        <Label x:Name="PublishAllLabel" Grid.Column="0" Grid.Row="10" Content="{x:Static resources:Resource.SolutionPackager_PublishAllLabel_Label_Content}" />
                         <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="10" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                               IsThreeState="False" IsEnabled="False" />
                     </Grid>
