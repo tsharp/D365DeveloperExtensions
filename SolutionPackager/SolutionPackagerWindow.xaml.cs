@@ -5,12 +5,12 @@ using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Win32;
 using Microsoft.Xrm.Sdk;
 using NLog;
 using SolutionPackager.Models;
+using SolutionPackager.Resources;
 using SolutionPackager.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,11 +32,17 @@ namespace SolutionPackager
 {
     public partial class SolutionPackagerWindow : INotifyPropertyChanged
     {
+        #region Private
+
         private readonly DTE _dte;
         private readonly Solution _solution;
-        private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private ObservableCollection<CrmSolution> _solutionData;
         private ObservableCollection<string> _projectFolders;
+
+        #endregion
+
+        #region Public
 
         public bool SolutionXmlExists;
         public ObservableCollection<CrmSolution> SolutionData
@@ -60,19 +66,24 @@ namespace SolutionPackager
         public List<SolutionType> PackageTypes => Enum.GetValues(typeof(SolutionType)).Cast<SolutionType>().ToList();
         public string Command;
 
+        #endregion
+
+        #region Events
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        #endregion
+
         public SolutionPackagerWindow()
         {
             InitializeComponent();
             DataContext = this;
 
-            SolutionData = new ObservableCollection<CrmSolution>();
-            ProjectFolders = new ObservableCollection<string>();
+            ResetCollections();
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (_dte == null)
@@ -117,6 +128,11 @@ namespace SolutionPackager
                 BindPackageButton();
                 LoadData();
             }
+        }
+        private void ResetCollections()
+        {
+            SolutionData = new ObservableCollection<CrmSolution>();
+            ProjectFolders = new ObservableCollection<string>();
         }
 
         private async void LoadData()
@@ -212,8 +228,7 @@ namespace SolutionPackager
         private void ResetForm()
         {
             RemoveEventHandlers();
-            SolutionData = new ObservableCollection<CrmSolution>();
-            ProjectFolders = new ObservableCollection<string>();
+            ResetCollections();
             SaveSolutions.IsChecked = false;
             SetControlState(false);
         }
@@ -222,7 +237,7 @@ namespace SolutionPackager
         {
             try
             {
-                Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_GettingSolutions}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var solutionTask = GetSolutions();
 
@@ -231,7 +246,7 @@ namespace SolutionPackager
                 if (!solutionTask.Result)
                 {
                     Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                    MessageBox.Show("Error Retrieving Solutions. See the Output Window for additional details.");
+                    MessageBox.Show(Resource.MessageBox_ErrorRetrievingSolutions);
                 }
 
                 AddEventHandlers();
@@ -248,12 +263,13 @@ namespace SolutionPackager
             if (results == null)
                 return false;
 
-            OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
+            OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
             SolutionData = ModelBuilder.CreateCrmSolutionView(results);
             SolutionList.DisplayMemberPath = "NameVersion";
 
-            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile, SolutionData);
+            SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject,
+                ConnPane.SelectedProfile, SolutionData);
             if (solutionPackageConfig == null)
                 return true;
 
@@ -267,7 +283,8 @@ namespace SolutionPackager
             string projectFolder = ProjectFolders.FirstOrDefault(s => s == $"/{solutionPackageConfig.packagepath}");
             SolutionList.SelectedItem = SolutionData.FirstOrDefault(s => s.UniqueName == solutionPackageConfig.solution_uniquename);
             PackageFolder.SelectedItem = projectFolder;
-            PackageType.SelectedItem = PackageTypes.FirstOrDefault(s => s.ToString().Equals(solutionPackageConfig.packagetype, StringComparison.InvariantCultureIgnoreCase));
+            PackageType.SelectedItem = PackageTypes.FirstOrDefault(s => s.ToString().Equals(solutionPackageConfig.packagetype,
+                StringComparison.InvariantCultureIgnoreCase));
             SolutionName.Text = SetSolutionName(solutionPackageConfig);
 
             PackageSolution.IsEnabled = SolutionXml.SolutionXmlExists(ConnPane.SelectedProject, projectFolder);
@@ -315,9 +332,11 @@ namespace SolutionPackager
             }
 
             bool publishAll = PublishAll.IsChecked == true;
-            string publishMesasge = publishAll ? " & publish" : String.Empty;
+            string publishMesasge = publishAll
+                ? Resource.Confirm_ImportAndPublish
+                : Resource.Confirm_Import;
 
-            MessageBoxResult result = MessageBox.Show($"Are you sure you want to import{publishMesasge} solution?", $"Ok to import{publishMesasge}?",
+            MessageBoxResult result = MessageBox.Show(publishMesasge, Resource.Confirm_Title_OkToImport,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             if (result == MessageBoxResult.No)
@@ -325,14 +344,14 @@ namespace SolutionPackager
 
             if (string.IsNullOrEmpty(latestSolutionPath))
             {
-                MessageBox.Show("Unable to find solution.");
+                MessageBox.Show(Resource.MessageBox_UnableToFindSolution);
                 return;
             }
 
             bool success;
             try
             {
-                Overlay.ShowMessage(_dte, "Importing solution...", vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_ImportingSolution}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 success = await Task.Run(() => PublishToCrm(latestSolutionPath, publishAll));
             }
@@ -342,8 +361,7 @@ namespace SolutionPackager
             }
 
             if (!success)
-                MessageBox.Show("Error importing or publishing solution. See output window for details.");
-
+                MessageBox.Show(Resource.MessageBox_ErrorImportingOrPublishing);
         }
 
         private async Task<bool> PublishToCrm(string latestSolutionPath, bool publishAll)
@@ -353,7 +371,7 @@ namespace SolutionPackager
             if (!publishAll)
                 return success;
 
-            Overlay.ShowMessage(_dte, "Publishing customizations...", vsStatusAnimation.vsStatusAnimationDeploy);
+            Overlay.ShowMessage(_dte, $"{Resource.Message_PublishingCustomizations}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
             success =
                 await Task.Run(() => CrmDeveloperExtensions2.Core.Crm.Publish.PublishAllCustomizations(ConnPane.CrmService));
@@ -386,31 +404,16 @@ namespace SolutionPackager
         private void AddEventHandlers()
         {
             SolutionList.SelectionChanged += SolutionList_OnSelectionChanged;
-            PackageFolder.SelectionChanged += PackageFolderOnSelectionChanged;
-            PackageType.SelectionChanged += PackageTypeOnSelectionChanged;
-            SolutionName.TextChanged += SolutionNameOnTextChanged;
+            PackageFolder.SelectionChanged += TriggerMappingUpdate;
+            PackageType.SelectionChanged += TriggerMappingUpdate;
+            SolutionName.TextChanged += TriggerMappingUpdate;
         }
-        private void SolutionNameOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
-        private void PackageTypeOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
-        private void PackageFolderOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
-        {
-            TriggerMappingUpdate(sender);
-        }
-
         private void RemoveEventHandlers()
         {
             SolutionList.SelectionChanged -= SolutionList_OnSelectionChanged;
-            PackageFolder.SelectionChanged -= PackageFolderOnSelectionChanged;
-            PackageType.SelectionChanged -= PackageTypeOnSelectionChanged;
-            SolutionName.TextChanged -= SolutionNameOnTextChanged;
+            PackageFolder.SelectionChanged -= TriggerMappingUpdate;
+            PackageType.SelectionChanged -= TriggerMappingUpdate;
+            SolutionName.TextChanged -= TriggerMappingUpdate;
         }
 
         private void SolutionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -429,7 +432,7 @@ namespace SolutionPackager
             Config.Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, CreateMappingObject());
         }
 
-        private void TriggerMappingUpdate(object sender)
+        private void TriggerMappingUpdate(object sender, EventArgs e)
         {
             Control c = (Control)sender;
             if (!c.IsLoaded)
@@ -481,11 +484,11 @@ namespace SolutionPackager
 
                 if (packSettings.Version == null)
                 {
-                    MessageBox.Show("Invalid Solution.xml version number. See the Output Window for additional details.");
+                    MessageBox.Show(Resource.MessageBox_InvalidSolutionXmlVersion);
                     return;
                 }
 
-                Overlay.ShowMessage(_dte, "Packaging solution...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_PackagingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 CommandOutput.Text = String.Empty;
 
@@ -495,7 +498,7 @@ namespace SolutionPackager
                     return;
 
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                MessageBox.Show("Error Packaging Solution. See the Output Window for additional details.");
+                MessageBox.Show(Resource.MessageBox_ErrorPackagingSolution);
             }
             finally
             {
@@ -558,13 +561,13 @@ namespace SolutionPackager
             return unpackSettings;
         }
 
-        private string GetToolPath()
+        private static string GetToolPath()
         {
             string toolPath = Packager.CreateToolPath();
             if (!string.IsNullOrEmpty(toolPath))
                 return toolPath;
 
-            OutputLogger.WriteToOutputWindow("Unable to find Solution Packager path", MessageType.Error);
+            OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_SolutionPackagerNotFound, MessageType.Error);
             return null;
         }
 
@@ -577,7 +580,7 @@ namespace SolutionPackager
             string commandArgs = Packager.GetPackageCommandArgs(packSettings);
             if (string.IsNullOrEmpty(commandArgs))
             {
-                OutputLogger.WriteToOutputWindow("Error creating command arguments", MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ErrorCreatingCommandArguments, MessageType.Error);
                 return false;
             }
 
@@ -600,10 +603,11 @@ namespace SolutionPackager
             {
                 UnpackSettings unpackSettings = GetValuesForUnpack();
 
-                Overlay.ShowMessage(_dte, "Connecting to CRM/365 and getting unmanaged solution...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_ConnectingGettingUnmanaegedSolution}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 List<Task> tasks = new List<Task>();
-                var getSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService, unpackSettings.CrmSolution, unpackSettings.SolutionPackageConfig.packagetype == "managed");
+                var getSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService,
+                    unpackSettings.CrmSolution, unpackSettings.SolutionPackageConfig.packagetype == "managed");
                 tasks.Add(getSolution);
 
                 await Task.WhenAll(tasks);
@@ -613,17 +617,17 @@ namespace SolutionPackager
                 if (string.IsNullOrEmpty(getSolution.Result))
                 {
                     Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                    MessageBox.Show("Error Retrieving Solution. See the Output Window for additional details.");
+                    MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingSolution);
                     return;
                 }
 
-                OutputLogger.WriteToOutputWindow("Retrieved Unmanaged Solution From CRM", MessageType.Info);
-                Overlay.ShowMessage(_dte, "Extracting solution...", vsStatusAnimation.vsStatusAnimationSync);
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedUnmanagedSolution, MessageType.Info);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_ExtractingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 bool success = ExecuteExtract(unpackSettings);
 
                 if (!success)
-                    MessageBox.Show("Error Extracting Solution. See the Output Window for additional details.");
+                    MessageBox.Show(Resource.MessageBox_ErrorExtractingSolution);
 
                 PackageSolution.IsEnabled = true;
                 SetFormVersionNumbers();
@@ -661,70 +665,21 @@ namespace SolutionPackager
         {
             BindPackageButton();
 
-            ProjectItem projectItem = e.ProjectItem;
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
-                return;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-
-            string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]).TrimEnd('/');
-            ProjectFolders.Add(newItemName);
-
-            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
+            ProjectFolderHelper.FolderAdded(e, ProjectFolders);
         }
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
         {
             BindPackageButton();
 
-            ProjectItem projectItem = e.ProjectItem;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null) return;
-
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
-                return;
-
-            var itemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
-            ProjectFolders.Remove(itemName);
-
-            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
+            ProjectFolderHelper.FolderRemoved(e, ProjectFolders);
         }
 
         private void ConnPane_OnProjectItemRenamed(object sender, ProjectItemRenamedEventArgs e)
         {
             BindPackageButton();
 
-            ProjectItem projectItem = e.ProjectItem;
-            if (projectItem.Name == null)
-                return;
-
-            var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
-            if (projectPath == null)
-                return;
-
-            string oldName = e.OldName;
-            Guid itemType = new Guid(projectItem.Kind);
-
-            if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
-                return;
-
-            var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-
-            int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
-            if (index == -1) return;
-
-            var oldItemPath = newItemPath.Remove(index, projectItem.Name.Length).Insert(index, oldName);
-
-            ProjectFolders.Remove(oldItemPath);
-
-            ProjectFolders = new ObservableCollection<string>(ProjectFolders.OrderBy(s => s));
+            ProjectFolderHelper.FolderRenamed(e, ProjectFolders);
         }
 
         private void SetFormVersionNumbers()
@@ -761,21 +716,21 @@ namespace SolutionPackager
                     VersionBuild.Text, VersionRevision.Text);
                 if (version == null)
                 {
-                    MessageBox.Show("Invalid version number");
+                    MessageBox.Show(Resource.MessageBox_InvalidVersionNumber);
                     return;
                 }
 
-                Overlay.ShowMessage(_dte, "Updating");
+                Overlay.ShowMessage(_dte, $"{Resource.Message_Updating}...");
 
                 bool success = SolutionXml.SetSolutionXmlVersion(ConnPane.SelectedProject, version, PackageFolder.SelectedItem.ToString());
                 if (!success)
                 {
                     Overlay.HideMessage(_dte);
-                    MessageBox.Show("Error updating Solution.xml version: see output window for details");
+                    MessageBox.Show(Resource.MessageBox_ErrorUpdatingSolutionXmlVersion);
                     return;
                 }
 
-                Overlay.ShowMessage(_dte, "Updated");
+                Overlay.ShowMessage(_dte, Resource.Message_Updated);
 
                 await Task.Delay(500);
             }

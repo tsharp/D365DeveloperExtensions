@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ToolWindowTitle" xml:space="preserve">
+  <data name="SolutionPackager_Window_Title" xml:space="preserve">
     <value>Crm DevEx: Solution Packager</value>
   </data>
-  <data name="PackageSolution_Button_Content" xml:space="preserve">
+  <data name="SolutionPackager_PackageSolution_Button_Content" xml:space="preserve">
     <value>Package</value>
   </data>
-  <data name="PackageSolution_Button_ToolTip" xml:space="preserve">
+  <data name="SolutionPackager_PackageSolution_Button_ToolTip" xml:space="preserve">
     <value>Package Solution</value>
   </data>
-  <data name="UnpackageSolution_Button_Content" xml:space="preserve">
+  <data name="SolutionPackager_UnpackageSolution_Button_Content" xml:space="preserve">
     <value>Unpackage</value>
   </data>
-  <data name="UnpackageSolution_Button_ToolTip" xml:space="preserve">
+  <data name="SolutionPackager_UnpackageSolution_Button_ToolTip" xml:space="preserve">
     <value>Unpackage Solution</value>
   </data>
-  <data name="SolutionsLabel_Label_Content" xml:space="preserve">
+  <data name="SolutionPackager_SolutionsLabel_Label_Content" xml:space="preserve">
     <value>Solutions</value>
   </data>
   <data name="SolutionList_ComboBox_ToolTip" xml:space="preserve">
@@ -141,16 +141,157 @@
   <data name="DownloadManagedLabel_Label_Content" xml:space="preserve">
     <value>Download Managed Solution?</value>
   </data>
-  <data name="SaveSolutionsLabel_Label_Content" xml:space="preserve">
+  <data name="SolutionPackager_SaveSolutionsLabel_Label_Content" xml:space="preserve">
     <value>Store Solution Files?</value>
   </data>
   <data name="CreateManagedLabel_Label_Content" xml:space="preserve">
     <value>Create Managed Solution?</value>
   </data>
-  <data name="ImportSolution_Button_Content" xml:space="preserve">
+  <data name="SolutionPackager_ImportSolution_Button_Content" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="ImportSolution_Button_ToolTip" xml:space="preserve">
+  <data name="SolutionPackager_ImportSolution_Button_ToolTip" xml:space="preserve">
     <value>Import Solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingSolutions" xml:space="preserve">
+    <value>Error retrieving solutions</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingSolution" xml:space="preserve">
+    <value>Error retrieving solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorImportingSolution" xml:space="preserve">
+    <value>Error importing solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorWritingTemp" xml:space="preserve">
+    <value>Error writing solution to temporary directory</value>
+  </data>
+  <data name="ErrorMessage_ErrorCreatingTemp" xml:space="preserve">
+    <value>Error creating temporary directory to extract files</value>
+  </data>
+  <data name="ErrorMessage_ErrorGettingFileNameFromTemp" xml:space="preserve">
+    <value>Error getting file name from temp path</value>
+  </data>
+  <data name="ErrorMessage_ErrorAddingSolutionFileProject" xml:space="preserve">
+    <value>Error adding solution file to project</value>
+  </data>
+  <data name="ErrorMessage_SetSolutionPackagerPath" xml:space="preserve">
+    <value>Please set the Solution Packager path in options</value>
+  </data>
+  <data name="ErrorMessage_SolutionPackagerNotFound" xml:space="preserve">
+    <value>SolutionPackager.exe not found</value>
+  </data>
+  <data name="ErrorMessage_SolutionXmlNotExist" xml:space="preserve">
+    <value>Solution.xml does not exist</value>
+  </data>
+  <data name="ErrorMessage_InvalidSolutionXml_VersionsNode" xml:space="preserve">
+    <value>Invalid Solution.xml: could not locate 'Versions' node</value>
+  </data>
+  <data name="ErrorMessage_InvalidSolutionXml_InvalidVersion" xml:space="preserve">
+    <value>Invalid Solution.xml: invalid version</value>
+  </data>
+  <data name="ErrorMessage_UnexpectedErrorValidatingSolutionXml" xml:space="preserve">
+    <value>Unexpected error validating Solution.xml</value>
+  </data>
+  <data name="ErrorMessage_SolutionXmlVersionTooLow" xml:space="preserve">
+    <value>Unexpected error setting Solution.xml version: new version cannot be lower than old version</value>
+  </data>
+  <data name="ErrorMessage_SetSolutionXmlVersion" xml:space="preserve">
+    <value>Unexpected error setting Solution.xml version</value>
+  </data>
+  <data name="SolutionPackager_PackageTypeLabel_Label_Content" xml:space="preserve">
+    <value>Package Type</value>
+  </data>
+  <data name="SolutionPackager_EnableSolutionPackagerLogLabel_Label_Content" xml:space="preserve">
+    <value>Enable Solution Packager Log?</value>
+  </data>
+  <data name="SolutionPackager_ExtractOptionsLabel_Label_Content" xml:space="preserve">
+    <value>Extract Options</value>
+  </data>
+  <data name="SolutionPackager_SolutionFolderLabe_Label_Content" xml:space="preserve">
+    <value>Solution Folder</value>
+  </data>
+  <data name="SolutionPackager_PackageFolderLabel_Label_Content" xml:space="preserve">
+    <value>Package Folder</value>
+  </data>
+  <data name="SolutionPackager_PackOptionsLabel_Label_Content" xml:space="preserve">
+    <value>Pack Options</value>
+  </data>
+  <data name="SolutionPackager_SolutionNameLabel_Label_Content" xml:space="preserve">
+    <value>Solution Name</value>
+  </data>
+  <data name="SolutionPackager_UpdateVersionImage_Button_ToolTip" xml:space="preserve">
+    <value>Update the version number in the local project's Solution.xml</value>
+  </data>
+  <data name="SolutionPackager_ImportOptionsLabel_Label_Content" xml:space="preserve">
+    <value>Import Options</value>
+  </data>
+  <data name="SolutionPackager_PublishAllLabel_Label_Content" xml:space="preserve">
+    <value>Publish All?</value>
+  </data>
+  <data name="Message_GettingSolutions" xml:space="preserve">
+    <value>Getting solutions</value>
+  </data>
+  <data name="MessageBox_ErrorRetrievingSolutions" xml:space="preserve">
+    <value>Error retrieving solutions</value>
+  </data>
+  <data name="Message_RetrievedSolutions" xml:space="preserve">
+    <value>Retrieved solutions</value>
+  </data>
+  <data name="Confirm_ImportAndPublish" xml:space="preserve">
+    <value>Are you sure you want to import &amp; publish solution?</value>
+  </data>
+  <data name="Confirm_Import" xml:space="preserve">
+    <value>Are you sure you want to import solution?</value>
+  </data>
+  <data name="Confirm_Title_OkToImport" xml:space="preserve">
+    <value>Ok to import?</value>
+  </data>
+  <data name="MessageBox_UnableToFindSolution" xml:space="preserve">
+    <value>Unable to find solution</value>
+  </data>
+  <data name="Message_ImportingSolution" xml:space="preserve">
+    <value>Importing solution</value>
+  </data>
+  <data name="MessageBox_ErrorImportingOrPublishing" xml:space="preserve">
+    <value>Error importing or publishing solution</value>
+  </data>
+  <data name="Message_PublishingCustomizations" xml:space="preserve">
+    <value>Publishing customizations</value>
+  </data>
+  <data name="MessageBox_InvalidSolutionXmlVersion" xml:space="preserve">
+    <value>Invalid Solution.xml version number</value>
+  </data>
+  <data name="Message_PackagingSolution" xml:space="preserve">
+    <value>Packaging solution</value>
+  </data>
+  <data name="MessageBox_ErrorPackagingSolution" xml:space="preserve">
+    <value>Error packaging solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorCreatingCommandArguments" xml:space="preserve">
+    <value>Error creating command arguments</value>
+  </data>
+  <data name="Message_ConnectingGettingUnmanaegedSolution" xml:space="preserve">
+    <value>Connecting and getting unmanaged solution</value>
+  </data>
+  <data name="Message_RetrievedUnmanagedSolution" xml:space="preserve">
+    <value>Retrieved unmanaged solution</value>
+  </data>
+  <data name="Message_ExtractingSolution" xml:space="preserve">
+    <value>Extracting solution</value>
+  </data>
+  <data name="MessageBox_ErrorExtractingSolution" xml:space="preserve">
+    <value>Error extracting solution</value>
+  </data>
+  <data name="Message_Updated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="Message_Updating" xml:space="preserve">
+    <value>Updating</value>
+  </data>
+  <data name="MessageBox_InvalidVersionNumber" xml:space="preserve">
+    <value>Invalid version number</value>
+  </data>
+  <data name="MessageBox_ErrorUpdatingSolutionXmlVersion" xml:space="preserve">
+    <value>Error updating Solution.xml version</value>
   </data>
 </root>

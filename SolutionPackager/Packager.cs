@@ -5,7 +5,9 @@ using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.UserOptions;
 using EnvDTE;
 using Microsoft.VisualStudio;
+using NLog;
 using SolutionPackager.Models;
+using SolutionPackager.Resources;
 using System;
 using System.IO;
 using System.Text;
@@ -14,12 +16,14 @@ namespace SolutionPackager
 {
     public static class Packager
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static bool CreatePackage(DTE dte, string toolPath, PackSettings packSettings, string commandArgs)
         {
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
             //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Better way?
+            //TODO: Find a better way
             System.Threading.Thread.Sleep(5000);
 
             if (!packSettings.SaveSolutions)
@@ -53,11 +57,13 @@ namespace SolutionPackager
             dte.ExecuteCommand($"shell {toolPath}", commandArgs);
 
             //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Better way?
+            //TODO: Find a better way
             System.Threading.Thread.Sleep(10000);
 
-            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName, unpackSettings.Project.ProjectItems, unpackSettings.SolutionPackageConfig.packagepath);
-            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder, unpackSettings.ProjectPackageFolder, unpackSettings.Project.ProjectItems);
+            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName, unpackSettings.Project.ProjectItems,
+                unpackSettings.SolutionPackageConfig.packagepath);
+            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder, unpackSettings.ProjectPackageFolder,
+                unpackSettings.Project.ProjectItems);
 
             Directory.Delete(unpackSettings.ExtractedFolder.FullName, true);
 
@@ -78,7 +84,7 @@ namespace SolutionPackager
                 string filename = Path.GetFileName(unpackSettings.DownloadedZipPath);
                 if (string.IsNullOrEmpty(filename))
                 {
-                    OutputLogger.WriteToOutputWindow("Error getting file name from temp path: " + unpackSettings.DownloadedZipPath, MessageType.Error);
+                    OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_ErrorGettingFileNameFromTemp}: {unpackSettings.DownloadedZipPath}", MessageType.Error);
                     return false;
                 }
 
@@ -98,8 +104,8 @@ namespace SolutionPackager
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error adding solution file to project: " + unpackSettings.DownloadedZipPath +
-                    Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorAddingSolutionFileProject, ex);
+
                 return false;
             }
         }
@@ -167,7 +173,8 @@ namespace SolutionPackager
                 if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
                 {
                     name = new DirectoryInfo(name).Name;
-                    if (name == projectFolder || name == "Properties")
+                    if (name == projectFolder || name.Equals(CrmDeveloperExtensions2.Core.Resources.Resource.Constant_PropertiesFolder,
+                        StringComparison.CurrentCultureIgnoreCase))
                         continue;
 
                     if (!Directory.Exists(Path.Combine(extractedFolder, name)))
@@ -193,7 +200,7 @@ namespace SolutionPackager
 
         public static string GetProjectPackageFolder(Project project, string projectFolder)
         {
-            if (projectFolder.StartsWith("/"))
+            if (projectFolder.StartsWith("/", StringComparison.CurrentCultureIgnoreCase))
                 projectFolder = projectFolder.Substring(1);
 
             string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
@@ -210,11 +217,11 @@ namespace SolutionPackager
             string spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
             if (string.IsNullOrEmpty(spPath))
             {
-                OutputLogger.WriteToOutputWindow("Please set the Solution Packager path in options", MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_SetSolutionPackagerPath, MessageType.Error);
                 return null;
             }
 
-            if (!spPath.EndsWith("\\"))
+            if (!spPath.EndsWith("\\", StringComparison.CurrentCultureIgnoreCase))
                 spPath += "\\";
 
             string toolPath = @"""" + spPath + "SolutionPackager.exe" + @"""";
@@ -222,7 +229,7 @@ namespace SolutionPackager
             if (File.Exists(spPath + "SolutionPackager.exe"))
                 return toolPath;
 
-            OutputLogger.WriteToOutputWindow($"SolutionPackager.exe not found at: {spPath}", MessageType.Error);
+            OutputLogger.WriteToOutputWindow($"S{Resource.ErrorMessage_SolutionPackagerNotFound}: {spPath}", MessageType.Error);
             return null;
         }
 

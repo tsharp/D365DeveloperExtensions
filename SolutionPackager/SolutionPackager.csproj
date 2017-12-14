@@ -112,6 +112,7 @@
     <Compile Include="MapFile.cs" />
     <Compile Include="ModelBuilder.cs" />
     <Compile Include="Packager.cs" />
+    <Compile Include="ProjectFolderHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
