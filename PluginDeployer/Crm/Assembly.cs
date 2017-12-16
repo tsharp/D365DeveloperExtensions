@@ -1,19 +1,23 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
+using PluginDeployer.Resources;
 using PluginDeployer.Spkl;
 using PluginDeployer.ViewModels;
 using System;
 using System.Linq;
-using System.ServiceModel;
 
 namespace PluginDeployer.Crm
 {
     public class Assembly
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static Entity RetrieveAssemblyFromCrm(CrmServiceClient client, string assemblyName)
         {
             try
@@ -40,16 +44,10 @@ namespace PluginDeployer.Crm
 
                 return assemblies.Entities.FirstOrDefault();
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Assembly From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Assembly From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingAssembly, ex);
+
                 return null;
             }
         }
@@ -60,13 +58,15 @@ namespace PluginDeployer.Crm
             {
                 Entity assembly = new Entity("pluginassembly")
                 {
-                    ["content"] = Convert.ToBase64String(CrmDeveloperExtensions2.Core.FileSystem.GetFileBytes(crmAssembly.AssemblyPath)),
+                    ["content"] = Convert.ToBase64String(FileSystem.GetFileBytes(crmAssembly.AssemblyPath)),
                     ["name"] = crmAssembly.Name,
                     ["culture"] = crmAssembly.Culture,
                     ["version"] = crmAssembly.Version,
                     ["publickeytoken"] = crmAssembly.PublicKeyToken,
                     ["sourcetype"] = new OptionSetValue(0), // database
-                    ["isolationmode"] = crmAssembly.IsolationMode == IsolationModeEnum.Sandbox ? new OptionSetValue(2) : new OptionSetValue(1) // 1= none, 2 = sandbox
+                    ["isolationmode"] = crmAssembly.IsolationMode == IsolationModeEnum.Sandbox 
+                    ? new OptionSetValue(2) // 2 = sandbox
+                    : new OptionSetValue(1) // 1= none
                 };
 
                 if (crmAssembly.AssemblyId == Guid.Empty)
@@ -74,19 +74,13 @@ namespace PluginDeployer.Crm
 
                 assembly.Id = crmAssembly.AssemblyId;
                 client.Update(assembly);
+
                 return crmAssembly.AssemblyId;
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                //TODO: change message based on create or update
-                OutputLogger.WriteToOutputWindow(
-                    "Error Updating Assembly In CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return Guid.Empty;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Updating Assembly In CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorCreatingOrUpdatingAssembly, ex);
+
                 return Guid.Empty;
             }
         }
@@ -101,24 +95,17 @@ namespace PluginDeployer.Crm
                     SolutionUniqueName = uniqueName,
                     ComponentId = assemblyId
                 };
-                AddSolutionComponentResponse response =
-                    (AddSolutionComponentResponse)client.Execute(scRequest);
 
-                OutputLogger.WriteToOutputWindow("New Assembly Added To Solution: " + response.id, MessageType.Info);
+                client.Execute(scRequest);
+
+                OutputLogger.WriteToOutputWindow(Resource.Message_AssemblyAddedSolution, MessageType.Info);
 
                 return true;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                //TODO: change message based on create or update
-                OutputLogger.WriteToOutputWindow(
-                    "Error adding assembly to solution: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return false;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error adding assembly to solution: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorAddingAssemblySolution, ex);
+
                 return false;
             }
         }
@@ -149,16 +136,10 @@ namespace PluginDeployer.Crm
 
                 return results.Entities.Count > 0;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error adding assembly to solution: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return true;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error adding assembly to solution: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorCheckingAssemblyInSolution, ex);
+
                 return true;
             }
         }

@@ -1,4 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core.ExtensionMethods;
+using CrmDeveloperExtensions2.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace TemplateWizards
         {
             Versions.Items.Clear();
 
-            if (LimitVersions.IsChecked != null && LimitVersions.IsChecked.Value)
+            if (LimitVersions.ReturnValue())
                 history = FilterLatestVersions(history);
 
             List<string> versions = history.versions.OrderByDescending(s => s).ToList();

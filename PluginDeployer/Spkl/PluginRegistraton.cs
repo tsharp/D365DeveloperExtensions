@@ -7,6 +7,7 @@ using System.Reflection;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
+using PluginDeployer.Models;
 using PluginDeployer.Spkl.Tasks;
 
 namespace PluginDeployer.Spkl

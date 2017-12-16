@@ -1,4 +1,5 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.ExtensionMethods;
 using CrmDeveloperExtensions2.Core.Models;
 using NuGetRetriever;
 using System;
@@ -42,7 +43,7 @@ namespace TemplateWizards
             _packageVersions = versions;
             _currentPackage = nuGetPackage;
 
-            if (LimitVersions.IsChecked != null && LimitVersions.IsChecked.Value)
+            if (LimitVersions.ReturnValue())
                 versions = FilterLatestVersions(versions);
 
             SdkVersionsGrid.Columns[0].Header = nuGetPackage;

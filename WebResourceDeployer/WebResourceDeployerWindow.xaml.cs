@@ -552,12 +552,9 @@ namespace WebResourceDeployer
         private void PublishSelectAll_OnClick(object sender, RoutedEventArgs e)
         {
             CheckBox publishAll = (CheckBox)sender;
-            bool? isChecked = publishAll.IsChecked;
+            bool isChecked = publishAll.ReturnValue();
 
-            if (isChecked != null && isChecked.Value)
-                UpdateAllPublishChecks(true);
-            else
-                UpdateAllPublishChecks(false);
+            UpdateAllPublishChecks(isChecked);
         }
 
         private void UpdateAllPublishChecks(bool publish)

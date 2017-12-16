@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using Microsoft.Xrm.Sdk;
+using PluginDeployer.Models;
 
 namespace PluginDeployer.Spkl
 {

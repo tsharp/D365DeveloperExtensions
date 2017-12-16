@@ -181,7 +181,7 @@
     <value>Stopped polling for plug-in trace log records</value>
   </data>
   <data name="PluginTraceViewerWindow_Message_GettingTraces" xml:space="preserve">
-    <value>Getting plug-in trace logs</value>
+    <value>Retrieving plug-in trace logs</value>
   </data>
   <data name="PluginTraceViewerWindow_StartedPolling" xml:space="preserve">
     <value>Started polling for plug-in trace log records: Interval 30 seconds</value>
