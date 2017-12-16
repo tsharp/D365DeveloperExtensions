@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
+using System.Runtime.InteropServices;
 
 namespace PluginDeployer
 {
@@ -8,7 +8,7 @@ namespace PluginDeployer
     {
         public PluginDeployerHost() : base(null)
         {
-            Caption = Resources.Resource.ToolWindowTitle;
+            Caption = Resources.Resource.PluginDeployer_Window_Title;
             BitmapResourceID = 301;
             BitmapIndex = 1;
             Content = new PluginDeployerWindow();

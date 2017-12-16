@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PluginDeployer.Spkl;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using PluginDeployer.Spkl;
 
-namespace PluginDeployer
+namespace PluginDeployer.Models
 {
     [Serializable]
     public class PluginData

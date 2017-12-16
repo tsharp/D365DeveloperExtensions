@@ -1,4 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using CrmDeveloperExtensions2.Core.ExtensionMethods;
+using CrmDeveloperExtensions2.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -26,7 +27,7 @@ namespace TemplateWizards
         {
             Versions.Items.Clear();
 
-            if (LimitVersions.IsChecked != null && LimitVersions.IsChecked.Value)
+            if (LimitVersions.ReturnValue())
                 packageVersions = FilterLatestVersions(packageVersions);
 
             VersionsGrid.Columns[0].Header = packageName;

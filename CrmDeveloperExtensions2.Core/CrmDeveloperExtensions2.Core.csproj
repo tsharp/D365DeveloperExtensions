@@ -223,6 +223,7 @@
     <Compile Include="Enums\TemplatePackageType.cs" />
     <Compile Include="Enums\ToolWindowType.cs" />
     <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="ExtensionMethods\CheckBoxExtensions.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Localization\LocalizedCategoryAttribute.cs" />
     <Compile Include="Localization\LocalizedDescriptionAttribute.cs" />

@@ -205,7 +205,7 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Getting plug-in trace logs.
+        ///   Looks up a localized string similar to Retrieving plug-in trace logs.
         /// </summary>
         public static string PluginTraceViewerWindow_Message_GettingTraces {
             get {

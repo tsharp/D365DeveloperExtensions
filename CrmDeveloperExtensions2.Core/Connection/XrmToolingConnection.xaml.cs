@@ -1,4 +1,5 @@
 ﻿using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.ExtensionMethods;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Resources;
@@ -539,7 +540,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void AutoLogin_Checked(object sender, RoutedEventArgs e)
         {
-            _autoLogin = AutoLogin.IsChecked.HasValue && AutoLogin.IsChecked.Value;
+            _autoLogin = AutoLogin.ReturnValue();
         }
 
         private void SetConfigFile()

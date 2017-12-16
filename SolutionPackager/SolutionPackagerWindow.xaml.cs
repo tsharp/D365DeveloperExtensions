@@ -1,6 +1,7 @@
 ﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Connection;
 using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.ExtensionMethods;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
@@ -331,7 +332,7 @@ namespace SolutionPackager
                 latestSolutionPath = fileDialog.FileName;
             }
 
-            bool publishAll = PublishAll.IsChecked == true;
+            bool publishAll = PublishAll.ReturnValue();
             string publishMesasge = publishAll
                 ? Resource.Confirm_ImportAndPublish
                 : Resource.Confirm_Import;
@@ -513,8 +514,8 @@ namespace SolutionPackager
                 Project = ConnPane.SelectedProject,
                 CrmSolution = (CrmSolution)SolutionList.SelectedItem,
                 SolutionPackageConfig = CreateMappingObject(),
-                EnablePackagerLogging = EnableSolutionPackagerLog.IsChecked ?? false,
-                SaveSolutions = SaveSolutions.IsChecked ?? false,
+                EnablePackagerLogging = EnableSolutionPackagerLog.ReturnValue(),
+                SaveSolutions = SaveSolutions.ReturnValue(),
                 SolutionFolder = SolutionFolder.SelectedItem.ToString(),
                 ProjectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
                 PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
@@ -546,8 +547,8 @@ namespace SolutionPackager
                 ProjectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
                 CrmSolution = (CrmSolution)SolutionList.SelectedItem,
                 SolutionPackageConfig = CreateMappingObject(),
-                EnablePackagerLogging = EnableSolutionPackagerLog.IsChecked ?? false,
-                SaveSolutions = SaveSolutions.IsChecked ?? false,
+                EnablePackagerLogging = EnableSolutionPackagerLog.ReturnValue(),
+                SaveSolutions = SaveSolutions.ReturnValue(),
                 SolutionFolder = SolutionFolder.SelectedItem.ToString(),
                 PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
             };
