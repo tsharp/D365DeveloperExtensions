@@ -42,6 +42,11 @@ namespace PluginTraceViewer.Crm
 
                 EntityCollection traceLogs = client.RetrieveMultiple(query);
 
+                if (traceLogs.Entities.Count > 0)
+                    OutputLogger.WriteToOutputWindow($"{Resource.Info_RetrievedNewTraces}: " + traceLogs.Entities.Count, MessageType.Info);
+                else
+                    OutputLogger.WriteToOutputWindow(Resource.Info_NoNewTraces, MessageType.Info);
+
                 return traceLogs;
             }
             catch (Exception ex)

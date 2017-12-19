@@ -1,4 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
+﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using EnvDTE;
@@ -7,19 +8,22 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
+using WebResourceDeployer.Resources;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Crm
 {
     public static class WebResource
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static EntityCollection RetrieveWebResourcesFromCrm(CrmServiceClient client)
         {
             EntityCollection results = null;
@@ -85,16 +89,14 @@ namespace WebResourceDeployer.Crm
                     results.Entities.AddRange(partialResults.Entities);
                 }
 
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedWebResources, MessageType.Info);
+
                 return results;
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resources From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resources From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingWebResources, ex);
+
                 return null;
             }
         }
@@ -106,16 +108,14 @@ namespace WebResourceDeployer.Crm
                 Entity webResource = client.Retrieve("webresource", webResourceId,
                     new ColumnSet("content", "name", "webresourcetype"));
 
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_DownloadedWebResource}: " + webResource.Id, MessageType.Info);
+
                 return webResource;
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingWebResource, ex);
+
                 return null;
             }
         }
@@ -126,16 +126,14 @@ namespace WebResourceDeployer.Crm
             {
                 Entity webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("content", "name"));
 
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_RetrievedWebResourceContent}: {webResourceId}", MessageType.Info);
+
                 return webResource;
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingWebResourceContent, ex);
+
                 return null;
             }
         }
@@ -148,14 +146,10 @@ namespace WebResourceDeployer.Crm
 
                 return webResource.GetAttributeValue<string>("description");
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingWebResourceDescription, ex);
+
                 return null;
             }
         }
@@ -166,13 +160,9 @@ namespace WebResourceDeployer.Crm
             {
                 client.Delete("webresource", webResourceId);
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Web Resource From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorDeletingWebResource, ex);
             }
         }
 
@@ -184,6 +174,7 @@ namespace WebResourceDeployer.Crm
                 ["webresourcetype"] = new OptionSetValue(type),
                 ["description"] = description
             };
+
             if (!string.IsNullOrEmpty(displayName))
                 webResource["displayname"] = displayName;
 
@@ -201,14 +192,6 @@ namespace WebResourceDeployer.Crm
 
             string content;
 
-            //TypeScript
-            //if (extension == FileExtensionType.Ts)
-            //{
-            //    // ReSharper disable once AssignNullToNotNullAttribute
-            //    content = File.ReadAllText(Path.ChangeExtension(filePath, ".js"));
-            //    return EncodeString(content);
-            //}
-
             //Images
             if (WebResourceTypes.IsImageType(extension))
             {
@@ -218,6 +201,7 @@ namespace WebResourceDeployer.Crm
 
             //Everything else
             content = File.ReadAllText(filePath);
+
             return EncodeString(content);
         }
 
@@ -227,18 +211,14 @@ namespace WebResourceDeployer.Crm
             {
                 Guid id = client.Create(webResource);
 
-                OutputLogger.WriteToOutputWindow("New Web Resource Created: " + id, MessageType.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_NewWebResourceCreated}: " + id, MessageType.Info);
 
                 return id;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Creating Web Resource: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return Guid.Empty;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Creating Web Resource: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorCreatingWebResource, ex);
+
                 return Guid.Empty;
             }
         }
@@ -268,7 +248,7 @@ namespace WebResourceDeployer.Crm
                 foreach (OrganizationRequest request in requests)
                 {
                     client.Execute(request);
-                    OutputLogger.WriteToOutputWindow("Uploaded Web Resource", MessageType.Info);
+                    OutputLogger.WriteToOutputWindow(Resource.Message_UploadedWebResource, MessageType.Info);
                 }
 
                 string publishXml = CreatePublishXml(webResources);
@@ -276,20 +256,14 @@ namespace WebResourceDeployer.Crm
 
                 client.Execute(publishRequest);
 
-                OutputLogger.WriteToOutputWindow("Published Web Resource(s)", MessageType.Info);
+                OutputLogger.WriteToOutputWindow(Resource.Message_PublishedWebResources, MessageType.Info);
 
                 return true;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
-                                                 crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return false;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
-                                                 ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorUpdatingPublishingWebResources, ex);
+
                 return false;
             }
         }
@@ -322,29 +296,21 @@ namespace WebResourceDeployer.Crm
                 {
                     if (responseItem.Fault == null) continue;
 
-                    OutputLogger.WriteToOutputWindow(
-                        "Error Updating And Publishing Web Resource(s) To CRM: " + responseItem.Fault.Message +
-                        Environment.NewLine + responseItem.Fault.TraceText, MessageType.Error);
+                    OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ErrorUpdatingPublishingWebResources, MessageType.Error);
                     wasError = true;
                 }
 
                 if (wasError)
                     return false;
 
-                OutputLogger.WriteToOutputWindow("Updated And Published Web Resource(s)", MessageType.Info);
+                OutputLogger.WriteToOutputWindow(Resource.Message_UpdatedPublishedWebResources, MessageType.Info);
 
                 return true;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
-                                            crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return false;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Updating And Publishing Web Resource(s) To CRM: " +
-                                            ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorUpdatingPublishingWebResources, ex);
+
                 return false;
             }
         }
@@ -383,12 +349,34 @@ namespace WebResourceDeployer.Crm
             return publishXml.ToString();
         }
 
+        public static List<Entity> CreateDescriptionUpdateWebResource(WebResourceItem webResourceItem, string newDescription)
+        {
+            List<Entity> webResources = new List<Entity>();
+            Entity webResource = new Entity("webresource")
+            {
+                Id = webResourceItem.WebResourceId,
+                ["description"] = newDescription
+            };
+
+            webResources.Add(webResource);
+
+            return webResources;
+        }
+
         public static string GetWebResourceContent(Entity webResource)
         {
             bool hasContent = webResource.Attributes.TryGetValue("content", out var contentObj);
             var content = hasContent ? contentObj.ToString() : String.Empty;
 
             return content;
+        }
+
+        public static byte[] GetDecodedContent(Entity webResource)
+        {
+            string content = WebResource.GetWebResourceContent(webResource);
+            byte[] decodedContent = WebResource.DecodeWebResource(content);
+
+            return decodedContent;
         }
 
         public static byte[] DecodeWebResource(string value)

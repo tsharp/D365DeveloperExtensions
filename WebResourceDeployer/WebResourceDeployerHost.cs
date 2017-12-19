@@ -8,7 +8,7 @@ namespace WebResourceDeployer
     {
         public WebResourceDeployerHost() : base(null)
         {
-            Caption = Resources.Resource.ToolWindowTitle;
+            Caption = Resources.Resource.WebResourceDeployer_Window_Title;
             BitmapResourceID = 301;
             BitmapIndex = 1;
             Content = new WebResourceDeployerWindow();

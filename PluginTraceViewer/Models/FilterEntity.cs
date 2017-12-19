@@ -29,5 +29,13 @@ namespace PluginTraceViewer.Models
 
             return filterEntities;
         }
+
+        public static ObservableCollection<FilterEntity> ResetFilter(ObservableCollection<FilterEntity> filterEntities)
+        {
+            if (filterEntities[0].IsSelected != true)
+                filterEntities[0].IsSelected = true;
+
+            return filterEntities;
+        }
     }
 }

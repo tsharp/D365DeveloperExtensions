@@ -61,15 +61,6 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file.
-        /// </summary>
-        public static string DeploymentType_Label_Toolip {
-            get {
-                return ResourceManager.GetString("DeploymentType_Label_Toolip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error adding assembly to solution.
         /// </summary>
         public static string ErrorMessage_ErrorAddingAssemblySolution {
@@ -358,6 +349,15 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file.
+        /// </summary>
+        public static string PluginDeployer_DeploymentType_Label_Toolip {
+            get {
+                return ResourceManager.GetString("PluginDeployer_DeploymentType_Label_Toolip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deployment Type.
         /// </summary>
         public static string PluginDeployer_DeploymentTypeLabel_Label_Content {
@@ -367,7 +367,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IlMerge.
+        ///   Looks up a localized string similar to ILMerge.
         /// </summary>
         public static string PluginDeployer_IlMerge_Button_Content {
             get {
@@ -389,7 +389,7 @@ namespace PluginDeployer.Resources {
         /// </summary>
         public static string PluginDeployer_OpenInCrmImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("PluginDeployer_OpenInCrmImage.Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_OpenInCrmImage_Button_ToolTip", resourceCulture);
             }
         }
         

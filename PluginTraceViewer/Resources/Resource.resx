@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PluginTraceViewerWindow_Window_Title" xml:space="preserve">
-    <value>Crm Dev: Plug-in Trace Viewer</value>
+    <value>Crm DevEx: Plug-in Trace Viewer</value>
   </data>
   <data name="PluginTraceViewerWindow_Poll_Button_Content" xml:space="preserve">
     <value>Start Polling</value>
@@ -136,10 +136,10 @@
     <value>Refresh logs</value>
   </data>
   <data name="PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip" xml:space="preserve">
-    <value>View Details</value>
+    <value>View details</value>
   </data>
   <data name="PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip" xml:space="preserve">
-    <value>Open In CRM/365</value>
+    <value>Open in CRM/365</value>
   </data>
   <data name="PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip" xml:space="preserve">
     <value>Delete Logs</value>
@@ -173,9 +173,6 @@
   </data>
   <data name="FilterEntity_Select_All" xml:space="preserve">
     <value>Select All</value>
-  </data>
-  <data name="PluginTraceViewerWindow_Info_AddingNewTraces" xml:space="preserve">
-    <value>Adding new traces: </value>
   </data>
   <data name="PluginTraceViewerWindow_Info_StoppedPolling" xml:space="preserve">
     <value>Stopped polling for plug-in trace log records</value>

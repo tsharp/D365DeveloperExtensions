@@ -6,8 +6,9 @@
                          xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                         xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
                          mc:Ignorable="d" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
-                         Title="New Web Resource" Height="275" Width="400">
+                         Title="{x:Static resources:Resource.NewWebResource_Window_Title}" Height="275" Width="400">
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
@@ -32,29 +33,29 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" Margin="0,2,0,2" Content="Solution" />
+            <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_SolutionsLabel_Label_Content}" />
             <ComboBox x:Name="Solutions" Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" DisplayMemberPath="Name" SelectionChanged="Solutions_OnSelectionChanged"
                       Template="{DynamicResource ComboBoxControlTemplate}" />
-            <Label x:Name="FilesLabel" Grid.Column="0" Grid.Row="1" Margin="0,2,0,2" Content="File" />
+            <Label x:Name="FilesLabel" Grid.Column="0" Grid.Row="1" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_FilesLabel_Label_Content}" />
             <ComboBox x:Name="Files" Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" SelectedValuePath="Content" SelectionChanged="Files_OnSelectionChanged" 
                       Template="{DynamicResource ComboBoxControlTemplate}" />
-            <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="2" Margin="0,2,0,2" Content="Name" />
-            <TextBox x:Name="Prefix" Grid.Column="1" Grid.Row="2" Margin="0,2,0,2" HorizontalAlignment="Left" Text="new_" Width="60" IsEnabled="False"
-                     TextAlignment="Right" VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
+            <Label x:Name="NameLabel" Grid.Column="0" Grid.Row="2" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_NameLabel_Label_Content}" />
+            <TextBox x:Name="Prefix" Grid.Column="1" Grid.Row="2" Margin="0,2,0,2" HorizontalAlignment="Left" Text="{x:Static resources:Resource.DefaultPrefix}" 
+                     Width="60" IsEnabled="False" TextAlignment="Right" VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
             <TextBox x:Name="UniqueName" Grid.Column="1" Grid.Row="2" Margin="60,2,0,2" TextWrapping="NoWrap" VerticalContentAlignment="Center"
                      MaxLength="200" Template="{DynamicResource TextBoxControlTemplate}"/>
-            <Label Content="Display Name" Grid.Column="0" Grid.Row="3" Margin="0,2,0,2" />
+            <Label x:Name="DisplayNameLabel" Grid.Column="0" Grid.Row="3" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_DisplayNameLabel_Label_Content}" />
             <TextBox x:Name="DisplayName" Grid.Column="1" Grid.Row="3" Margin="0,2,0,2" TextWrapping="NoWrap" MaxLength="249" 
                      VerticalContentAlignment="Center" Template="{DynamicResource TextBoxControlTemplate}"/>
-            <Label x:Name="TypeLabel" Grid.Column="0" Grid.Row="4" Margin="0,2,0,2" Content="Type" />
+            <Label x:Name="TypeLabel" Grid.Column="0" Grid.Row="4" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_TypeLabel_Label_Content}" />
             <ComboBox x:Name="Type" Grid.Column="1" Grid.Row="4" Margin="0,2,0,2" SelectedValuePath="Content" DisplayMemberPath="DisplayName"
                       Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding WebResourceTypes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            <Label x:Name="DescriptionLabel" Grid.Column="0" Grid.Row="5" Margin="0,2,0,2" Content="Description" />
+            <Label x:Name="DescriptionLabel" Grid.Column="0" Grid.Row="5" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_DescriptionLabel_Label_Content}" />
             <TextBox x:Name="Description" Grid.Column="1" Grid.Row="5" Margin="0,2,0,2" Height="46" TextWrapping="Wrap" AcceptsReturn="True" 
                      MaxLength="2000" Template="{DynamicResource TextBoxControlTemplate}" />
             <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-                <Button x:Name="Create" Content="Create" Margin="0,5,10,0" MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" Height="23"
-                        Click="Create_OnClick">
+                <Button x:Name="Create" Content="{x:Static resources:Resource.NewWebResource_Create_Button_Content}" Margin="0,5,10,0" 
+                        MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" Height="23" Click="Create_OnClick">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource NewWebResourceCreateConverter}">
                             <Binding ElementName="Solutions" Path="SelectedIndex" />
@@ -64,8 +65,8 @@
                         </MultiBinding>
                     </Button.IsEnabled>
                 </Button>
-                <Button x:Name="Cancel" Content="Cancel" Margin="0,5,10,0" MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" Height="23" 
-                        Click="Cancel_OnClick"/>
+                <Button x:Name="Cancel" Content="{x:Static resources:Resource.NewWebResource_Cancel_Button_Content}" Margin="0,5,10,0" 
+                        MinWidth="70" Template="{DynamicResource FormButtonControlTemplate}" Height="23" Click="Cancel_OnClick"/>
             </StackPanel>
         </Grid>
         <coreControls:LockOverlay x:Name="Overlay" />

@@ -238,7 +238,7 @@ namespace SolutionPackager
         {
             try
             {
-                Overlay.ShowMessage(_dte, $"{Resource.Message_GettingSolutions}...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_RetrievingSolutions}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var solutionTask = GetSolutions();
 
@@ -263,8 +263,6 @@ namespace SolutionPackager
             EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService));
             if (results == null)
                 return false;
-
-            OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
             SolutionData = ModelBuilder.CreateCrmSolutionView(results);
             SolutionList.DisplayMemberPath = "NameVersion";
@@ -622,7 +620,6 @@ namespace SolutionPackager
                     return;
                 }
 
-                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedUnmanagedSolution, MessageType.Info);
                 Overlay.ShowMessage(_dte, $"{Resource.Message_ExtractingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 bool success = ExecuteExtract(unpackSettings);

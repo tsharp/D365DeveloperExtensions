@@ -1,4 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
@@ -66,6 +68,8 @@ namespace SolutionPackager.Crm
 
                 EntityCollection solutions = client.RetrieveMultiple(query);
 
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
+
                 return solutions;
             }
             catch (Exception ex)
@@ -93,6 +97,8 @@ namespace SolutionPackager.Crm
                     SolutionName = selectedSolution.UniqueName
                 };
                 ExportSolutionResponse response = await Task.Run(() => (ExportSolutionResponse)client.Execute(request));
+
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolution, MessageType.Info);
 
                 string fileName = FileHandler.FormatSolutionVersionString(selectedSolution.UniqueName, selectedSolution.Version, managed);
                 string tempFile = FileHandler.WriteTempFile(fileName, response.ExportSolutionFile);

@@ -36,7 +36,7 @@ namespace SolutionPackager
         private static ObservableCollection<CrmSolution> SortSolutions(ObservableCollection<CrmSolution> solutions)
         {
             //Default on top
-            var defaultSolution =solutions.FirstOrDefault(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
+            var defaultSolution = solutions.FirstOrDefault(s => s.SolutionId == ExtensionConstants.DefaultSolutionId);
             solutions.Remove(defaultSolution);
             solutions.Insert(0, defaultSolution);
 
