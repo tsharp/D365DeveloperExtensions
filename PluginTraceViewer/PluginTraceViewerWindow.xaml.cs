@@ -144,7 +144,6 @@ namespace PluginTraceViewer
 
             newTraces = new ObservableCollection<CrmPluginTrace>(newTraces.OrderBy(t => t.CreatedOn));
 
-            OutputLogger.WriteToOutputWindow($"{Resource.PluginTraceViewerWindow_Info_AddingNewTraces}: {newTraces.Count}", MessageType.Info);
             foreach (CrmPluginTrace crmPluginTrace in newTraces)
                 Traces.Insert(0, crmPluginTrace);
 
@@ -161,14 +160,8 @@ namespace PluginTraceViewer
 
                 if (newTraces.Count > 0)
                 {
-                    OutputLogger.WriteToOutputWindow($"{Resource.Info_RetrievedNewTraces}: " + newTraces.Count, MessageType.Info);
-
                     UpdateGridDelegate updateGridDelegate = UpdateDelegateGrid;
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, updateGridDelegate, newTraces);
-                }
-                else
-                {
-                    OutputLogger.WriteToOutputWindow(Resource.Info_NoNewTraces, MessageType.Info);
                 }
 
                 System.Threading.Thread.Sleep(30000);
@@ -445,6 +438,9 @@ namespace PluginTraceViewer
 
         public void FilterTraces()
         {
+            if (Traces.Count == 0)
+                return;
+
             ICollectionView icv = CollectionViewSource.GetDefaultView(CrmPluginTraces.ItemsSource);
             if (icv == null) return;
 
@@ -503,15 +499,10 @@ namespace PluginTraceViewer
 
         private void ClearFilters_Click(object sender, RoutedEventArgs e)
         {
-            if (FilterEntities[0].IsSelected != true)
-                FilterEntities[0].IsSelected = true;
-            if (FilterMessages[0].IsSelected != true)
-                FilterMessages[0].IsSelected = true;
-            if (FilterModes[0].IsSelected != true)
-                FilterModes[0].IsSelected = true;
-            if (FilterTypeNames[0].IsSelected != true)
-                FilterTypeNames[0].IsSelected = true;
-
+            FilterEntities = FilterEntity.ResetFilter(FilterEntities);
+            FilterMessages = FilterMessage.ResetFilter(FilterMessages);
+            FilterModes = FilterMode.ResetFilter(FilterModes);
+            FilterTypeNames = FilterTypeName.ResetFilter(FilterTypeNames);
             DetailsSearch.Text = string.Empty;
         }
 
@@ -522,8 +513,7 @@ namespace PluginTraceViewer
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
-            textBox.SelectAll();
+            ((TextBox)sender).SelectAll();
         }
     }
 }

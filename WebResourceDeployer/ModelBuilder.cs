@@ -4,6 +4,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -38,6 +39,8 @@ namespace WebResourceDeployer
 
                 webResourceItems.Add(webResourceItem);
             }
+
+            webResourceItems = new ObservableCollection<WebResourceItem>(webResourceItems.OrderBy(w => w.Name));
 
             return webResourceItems;
         }

@@ -178,15 +178,6 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adding new traces: .
-        /// </summary>
-        public static string PluginTraceViewerWindow_Info_AddingNewTraces {
-            get {
-                return ResourceManager.GetString("PluginTraceViewerWindow_Info_AddingNewTraces", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Stopped polling for plug-in trace log records.
         /// </summary>
         public static string PluginTraceViewerWindow_Info_StoppedPolling {
@@ -223,7 +214,7 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open In CRM/365.
+        ///   Looks up a localized string similar to Open in CRM/365.
         /// </summary>
         public static string PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip {
             get {
@@ -295,7 +286,7 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View Details.
+        ///   Looks up a localized string similar to View details.
         /// </summary>
         public static string PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip {
             get {
@@ -304,7 +295,7 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm Dev: Plug-in Trace Viewer.
+        ///   Looks up a localized string similar to Crm DevEx: Plug-in Trace Viewer.
         /// </summary>
         public static string PluginTraceViewerWindow_Window_Title {
             get {

@@ -15,15 +15,24 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using NLog;
+using WebResourceDeployer.Resources;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
 {
     public partial class NewWebResource
     {
+        #region Private
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly CrmServiceClient _client;
         private readonly DTE _dte;
         private ObservableCollection<WebResourceType> _webResourceTypes;
+
+        #endregion
+
+        #region Public
 
         public Guid NewId;
         public int NewType;
@@ -42,6 +51,18 @@ namespace WebResourceDeployer
             }
         }
 
+        #endregion
+
+        #region  Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
         public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
         {
             InitializeComponent();
@@ -52,7 +73,7 @@ namespace WebResourceDeployer
             bool result = GetSolutions(selectedSolutionId);
             if (!result)
             {
-                MessageBox.Show("Error Retrieving Solutions From CRM. See the Output Window for additional details.");
+                MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingSolutions);
                 DialogResult = false;
                 Close();
             }
@@ -60,12 +81,6 @@ namespace WebResourceDeployer
             Files.ItemsSource = projectFiles;
             WebResourceTypes =
                 CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void Create_OnClick(object sender, RoutedEventArgs e)
@@ -84,7 +99,7 @@ namespace WebResourceDeployer
             string displayName = DisplayName.Text.Trim();
             string description = Description.Text.Trim();
 
-            Overlay.ShowMessage(_dte, "Creating...");
+            Overlay.ShowMessage(_dte, $"{Resource.Message_Creating}...");
 
             Entity webResource =
                 Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath);
@@ -131,8 +146,8 @@ namespace WebResourceDeployer
             if (File.Exists(filePath))
                 return filePath;
 
-            OutputLogger.WriteToOutputWindow("Missing File: " + filePath, MessageType.Error);
-            MessageBox.Show("File does not exist");
+            OutputLogger.WriteToOutputWindow($"{Resource.Message_MissingFile}: " + filePath, MessageType.Error);
+            MessageBox.Show(Resource.MessageBox_FileDoesNotExist);
             return null;
         }
 
@@ -141,7 +156,7 @@ namespace WebResourceDeployer
             if (Crm.WebResource.ValidateName(UniqueName.Text))
                 return true;
 
-            MessageBox.Show("Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters");
+            MessageBox.Show(Resource.Message_InvalidWebResourceName);
             UniqueName.Focus();
             return false;
         }
@@ -167,10 +182,9 @@ namespace WebResourceDeployer
             }
 
             FileExtensionType extensionType = CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetExtensionType(fileName);
-            Type.SelectedItem = extensionType == FileExtensionType.Map 
-                ? WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper()) 
+            Type.SelectedItem = extensionType == FileExtensionType.Map
+                ? WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper())
                 : WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());
-
         }
 
         private string FileNameToDisplayName(string fileName)
@@ -194,12 +208,12 @@ namespace WebResourceDeployer
                 Prefix.Text = solution.Prefix + "_";
             }
             else
-                Prefix.Text = "new_";
+                Prefix.Text = Resource.DefaultPrefix;
         }
 
         private bool GetSolutions(Guid selectedSolutionId)
         {
-            Overlay.ShowMessage(_dte, "Getting solutions from CRM...");
+            Overlay.ShowMessage(_dte, $"{Resource.Message_RetrievingSolutions}...");
 
             EntityCollection results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
 

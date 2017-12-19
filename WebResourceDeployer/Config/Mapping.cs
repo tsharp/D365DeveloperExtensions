@@ -18,14 +18,7 @@ namespace WebResourceDeployer.Config
 
             List<SpklConfigWebresourceFile> mappingsToRemove = new List<SpklConfigWebresourceFile>();
 
-            List<WebresourceDeployConfig> spklWebresourceDeployConfig = spklConfig.webresources;
-            if (spklWebresourceDeployConfig == null)
-                return webResourceItems;
-
-            List<SpklConfigWebresourceFile> mappedWebResources = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklWebresourceDeployConfig[0].files
-                : spklWebresourceDeployConfig.FirstOrDefault(w => w.profile == profile)?.files;
-
+            var mappedWebResources = GetSpklConfigWebresourceFiles(profile, spklConfig);
             if (mappedWebResources == null)
                 return webResourceItems;
 
@@ -78,10 +71,8 @@ namespace WebResourceDeployer.Config
         {
             SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
 
-            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklConfig.webresources[0].files
-                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files ??
-                                             new List<SpklConfigWebresourceFile>();
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = GetSpklConfigWebresourceFiles(profile, spklConfig) ??
+                                                                         new List<SpklConfigWebresourceFile>();
 
             SpklConfigWebresourceFile spklConfigWebresourceFile =
                 spklConfigWebresourceFiles.FirstOrDefault(w => w.uniquename == webResourceItem.Name);
@@ -94,10 +85,7 @@ namespace WebResourceDeployer.Config
 
         private static void UpdateSpklMapping(SpklConfig spklConfig, Project project, string profile, WebResourceItem webResourceItem)
         {
-            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklConfig.webresources[0].files
-                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files;
-
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = GetSpklConfigWebresourceFiles(profile, spklConfig);
             if (spklConfigWebresourceFiles == null)
                 return;
 
@@ -132,7 +120,7 @@ namespace WebResourceDeployer.Config
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.webresources[0].files
-                .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
+                    .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
             else
                 spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files
                     .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
@@ -156,6 +144,15 @@ namespace WebResourceDeployer.Config
 
             string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
+        }
+
+        private static List<SpklConfigWebresourceFile> GetSpklConfigWebresourceFiles(string profile, SpklConfig spklConfig)
+        {
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklConfig.webresources[0].files
+                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files;
+
+            return spklConfigWebresourceFiles;
         }
     }
 }

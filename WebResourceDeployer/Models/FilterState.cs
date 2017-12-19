@@ -48,5 +48,17 @@ namespace WebResourceDeployer.Models
 
             return filterStates;
         }
+
+        public static ObservableCollection<FilterState> ResetFilter(ObservableCollection<FilterState> filterStates)
+        {
+            if (filterStates[0].IsSelected)
+                filterStates[0].IsSelected = false;
+            if (filterStates[1].IsSelected)
+                filterStates[1].IsSelected = false;
+            if (filterStates[2].IsSelected != true)
+                filterStates[2].IsSelected = true;
+
+            return filterStates;
+        }
     }
 }

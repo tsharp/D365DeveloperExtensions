@@ -1,8 +1,6 @@
 ﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Enums;
 using CrmDeveloperExtensions2.Core.ExtensionMethods;
-using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.Vs;
 using EnvDTE;
@@ -216,8 +214,6 @@ namespace PluginDeployer
             EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService));
             if (results == null)
                 return false;
-
-            OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
             _crmSolutions = ModelBuilder.CreateCrmSolutionView(results);
 

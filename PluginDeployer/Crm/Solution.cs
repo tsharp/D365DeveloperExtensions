@@ -53,6 +53,8 @@ namespace PluginDeployer.Crm
 
                 EntityCollection solutions = client.RetrieveMultiple(query);
 
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
+
                 return solutions;
             }
             catch (Exception ex)

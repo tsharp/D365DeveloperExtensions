@@ -10,8 +10,7 @@
              xmlns:resources="clr-namespace:PluginDeployer.Resources"
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
-             mc:Ignorable="d"
-             d:DesignHeight="350" d:DesignWidth="1100">
+             mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
@@ -87,7 +86,7 @@
                     </StackPanel>
                     <Label x:Name="DeploymentTypeLabel" Grid.Column="0" Grid.Row="3"
                            Content="{x:Static resources:Resource.PluginDeployer_DeploymentTypeLabel_Label_Content}" 
-                           IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}" ToolTip="{x:Static resources:Resource.DeploymentType_Label_Toolip}" />
+                           IsEnabled="{Binding IsEnabled, ElementName=DeploymentType}" ToolTip="{x:Static resources:Resource.PluginDeployer_DeploymentType_Label_Toolip}" />
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" >
                         <ComboBox x:Name="DeploymentType" Margin="5,5,0,0" Template="{DynamicResource ComboBoxControlTemplate}" DisplayMemberPath="Name"
                                   SelectedValuePath="Value" Width="350" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" HorizontalAlignment="Left" />

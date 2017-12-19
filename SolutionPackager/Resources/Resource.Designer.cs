@@ -88,24 +88,6 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Managed Solution?.
-        /// </summary>
-        public static string CreateManagedLabel_Label_Content {
-            get {
-                return ResourceManager.GetString("CreateManagedLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Download Managed Solution?.
-        /// </summary>
-        public static string DownloadManagedLabel_Label_Content {
-            get {
-                return ResourceManager.GetString("DownloadManagedLabel_Label_Content", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error adding solution file to project.
         /// </summary>
         public static string ErrorMessage_ErrorAddingSolutionFileProject {
@@ -268,15 +250,6 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Getting solutions.
-        /// </summary>
-        public static string Message_GettingSolutions {
-            get {
-                return ResourceManager.GetString("Message_GettingSolutions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Importing solution.
         /// </summary>
         public static string Message_ImportingSolution {
@@ -304,6 +277,15 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Retrieved solution.
+        /// </summary>
+        public static string Message_RetrievedSolution {
+            get {
+                return ResourceManager.GetString("Message_RetrievedSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retrieved solutions.
         /// </summary>
         public static string Message_RetrievedSolutions {
@@ -313,11 +295,11 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrieved unmanaged solution.
+        ///   Looks up a localized string similar to Retrieving solutions.
         /// </summary>
-        public static string Message_RetrievedUnmanagedSolution {
+        public static string Message_RetrievingSolutions {
             get {
-                return ResourceManager.GetString("Message_RetrievedUnmanagedSolution", resourceCulture);
+                return ResourceManager.GetString("Message_RetrievingSolutions", resourceCulture);
             }
         }
         

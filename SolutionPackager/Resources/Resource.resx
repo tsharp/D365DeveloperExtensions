@@ -138,14 +138,8 @@
   <data name="SolutionList_ComboBox_ToolTip" xml:space="preserve">
     <value>Solution To Package</value>
   </data>
-  <data name="DownloadManagedLabel_Label_Content" xml:space="preserve">
-    <value>Download Managed Solution?</value>
-  </data>
   <data name="SolutionPackager_SaveSolutionsLabel_Label_Content" xml:space="preserve">
     <value>Store Solution Files?</value>
-  </data>
-  <data name="CreateManagedLabel_Label_Content" xml:space="preserve">
-    <value>Create Managed Solution?</value>
   </data>
   <data name="SolutionPackager_ImportSolution_Button_Content" xml:space="preserve">
     <value>Import</value>
@@ -228,8 +222,8 @@
   <data name="SolutionPackager_PublishAllLabel_Label_Content" xml:space="preserve">
     <value>Publish All?</value>
   </data>
-  <data name="Message_GettingSolutions" xml:space="preserve">
-    <value>Getting solutions</value>
+  <data name="Message_RetrievingSolutions" xml:space="preserve">
+    <value>Retrieving solutions</value>
   </data>
   <data name="MessageBox_ErrorRetrievingSolutions" xml:space="preserve">
     <value>Error retrieving solutions</value>
@@ -273,8 +267,8 @@
   <data name="Message_ConnectingGettingUnmanaegedSolution" xml:space="preserve">
     <value>Connecting and getting unmanaged solution</value>
   </data>
-  <data name="Message_RetrievedUnmanagedSolution" xml:space="preserve">
-    <value>Retrieved unmanaged solution</value>
+  <data name="Message_RetrievedSolution" xml:space="preserve">
+    <value>Retrieved solution</value>
   </data>
   <data name="Message_ExtractingSolution" xml:space="preserve">
     <value>Extracting solution</value>

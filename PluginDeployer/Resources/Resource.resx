@@ -127,7 +127,7 @@
     <value>Publish to CRM/365</value>
   </data>
   <data name="PluginDeployer_IlMerge_Button_Content" xml:space="preserve">
-    <value>IlMerge</value>
+    <value>ILMerge</value>
   </data>
   <data name="PluginDeployer_IlMerge_Button_ToolTip" xml:space="preserve">
     <value>Toggle ILMerging Referenced Assemblies</value>
@@ -147,7 +147,7 @@
   <data name="PluginDeployer_SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>
-  <data name="DeploymentType_Label_Toolip" xml:space="preserve">
+  <data name="PluginDeployer_DeploymentType_Label_Toolip" xml:space="preserve">
     <value>Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file</value>
   </data>
   <data name="ErrorMessage_ErrorRetrievingAssembly" xml:space="preserve">
@@ -204,7 +204,7 @@
   <data name="PluginDeployer_ProjectNameLabel_Label_Content" xml:space="preserve">
     <value>Project Name</value>
   </data>
-  <data name="PluginDeployer_OpenInCrmImage.Button_ToolTip" xml:space="preserve">
+  <data name="PluginDeployer_OpenInCrmImage_Button_ToolTip" xml:space="preserve">
     <value>Open in CRM/365</value>
   </data>
   <data name="PluginDeployer_DeploymentTypeLabel_Label_Content" xml:space="preserve">
