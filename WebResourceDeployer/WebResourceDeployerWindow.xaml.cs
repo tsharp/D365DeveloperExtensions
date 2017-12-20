@@ -624,21 +624,16 @@ namespace WebResourceDeployer
 
         private void DownloadAll_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show(Resource.Message_DownloadAllWebResources +
-                Environment.NewLine + Environment.NewLine + Resource.Message_OkProceed, Resource.MessageBox_WebResourceDownload,
-                MessageBoxButton.YesNo);
-
-            if (result != MessageBoxResult.Yes)
-                return;
-
-            ExecuteDownloadAll();
-        }
-
-        private void ExecuteDownloadAll()
-        {
             try
             {
                 Overlay.ShowMessage(_dte, $"{Resource.Message_DownloadingFiles}...", vsStatusAnimation.vsStatusAnimationSync);
+
+                MessageBoxResult result = MessageBox.Show(Resource.Message_DownloadAllWebResources +
+                                                          Environment.NewLine + Environment.NewLine + Resource.Message_OkProceed, Resource.MessageBox_WebResourceDownload,
+                    MessageBoxButton.YesNo);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
 
                 ICollectionView icv = CollectionViewSource.GetDefaultView(WebResourceGrid.ItemsSource);
                 List<WebResourceItem> downloadItems = icv.Cast<WebResourceItem>().ToList();
