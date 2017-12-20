@@ -52,6 +52,7 @@ namespace WebResourceDeployer
         private ObservableCollection<WebResourceType> _webResourceTypes;
         private ObservableCollection<FilterTypeName> _filterTypeNames;
         private ObservableCollection<FilterState> _filterStates;
+        private List<MovedWebResourceItem> _movedWebResourceItems;
 
         #endregion
 
@@ -352,6 +353,15 @@ namespace WebResourceDeployer
             }
         }
 
+        private void UpdateMovedWebResourceItemsBoundFile(string newValue)
+        {
+            foreach (MovedWebResourceItem movedWebResourceItem in _movedWebResourceItems)
+            {
+                movedWebResourceItem.WebResourceItem.BoundFile = newValue;
+                movedWebResourceItem.WebResourceItem.Publish = movedWebResourceItem.Publish;
+            }
+        }
+
         private void UpdateProjectFilesAfterChange(string oldName, string newName)
         {
             ComboBoxItem projectFile = ProjectFiles.FirstOrDefault(p => p.Content.ToString().Equals(oldName, StringComparison.InvariantCultureIgnoreCase));
@@ -447,6 +457,8 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
         {
+            _movedWebResourceItems = new List<MovedWebResourceItem>();
+
             ProjectItem projectItem = e.ProjectItem;
             if (projectItem.ContainingProject != ConnPane.SelectedProject) return;
 
@@ -456,6 +468,11 @@ namespace WebResourceDeployer
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
                 string itemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+                _movedWebResourceItems.AddRange(WebResourceItems.Where(w => w.BoundFile == itemName).Select(n => new MovedWebResourceItem
+                {
+                    WebResourceItem = n,
+                    Publish = n.Publish
+                }));
 
                 UpdateWebResourceItemsBoundFile(itemName, null);
 
@@ -491,7 +508,7 @@ namespace WebResourceDeployer
             {
                 string newItemName = LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1]);
 
-                UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
+                UpdateMovedWebResourceItemsBoundFile(newItemName);
 
                 UpdateProjectFilesAfterChange(oldItemName, newItemName);
             }
@@ -601,6 +618,8 @@ namespace WebResourceDeployer
         private async void DownloadWebResourceToFolder(string folder, Guid webResourceId)
         {
             await DownloadWebResourceAsync(webResourceId, folder, ConnPane.CrmService);
+
+            ProjectFolderList.SelectedItem = null;
         }
 
         private void DownloadAll_OnClick(object sender, RoutedEventArgs e)
@@ -874,15 +893,17 @@ namespace WebResourceDeployer
             if (e.PropertyName == "BoundFile")
             {
                 if (WebResourceGrid.ItemsSource != null)
-                    foreach (WebResourceItem webResourceItem in WebResourceItems.Where(w => w.Name == item.Name && w.BoundFile != item.BoundFile))
+                {
+                    foreach (WebResourceItem webResourceItem in WebResourceItems.Where(w =>
+                        w.Name == item.Name && w.BoundFile != item.BoundFile))
                     {
-                        //Remove & re-add the event handler to avoid triggering on same file on other solutions
                         webResourceItem.PropertyChanged -= WebResourceItem_PropertyChanged;
                         webResourceItem.BoundFile = item.BoundFile;
                         webResourceItem.PropertyChanged += WebResourceItem_PropertyChanged;
                         if (string.IsNullOrEmpty(item.BoundFile) && item.Publish)
                             webResourceItem.Publish = false;
                     }
+                }
 
                 Mapping.AddOrUpdateSpklMapping(ConnPane.SelectedProject, ConnPane.SelectedProfile, item);
             }

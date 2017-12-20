@@ -125,6 +125,7 @@
     <Compile Include="Crm\WebResource.cs" />
     <Compile Include="Config\Mapping.cs" />
     <Compile Include="Models\FilterCriteria.cs" />
+    <Compile Include="Models\MovedWebResourceItem.cs" />
     <Compile Include="NewWebResource.xaml.cs">
       <DependentUpon>NewWebResource.xaml</DependentUpon>
     </Compile>

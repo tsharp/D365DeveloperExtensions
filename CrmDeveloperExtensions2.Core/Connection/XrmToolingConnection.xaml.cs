@@ -244,12 +244,14 @@ namespace CrmDeveloperExtensions2.Core.Connection
         #region Events
         public void ProjectItemMoveDeleted(ProjectItem projectItem)
         {
-            /*Web site projects are not triggering the same project item added/removed event
+            /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
-            existing events here fixes the issue*/
+            existing events here fixes the issue. Moves first do a delete then an add*/
             Project p = projectItem.ContainingProject;
-            if (p.Kind.ToUpper() == ExtensionConstants.VsProjectTypeWebSite)
-                ProjectItemsEvents_ItemRemoved(projectItem);
+            if (p.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite)
+                return;
+
+            ProjectItemsEvents_ItemRemoved(projectItem);
 
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
             if (projectPath == null)
@@ -266,12 +268,14 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         public void ProjectItemMoveAdded(ProjectItem projectItem)
         {
-            /*Web site projects are not triggering the same project item added/removed event
+            /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
-            existing events here fixes the issue*/
+            existing events here fixes the issue. Moves first do a delete then an add*/
             Project p = projectItem.ContainingProject;
-            if (p.Kind.ToUpper() == ExtensionConstants.VsProjectTypeWebSite)
-                ProjectItemsEvents_ItemAdded(projectItem);
+            if (p.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite)
+                return;
+            
+            ProjectItemsEvents_ItemAdded(projectItem);
 
             if (SelectedProject == null)
                 return;
