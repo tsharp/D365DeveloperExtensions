@@ -63,7 +63,6 @@
     <Compile Include="StartupTasks.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="CrmDevExKey.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">

@@ -2,7 +2,7 @@
 
 namespace CrmDeveloperExtensions2.Core.Connection
 {
-    public class ProjectItemAddedEventArgs
+    public class ProjectItemRemovedEventArgs
     {
         public ProjectItem ProjectItem { get; set; }
     }
