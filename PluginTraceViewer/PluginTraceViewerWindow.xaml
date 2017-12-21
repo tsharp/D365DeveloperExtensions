@@ -224,7 +224,7 @@
                     </DataGrid.Columns>
                     <DataGrid.RowDetailsTemplate>
                         <DataTemplate>
-                            <TextBox Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                            <TextBox Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  Style="{DynamicResource DataGridTextBoxStyle}"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto" BorderThickness="0" ScrollViewer.CanContentScroll="True" 
                                      MaxHeight="200" Text="{Binding Details}" IsReadOnly="True" Margin="10" TextWrapping="Wrap" />
                         </DataTemplate>
