@@ -10,6 +10,9 @@ namespace CrmDeveloperExtensions2.Core.Config
     {
         public static List<string> GetProfiles(Project project, ToolWindowType toolWindowType)
         {
+            if (toolWindowType == ToolWindowType.PluginTraceViewer)
+                return null;
+
             SpklConfig spklConfig = ConfigFile.GetSpklConfigFile(project);
             string projectPath = ProjectWorker.GetProjectPath(project);
 
@@ -17,8 +20,6 @@ namespace CrmDeveloperExtensions2.Core.Config
             {
                 case ToolWindowType.PluginDeployer:
                     return GetConfigProfiles(projectPath, spklConfig.plugins);
-                case ToolWindowType.PluginTraceViewer:
-                    return null;
                 case ToolWindowType.SolutionPackager:
                     return GetConfigProfiles(projectPath, spklConfig.solutions);
                 case ToolWindowType.WebResourceDeployer:
