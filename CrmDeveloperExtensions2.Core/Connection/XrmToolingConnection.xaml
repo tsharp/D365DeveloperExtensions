@@ -6,6 +6,7 @@
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
              xmlns:controls="clr-namespace:CrmDeveloperExtensions2.Core.Controls"
+             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="190" d:DesignWidth="200">
@@ -19,13 +20,15 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
+    <Expander x:Name="Expander" HorizontalAlignment="Left" Margin="-1,0,0,0" VerticalAlignment="Top" ExpandDirection="Right" BorderThickness="0" IsExpanded="True">
         <Expander.Header>
-            <TextBlock Text="{x:Static resources:Resource.XrmToolingConnection_Connect_TextBlock_Text}">
-                <TextBlock.LayoutTransform>
-                    <RotateTransform Angle="90"/>
-                </TextBlock.LayoutTransform>
-            </TextBlock>
+            <Border Style="{DynamicResource TabBorder}" x:Name="ExpanderHeaderBorder">
+                <TextBlock Text="{x:Static resources:Resource.XrmToolingConnection_Connect_TextBlock_Text}" Style="{DynamicResource TabTextBlock}">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Border>
         </Expander.Header>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="200" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
