@@ -274,7 +274,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             Project p = projectItem.ContainingProject;
             if (p.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite)
                 return;
-            
+
             ProjectItemsEvents_ItemAdded(projectItem);
 
             if (SelectedProject == null)
@@ -424,6 +424,11 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void GetProjectsForList()
         {
+            if (ToolWindow.Type == ToolWindowType.PluginTraceViewer) {
+                SolutionProjectsList.IsEnabled = false;
+                return;
+            }
+
             Projects = new ObservableCollection<ProjectListItem>();
 
             IList<Project> projects = SolutionWorker.GetProjects();
@@ -549,6 +554,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void SetConfigFile()
         {
+            if (ToolWindow.Type == ToolWindowType.PluginTraceViewer)
+                return;
+
             if (!Config.ConfigFile.SpklConfigFileExists(ProjectWorker.GetProjectPath(SelectedProject)))
                 Config.ConfigFile.CreateSpklConfigFile(SelectedProject);
         }
