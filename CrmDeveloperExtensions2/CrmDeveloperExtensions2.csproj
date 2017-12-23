@@ -133,6 +133,20 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginBaseClass\CSharpSdkPluginBaseClass.csproj">
+      <Project>{9F7A8E0E-7091-4BB6-8225-9811A5C1985A}</Project>
+      <Name>CSharpSdkPluginBaseClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginFromBaseClass\CSharpSdkPluginFromBaseClass.csproj">
+      <Project>{0680411B-7F53-4595-847A-5406BA93FA4E}</Project>
+      <Name>CSharpSdkPluginFromBaseClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSolutionPackagerMap\CSharpSolutionPackagerMap.csproj">
       <Project>{E8D7659C-BB6B-4FDF-B0D8-6E6007F4696F}</Project>
       <Name>CSharpSolutionPackagerMap</Name>
