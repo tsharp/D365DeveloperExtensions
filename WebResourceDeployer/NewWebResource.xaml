@@ -3,9 +3,9 @@
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                         xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
                          mc:Ignorable="d" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
                          Title="{x:Static resources:Resource.NewWebResource_Window_Title}" Height="275" Width="400">

@@ -1,18 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                    xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+                    xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0">
 
     <Style x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.TitleBarActiveGradientBrushKey}}"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"/>
-        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowBorderBrushKey}}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowBorderBrushKey}}"/>
     </Style>
 
     <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" >
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowBorderBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="-1,-1,0,0" />
         <Setter Property="Padding" Value="5"/>
@@ -21,28 +20,28 @@
                 <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextInactiveKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolboxDisabledContentTextBrushKey}}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="DataGridTextBlockStyle" TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
         <Setter Property="Padding" Value="2,0,2,0" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextInactiveKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolboxDisabledContentTextBrushKey}}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="DataGridTextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
 
     <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}" >
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextActiveKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
 
     <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
@@ -124,56 +123,8 @@
         </Style.Triggers>
     </Style>
 
-    <!--<Style x:Key="DataGridButtonContextMenuStyle" TargetType="{x:Type MenuItem}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        -->
-    <!--TODO: figure out a away not to hard-code the field-->
-    <!--
-        <Setter Property="CommandParameter" Value="{Binding WebResourceId}" />
-        <Setter Property="IsCheckable" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type MenuItem}">
-                    <Border x:Name="border" Padding="17,2,17,2" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
-                        Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                        <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Header}" ContentSource="Header" Margin="{TemplateBinding Padding}" 
-                            RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsHighlighted" Value="True">
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="DataGridContextMenuStyle" TargetType="{x:Type ContextMenu}">
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
-        <Setter Property="HasDropShadow" Value="True"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ContextMenu">
-                    <Border Name="Border" Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBackgroundGradientKey}}"
-                        BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="1">
-                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="HasDropShadow" Value="true">
-                            <Setter TargetName="Border" Property="Padding" Value="0,3,0,3"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
     <Style x:Key="DataGridCheckBoxStyle" TargetType="{x:Type CheckBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DataGridCheckBoxFocusVisual}"/>
@@ -182,9 +133,9 @@
                 <ControlTemplate TargetType="CheckBox">
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Border x:Name="Border" Width="15" Height="15" CornerRadius="0" Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}" 
-                                    BorderThickness="1" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" Margin="0" Padding="0">
-                                <Path Width="8" Height="8" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="AliceBlue"
+                            <Border x:Name="Border" Width="15" Height="15" CornerRadius="0" Background="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBackgroundBrushKey}}"
+                                    BorderThickness="1" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBorderBrushKey}}" Margin="0" Padding="0">
+                                <Path Width="8" Height="8" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"
                                       StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0" />
                             </Border>
                         </BulletDecorator.Bullet>
@@ -198,19 +149,20 @@
                             <Setter TargetName="CheckMark" Property="Data" Value="M 0 7 L 7 0" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" />
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBorderHoverBrushKey}}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBackgroundHoverBrushKey}}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}" />
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarTextInactiveKey}}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBackgroundDisabledBrushKey}}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBorderDisabledBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolboxDisabledContentTextBrushKey}}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="DataGridCheckBoxFocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -223,7 +175,9 @@
         </Setter>
     </Style>
 
-    <Style x:Key="DataGridPopupStyle" TargetType="{x:Type Popup}">
-       
+    <Style x:Key="DataGridFilterPopupListBox" TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowBackgroundBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowBorderBrushKey}}"/>
     </Style>
+
 </ResourceDictionary>

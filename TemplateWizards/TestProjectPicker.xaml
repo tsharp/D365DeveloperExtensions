@@ -36,7 +36,8 @@
             <Button x:Name="CreateProject" Content="{x:Static resx:Resource.TestProjectPicker_CreateProject_Button_Content}" Margin="0,5,10,0" MinWidth="70" 
                     Template="{DynamicResource FormButtonControlTemplate}" 
                     Click="CreateProject_OnClick" ToolTip="{x:Static resx:Resource.TestProjectPicker_CreateProject_Button_Tooltip}" Height="23" IsEnabled="False"/>
-            <Button x:Name="Cancel" Content="{x:Static resx:Resource.TestProjectPicker_Cancel_Button_Content}" Margin="0,5,10,0" MinWidth="70" Click="Cancel_Click" Template="{DynamicResource FormButtonControlTemplate}" Height="23"/>
+            <Button x:Name="Cancel" Content="{x:Static resx:Resource.TestProjectPicker_Cancel_Button_Content}" Margin="0,5,10,0" MinWidth="70" Click="Cancel_Click" 
+                    Template="{DynamicResource FormButtonControlTemplate}" Height="23"/>
         </StackPanel>
     </Grid>
 </platformUi:DialogWindow>

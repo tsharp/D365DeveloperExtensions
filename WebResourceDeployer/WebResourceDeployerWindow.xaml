@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WebResourceDeployer.WebResourceDeployerWindow" 
+﻿<UserControl x:Class="WebResourceDeployer.WebResourceDeployerWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,10 +6,10 @@
              xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
-             xmlns:converters="clr-namespace:WebResourceDeployer.Converters"        
-             xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
+             xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
              mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
         <ResourceDictionary >
@@ -194,7 +194,7 @@
                                 <DataTemplate>
                                     <Grid x:Name="BoundFileGrid" HorizontalAlignment="Stretch" MouseLeftButtonDown="BoundFile_OnMouseLeftButtonDown">
                                         <TextBlock x:Name="ClickToMapLabel" Text="{Binding BoundFile}" Tag="{Binding WebResourceId}" Padding="2,0,2,0"
-                                            ToolTip="{x:Static resources:Resource.WebResourceDeployer_ClickToMapLabel_TextBlock_ToolTip}" />
+                                                   ToolTip="{x:Static resources:Resource.WebResourceDeployer_ClickToMapLabel_TextBlock_ToolTip}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -272,7 +272,7 @@
                                         <Button x:Name="EditDescription" Grid.Column="3" Click="EditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}"
                                                 HorizontalAlignment="Right" Visibility="Visible" IsEnabled="{Binding IsManaged, Converter={StaticResource InverseConverter}}">
                                             <imaging:CrispImage x:Name="EditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
-                                                        ToolTip="{x:Static resources:Resource.WebResourceDeployer_EditDescriptionImage_Button_ToolTip}" />
+                                                                ToolTip="{x:Static resources:Resource.WebResourceDeployer_EditDescriptionImage_Button_ToolTip}" />
                                         </Button>
                                         <Button x:Name="UndoEditDescription" Grid.Column="1" Click="UndoEditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
                                                 CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
@@ -282,12 +282,12 @@
                                         <Button x:Name="CancelEditDescription" Grid.Column="2" Click="CancelEditDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
                                                 CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
                                             <imaging:CrispImage x:Name="CancelEditDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.Cancel}" 
-                                                        ToolTip="{x:Static resources:Resource.WebResourceDeployer_CancelEditDescriptionImage_Button_ToolTip}" />
+                                                                ToolTip="{x:Static resources:Resource.WebResourceDeployer_CancelEditDescriptionImage_Button_ToolTip}" />
                                         </Button>
                                         <Button x:Name="SaveDescription" Grid.Column="3" Click="SaveDescription_Click" Style="{DynamicResource DataGridHeaderButtonStyle}" 
                                                 CommandParameter="{Binding WebResourceId}" HorizontalAlignment="Right" Visibility="Hidden">
                                             <imaging:CrispImage x:Name="SaveDescriptionImage" Moniker="{x:Static catalog:KnownMonikers.Save}" 
-                                                        ToolTip="{x:Static resources:Resource.WebResourceDeployer_SaveDescriptionImage_Button_ToolTip}" />
+                                                                ToolTip="{x:Static resources:Resource.WebResourceDeployer_SaveDescriptionImage_Button_ToolTip}" />
                                         </Button>
                                     </Grid>
                                 </DataTemplate>

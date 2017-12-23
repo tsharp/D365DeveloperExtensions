@@ -224,6 +224,7 @@ namespace SolutionPackager
             VersionRevision.IsEnabled = enabled;
             UpdateVersion.IsEnabled = enabled;
             PublishAll.IsEnabled = enabled;
+            CommandOutput.IsEnabled = enabled;
         }
 
         private void ResetForm()
@@ -626,6 +627,8 @@ namespace SolutionPackager
 
                 if (!success)
                     MessageBox.Show(Resource.MessageBox_ErrorExtractingSolution);
+
+                _dte.ExecuteCommand("File.SaveAll");
 
                 PackageSolution.IsEnabled = true;
                 SetFormVersionNumbers();

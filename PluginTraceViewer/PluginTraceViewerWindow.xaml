@@ -2,11 +2,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
-             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
              x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
              mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
@@ -43,7 +43,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
                     <Button x:Name="Poll" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_Content}, Converter={StaticResource ToUpperConverter}, Mode=OneWay}" 
                             ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_ToolTip}" />
                     <Button x:Name="PollOff" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
                             Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
@@ -62,7 +62,7 @@
                                 <StackPanel Background="Transparent">
                                     <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
-                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_RefreshImage_Button_ToolTip}" />
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_RefreshImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>
                             </DataGridTemplateColumn.Header>
@@ -70,7 +70,7 @@
                                 <DataTemplate>
                                     <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
-                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip}" />
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip}" />
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -80,7 +80,7 @@
                                 <DataTemplate>
                                     <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" CommandParameter="{Binding PluginTraceLogidId}">
                                         <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
-                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip}" />
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip}" />
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -90,14 +90,14 @@
                                 <StackPanel>
                                     <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
                                         <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
-                                                        ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip}" />
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <CheckBox IsChecked="{Binding PendingDelete, UpdateSourceTrigger=PropertyChanged}" 
-                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

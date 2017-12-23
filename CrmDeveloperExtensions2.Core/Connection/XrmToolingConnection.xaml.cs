@@ -424,7 +424,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
         private void GetProjectsForList()
         {
-            if (ToolWindow.Type == ToolWindowType.PluginTraceViewer) {
+            if (ToolWindow != null && ToolWindow.Type == ToolWindowType.PluginTraceViewer)
+            {
                 SolutionProjectsList.IsEnabled = false;
                 return;
             }

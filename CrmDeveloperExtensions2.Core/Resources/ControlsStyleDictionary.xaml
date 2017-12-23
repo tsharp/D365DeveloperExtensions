@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                    xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+                    xmlns:vsp="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0">
 
     <Style x:Key="ImageButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
@@ -34,50 +33,52 @@
     </Style>
 
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-        <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundBrushKey}}" />
         <Setter Property="Height" Value="21"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border x:Name="border" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="{TemplateBinding BorderThickness}" 
+                    <Border x:Name="border" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}" 
                             Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                            <Setter Property="Background" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundDisabledBrushKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderDisabledBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderFocusedBrushKey}}"/>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundFocusedBrushKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
+
     <Style TargetType="{x:Type Label}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
 
     <Style TargetType="{x:Type CheckBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
 
     <Style TargetType="{x:Type ComboBox}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBorderBrushKey}}"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
@@ -91,7 +92,7 @@
                 Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
                 <vsp:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
                     <Border x:Name="dropDownBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" 
-                            Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBackgroundGradientKey}}">
+                            Background="{DynamicResource {x:Static vsp:EnvironmentColors.CommandBarMenuBackgroundGradientBrushKey}}">
                         <ScrollViewer x:Name="DropDownScrollViewer">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
@@ -116,12 +117,12 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                    <Border x:Name="templateRoot" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="1" 
-                                        SnapsToDevicePixels="True" Background="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}">
+                                    <Border x:Name="templateRoot" BorderBrush="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBorderBrushKey}}" BorderThickness="1" 
+                                            SnapsToDevicePixels="True" Background="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}">
                                         <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" 
                                             Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                            <Path x:Name="Arrow" Data="M 0 0 L 3.5 3 L 6 0 Z" Fill="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuSubmenuGlyphKey}}" 
-                                                HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                                            <Path x:Name="Arrow" Data="M 0 0 L 3.5 3 L 6 0 Z" Fill="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxGlyphBrushKey}}" 
+                                                  HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
                                         </Border>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -130,20 +131,22 @@
                                                 <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxButtonMouseDownBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxButtonMouseOverSeparatorBrushKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
                                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.BackgroundKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxButtonMouseOverBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxButtonMouseOverBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxButtonMouseOverSeparatorBrushKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverGlyphBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
@@ -152,75 +155,77 @@
                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
                                                 <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBorderBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBorderBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBackgroundGradientBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
                                             <Setter Property="BorderThickness" TargetName="splitBorder" Value="1,0,0,0"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.BackgroundKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBackgroundGradientBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
                                             <Setter Property="BorderThickness" TargetName="splitBorder" Value="1,0,0,0"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBackgroundGradientBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <Trigger Property="IsPressed" Value="true">
-                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBorderBrushKey}}"/>
                                         </Trigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBorderBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarOptionsMouseOverGlyphKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBorderBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownBorderBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <Trigger Property="IsEnabled" Value="false">
-                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
                                         </Trigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBorderBrushKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledGlyphBrushKey}}"/>
                                         </MultiDataTrigger>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
                                             </MultiDataTrigger.Conditions>
-                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
-                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBackgroundKey}}"/>
-                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                                            <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBorderBrushKey}}"/>
+                                            <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBackgroundBrushKey}}"/>
+                                            <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledBorderBrushKey}}"/>
+                                            <Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledGlyphBrushKey}}"/>
                                         </MultiDataTrigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -237,10 +242,10 @@
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ComboBoxDisabledBorderKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxDisabledTextBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxTextBrushKey}}"/>
             </Trigger>
             <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="True">
                 <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
@@ -269,12 +274,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBoxItem">
-                    <Border  Name="Border" Padding="6 4 6 4" SnapsToDevicePixels="true">
+                    <Border  Name="Border" Padding="2" Margin="2 0 2 0" SnapsToDevicePixels="true">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxItemMouseOverBackgroundBrushKey}}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -283,46 +288,45 @@
     </Style>
 
     <ControlTemplate x:Key="TextBoxControlTemplate" TargetType="{x:Type TextBox}">
-        <Border x:Name="border" BorderBrush="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}" BorderThickness="{TemplateBinding BorderThickness}" 
+        <Border x:Name="border" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}" 
                 Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
             <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
         </Border>
 
         <ControlTemplate.Triggers>
             <Trigger Property="IsEnabled" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxTextBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundBrushKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxTextDisabledBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundDisabledBrushKey}}"/>
             </Trigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsEnabled" Value="True"/>
                     <Condition Property="IsMouseOver" Value="True"/>
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxMouseOverBorderBrushKey}}"/>
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsEnabled" Value="False"/>
                     <Condition Property="IsMouseOver" Value="True"/>
                 </MultiTrigger.Conditions>
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarMenuBorderKey}}"/>
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarGradientBeginKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBorderDisabledBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundDisabledBrushKey}}"/>
             </MultiTrigger>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.CommandBarHoverKey}}" />
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.TextBoxBackgroundFocusedBrushKey}}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="FormButtonControlTemplate" TargetType="{x:Type Button}">
-        <Border x:Name="border" BorderBrush="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}"
-                                    Background="{DynamicResource {x:Static shell:VsBrushes.ButtonFaceKey}}" SnapsToDevicePixels="True" MinWidth="70" Height="23">
+        <Border x:Name="border" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBrushKey}}" SnapsToDevicePixels="True" MinWidth="70" Height="23">
             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}"
                                                   ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                                   Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
@@ -330,26 +334,26 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsDefaulted" Value="True">
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderDefaultBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.ButtonFaceKey}}"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonHoverBrushKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderHoverBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonPressedBrushKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderPressedBrushKey}}"/>
             </Trigger>
             <Trigger Property="ToggleButton.IsChecked" Value="True">
-                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonPressedBrushKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderPressedBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowButtonInactiveKey}}"/>
-                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowButtonInactiveKey}}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonDisabledTextBrushKey}}"/>
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonDisabledTextBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="True">
-                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"/>
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonDefaultTextBrushKey}}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
