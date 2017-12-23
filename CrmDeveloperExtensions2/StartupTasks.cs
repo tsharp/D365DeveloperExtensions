@@ -9,7 +9,7 @@ namespace CrmDeveloperExtensions2
     {
         public static void Run(DTE dte)
         {
-            SetupUserOptionsHelper(dte);
+            SetupUserOptionsHelper(dte);           
             SetupLogging(dte);
             SetupStatusBar(dte);          
         }

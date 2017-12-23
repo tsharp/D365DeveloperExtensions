@@ -402,4 +402,7 @@
   <data name="ErrorMessage_ErrorPublishing" xml:space="preserve">
     <value>Error publishing customizations</value>
   </data>
+  <data name="ErrorMessage_ErrorGettingOutputWindow" xml:space="preserve">
+    <value>Error getting output window</value>
+  </data>
 </root>
