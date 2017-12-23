@@ -6,7 +6,6 @@
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:resources="clr-namespace:CrmDeveloperExtensions2.Core.Resources"
              xmlns:controls="clr-namespace:CrmDeveloperExtensions2.Core.Controls"
-             xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              x:Class="CrmDeveloperExtensions2.Core.Connection.XrmToolingConnection"
              mc:Ignorable="d"
              d:DesignHeight="190" d:DesignWidth="200">
@@ -47,10 +46,11 @@
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.XrmToolingConnection_Connect_Label_Content}" />
             <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
                 <Button x:Name="Connect" IsEnabled="True" Click="Connect_OnClick" VerticalAlignment="Bottom" Style="{DynamicResource ImageButtonStyle}">
-                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" ToolTip="{x:Static resources:Resource.XrmToolingConnection_ConnectImage_Button_Tooltip}" />
+                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" 
+                                        ToolTip="{x:Static resources:Resource.XrmToolingConnection_ConnectImage_Button_Tooltip}" />
                 </Button>
-                <CheckBox x:Name="AutoLogin" Margin="5,0,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.XrmToolingConnection_AutoLogin_Button_ToolTip}" IsChecked="True"
-                          Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked" VerticalAlignment="Center" />
+                <CheckBox x:Name="AutoLogin" Margin="5,0,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.XrmToolingConnection_AutoLogin_Button_ToolTip}" 
+                          IsChecked="True" Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked" VerticalAlignment="Center" />
             </StackPanel>
         </StackPanel>
     </Expander>

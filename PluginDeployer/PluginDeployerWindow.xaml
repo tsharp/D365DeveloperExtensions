@@ -6,10 +6,10 @@
              xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
              xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
-             xmlns:converters="clr-namespace:PluginDeployer.Converters"
-             xmlns:resources="clr-namespace:PluginDeployer.Resources"
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:converters="clr-namespace:PluginDeployer.Converters"
+             xmlns:resources="clr-namespace:PluginDeployer.Resources"
              mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
         <ResourceDictionary >
@@ -50,12 +50,11 @@
                     </Button.IsEnabled>
                 </Button>
                 <Button x:Name="RegistrationTool" Click="RegistrationTool_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
-                    Content="{Binding Source={x:Static resources:Resource.PluginDeployer_RegistrationTool_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                        Content="{Binding Source={x:Static resources:Resource.PluginDeployer_RegistrationTool_Button_Content}, Converter={StaticResource ToUpperConverter}, Mode=OneWay}" 
                         ToolTip="{x:Static resources:Resource.PluginDeployer_RegistrationTool_Button_ToolTip}" />
                 <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                 <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
             </StackPanel>
-
             <Grid HorizontalAlignment="Stretch" Margin="5,30,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
