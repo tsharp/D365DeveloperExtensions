@@ -259,6 +259,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error getting output window.
+        /// </summary>
+        public static string ErrorMessage_ErrorGettingOutputWindow {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorGettingOutputWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error publishing customizations.
         /// </summary>
         public static string ErrorMessage_ErrorPublishing {
