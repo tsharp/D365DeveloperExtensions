@@ -8,7 +8,7 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using CrmDeveloperExtensions2.Core.UserOptions;
 using CrmDeveloperExtensions2.Resources;
-using CrmIntellisense;
+//using CrmIntellisense;
 using PluginDeployer;
 using PluginTraceViewer;
 using SolutionPackager;
