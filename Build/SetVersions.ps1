@@ -39,7 +39,7 @@ Write-Host ("New Assembly Copyright: " + $newCopyright)
 
 $assemblyinfo_content = [Regex]::Replace($assemblyinfo_content, $copyrightPattern, 'AssemblyCopyright("' + $newCopyright + '")]')
 
-
+[System.IO.File]::WriteAllText($assemblyinfo, $assemblyinfo_content)
 
 #Update manifest version in source.extension.vsixmanifest
 $script_path = $myinvocation.mycommand.path
@@ -86,3 +86,5 @@ Write-Host "Current Package Revision: " $packageVersion.Revision
 $package_content = [Regex]::Replace($package_content, $packagePattern, $newVersion)
 
 [System.IO.File]::WriteAllText($package, $package_content)
+
+Write-Host ("##vso[task.setvariable variable=BuildVersion;]$newVersion")
