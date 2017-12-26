@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.17360.0411" Language="en-US" Publisher="Jason Lattimer" />
+        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.17360.2107" Language="en-US" Publisher="Jason Lattimer" />
         <DisplayName>Crm Developer Extensions 2 - BETA</DisplayName>
         <Description xml:space="preserve">Dynamics CRM/365 Developer Extensions - 2nd Edition
-For Dynamics CRM/365 versions 2011+</Description>
+For Dynamics CRM/365 versions 2011+
+Visual Studio 2015 &amp; 2017</Description>
         <MoreInfo>https://github.com/jlattimer/CrmDeveloperExtensions2/wiki</MoreInfo>
         <License>License.txt</License>
         <Icon>Resources\icon.ico</Icon>
         <Tags>Dynamics 365, D365, Dynamics CRM, Jason Lattimer</Tags>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,15.0]" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.6.2,)" />
-        <Dependency Id="Microsoft.VisualStudio.MPF.15.0" DisplayName="Visual Studio MPF 15.0" d:Source="Installed" Version="[15.0]" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0,15.0)" />
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
@@ -40,6 +41,8 @@ For Dynamics CRM/365 versions 2011+</Description>
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSpklConfig" d:TargetPath="|CSharpSpklConfig;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkPluginBaseClass" d:TargetPath="|CSharpSdkPluginBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkPluginFromBaseClass" d:TargetPath="|CSharpSdkPluginFromBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.Xrm.Tooling.Ui.Styles.dll" AssemblyName="Microsoft.Xrm.Tooling.Ui.Styles, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Newtonsoft.Json.dll" AssemblyName="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
