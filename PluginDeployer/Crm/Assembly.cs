@@ -42,7 +42,12 @@ namespace PluginDeployer.Crm
 
                 EntityCollection assemblies = client.RetrieveMultiple(query);
 
-                return assemblies.Entities.FirstOrDefault();
+                if (assemblies.Entities.Count <= 0)
+                    return null;
+
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_RetrievedAssembly}: {assemblies.Entities[0].Id}", MessageType.Info);
+                return assemblies.Entities[0];
+
             }
             catch (Exception ex)
             {
@@ -64,16 +69,22 @@ namespace PluginDeployer.Crm
                     ["version"] = crmAssembly.Version,
                     ["publickeytoken"] = crmAssembly.PublicKeyToken,
                     ["sourcetype"] = new OptionSetValue(0), // database
-                    ["isolationmode"] = crmAssembly.IsolationMode == IsolationModeEnum.Sandbox 
+                    ["isolationmode"] = crmAssembly.IsolationMode == IsolationModeEnum.Sandbox
                     ? new OptionSetValue(2) // 2 = sandbox
                     : new OptionSetValue(1) // 1= none
                 };
 
                 if (crmAssembly.AssemblyId == Guid.Empty)
-                    return client.Create(assembly);
+                {
+                    Guid newId = client.Create(assembly);
+                    OutputLogger.WriteToOutputWindow($"{Resource.Message_CreatedAssembly}: {newId}", MessageType.Info);
+                    return newId;
+                }
 
                 assembly.Id = crmAssembly.AssemblyId;
                 client.Update(assembly);
+
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_UpdatedAssembly}: {crmAssembly.AssemblyId}", MessageType.Info);
 
                 return crmAssembly.AssemblyId;
             }
@@ -98,7 +109,7 @@ namespace PluginDeployer.Crm
 
                 client.Execute(scRequest);
 
-                OutputLogger.WriteToOutputWindow(Resource.Message_AssemblyAddedSolution, MessageType.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_AssemblyAddedSolution}: {uniqueName} - {assemblyId}", MessageType.Info);
 
                 return true;
             }
@@ -134,7 +145,11 @@ namespace PluginDeployer.Crm
 
                 EntityCollection results = client.RetrieveMultiple(query);
 
-                return results.Entities.Count > 0;
+                bool inSolution = results.Entities.Count > 0;
+
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_AssemblyInSolution}: {uniqueName} - {assemblyName} - {inSolution}", MessageType.Info);
+
+                return inSolution;
             }
             catch (Exception ex)
             {

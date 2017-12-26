@@ -48,18 +48,17 @@ namespace PluginDeployer.Spkl
 
             try
             {
+                string assemblyFolderPath = assemblyFilePath.DirectoryName;
+
                 //Load the assembly in its own AppDomain to prevent load errors & file locking
                 var assemblyBytes = File.ReadAllBytes(file);
-                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, true, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, true, assemblyFolderPath, true);
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)
                     return Guid.Empty;
 
                 var plugin = RegisterAssembly(assemblyFilePath, pluginDatas.First().AssemblyName, pluginDatas.First().CrmPluginRegistrationAttributes);
-
-                if (plugin == null)
-                    return plugin.Id;
 
                 foreach (PluginData pluginData in pluginDatas)
                 {
@@ -76,7 +75,7 @@ namespace PluginDeployer.Spkl
             }
         }
 
-        private void RegisterActivities(List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes, PluginAssembly plugin, string assemblyFullName)
+        public void RegisterActivities(List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes, PluginAssembly plugin, string assemblyFullName)
         {
             var sdkPluginTypes = _ctx.GetPluginTypes(plugin);
 
@@ -167,9 +166,11 @@ namespace PluginDeployer.Spkl
 
             try
             {
+                string assemblyFolderPath = assemblyFilePath.DirectoryName;
+
                 //Load the assembly in its own AppDomain to prevent load errors & file locking
                 var assemblyBytes = File.ReadAllBytes(file);
-                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, false, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, false, assemblyFolderPath, true);
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)

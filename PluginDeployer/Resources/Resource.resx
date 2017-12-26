@@ -148,7 +148,7 @@
     <value>Solution</value>
   </data>
   <data name="PluginDeployer_DeploymentType_Label_Toolip" xml:space="preserve">
-    <value>Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file</value>
+    <value>Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath location in the config file</value>
   </data>
   <data name="ErrorMessage_ErrorRetrievingAssembly" xml:space="preserve">
     <value>Error retrieving assembly</value>
@@ -248,5 +248,17 @@
   </data>
   <data name="ErrorMessage_ErrorLaunchingPRT" xml:space="preserve">
     <value>Error launching Plug-in Registration Tool</value>
+  </data>
+  <data name="Message_RetrievedAssembly" xml:space="preserve">
+    <value>Retrieved assembly</value>
+  </data>
+  <data name="Message_CreatedAssembly" xml:space="preserve">
+    <value>Created assembly</value>
+  </data>
+  <data name="Message_UpdatedAssembly" xml:space="preserve">
+    <value>Updated assembly</value>
+  </data>
+  <data name="Message_AssemblyInSolution" xml:space="preserve">
+    <value>Assembly in solution</value>
   </data>
 </root>

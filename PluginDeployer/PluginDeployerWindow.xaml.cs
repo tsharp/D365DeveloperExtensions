@@ -13,6 +13,7 @@ using PluginDeployer.Spkl;
 using PluginDeployer.Spkl.Tasks;
 using PluginDeployer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -254,8 +255,9 @@ namespace PluginDeployer
                 if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
                     return;
 
+                bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
                 string assemblyFilePath = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
-                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath);
+                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath, isWorkflow);
 
                 var assembly = ModelBuilder.CreateCrmAssembly(projectAssemblyName, assemblyFilePath, assemblyProperties);
 
@@ -274,6 +276,9 @@ namespace PluginDeployer
                 if (assemblyId == Guid.Empty)
                     MessageBox.Show(Resource.MEssageBox_ErrorDeployingAssembly);
 
+                if (foundAssembly == null)
+                    CreatePluginType(assemblyProperties, assemblyId, assemblyFilePath);
+
                 if (solution.SolutionId == ExtensionConstants.DefaultSolutionId)
                     return;
 
@@ -288,6 +293,28 @@ namespace PluginDeployer
             finally
             {
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationDeploy);
+            }
+        }
+
+        private void CreatePluginType(string[] assemblyProperties, Guid assemblyId, string assemblyFilePath)
+        {
+            List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes = new List<CrmPluginRegistrationAttribute>();
+            CrmPluginRegistrationAttribute crmPluginRegistrationAttribute =
+                new CrmPluginRegistrationAttribute(ConnPane.SelectedProject.Name, Guid.NewGuid().ToString(),
+                    String.Empty, $"{ConnPane.SelectedProject.Name} ({assemblyProperties[2]})", IsolationModeEnum.Sandbox);
+
+            crmPluginRegistrationAttributes.Add(crmPluginRegistrationAttribute);
+            PluginAssembly pluginAssembly = new PluginAssembly { Id = assemblyId };
+            string assemblyFullName = SpklHelpers.AssemblyFullName(assemblyFilePath, true);
+
+            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+            var ctx = new OrganizationServiceContext(service);
+
+            using (ctx)
+            {
+                PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
+
+                pluginRegistraton.RegisterActivities(crmPluginRegistrationAttributes, pluginAssembly, assemblyFullName);
             }
         }
 
@@ -314,7 +341,7 @@ namespace PluginDeployer
                 if (!AssemblyValidation.ValidateRegistraionDetails(assemblyFilePath, isWorkflow))
                     return;
 
-                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath);
+                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath, isWorkflow);
                 Version projectAssemblyVersion = Version.Parse(assemblyProperties[2]);
 
                 string projectAssemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();

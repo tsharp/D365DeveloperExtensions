@@ -160,11 +160,29 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly in solution.
+        /// </summary>
+        public static string Message_AssemblyInSolution {
+            get {
+                return ResourceManager.GetString("Message_AssemblyInSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly path is empty.
         /// </summary>
         public static string Message_AssemblyPathEmpty {
             get {
                 return ResourceManager.GetString("Message_AssemblyPathEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created assembly.
+        /// </summary>
+        public static string Message_CreatedAssembly {
+            get {
+                return ResourceManager.GetString("Message_CreatedAssembly", resourceCulture);
             }
         }
         
@@ -214,6 +232,15 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Retrieved assembly.
+        /// </summary>
+        public static string Message_RetrievedAssembly {
+            get {
+                return ResourceManager.GetString("Message_RetrievedAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retrieved solutions.
         /// </summary>
         public static string Message_RetrievedSolutions {
@@ -228,6 +255,15 @@ namespace PluginDeployer.Resources {
         public static string Message_RetrievingSolutions {
             get {
                 return ResourceManager.GetString("Message_RetrievingSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated assembly.
+        /// </summary>
+        public static string Message_UpdatedAssembly {
+            get {
+                return ResourceManager.GetString("Message_UpdatedAssembly", resourceCulture);
             }
         }
         
@@ -349,7 +385,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath localtion in the config file.
+        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath location in the config file.
         /// </summary>
         public static string PluginDeployer_DeploymentType_Label_Toolip {
             get {

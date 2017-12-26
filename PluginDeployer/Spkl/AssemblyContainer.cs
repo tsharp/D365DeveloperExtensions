@@ -59,16 +59,17 @@ namespace PluginDeployer.Spkl
         /// </summary>
         /// <param name="assemblyBytes"></param>
         /// <param name="isWorkflow"></param>
+        /// <param name="assemblyFolderPath"></param>
         /// <param name="reflectionOnly"></param>
         /// <returns></returns>
-        public static AssemblyContainer LoadAssembly(byte[] assemblyBytes, bool isWorkflow, bool reflectionOnly = false)
+        public static AssemblyContainer LoadAssembly(byte[] assemblyBytes, bool isWorkflow, string assemblyFolderPath, bool reflectionOnly = false)
         {
             var containerAppDomain = AppDomain.CreateDomain(
                 "AssemblyContainer",
                 AppDomain.CurrentDomain.Evidence,
                 new AppDomainSetup
                 {
-                    ApplicationBase = Environment.CurrentDirectory,
+                    ApplicationBase = assemblyFolderPath,
                     ShadowCopyFiles = "true"
                 },
                 new PermissionSet(PermissionState.Unrestricted));
