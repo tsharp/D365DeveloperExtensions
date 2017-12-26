@@ -10,7 +10,6 @@ using PluginDeployer.Resources;
 using PluginDeployer.Spkl;
 using PluginDeployer.ViewModels;
 using System;
-using System.Linq;
 
 namespace PluginDeployer.Crm
 {

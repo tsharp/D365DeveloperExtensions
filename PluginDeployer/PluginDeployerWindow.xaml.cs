@@ -277,7 +277,7 @@ namespace PluginDeployer
                     MessageBox.Show(Resource.MEssageBox_ErrorDeployingAssembly);
 
                 if (foundAssembly == null)
-                    CreatePluginType(assemblyProperties, assemblyId, assemblyFilePath);
+                    CreatePluginType(assemblyProperties, assemblyId, assemblyFilePath, isWorkflow);
 
                 if (solution.SolutionId == ExtensionConstants.DefaultSolutionId)
                     return;
@@ -296,7 +296,7 @@ namespace PluginDeployer
             }
         }
 
-        private void CreatePluginType(string[] assemblyProperties, Guid assemblyId, string assemblyFilePath)
+        private void CreatePluginType(string[] assemblyProperties, Guid assemblyId, string assemblyFilePath, bool isWorkflow)
         {
             List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes = new List<CrmPluginRegistrationAttribute>();
             CrmPluginRegistrationAttribute crmPluginRegistrationAttribute =
@@ -305,7 +305,7 @@ namespace PluginDeployer
 
             crmPluginRegistrationAttributes.Add(crmPluginRegistrationAttribute);
             PluginAssembly pluginAssembly = new PluginAssembly { Id = assemblyId };
-            string assemblyFullName = SpklHelpers.AssemblyFullName(assemblyFilePath, true);
+            string assemblyFullName = SpklHelpers.AssemblyFullName(assemblyFilePath, isWorkflow);
 
             var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
             var ctx = new OrganizationServiceContext(service);
