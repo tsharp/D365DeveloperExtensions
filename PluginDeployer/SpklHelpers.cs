@@ -12,12 +12,14 @@ namespace PluginDeployer
 {
     public class SpklHelpers
     {
-        public static string[] AssemblyProperties(string assemblyPath)
+        public static string[] AssemblyProperties(string assemblyPath, bool isWorkflow)
         {
             AssemblyContainer assemblyContainer = null;
             try
             {
-                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), false, true);
+                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
 
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
@@ -26,6 +28,25 @@ namespace PluginDeployer
                 var assemblyProperties = assemblyName.FullName.Split(",= ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                 return assemblyProperties;
+            }
+            finally
+            {
+                assemblyContainer?.Unload();
+            }
+        }
+
+        public static string AssemblyFullName(string assemblyPath, bool isWorkflow)
+        {
+            AssemblyContainer assemblyContainer = null;
+            try
+            {
+                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
+
+                List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
+
+                return pluginDatas.First().AssemblyFullName;
             }
             finally
             {

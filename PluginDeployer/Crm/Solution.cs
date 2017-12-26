@@ -78,7 +78,7 @@ namespace PluginDeployer.Crm
 
                 client.Execute(scRequest);
 
-                OutputLogger.WriteToOutputWindow(Resource.Message_NewWebResourceAddedSolution, MessageType.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_NewWebResourceAddedSolution}: {uniqueName} - {webResourceId}", MessageType.Info);
 
                 return true;
             }

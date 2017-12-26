@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using CrmDeveloperExtensions2.Core;
+﻿using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.Models;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using PluginDeployer.Resources;
 using PluginDeployer.Spkl;
+using System;
+using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace PluginDeployer
 {
@@ -88,7 +85,9 @@ namespace PluginDeployer
             {
                 var assemblyBytes = File.ReadAllBytes(assemblyPath);
 
-                container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, true);
+                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+
+                container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, assemblyFolderPath, true);
 
                 return container.PluginDatas.First().CrmPluginRegistrationAttributes.Count > 0;
             }

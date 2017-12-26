@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.17358.0539" Language="en-US" Publisher="Jason Lattimer" />
+        <Identity Id="CrmDeveloperExtensions2.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.17360.0333" Language="en-US" Publisher="Jason Lattimer" />
         <DisplayName>Crm Developer Extensions 2 - BETA</DisplayName>
         <Description xml:space="preserve">Dynamics CRM &amp; 365 2011/2013/2015/2016 Developer Extensions - 2nd Edition</Description>
         <MoreInfo>https://github.com/jlattimer/CrmDeveloperExtensions2/wiki</MoreInfo>
