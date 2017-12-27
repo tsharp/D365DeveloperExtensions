@@ -104,7 +104,8 @@
                           EnableColumnVirtualization="True" RowStyle="{DynamicResource DataGridRowStyle}" SelectionChanged="WebResourceGrid_OnSelectionChanged" CanUserReorderColumns="False"
                           ItemsSource="{Binding WebResourceItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" Width="25" SortMemberPath="WebResourceId">
+                        <DataGridTemplateColumn IsReadOnly="True" CanUserResize="False" CanUserSort="True" Width="25" SortMemberPath="WebResourceId"
+                                                HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" >
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Button x:Name="ShowId" Click="ShowId_Click" Style="{DynamicResource ImageButtonStyle}" Margin="-2,0,0,0">
