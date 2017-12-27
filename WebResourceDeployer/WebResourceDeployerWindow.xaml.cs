@@ -695,10 +695,7 @@ namespace WebResourceDeployer
                     MessageBoxResult result = MessageBox.Show(Resource.MessageBox_OkOverwrite, Resource.MessageBox_WebResourceDownload,
                         MessageBoxButton.YesNo);
                     if (result != MessageBoxResult.Yes)
-                    {
-                        Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                         return;
-                    }
                 }
 
                 byte[] decodedContent = WebResource.GetDecodedContent(webResource);
@@ -995,7 +992,6 @@ namespace WebResourceDeployer
                 EntityCollection results = await Task.Run(() => WebResource.RetrieveWebResourcesFromCrm(ConnPane.CrmService));
                 if (results == null)
                 {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingWebResources);
                     return;
                 }

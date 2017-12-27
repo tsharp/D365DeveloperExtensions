@@ -305,10 +305,7 @@ namespace PluginTraceViewer
                 await Task.WhenAll(traceTask);
 
                 if (!traceTask.Result)
-                {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingTraces);
-                }
             }
             finally
             {
