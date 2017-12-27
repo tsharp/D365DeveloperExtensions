@@ -16,6 +16,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem ReplaceParameters="true">CrmPluginRegistrationAttribute.cs</ProjectItem>
+    <ProjectItem ReplaceParameters="true" OpenInEditor="false">CrmPluginRegistrationAttribute.cs</ProjectItem>
   </TemplateContent>
 </VSTemplate>
