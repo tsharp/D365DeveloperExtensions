@@ -246,10 +246,7 @@ namespace SolutionPackager
                 await Task.WhenAll(solutionTask);
 
                 if (!solutionTask.Result)
-                {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show(Resource.MessageBox_ErrorRetrievingSolutions);
-                }
 
                 AddEventHandlers();
             }
@@ -497,7 +494,6 @@ namespace SolutionPackager
                 if (success)
                     return;
 
-                Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                 MessageBox.Show(Resource.MessageBox_ErrorPackagingSolution);
             }
             finally
@@ -601,9 +597,16 @@ namespace SolutionPackager
         {
             try
             {
-                UnpackSettings unpackSettings = GetValuesForUnpack();
-
                 Overlay.ShowMessage(_dte, $"{Resource.Message_ConnectingGettingUnmanaegedSolution}...", vsStatusAnimation.vsStatusAnimationSync);
+
+                string toolPath = Packager.CreateToolPath();
+                if (string.IsNullOrEmpty(toolPath))
+                {
+                    MessageBox.Show(Resource.ErrorMessage_SetSolutionPackagerPath);
+                    return;
+                }
+
+                UnpackSettings unpackSettings = GetValuesForUnpack();
 
                 List<Task> tasks = new List<Task>();
                 var getSolution = Crm.Solution.GetSolutionFromCrm(ConnPane.CrmService,
@@ -616,7 +619,6 @@ namespace SolutionPackager
 
                 if (string.IsNullOrEmpty(getSolution.Result))
                 {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
                     MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingSolution);
                     return;
                 }
