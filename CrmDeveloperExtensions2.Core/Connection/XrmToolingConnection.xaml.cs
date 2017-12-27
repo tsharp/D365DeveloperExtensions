@@ -116,12 +116,12 @@ namespace CrmDeveloperExtensions2.Core.Connection
         public event EventHandler<SelectionChangedEventArgs> SelectedProjectChanged;
         public event EventHandler<SelectionChangedEventArgs> ProfileChanged;
 
-        #endregion
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
 
         public XrmToolingConnection()
         {
@@ -172,9 +172,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 SolutionProjectsList.SelectionChanged += SolutionProjectsList_OnSelectionChanged;
 
                 SetConfigFile();
-
-                GetProfiles();
             }
+
+            if (Profiles == null || Profiles.Count == 0)
+                GetProfiles();
 
             if (!_projectEventsRegistered)
             {
