@@ -142,7 +142,7 @@
     <value>Registration Tool</value>
   </data>
   <data name="PluginDeployer_RegistrationTool_Button_ToolTip" xml:space="preserve">
-    <value>Launch Plug-in Registrion Tool</value>
+    <value>Launch Plug-in Registration Tool</value>
   </data>
   <data name="PluginDeployer_SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
@@ -187,7 +187,7 @@
     <value>MSBuild.ILMerge.Task uninstalled</value>
   </data>
   <data name="Message_NoRegistrationDetails" xml:space="preserve">
-    <value>You haven't addedd any registration details to the assembly class</value>
+    <value>You haven't added any registration details to the assembly class</value>
   </data>
   <data name="Message_UpdatingMajorMinorRequireRedeployment" xml:space="preserve">
     <value>Error updating assembly: changes to major &amp; minor versions require redeployment</value>
@@ -241,7 +241,7 @@
     <value>Adding registration details</value>
   </data>
   <data name="MessageBox_SetPRTOptionsPath" xml:space="preserve">
-    <value>Set Plug-in Registraion Tool path under Tools -&gt; Options -&gt; CRM DevEx</value>
+    <value>Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; CRM DevEx</value>
   </data>
   <data name="MessageBox_PRTNotFound" xml:space="preserve">
     <value>PluginRegistration.exe not found</value>

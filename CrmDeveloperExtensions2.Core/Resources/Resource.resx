@@ -130,7 +130,7 @@
     <value>Crm DevEx</value>
   </data>
   <data name="PluginRegistraionToolPath" xml:space="preserve">
-    <value>Plug-in Registraion Tool Path</value>
+    <value>Plug-in Registration Tool Path</value>
   </data>
   <data name="SolutionPackagerToolPath" xml:space="preserve">
     <value>Solution Packager Tool Path</value>

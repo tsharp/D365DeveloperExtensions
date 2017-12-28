@@ -475,7 +475,7 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plug-in Registraion Tool Path.
+        ///   Looks up a localized string similar to Plug-in Registration Tool Path.
         /// </summary>
         public static string PluginRegistraionToolPath {
             get {

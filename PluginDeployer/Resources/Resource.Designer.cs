@@ -223,7 +223,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You haven&apos;t addedd any registration details to the assembly class.
+        ///   Looks up a localized string similar to You haven&apos;t added any registration details to the assembly class.
         /// </summary>
         public static string Message_NoRegistrationDetails {
             get {
@@ -349,7 +349,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set Plug-in Registraion Tool path under Tools -&gt; Options -&gt; CRM DevEx.
+        ///   Looks up a localized string similar to Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; CRM DevEx.
         /// </summary>
         public static string MessageBox_SetPRTOptionsPath {
             get {
@@ -466,7 +466,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launch Plug-in Registrion Tool.
+        ///   Looks up a localized string similar to Launch Plug-in Registration Tool.
         /// </summary>
         public static string PluginDeployer_RegistrationTool_Button_ToolTip {
             get {
