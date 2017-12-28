@@ -20,5 +20,6 @@ namespace SolutionPackager.Models
         public string FileName { get; set; }
         public string FullFilePath { get; set; }
         public Version Version { get; set; }
+        public bool UseMapFile { get; set; }
     }
 }

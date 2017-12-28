@@ -157,6 +157,7 @@
     <Compile Include="FileHandler.cs" />
     <Compile Include="MapFile.cs" />
     <Compile Include="ModelBuilder.cs" />
+    <Compile Include="Models\SolutionPackagerCommand.cs" />
     <Compile Include="Packager.cs" />
     <Compile Include="ProjectFolderHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
@@ -194,6 +195,7 @@
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -88,6 +88,15 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not set working directory.
+        /// </summary>
+        public static string ErrorMessage_CouldNotSetWorkingDirectory {
+            get {
+                return ResourceManager.GetString("ErrorMessage_CouldNotSetWorkingDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error adding solution file to project.
         /// </summary>
         public static string ErrorMessage_ErrorAddingSolutionFileProject {
@@ -232,11 +241,38 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Begin.
+        /// </summary>
+        public static string Message_Begin {
+            get {
+                return ResourceManager.GetString("Message_Begin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting and getting unmanaged solution.
         /// </summary>
         public static string Message_ConnectingGettingUnmanaegedSolution {
             get {
                 return ResourceManager.GetString("Message_ConnectingGettingUnmanaegedSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        public static string Message_End {
+            get {
+                return ResourceManager.GetString("Message_End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error executing Solution Packager command.
+        /// </summary>
+        public static string Message_ErrorExecutingSolutionPackager {
+            get {
+                return ResourceManager.GetString("Message_ErrorExecutingSolutionPackager", resourceCulture);
             }
         }
         
@@ -300,6 +336,15 @@ namespace SolutionPackager.Resources {
         public static string Message_RetrievingSolutions {
             get {
                 return ResourceManager.GetString("Message_RetrievingSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout executing Solution Packager command.
+        /// </summary>
+        public static string Message_TimoutExecutingSolutionPackager {
+            get {
+                return ResourceManager.GetString("Message_TimoutExecutingSolutionPackager", resourceCulture);
             }
         }
         
@@ -561,6 +606,15 @@ namespace SolutionPackager.Resources {
         public static string SolutionPackager_UpdateVersionImage_Button_ToolTip {
             get {
                 return ResourceManager.GetString("SolutionPackager_UpdateVersionImage_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Map File?.
+        /// </summary>
+        public static string SolutionPackager_UseMapFileLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("SolutionPackager_UseMapFileLabel_Label_Content", resourceCulture);
             }
         }
         
