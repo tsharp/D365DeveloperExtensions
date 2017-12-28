@@ -19,5 +19,6 @@ namespace SolutionPackager.Models
         public string ProjectSolutionFolder { get; set; }
         public string DownloadedZipPath { get; set; }
         public DirectoryInfo ExtractedFolder { get; set; }
+        public bool UseMapFile { get; set; }
     }
 }

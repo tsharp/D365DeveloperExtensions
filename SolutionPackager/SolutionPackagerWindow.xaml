@@ -69,6 +69,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                 Content="{x:Static resources:Resource.SolutionPackager_SolutionsLabel_Label_Content}" />
@@ -83,25 +84,28 @@
                                Content="{x:Static resources:Resource.SolutionPackager_EnableSolutionPackagerLogLabel_Label_Content}"/>
                         <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="ExtractOptionsLabel"  Grid.Column="0" Grid.Row="3" FontWeight="Bold" 
-                               Content="{x:Static resources:Resource.SolutionPackager_ExtractOptionsLabel_Label_Content}" />
-                        <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                               Content="{x:Static resources:Resource.SolutionPackager_SaveSolutionsLabel_Label_Content}" />
-                        <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="4" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                        <Label x:Name="UseMapFileLabel" Grid.Column="0" Grid.Row="3" Content="{x:Static resources:Resource.SolutionPackager_UseMapFileLabel_Label_Content}"/>
+                        <CheckBox x:Name="UseMapFile" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="5" Content="{x:Static resources:Resource.SolutionPackager_SolutionFolderLabe_Label_Content}"/>
-                        <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" VerticalAlignment="Top"
+                        <Label x:Name="ExtractOptionsLabel"  Grid.Column="0" Grid.Row="4" FontWeight="Bold" 
+                               Content="{x:Static resources:Resource.SolutionPackager_ExtractOptionsLabel_Label_Content}" />
+                        <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                               Content="{x:Static resources:Resource.SolutionPackager_SaveSolutionsLabel_Label_Content}" />
+                        <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                                  IsThreeState="False" IsEnabled="False" />
+                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="6" Content="{x:Static resources:Resource.SolutionPackager_SolutionFolderLabe_Label_Content}"/>
+                        <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="{Binding IsEnabled, ElementName=SaveSolutions}" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="6" Content="{x:Static resources:Resource.SolutionPackager_PackageFolderLabel_Label_Content}"/>
-                        <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
+                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="7" Content="{x:Static resources:Resource.SolutionPackager_PackageFolderLabel_Label_Content}"/>
+                        <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="7" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackOptionsLabel" Grid.Column="0" Grid.Row="7" FontWeight="Bold" 
+                        <Label x:Name="PackOptionsLabel" Grid.Column="0" Grid.Row="8" FontWeight="Bold" 
                                Content="{x:Static resources:Resource.SolutionPackager_PackOptionsLabel_Label_Content}" />
-                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                Content="{x:Static resources:Resource.SolutionPackager_SolutionNameLabel_Label_Content}"/>
-                        <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <StackPanel Grid.Column="1" Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Stretch">
                             <TextBox x:Name="SolutionName" Margin="5,5,0,0" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" Style="{DynamicResource TextBoxStyle}"/>
                             <TextBox x:Name="VersionMajor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
@@ -120,10 +124,10 @@
                                 </Button>
                             </StackPanel>
                         </StackPanel>
-                        <Label x:Name="ImportOptionsLabel" Grid.Column="0" Grid.Row="9" FontWeight="Bold" 
+                        <Label x:Name="ImportOptionsLabel" Grid.Column="0" Grid.Row="10" FontWeight="Bold" 
                                Content="{x:Static resources:Resource.SolutionPackager_ImportOptionsLabel_Label_Content}"/>
-                        <Label x:Name="PublishAllLabel" Grid.Column="0" Grid.Row="10" Content="{x:Static resources:Resource.SolutionPackager_PublishAllLabel_Label_Content}" />
-                        <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="10" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                        <Label x:Name="PublishAllLabel" Grid.Column="0" Grid.Row="11" Content="{x:Static resources:Resource.SolutionPackager_PublishAllLabel_Label_Content}" />
+                        <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="11" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
                     </Grid>
                     <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">

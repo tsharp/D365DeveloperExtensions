@@ -288,4 +288,22 @@
   <data name="MessageBox_ErrorUpdatingSolutionXmlVersion" xml:space="preserve">
     <value>Error updating Solution.xml version</value>
   </data>
+  <data name="Message_Begin" xml:space="preserve">
+    <value>Begin</value>
+  </data>
+  <data name="Message_End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="ErrorMessage_CouldNotSetWorkingDirectory" xml:space="preserve">
+    <value>Could not set working directory</value>
+  </data>
+  <data name="Message_ErrorExecutingSolutionPackager" xml:space="preserve">
+    <value>Error executing Solution Packager command</value>
+  </data>
+  <data name="Message_TimoutExecutingSolutionPackager" xml:space="preserve">
+    <value>Timeout executing Solution Packager command</value>
+  </data>
+  <data name="SolutionPackager_UseMapFileLabel_Label_Content" xml:space="preserve">
+    <value>Use Map File?</value>
+  </data>
 </root>

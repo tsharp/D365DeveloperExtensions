@@ -477,6 +477,8 @@ namespace SolutionPackager
         {
             try
             {
+                Overlay.ShowMessage(_dte, $"{Resource.Message_PackagingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
+
                 PackSettings packSettings = GetValuesForPack();
 
                 if (packSettings.Version == null)
@@ -484,9 +486,7 @@ namespace SolutionPackager
                     MessageBox.Show(Resource.MessageBox_InvalidSolutionXmlVersion);
                     return;
                 }
-
-                Overlay.ShowMessage(_dte, $"{Resource.Message_PackagingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
-
+               
                 CommandOutput.Text = String.Empty;
 
                 bool success = ExecutePackage(packSettings);
@@ -513,7 +513,8 @@ namespace SolutionPackager
                 SaveSolutions = SaveSolutions.ReturnValue(),
                 SolutionFolder = SolutionFolder.SelectedItem.ToString(),
                 ProjectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject),
-                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
+                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/",
+                UseMapFile = UseMapFile.ReturnValue()
             };
 
             packSettings.Version =
@@ -545,7 +546,8 @@ namespace SolutionPackager
                 EnablePackagerLogging = EnableSolutionPackagerLog.ReturnValue(),
                 SaveSolutions = SaveSolutions.ReturnValue(),
                 SolutionFolder = SolutionFolder.SelectedItem.ToString(),
-                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/"
+                PackageFolder = PackageFolder.SelectedItem?.ToString() ?? "/",
+                UseMapFile = UseMapFile.ReturnValue()
             };
 
             unpackSettings.ProjectPackageFolder = Path.Combine(unpackSettings.ProjectPath,
@@ -623,7 +625,7 @@ namespace SolutionPackager
                     return;
                 }
 
-                Overlay.ShowMessage(_dte, $"{Resource.Message_ExtractingSolution}...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_ExtractingSolution}...");
 
                 bool success = ExecuteExtract(unpackSettings);
 

@@ -9,8 +9,12 @@ using NLog;
 using SolutionPackager.Models;
 using SolutionPackager.Resources;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Windows;
 
 namespace SolutionPackager
 {
@@ -20,11 +24,15 @@ namespace SolutionPackager
 
         public static bool CreatePackage(DTE dte, string toolPath, PackSettings packSettings, string commandArgs)
         {
-            dte.ExecuteCommand($"shell {toolPath}", commandArgs);
+            SolutionPackagerCommand command = new SolutionPackagerCommand
+            {
+                Action = SolutionPackagerAction.Pack.ToString(),
+                CommandArgs = commandArgs,
+                ToolPath = toolPath,
+                SolutionName = packSettings.CrmSolution.Name
+            };
 
-            //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Find a better way
-            System.Threading.Thread.Sleep(5000);
+            ExecuteSolutionPackager(command);
 
             if (!packSettings.SaveSolutions)
                 return true;
@@ -54,15 +62,21 @@ namespace SolutionPackager
 
         public static bool ExtractPackage(DTE dte, string toolPath, UnpackSettings unpackSettings, string commandArgs)
         {
-            dte.ExecuteCommand($"shell {toolPath}", commandArgs);
+            SolutionPackagerCommand command = new SolutionPackagerCommand
+            {
+                Action = SolutionPackagerAction.Extract.ToString(),
+                CommandArgs = commandArgs,
+                ToolPath = toolPath,
+                SolutionName = unpackSettings.CrmSolution.Name
+            };
 
-            //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Find a better way
-            System.Threading.Thread.Sleep(10000);
+            ExecuteSolutionPackager(command);
 
-            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName, unpackSettings.Project.ProjectItems,
+            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName,
+                unpackSettings.Project.ProjectItems,
                 unpackSettings.SolutionPackageConfig.packagepath);
-            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder, unpackSettings.ProjectPackageFolder,
+            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder,
+                unpackSettings.ProjectPackageFolder,
                 unpackSettings.Project.ProjectItems);
 
             Directory.Delete(unpackSettings.ExtractedFolder.FullName, true);
@@ -235,17 +249,13 @@ namespace SolutionPackager
 
         private static string CreatePackCommandArgs(PackSettings packSettings)
         {
-            var zipFolder = packSettings.SaveSolutions
-                ? packSettings.ProjectSolutionFolder
-                : packSettings.ProjectPackageFolder;
-
             StringBuilder command = new StringBuilder();
             command.Append(" /action: Pack");
-            command.Append($" /zipfile: \"{Path.Combine(zipFolder, packSettings.FileName)}\"");
+            command.Append($" /zipfile: \"{Path.Combine(packSettings.ProjectSolutionFolder, packSettings.FileName)}\"");
             command.Append($" /folder: \"{packSettings.ProjectPackageFolder}\"");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (packSettings.SolutionPackageConfig.map != null)
+            if (packSettings.SolutionPackageConfig.map != null && packSettings.UseMapFile)
             {
                 MapFile.Create(packSettings.SolutionPackageConfig, Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
                 if (File.Exists(Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
@@ -271,7 +281,7 @@ namespace SolutionPackager
             command.Append(" /clobber");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (unpackSettings.SolutionPackageConfig.map != null)
+            if (unpackSettings.SolutionPackageConfig.map != null && unpackSettings.UseMapFile)
             {
                 MapFile.Create(unpackSettings.SolutionPackageConfig, Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
                 if (File.Exists(Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
@@ -286,6 +296,90 @@ namespace SolutionPackager
             command.Append($" /packagetype:{unpackSettings.SolutionPackageConfig.packagetype}");
 
             return command.ToString();
+        }
+
+        public static bool ExecuteSolutionPackager(SolutionPackagerCommand command)
+        {
+            OutputLogger.WriteToOutputWindow($"{Resource.Message_Begin} {command.Action}: {command.SolutionName}", MessageType.Info);
+
+            int timeout = 60000;
+            string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (string.IsNullOrEmpty(workingDirectory))
+            {
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_CouldNotSetWorkingDirectory, MessageType.Error);
+                return false;
+            }
+
+            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            {
+                var processStartInfo = CreateProcessStartInfo(command);
+                process.StartInfo = processStartInfo;
+                process.StartInfo.WorkingDirectory = workingDirectory;
+
+                StringBuilder output = new StringBuilder();
+                StringBuilder errorDataReceived = new StringBuilder();
+
+                using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+                {
+                    using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+                    {
+                        process.OutputDataReceived += (sender, e) =>
+                        {
+                            if (e.Data == null)
+                                outputWaitHandle.Set();
+                            else
+                                output.AppendLine(e.Data);
+                        };
+                        process.ErrorDataReceived += (sender, e) =>
+                        {
+                            if (e.Data == null)
+                                errorWaitHandle.Set();
+                            else
+                                errorDataReceived.AppendLine(e.Data);
+                        };
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+
+                        string message;
+                        if (process.WaitForExit(timeout) && outputWaitHandle.WaitOne(timeout) && errorWaitHandle.WaitOne(timeout))
+                        {
+                            if (process.ExitCode == 0)
+                            {
+                                OutputLogger.WriteToOutputWindow($"{Resource.Message_End} {command.Action}: {command.SolutionName}", MessageType.Info);
+                                return true;
+                            }
+
+                            message = $"{Resource.Message_ErrorExecutingSolutionPackager}: {command.Action}: {command.SolutionName}";
+                        }
+                        else
+                        {
+                            message = $"{Resource.Message_TimoutExecutingSolutionPackager}: {command.Action}: {command.SolutionName}";
+                        }
+
+                        ExceptionHandler.LogProcessError(Logger, message, errorDataReceived.ToString());
+                        MessageBox.Show(message);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static ProcessStartInfo CreateProcessStartInfo(SolutionPackagerCommand command)
+        {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd",
+                Arguments = $"/c \"{command.ToolPath} {command.CommandArgs}\"",
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+
+            return processStartInfo;
         }
     }
 }
