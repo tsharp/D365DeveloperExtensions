@@ -27,6 +27,15 @@ namespace CrmDeveloperExtensions2.Core
             OutputLogger.WriteToOutputWindow(output, MessageType.Error);
         }
 
+        public static void LogProcessError(Logger logger, string message, string errorDataReceived)
+        {
+            string output = FormatProcessErrorOutput(message, errorDataReceived);
+
+            ExtensionLogger.LogToFile(logger, output, LogLevel.Error);
+
+            OutputLogger.WriteToOutputWindow(output, MessageType.Error);
+        }
+
         private static string FormatExceptionOutput(string message, Exception ex)
         {
             string result = $"{message}: {ex.Message}";
@@ -45,6 +54,11 @@ namespace CrmDeveloperExtensions2.Core
                    crmConnectionManager.LastException.Message +
                    Environment.NewLine +
                    crmConnectionManager.LastException.StackTrace;
+        }
+
+        private static string FormatProcessErrorOutput(string message, string errorDataReceived)
+        {
+            return $"{message}: {errorDataReceived}";
         }
     }
 }

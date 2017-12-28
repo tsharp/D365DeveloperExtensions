@@ -6,12 +6,14 @@ using NLog;
 using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using CrmDeveloperExtensions2.Core;
 using CrmDeveloperExtensions2.Core.UserOptions;
 using CrmDeveloperExtensions2.Resources;
 //using CrmIntellisense;
 using PluginDeployer;
 using PluginTraceViewer;
 using SolutionPackager;
+using TemplateWizards;
 using WebResourceDeployer;
 using ExLogger = CrmDeveloperExtensions2.Core.Logging.ExtensionLogger;
 using Logger = NLog.Logger;
@@ -36,8 +38,7 @@ namespace CrmDeveloperExtensions2
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    //TODO: Add pre-build step to update to actual version
-    [InstalledProductRegistration("#110", "#112", "2.0.17360.2107", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "2.0.17362.0540", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
@@ -90,9 +91,34 @@ namespace CrmDeveloperExtensions2
             CommandID ptvWindowCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidPluginTraceViewerWindow);
             OleMenuCommand ptvWindowItem = new OleMenuCommand(ShowToolWindow<PluginTraceViewerHost>, ptvWindowCommandId);
             mcs.AddCommand(ptvWindowItem);
+
+            //NuGet SDK Tools - Core Tools
+            CommandID nugetSdkToolsCoreCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidNuGetSdkToolsCore);
+            OleMenuCommand nugetSdkToolsCoreItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsCoreCommandId);
+            mcs.AddCommand(nugetSdkToolsCoreItem);
+
+            //NuGet SDK Tools - Plug-in Registration Tool
+            CommandID nugetSdkToolsPrtCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidNuGetSdkToolsPrt);
+            OleMenuCommand nugetSdkToolsPrtItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsPrtCommandId);
+            mcs.AddCommand(nugetSdkToolsPrtItem);
         }
 
-        private void ShowToolWindow<T>(object sender, EventArgs a)
+        private static void InstallNuGetCliPackage(object sender, EventArgs e)
+        {
+            OleMenuCommand oleMenuCommand = (OleMenuCommand)sender;
+
+            switch (oleMenuCommand.CommandID.ID)
+            {
+                case 262:
+                    SdkToolsInstaller.InstallNuGetCliPackage(ExtensionConstants.MicrosoftCrmSdkXrmToolingPrt);
+                    break;
+                case 263:
+                    SdkToolsInstaller.InstallNuGetCliPackage(ExtensionConstants.MicrosoftCrmSdkCoreTools);
+                    break;
+            }
+        }
+
+        private void ShowToolWindow<T>(object sender, EventArgs e)
         {
             ToolWindowPane window = FindToolWindow(typeof(T), 0, true);
             if (window?.Frame == null)

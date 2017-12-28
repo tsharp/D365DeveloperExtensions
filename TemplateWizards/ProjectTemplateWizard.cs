@@ -87,7 +87,7 @@ namespace TemplateWizards
             {
                 ExceptionHandler.LogException(Logger, Resource.ErrorMessage_TemplateWizardError, ex);
                 MessageBox.Show(Resource.ErrorMessage_TemplateWizardError);
-                throw new WizardCancelledException("Internal error", ex);
+                throw new WizardCancelledException(Resource.ErrorMessage_WizardCancelInternalError, ex);
             }
         }
 

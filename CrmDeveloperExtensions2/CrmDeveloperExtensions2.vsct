@@ -4,34 +4,50 @@
   <Extern href="vsshlids.h"/>
   <Commands package="GuidCrmDeveloperExtensionsPkg">
     <Groups>
-      <!--Item Templates--><!--
+      <!--Item Templates-->
+      <!--
       <Group guid="GuidItMenuCommandsCmdSet" id="CrmMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ADD"/>
       </Group>-->
 
-      <!--CRM Developer Extensions Project Menu-->
-      <Group guid="GuidCrmDevExCmdSet" id="ProjectMenuGroup" priority="0xFFFE">
+      <!--CRM Developer Extensions Solution Menu-->
+      <Group guid="GuidCrmDevExCmdSet" id="SolutionMenuGroup" priority="0xFFFE">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
       <Group guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" priority="0xFFFF">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenu"/>
       </Group>
 
+      <Group guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenuGroup" priority="0xFFFF">
+        <Parent guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenu"/>
+      </Group>
+
     </Groups>
 
     <Menus>
 
-      <Menu guid="GuidCrmDevExCmdSet" id="TopLevelMenu" priority="0x100" type="Menu">
-        <Parent guid="GuidCrmDevExCmdSet" id="ProjectMenuGroup"/>
+      <!-- Main menu -->
+      <Menu guid="GuidCrmDevExCmdSet" id="TopLevelMenu" priority="0x0100" type="Menu">
+        <Parent guid="GuidCrmDevExCmdSet" id="SolutionMenuGroup"/>
         <Strings>
           <ButtonText>Crm Developer Extensions</ButtonText>
+        </Strings>
+      </Menu>
+
+      <!-- NuGet SDK Tools sub-menu -->
+      <Menu guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenu" priority="0xFFFE" type="Menu">
+        <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup"/>
+        <Strings>
+          <ButtonText>NuGet SDK Tools</ButtonText>
+          <CommandName>NuGet SDK Tools</CommandName>
         </Strings>
       </Menu>
 
     </Menus>
 
     <Buttons>
-      <!--Item Templates--><!--
+      <!--Item Templates-->
+      <!--
       <Button guid="GuidItMenuCommandsCmdSet" id="CmdidAddItem1" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD_ITEMS" />
         <Icon guid="GuidMenuImage" id="Item" />
@@ -70,7 +86,7 @@
           <ButtonText>Plug-in Deployer</ButtonText>
         </Strings>
       </Button>
-      
+
       <!--Plug-in Trace Viewer-->
       <Button guid="GuidCrmDevExCmdSet" id="CmdidPluginTraceViewerWindow" priority="0xFFFB" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
@@ -104,6 +120,26 @@
         </Strings>
       </Button>
 
+      <!--Plug-in Registration Tool-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidNuGetSdkToolsPrt" priority="0xFFFA" type="Button">
+        <Parent guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Plug-in Registration Tool</ButtonText>
+        </Strings>
+      </Button>
+
+      <!--Core Tools-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidNuGetSdkToolsCore" priority="0xFFFB" type="Button">
+        <Parent guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Core Tools</ButtonText>
+        </Strings>
+      </Button>
+
     </Buttons>
     <!--<Bitmaps>
       <Bitmap guid="GuidMenuImage" href="Resources\menu.png" usedList="Item"/>
@@ -117,7 +153,8 @@
   <Symbols>
     <GuidSymbol name="GuidCrmDeveloperExtensionsPkg" value="{A4FA8F78-98AF-4633-8621-BBDD7792A6AC}" />
 
-    <!--Item Templates--><!--
+    <!--Item Templates-->
+    <!--
     <GuidSymbol name="GuidItMenuCommandsCmdSet" value="{393DA428-4DEC-489D-9BC7-586DD3DEAE24}">
       <IDSymbol name="CrmMenuGroup" value="0x1020" />
       <IDSymbol name="CmdidAddItem1" value="0x0100" />
@@ -127,16 +164,22 @@
 
     <!--CRM Developer Extensions Solution Menu-->
     <GuidSymbol name="GuidCrmDevExCmdSet" value="{95CD7B0B-0592-4683-B42C-A79A41380FFE}">
-      <IDSymbol name="ProjectMenuGroup" value="0x1020" />
+      <IDSymbol name="SolutionMenuGroup" value="0x1020" />
       <IDSymbol name="CmdidPluginDeployerWindow" value="0x0101" />
       <IDSymbol name="CmdidWebResourceDeployerWindow" value="0x0102" />
       <IDSymbol name="CmdidPluginTraceViewerWindow" value="0x0103" />
       <IDSymbol name="CmdidSolutionPackagerWindow" value="0x0104" />
       <IDSymbol name="TopLevelMenu" value="0x0100" />
       <IDSymbol name="TopLevelMenuGroup" value="0x0200" />
+
+      <IDSymbol name="CmdidNuGetSdkToolsPrt" value="0x0106" />
+      <IDSymbol name="CmdidNuGetSdkToolsCore" value="0x0107" />
+      <IDSymbol name="NuGetSdkSubMenu" value="0x1100"/>
+      <IDSymbol name="NuGetSdkSubMenuGroup" value="0x0105"/>
     </GuidSymbol>
 
-    <!--Menu Images--><!--
+    <!--Menu Images-->
+    <!--
     <GuidSymbol name="GuidMenuImage" value="{1CB77147-7544-418E-884D-62F2BEE1EF6A}" >
       <IDSymbol name="Item" value="1" />
     </GuidSymbol>

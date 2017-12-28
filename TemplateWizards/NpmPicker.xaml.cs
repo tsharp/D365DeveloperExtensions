@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using TemplateWizards.Resources;
 using NpmHistory = CrmDeveloperExtensions2.Core.Models.NpmHistory;
 
 namespace TemplateWizards
@@ -19,6 +20,8 @@ namespace TemplateWizards
             InitializeComponent();
 
             _npmHistory = history;
+
+            Title += $"{Resource.Version_Window_Title}: {history.name}";
 
             GetPackage(history);
         }

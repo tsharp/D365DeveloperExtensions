@@ -18,7 +18,7 @@ namespace CrmDeveloperExtensions2
     /// </summary>
     internal sealed class PackageIds
     {
-        public const int ProjectMenuGroup = 0x1020;
+        public const int SolutionMenuGroup = 0x1020;
         public const int CmdidPluginDeployerWindow = 0x0101;
         public const int CmdidWebResourceDeployerWindow = 0x0102;
         public const int CmdidPluginTraceViewerWindow = 0x0103;
@@ -26,5 +26,10 @@ namespace CrmDeveloperExtensions2
         public const int CmdidCrmIntellisense = 0x0105;
         public const int TopLevelMenu = 0x0100;
         public const int TopLevelMenuGroup = 0x0200;
+
+        public const int CmdidNuGetSdkToolsPrt = 0x0106;
+        public const int CmdidNuGetSdkToolsCore = 0x0107;
+        public const int NuGetSdkSubMenu = 0x1100;
+        public const int NuGetSdkSubMenuGroup = 0x0105;
     }
 }

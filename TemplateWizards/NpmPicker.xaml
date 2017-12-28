@@ -5,7 +5,7 @@
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
                          xmlns:resx="clr-namespace:TemplateWizards.Resources"
-                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static resx:Resource.NpmPickerTitle}"
+                         mc:Ignorable="d" WindowStyle="ToolWindow" 
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
                          Height="315" Width="350">
     <Window.Resources>
@@ -25,7 +25,7 @@
                   ItemContainerStyle="{DynamicResource PickerListViewItemStyle}" SelectionChanged="Versions_OnSelectionChanged">
             <ListView.View>
                 <GridView x:Name="VersionsGrid" AllowsColumnReorder="False" ColumnHeaderContainerStyle="{DynamicResource ListViewGridHeaderHiddenStyle}">
-                    <GridViewColumn />
+                    <GridViewColumn Width="300" />
                 </GridView>
             </ListView.View>
         </ListView>

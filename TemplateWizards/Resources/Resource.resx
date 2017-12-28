@@ -141,9 +141,6 @@
   <data name="NpmPickerOKTooltipText" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="NpmPickerTitle" xml:space="preserve">
-    <value>Choose NPM package</value>
-  </data>
   <data name="NuGetPackageInstallFailureMessage" xml:space="preserve">
     <value>Error installing NuGet package</value>
   </data>
@@ -164,9 +161,6 @@
   </data>
   <data name="NuGetPickerOKTooltipText" xml:space="preserve">
     <value>OK</value>
-  </data>
-  <data name="NuGetPickerTitle" xml:space="preserve">
-    <value>Choose NuGet package</value>
   </data>
   <data name="SdkAssemblyCore" xml:space="preserve">
     <value>Microsoft.CrmSdk.CoreAssemblies</value>
@@ -199,7 +193,7 @@
     <value>Project To Test</value>
   </data>
   <data name="TestProjectPicker_Window_Title" xml:space="preserve">
-    <value>Choose a unit testing framework</value>
+    <value>Unit testing framework</value>
   </data>
   <data name="TestProjectPicker_UnitTestFramework_Label_Content" xml:space="preserve">
     <value>Unit Test Framework</value>
@@ -226,7 +220,7 @@
     <value>Confirm</value>
   </data>
   <data name="CustomTemplatePicker_Window_Title" xml:space="preserve">
-    <value>Choose custom template</value>
+    <value>Custom template</value>
   </data>
   <data name="CustomTemplateWindow_Ok_Button_Content" xml:space="preserve">
     <value>OK</value>
@@ -255,13 +249,37 @@
   <data name="ErrorMessage_ErrorProcessingTemplate" xml:space="preserve">
     <value>Error processing template</value>
   </data>
-  <data name="SdkVersionPicker_Window_Title" xml:space="preserve">
-    <value>Choose Version</value>
+  <data name="Version_Window_Title" xml:space="preserve">
+    <value>Version</value>
   </data>
   <data name="TestProjectPicker_Cancel_Button_Content" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="TestProjectPicker_CreateProject_Button_Content" xml:space="preserve">
     <value>Create Project</value>
+  </data>
+  <data name="Message_InstallingNuGetPackage" xml:space="preserve">
+    <value>Installing NuGet package</value>
+  </data>
+  <data name="Message_InstalledNuGetPackage" xml:space="preserve">
+    <value>Installed NuGet package</value>
+  </data>
+  <data name="Message_ErrorInstallingNuGetPackage" xml:space="preserve">
+    <value>Error installing NuGet package</value>
+  </data>
+  <data name="Message_TimeoutInstallingNuGetPackage" xml:space="preserve">
+    <value>Timeout installing NuGet package</value>
+  </data>
+  <data name="ConfirmMessage_UpdateUserSetting_Title" xml:space="preserve">
+    <value>Update user setting</value>
+  </data>
+  <data name="ConfirmMessage_UpdatePrtPath" xml:space="preserve">
+    <value>Update Crm DevEx Plug-in Registration Tool path?</value>
+  </data>
+  <data name="ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath" xml:space="preserve">
+    <value>Update Crm DevEx CrmSvcUtil &amp; Solution Packager paths?</value>
+  </data>
+  <data name="ErrorMessage_WizardCancelInternalError" xml:space="preserve">
+    <value>Internal error</value>
   </data>
 </root>

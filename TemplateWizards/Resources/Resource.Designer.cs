@@ -61,7 +61,34 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose custom template.
+        ///   Looks up a localized string similar to Update Crm DevEx CrmSvcUtil &amp; Solution Packager paths?.
+        /// </summary>
+        public static string ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath {
+            get {
+                return ResourceManager.GetString("ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Crm DevEx Plug-in Registration Tool path?.
+        /// </summary>
+        public static string ConfirmMessage_UpdatePrtPath {
+            get {
+                return ResourceManager.GetString("ConfirmMessage_UpdatePrtPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update user setting.
+        /// </summary>
+        public static string ConfirmMessage_UpdateUserSetting_Title {
+            get {
+                return ResourceManager.GetString("ConfirmMessage_UpdateUserSetting_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom template.
         /// </summary>
         public static string CustomTemplatePicker_Window_Title {
             get {
@@ -151,6 +178,15 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internal error.
+        /// </summary>
+        public static string ErrorMessage_WizardCancelInternalError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_WizardCancelInternalError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error generating key.
         /// </summary>
         public static string GeneratingKeyFailureMessage {
@@ -165,6 +201,42 @@ namespace TemplateWizards.Resources {
         public static string GeneratingKeyStatusBarMessage {
             get {
                 return ResourceManager.GetString("GeneratingKeyStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error installing NuGet package.
+        /// </summary>
+        public static string Message_ErrorInstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_ErrorInstallingNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installed NuGet package.
+        /// </summary>
+        public static string Message_InstalledNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_InstalledNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing NuGet package.
+        /// </summary>
+        public static string Message_InstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_InstallingNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout installing NuGet package.
+        /// </summary>
+        public static string Message_TimeoutInstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_TimeoutInstallingNuGetPackage", resourceCulture);
             }
         }
         
@@ -268,15 +340,6 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose NPM package.
-        /// </summary>
-        public static string NpmPickerTitle {
-            get {
-                return ResourceManager.GetString("NpmPickerTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error installing NuGet package.
         /// </summary>
         public static string NuGetPackageInstallFailureMessage {
@@ -358,15 +421,6 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose NuGet package.
-        /// </summary>
-        public static string NuGetPickerTitle {
-            get {
-                return ResourceManager.GetString("NuGetPickerTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Microsoft.CrmSdk.CoreAssemblies.
         /// </summary>
         public static string SdkAssemblyCore {
@@ -399,15 +453,6 @@ namespace TemplateWizards.Resources {
         public static string SdkAssemblyXrmTooling {
             get {
                 return ResourceManager.GetString("SdkAssemblyXrmTooling", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Choose Version.
-        /// </summary>
-        public static string SdkVersionPicker_Window_Title {
-            get {
-                return ResourceManager.GetString("SdkVersionPicker_Window_Title", resourceCulture);
             }
         }
         
@@ -493,11 +538,20 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose a unit testing framework.
+        ///   Looks up a localized string similar to Unit testing framework.
         /// </summary>
         public static string TestProjectPicker_Window_Title {
             get {
                 return ResourceManager.GetString("TestProjectPicker_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string Version_Window_Title {
+            get {
+                return ResourceManager.GetString("Version_Window_Title", resourceCulture);
             }
         }
     }
