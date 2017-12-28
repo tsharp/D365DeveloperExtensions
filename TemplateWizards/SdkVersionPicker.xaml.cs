@@ -36,7 +36,7 @@ namespace TemplateWizards
         private void GetPackage(string nuGetPackage)
         {
             SdkVersions.Items.Clear();
-            Title = $"{Resource.SdkVersionPicker_Window_Title}:  {nuGetPackage}";
+            Title = $"{Resource.Version_Window_Title}:  {nuGetPackage}";
 
             List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
 

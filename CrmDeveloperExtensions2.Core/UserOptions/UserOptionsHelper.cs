@@ -19,5 +19,12 @@ namespace CrmDeveloperExtensions2.Core.UserOptions
 
             return (T)props.Item(userOptionProperty.Name).Value;
         }
+
+        public static void SetOption<T>(UserOptionProperty userOptionProperty, T value)
+        {
+            var props = _dte.Properties[Resource.UserOptionsCategory, userOptionProperty.Page];
+            Property setting = props.Item(userOptionProperty.Name);
+            setting.Value = value;
+        }
     }
 }

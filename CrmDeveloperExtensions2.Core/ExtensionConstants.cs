@@ -21,6 +21,8 @@ namespace CrmDeveloperExtensions2.Core
         public static string MicrosoftCrmSdkXrmToolingCoreAssembly = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
         public static string MsTestTestAdapter = "MSTest.TestAdapter";
         public static string MsTestTestFramework = "MSTest.TestFramework";
+        public static string MicrosoftCrmSdkCoreTools = "Microsoft.CrmSdk.CoreTools";
+        public static string MicrosoftCrmSdkXrmToolingPrt = "Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool";
 
         public static List<ToolWindow> CrmDevExToolWindows = new List<ToolWindow> {
             new ToolWindow {

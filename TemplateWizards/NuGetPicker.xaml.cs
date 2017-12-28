@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using TemplateWizards.Resources;
 
 namespace TemplateWizards
 {
@@ -19,6 +20,8 @@ namespace TemplateWizards
 
             _packageName = packageName;
             _packageVersions = packageVersions;
+
+            Title += $"{Resource.Version_Window_Title}: {packageName}";
 
             GetPackage(packageName, packageVersions);
         }

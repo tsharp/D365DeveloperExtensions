@@ -31,7 +31,7 @@ namespace CrmDeveloperExtensions2.Core.Logging
             }
 
             if (guidPane == VSConstants.OutputWindowPaneGuid.GeneralPane_guid)
-                outputWindow.CreatePane(guidPane, Resources.Resource.OutputLoggerWindowTitle, 1, 1);
+                outputWindow.CreatePane(guidPane, Resource.OutputLoggerWindowTitle, 1, 1);
 
             outputWindow.GetPane(guidPane, out var outputWindowPane);
 
@@ -40,6 +40,11 @@ namespace CrmDeveloperExtensions2.Core.Logging
 
             outputWindowPane.Activate();
             outputWindowPane.OutputString(message);
+
+            //This would bring the output window into focus
+            //using EnvDTE;
+            //DTE dte = (DTE)Package.GetGlobalService(typeof(DTE));
+            //dte.ExecuteCommand("View.Output", string.Empty);
         }
     }
 }
