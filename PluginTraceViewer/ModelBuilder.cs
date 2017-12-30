@@ -12,6 +12,9 @@ namespace PluginTraceViewer
         {
             ObservableCollection<CrmPluginTrace> crmPluginTraces = new ObservableCollection<CrmPluginTrace>();
 
+            if (pluginTraces == null)
+                return crmPluginTraces;
+
             foreach (Entity pluginTrace in pluginTraces.Entities)
             {
                 CrmPluginTrace crmPluginTrace = new CrmPluginTrace

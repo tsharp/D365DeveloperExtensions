@@ -50,6 +50,7 @@
                             ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_ToolTip}" Visibility="Collapsed"/>
                     <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
                     <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                    <Label x:Name="PollTime" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" Visibility="Collapsed" />
                 </StackPanel>
                 <DataGrid x:Name="CrmPluginTraces" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Margin="5,0,0,0" IsEnabled="False"
                           BorderThickness="0" Background="Transparent" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeColumns="False" 
@@ -57,11 +58,11 @@
                           Style="{DynamicResource DataGridStyle}" CellStyle="{StaticResource DataGridCellStyle}" RowStyle="{StaticResource DataGridRowStyle}" 
                           SelectionChanged="CrmPluginTraces_SelectionChanged">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn CanUserSort="False">
+                        <DataGridTemplateColumn CanUserSort="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                             <DataGridTemplateColumn.Header>
                                 <StackPanel Background="Transparent">
                                     <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
-                                        <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
+                                        <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" Style="{DynamicResource DataGridImageEnabled}"
                                                             ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_RefreshImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>
