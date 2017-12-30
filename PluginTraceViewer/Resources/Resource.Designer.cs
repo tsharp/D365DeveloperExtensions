@@ -115,6 +115,60 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjusting next poll time to.
+        /// </summary>
+        public static string Message_AdjustingNextPollTo {
+            get {
+                return ResourceManager.GetString("Message_AdjustingNextPollTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted plug-in trace log.
+        /// </summary>
+        public static string Message_DeletedTraceLog {
+            get {
+                return ResourceManager.GetString("Message_DeletedTraceLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting plug-in trace logs.
+        /// </summary>
+        public static string Message_DeletingTraces {
+            get {
+                return ResourceManager.GetString("Message_DeletingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last plug-in trace log created time.
+        /// </summary>
+        public static string Message_LastLogCreatedTime {
+            get {
+                return ResourceManager.GetString("Message_LastLogCreatedTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving plug-in traces.
+        /// </summary>
+        public static string Message_RetrievingTraces {
+            get {
+                return ResourceManager.GetString("Message_RetrievingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next poll in.
+        /// </summary>
+        public static string PluginTraceViewer_PollTime_Label_Content {
+            get {
+                return ResourceManager.GetString("PluginTraceViewer_PollTime_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correlation Id.
         /// </summary>
         public static string PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header {

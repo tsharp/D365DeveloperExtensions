@@ -18,6 +18,8 @@ namespace PluginTraceViewer.Crm
 
         public static EntityCollection RetrievePluginTracesFromCrm(CrmServiceClient client, DateTime afterDate)
         {
+            OutputLogger.WriteToOutputWindow(Resource.Message_RetrievingTraces, MessageType.Info);
+
             try
             {
                 FetchExpression query = new FetchExpression($@"<fetch>
@@ -38,7 +40,7 @@ namespace PluginTraceViewer.Crm
                                                                 </filter>
                                                                 <order attribute='createdon' descending='true' />
                                                                 </entity>
-                                                            </fetch>");
+                                                               </fetch>");
 
                 EntityCollection traceLogs = client.RetrieveMultiple(query);
 
@@ -59,6 +61,8 @@ namespace PluginTraceViewer.Crm
 
         public static List<Guid> DeletePluginTracesFromCrm(CrmServiceClient client, Guid[] pluginTraceLogIds)
         {
+            OutputLogger.WriteToOutputWindow(Resource.Message_DeletingTraces, MessageType.Info);
+
             List<Guid> deletedPluginTraceLogIds = new List<Guid>();
 
             try
@@ -86,7 +90,7 @@ namespace PluginTraceViewer.Crm
                 ExecuteMultipleResponse executeMultipleResponse =
                     (ExecuteMultipleResponse)client.Execute(executeMultipleRequest);
 
-                CheckForDeletionErrors(pluginTraceLogIds, executeMultipleResponse, deletedPluginTraceLogIds);
+                deletedPluginTraceLogIds = CheckForDeletionErrors(pluginTraceLogIds, executeMultipleResponse);
             }
             catch (Exception ex)
             {
@@ -96,20 +100,24 @@ namespace PluginTraceViewer.Crm
             return deletedPluginTraceLogIds;
         }
 
-        private static void CheckForDeletionErrors(Guid[] pluginTraceLogIds, ExecuteMultipleResponse executeMultipleResponse,
-            List<Guid> deletedPluginTraceLogIds)
+        private static List<Guid> CheckForDeletionErrors(Guid[] pluginTraceLogIds, ExecuteMultipleResponse executeMultipleResponse)
         {
+            List<Guid> deletedPluginTraceLogIds = new List<Guid>();
+
             foreach (var responseItem in executeMultipleResponse.Responses)
             {
                 if (responseItem.Response != null)
                 {
                     deletedPluginTraceLogIds.Add(pluginTraceLogIds[responseItem.RequestIndex]);
+                    OutputLogger.WriteToOutputWindow($"{Resource.Message_DeletedTraceLog}: {pluginTraceLogIds[responseItem.RequestIndex]}", MessageType.Info);
                     continue;
                 }
 
                 if (responseItem.Fault != null)
                     OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_ErrorDeletingTrace}: {responseItem.Fault}", MessageType.Error);
             }
+
+            return deletedPluginTraceLogIds;
         }
     }
 }

@@ -106,8 +106,8 @@
                 </vsp:SystemDropShadowChrome>
             </Popup>
             <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" 
-                Grid.ColumnSpan="2" Grid.Column="0"
-                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                          Grid.ColumnSpan="2" Grid.Column="0"
+                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}">
                         <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -120,7 +120,7 @@
                                     <Border x:Name="templateRoot" BorderBrush="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBorderBrushKey}}" BorderThickness="1" 
                                             SnapsToDevicePixels="True" Background="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxBackgroundBrushKey}}">
                                         <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" 
-                                            Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                                                Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
                                             <Path x:Name="Arrow" Data="M 0 0 L 3.5 3 L 6 0 Z" Fill="{DynamicResource {x:Static vsp:EnvironmentColors.ComboBoxGlyphBrushKey}}" 
                                                   HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
                                         </Border>
@@ -235,10 +235,10 @@
                 </ToggleButton.Style>
             </ToggleButton>
             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" 
-                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                IsHitTestVisible="False" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                              IsHitTestVisible="False" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsEnabled" Value="false">
@@ -328,9 +328,9 @@
         <Border x:Name="border" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBorderBrushKey}}" BorderThickness="{TemplateBinding BorderThickness}"
                 Background="{DynamicResource {x:Static vsp:CommonControlsColors.ButtonBrushKey}}" SnapsToDevicePixels="True" MinWidth="70" Height="23">
             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}"
-                                                  ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                                  Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                              ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsDefaulted" Value="True">

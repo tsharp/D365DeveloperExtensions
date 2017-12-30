@@ -201,4 +201,22 @@
   <data name="Info_NoNewTraces" xml:space="preserve">
     <value>No new traces</value>
   </data>
+  <data name="Message_DeletedTraceLog" xml:space="preserve">
+    <value>Deleted plug-in trace log</value>
+  </data>
+  <data name="Message_DeletingTraces" xml:space="preserve">
+    <value>Deleting plug-in trace logs</value>
+  </data>
+  <data name="Message_RetrievingTraces" xml:space="preserve">
+    <value>Retrieving plug-in traces</value>
+  </data>
+  <data name="Message_LastLogCreatedTime" xml:space="preserve">
+    <value>Last plug-in trace log created time</value>
+  </data>
+  <data name="Message_AdjustingNextPollTo" xml:space="preserve">
+    <value>Adjusting next poll time to</value>
+  </data>
+  <data name="PluginTraceViewer_PollTime_Label_Content" xml:space="preserve">
+    <value>Next poll in</value>
+  </data>
 </root>

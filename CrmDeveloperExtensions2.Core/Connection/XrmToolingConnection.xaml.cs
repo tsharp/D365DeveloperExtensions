@@ -296,10 +296,10 @@ namespace CrmDeveloperExtensions2.Core.Connection
         }
         private void SolutionEventsOnOpened()
         {
-            ClearConnection();
-            GetProjectsForList();
+            //ClearConnection();
+            //GetProjectsForList();
 
-            SolutionOpened?.Invoke(this, null);
+            //SolutionOpened?.Invoke(this, null);
         }
         private void SolutionEventsOnProjectRemoved(Project project)
         {
