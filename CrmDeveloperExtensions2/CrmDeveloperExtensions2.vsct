@@ -2,6 +2,7 @@
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
   <Commands package="GuidCrmDeveloperExtensionsPkg">
     <Groups>
       <!--Item Templates-->
@@ -120,9 +121,35 @@
         </Strings>
       </Button>
 
+      <!--CRM Intellisense On-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidCrmIntellisenseOn" priority="0xFFFE" type="Button">
+        <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="Run" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>CRM Intellisense On</ButtonText>
+        </Strings>
+      </Button>
+
+      <!--CRM Intellisense Off-->
+      <Button guid="GuidCrmDevExCmdSet" id="CmdidCrmIntellisenseOff" priority="0xFFFE" type="Button">
+        <Parent guid="GuidCrmDevExCmdSet" id="TopLevelMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="Stop" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>CRM Intellisense Off</ButtonText>
+        </Strings>
+      </Button>
+
       <!--Plug-in Registration Tool-->
       <Button guid="GuidCrmDevExCmdSet" id="CmdidNuGetSdkToolsPrt" priority="0xFFFA" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="NuGet" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
@@ -133,6 +160,8 @@
       <!--Core Tools-->
       <Button guid="GuidCrmDevExCmdSet" id="CmdidNuGetSdkToolsCore" priority="0xFFFB" type="Button">
         <Parent guid="GuidCrmDevExCmdSet" id="NuGetSdkSubMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="NuGet" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
@@ -169,6 +198,8 @@
       <IDSymbol name="CmdidWebResourceDeployerWindow" value="0x0102" />
       <IDSymbol name="CmdidPluginTraceViewerWindow" value="0x0103" />
       <IDSymbol name="CmdidSolutionPackagerWindow" value="0x0104" />
+      <IDSymbol name="CmdidCrmIntellisenseOn" value="0x0108" />
+      <IDSymbol name="CmdidCrmIntellisenseOff" value="0x0109" />
       <IDSymbol name="TopLevelMenu" value="0x0100" />
       <IDSymbol name="TopLevelMenuGroup" value="0x0200" />
 

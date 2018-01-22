@@ -98,16 +98,19 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-  <data name="TraceInfo_InitializingExtension" xml:space="preserve">
-    <value>Initializing extension</value>
+  <data name="Message_RetrievingMetadata" xml:space="preserve">
+    <value>Retrieving metadata</value>
   </data>
-  <data name="ErrorMessage_CannotCreateToolWindow" xml:space="preserve">
-    <value>Cannot create tool window</value>
+  <data name="Message_RetrievedMetadata" xml:space="preserve">
+    <value>Retrieved metadata</value>
   </data>
-  <data name="MessageBox_ConnectToCrm" xml:space="preserve">
-    <value>Connect to CRM?</value>
+  <data name="Message_ErrorRetrievingMetadata" xml:space="preserve">
+    <value>Error retrieving metadata</value>
   </data>
-  <data name="MessageBox_ConnectToCrm_Title" xml:space="preserve">
-    <value>Connect</value>
+  <data name="Message_ProcessingMetadata" xml:space="preserve">
+    <value>Processing metadata</value>
+  </data>
+  <data name="Infobar_RetrievingMetadata" xml:space="preserve">
+    <value>Retrieving metadata... You will need to close and reopen any other open files to use CRM Intellisense in them</value>
   </data>
 </root>

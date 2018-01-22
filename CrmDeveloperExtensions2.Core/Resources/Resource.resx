@@ -297,7 +297,7 @@
   <data name="UserOptions_Description_ExtensionLoggingPath" xml:space="preserve">
     <value>Path to extension log file storage</value>
   </data>
-  <data name="UserOptions_Description_Intellisense" xml:space="preserve">
+  <data name="UserOptions_Description_UseIntellisense" xml:space="preserve">
     <value>Get organization metadata and provide string completion - this will require closing and re-opening any files</value>
   </data>
   <data name="UserOptions_Description_RegToolPath" xml:space="preserve">
@@ -327,7 +327,7 @@
   <data name="UserOptions_DisplayName_ExtensionLoggingPath" xml:space="preserve">
     <value>Extension log file path</value>
   </data>
-  <data name="UserOptions_DisplayName_Intellisense" xml:space="preserve">
+  <data name="UserOptions_DisplayName_UseIntellisense" xml:space="preserve">
     <value>Use Intellisense?</value>
   </data>
   <data name="UserOptions_DisplayName_RegToolPath" xml:space="preserve">
@@ -404,5 +404,23 @@
   </data>
   <data name="ErrorMessage_ErrorGettingOutputWindow" xml:space="preserve">
     <value>Error getting output window</value>
+  </data>
+  <data name="UserOptions_Description_IntellisenseEntityTriggerCharacter" xml:space="preserve">
+    <value>The character that will activate the custom intellisense inside a string to display entity &amp; field completions</value>
+  </data>
+  <data name="UserOptions_Description_IntellisenseFieldTriggerCharacter" xml:space="preserve">
+    <value>The character that will activate the custom intellisense inside a string after an entity to display field completeions</value>
+  </data>
+  <data name="UserOptions_DisplayName_IntellisenseEntityTriggerCharacter" xml:space="preserve">
+    <value>Entity trigger character</value>
+  </data>
+  <data name="UserOptions_DisplayName_IntellisenseFieldTriggerCharacter" xml:space="preserve">
+    <value>Field trigger character</value>
+  </data>
+  <data name="ErrorMessage_UnknownInfobarError" xml:space="preserve">
+    <value>Unknown error creating infobar</value>
+  </data>
+  <data name="ErrorMessage_IntellisenseTriggerCharacterLength" xml:space="preserve">
+    <value>Intellisense: Entity/Field trigger character can only be 1 character long</value>
   </data>
 </root>

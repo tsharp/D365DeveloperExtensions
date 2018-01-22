@@ -4,12 +4,13 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Linq;
 using System.Text;
+using EnvDTE;
 
 namespace CrmDeveloperExtensions2.Core
 {
     public static class HostWindow
     {
-        public static string SetCaption(string caption, CrmServiceClient client)
+        public static string GetCaption(string caption, CrmServiceClient client)
         {
             string[] parts = caption.Split('|');
 
@@ -58,6 +59,17 @@ namespace CrmDeveloperExtensions2.Core
             Guid windowGuid = new Guid(StringFormatting.RemoveBracesToUpper(window.ObjectKind));
 
             return ExtensionConstants.CrmDevExToolWindows.FirstOrDefault(w => w.ToolWindowsId == windowGuid);
+        }
+
+        public static bool IsCrmDexWindowOpen(DTE dte)
+        {
+            foreach (Window window in dte.Windows)
+            {
+                if (IsCrmDevExWindow(window))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

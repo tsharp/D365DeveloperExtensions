@@ -345,7 +345,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
             ResetForm();
             ClearConnection();
             ToolWindow = null;
-
+          
             SolutionProjectsList.SelectionChanged -= SolutionProjectsList_OnSelectionChanged;
 
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);
@@ -463,7 +463,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 if (result != true)
                     return;
 
-                if (ctrl.CrmConnectionMgr?.CrmSvc == null || !ctrl.CrmConnectionMgr.CrmSvc.IsReady)
+                if (!ctrl.CrmConnectionMgr?.CrmSvc?.IsReady != true)
                 {
                     if (ctrl.CrmConnectionMgr != null)
                         ExceptionHandler.LogCrmConnectionError(Logger, Resource.ErrorMessage_ErrorCrmConnection, ctrl.CrmConnectionMgr);
@@ -492,8 +492,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
 
             if (SolutionProjectsList.SelectedItem != null)
                 SelectedProject = ((ProjectListItem)SolutionProjectsList.SelectedItem).Project;
-
-            SharedGlobals.SetGlobal("CrmService", loginForm.CrmConnectionMgr.CrmSvc, _dte);
 
             Dispatcher.Invoke(() =>
             {
@@ -589,6 +587,11 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 SelectedProfile = ProfileList.SelectedItem.ToString();
 
             ProfileChanged?.Invoke(this, e);
+        }
+
+        public void CollapsePane()
+        {
+            Expander.IsExpanded = false;
         }
     }
 }

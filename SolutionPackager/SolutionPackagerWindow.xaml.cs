@@ -119,10 +119,10 @@ namespace SolutionPackager
                 return;
 
             //Window was already loaded
-            if (SolutionData != null)
+            if (SolutionData.Count > 0)
                 return;
 
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
+            if (ConnPane.CrmService?.IsReady == true)
             {
                 SetWindowCaption(gotFocus.Caption);
                 SetControlState(true);
@@ -138,7 +138,10 @@ namespace SolutionPackager
 
         private async void LoadData()
         {
+            ConnPane.CollapsePane();
+
             GetProjectFolders();
+
             await GetCrmData();
         }
 
@@ -170,7 +173,7 @@ namespace SolutionPackager
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)

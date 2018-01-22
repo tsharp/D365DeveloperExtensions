@@ -147,8 +147,8 @@ namespace PluginTraceViewer
             if (CrmPluginTraces.ItemsSource != null)
                 return;
 
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
-                PrepareWindow(gotFocus.Caption);
+            if (ConnPane.CrmService?.IsReady == true)
+                InitializeForm();
         }
 
         private delegate void UpdateGridDelegate(ObservableCollection<CrmPluginTrace> pluginTraces);
@@ -168,6 +168,12 @@ namespace PluginTraceViewer
             _lastLogDate = GetLastDate();
 
             CreateFilters();
+        }
+
+        private void InitializeForm()
+        {
+            ResetFilterCollections();
+            PrepareWindow(_dte.ActiveWindow.Caption);
         }
 
         private void PollTimerTick(object sender, EventArgs e)
@@ -266,14 +272,12 @@ namespace PluginTraceViewer
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-            ResetFilterCollections();
-
-            PrepareWindow(_dte.ActiveWindow.Caption);
+            InitializeForm();
         }
 
         private void PrepareWindow(string caption)
@@ -502,6 +506,8 @@ namespace PluginTraceViewer
 
         private async void LoadData()
         {
+            ConnPane.CollapsePane();
+
             await GetCrmData();
         }
 

@@ -109,20 +109,21 @@ namespace PluginDeployer
             if (_crmSolutions != null)
                 return;
 
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
-            {
-                SetWindowCaption(gotFocus.Caption);
-                LoadData();
-            }
+            if (ConnPane.CrmService?.IsReady == true)
+                InitializeForm();
         }
 
-        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        private void InitializeForm()
         {
             ResetCollections();
             LoadData();
             ProjectName.Content = ConnPane.SelectedProject.Name;
-
             SetWindowCaption(_dte.ActiveWindow.Caption);
+        }
+
+        private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        {
+            InitializeForm();
         }
 
         private void ResetCollections()
@@ -144,7 +145,7 @@ namespace PluginDeployer
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -191,6 +192,8 @@ namespace PluginDeployer
 
         private async Task GetCrmData()
         {
+            ConnPane.CollapsePane();
+
             bool result = false;
 
             try

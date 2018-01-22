@@ -103,6 +103,9 @@ namespace SolutionPackager
 
         public static bool SolutionXmlExists(Project project, string packageFolder)
         {
+            if (string.IsNullOrEmpty(packageFolder))
+                return false;
+
             string solutionXmlPath = GetSolutionXmlPath(project, packageFolder);
 
             return File.Exists(solutionXmlPath);

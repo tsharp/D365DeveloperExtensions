@@ -4,6 +4,9 @@ namespace CrmDeveloperExtensions2.Core
 {
     public static class SharedGlobals
     {
+        //CrmService (CrmServiceClient) = Active connection to CRM
+        //UseCrmIntellisense (boolean) = Is CRM intellisense on/off
+
         public static object GetGlobal(string globalName, DTE dte)
         {
             Globals globals = dte.Globals;

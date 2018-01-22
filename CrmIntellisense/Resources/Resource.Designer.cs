@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CrmDeveloperExtensions2.Resources {
+namespace CrmIntellisense.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace CrmDeveloperExtensions2.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CrmDeveloperExtensions2.Resources.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CrmIntellisense.Resources.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +61,47 @@ namespace CrmDeveloperExtensions2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create tool window.
+        ///   Looks up a localized string similar to Retrieving metadata... You will need to close and reopen any other open files to use CRM Intellisense in them.
         /// </summary>
-        public static string ErrorMessage_CannotCreateToolWindow {
+        public static string Infobar_RetrievingMetadata {
             get {
-                return ResourceManager.GetString("ErrorMessage_CannotCreateToolWindow", resourceCulture);
+                return ResourceManager.GetString("Infobar_RetrievingMetadata", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect to CRM?.
+        ///   Looks up a localized string similar to Error retrieving metadata.
         /// </summary>
-        public static string MessageBox_ConnectToCrm {
+        public static string Message_ErrorRetrievingMetadata {
             get {
-                return ResourceManager.GetString("MessageBox_ConnectToCrm", resourceCulture);
+                return ResourceManager.GetString("Message_ErrorRetrievingMetadata", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect.
+        ///   Looks up a localized string similar to Processing metadata.
         /// </summary>
-        public static string MessageBox_ConnectToCrm_Title {
+        public static string Message_ProcessingMetadata {
             get {
-                return ResourceManager.GetString("MessageBox_ConnectToCrm_Title", resourceCulture);
+                return ResourceManager.GetString("Message_ProcessingMetadata", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initializing extension.
+        ///   Looks up a localized string similar to Retrieved metadata.
         /// </summary>
-        public static string TraceInfo_InitializingExtension {
+        public static string Message_RetrievedMetadata {
             get {
-                return ResourceManager.GetString("TraceInfo_InitializingExtension", resourceCulture);
+                return ResourceManager.GetString("Message_RetrievedMetadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving metadata.
+        /// </summary>
+        public static string Message_RetrievingMetadata {
+            get {
+                return ResourceManager.GetString("Message_RetrievingMetadata", resourceCulture);
             }
         }
     }

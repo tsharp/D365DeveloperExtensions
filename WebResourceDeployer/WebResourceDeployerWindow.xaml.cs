@@ -180,13 +180,8 @@ namespace WebResourceDeployer
             if (WebResourceGrid.ItemsSource != null)
                 return;
 
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
-            {
-                SetWindowCaption(gotFocus.Caption);
-                LoadData();
-
-                WebResourceTypes = CoreWebResourceTypes.GetTypes(ConnPane.CrmService.ConnectedOrgVersion.Major, true);
-            }
+            if (ConnPane.CrmService?.IsReady == true)
+                InitializeForm();
         }
 
         private void ResetCollections()
@@ -200,15 +195,22 @@ namespace WebResourceDeployer
 
         private async void LoadData()
         {
+            ConnPane.CollapsePane();
+
             await GetCrmData();
         }
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
+        {
+            InitializeForm();
+        }
+
+        private void InitializeForm()
         {
             ResetCollections();
 
@@ -830,7 +832,6 @@ namespace WebResourceDeployer
 
                 if (!webResourceTask.Result)
                     MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingWebResources);
-
             }
             finally
             {

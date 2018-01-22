@@ -60,5 +60,15 @@ namespace CrmDeveloperExtensions2.Core.Models
             Name = "UseIntellisense",
             Page = Resource.UserOptions_Page_Intellisense
         };
+        public static UserOptionProperty IntellisenseEntityTriggerCharacter => new UserOptionProperty
+        {
+            Name = "IntellisenseEntityTriggerCharacter",
+            Page = Resource.UserOptions_Page_Intellisense
+        };
+        public static UserOptionProperty IntellisenseFieldTriggerCharacter => new UserOptionProperty
+        {
+            Name = "IntellisenseFieldTriggerCharacter",
+            Page = Resource.UserOptions_Page_Intellisense
+        };
     }
 }
