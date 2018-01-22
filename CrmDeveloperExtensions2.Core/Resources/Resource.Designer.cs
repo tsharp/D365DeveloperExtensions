@@ -286,6 +286,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Intellisense: Entity/Field trigger character can only be 1 character long.
+        /// </summary>
+        public static string ErrorMessage_IntellisenseTriggerCharacterLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_IntellisenseTriggerCharacterLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not connected to an organization.
         /// </summary>
         public static string ErrorMessage_NotConnectedOrg {
@@ -336,6 +345,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string ErrorMessage_UnableWriteConfig {
             get {
                 return ResourceManager.GetString("ErrorMessage_UnableWriteConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error creating infobar.
+        /// </summary>
+        public static string ErrorMessage_UnknownInfobarError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnknownInfobarError", resourceCulture);
             }
         }
         
@@ -619,11 +637,20 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get organization metadata and provide string completion - this will require closing and re-opening any files.
+        ///   Looks up a localized string similar to The character that will activate the custom intellisense inside a string to display entity &amp; field completions.
         /// </summary>
-        public static string UserOptions_Description_Intellisense {
+        public static string UserOptions_Description_IntellisenseEntityTriggerCharacter {
             get {
-                return ResourceManager.GetString("UserOptions_Description_Intellisense", resourceCulture);
+                return ResourceManager.GetString("UserOptions_Description_IntellisenseEntityTriggerCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The character that will activate the custom intellisense inside a string after an entity to display field completeions.
+        /// </summary>
+        public static string UserOptions_Description_IntellisenseFieldTriggerCharacter {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_IntellisenseFieldTriggerCharacter", resourceCulture);
             }
         }
         
@@ -651,6 +678,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptions_Description_TemplatesPath {
             get {
                 return ResourceManager.GetString("UserOptions_Description_TemplatesPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get organization metadata and provide string completion - this will require closing and re-opening any files.
+        /// </summary>
+        public static string UserOptions_Description_UseIntellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_Description_UseIntellisense", resourceCulture);
             }
         }
         
@@ -718,11 +754,20 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use Intellisense?.
+        ///   Looks up a localized string similar to Entity trigger character.
         /// </summary>
-        public static string UserOptions_DisplayName_Intellisense {
+        public static string UserOptions_DisplayName_IntellisenseEntityTriggerCharacter {
             get {
-                return ResourceManager.GetString("UserOptions_DisplayName_Intellisense", resourceCulture);
+                return ResourceManager.GetString("UserOptions_DisplayName_IntellisenseEntityTriggerCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field trigger character.
+        /// </summary>
+        public static string UserOptions_DisplayName_IntellisenseFieldTriggerCharacter {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_IntellisenseFieldTriggerCharacter", resourceCulture);
             }
         }
         
@@ -750,6 +795,15 @@ namespace CrmDeveloperExtensions2.Core.Resources {
         public static string UserOptions_DisplayName_TemplatesPath {
             get {
                 return ResourceManager.GetString("UserOptions_DisplayName_TemplatesPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Intellisense?.
+        /// </summary>
+        public static string UserOptions_DisplayName_UseIntellisense {
+            get {
+                return ResourceManager.GetString("UserOptions_DisplayName_UseIntellisense", resourceCulture);
             }
         }
         

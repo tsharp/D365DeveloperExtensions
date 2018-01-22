@@ -12,10 +12,13 @@ using System.ComponentModel.Composition;
 namespace CrmIntellisense
 {
     [Export(typeof(IVsTextViewCreationListener))]
-    [Name("CRM CSharp Token Completion Handler")]
-    [ContentType("CSharp")]
-    [TextViewRole(PredefinedTextViewRoles.Editable)]
-    internal class CrmCSharpCompletionHandlerProvider : CrmCompletionHandlerProviderBase, IVsTextViewCreationListener
+    [Name("CRM JS Token Completion Handler")]
+    [ContentType("JavaScript")]
+    [ContentType("JScript")]
+    //[ContentType("htmlx")]
+    [ContentType("TypeScript")]
+    [TextViewRole(PredefinedTextViewRoles.Interactive)]
+    internal class CrmJsCompletionHandlerProvider : CrmCompletionHandlerProviderBase, IVsTextViewCreationListener
     {
         [Import]
         internal IVsEditorAdaptersFactoryService AdapterService;
@@ -32,7 +35,7 @@ namespace CrmIntellisense
 
             if (!(SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client))
                 return;
-
+            
             if (!IsIntellisenseEnabled(dte))
                 return;
 
@@ -40,7 +43,7 @@ namespace CrmIntellisense
             if (textView == null)
                 return;
 
-            CrmCSharpCompletionCommandHandler CreateCommandHandler() => new CrmCSharpCompletionCommandHandler(textViewAdapter, textView, this);
+            CrmJsCompletionCommandHandler CreateCommandHandler() => new CrmJsCompletionCommandHandler(textViewAdapter, textView, this);
             textView.Properties.GetOrCreateSingletonProperty(CreateCommandHandler);
 
             var metadata = SharedGlobals.GetGlobal("CrmMetadata", dte);

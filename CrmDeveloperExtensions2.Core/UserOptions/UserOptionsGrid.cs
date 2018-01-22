@@ -1,11 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using CrmDeveloperExtensions2.Core.Localization;
+﻿using CrmDeveloperExtensions2.Core.Localization;
 using CrmDeveloperExtensions2.Core.Resources;
 using Microsoft.VisualStudio.Shell;
 using NLog;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Windows;
 using Logger = NLog.Logger;
 
 namespace CrmDeveloperExtensions2.Core.UserOptions
@@ -100,18 +101,39 @@ namespace CrmDeveloperExtensions2.Core.UserOptions
         [LocalizedDescription("UserOptions_Description_DefaultKeyFileName", typeof(Resource))]
         public string DefaultKeyFileName { get; set; } = Resource.DefaultKeyName;
 
-        //[LocalizedCategory("UserOptions_Category_Intellisense", typeof(Resource))]
-        //[LocalizedDisplayName("UserOptions_DisplayName_Intellisense", typeof(Resource))]
-        //[LocalizedDescription("UserOptions_Description_Intellisense", typeof(Resource))]
-        //public bool UseIntellisense { get; set; } = false;
+        [LocalizedCategory("UserOptions_Category_Intellisense", typeof(Resource))]
+        [LocalizedDisplayName("UserOptions_DisplayName_UseIntellisense", typeof(Resource))]
+        [LocalizedDescription("UserOptions_Description_UseIntellisense", typeof(Resource))]
+        public bool UseIntellisense { get; set; } = false;
 
-        #region Events
+        [LocalizedCategory("UserOptions_Category_Intellisense", typeof(Resource))]
+        [LocalizedDisplayName("UserOptions_DisplayName_IntellisenseEntityTriggerCharacter", typeof(Resource))]
+        [LocalizedDescription("UserOptions_Description_IntellisenseEntityTriggerCharacter", typeof(Resource))]
+        public string IntellisenseEntityTriggerCharacter { get; set; } = "$";
 
-        public delegate void ApplySettingsHandler(object sender, EventArgs e); //Applied on save of form - may not be required
+        [LocalizedCategory("UserOptions_Category_Intellisense", typeof(Resource))]
+        [LocalizedDisplayName("UserOptions_DisplayName_IntellisenseFieldTriggerCharacter", typeof(Resource))]
+        [LocalizedDescription("UserOptions_Description_IntellisenseFieldTriggerCharacter", typeof(Resource))]
+        public string IntellisenseFieldTriggerCharacter { get; set; } = "_";
+
+        public delegate void ApplySettingsHandler(object sender, EventArgs e);
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected override void OnApply(PageApplyEventArgs e)
         {
+            if (IntellisenseEntityTriggerCharacter.Length > 1 || IntellisenseFieldTriggerCharacter.Length > 1)
+            {
+                MessageBox.Show(Resource.ErrorMessage_IntellisenseTriggerCharacterLength);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
+            if (IntellisenseEntityTriggerCharacter.Length == 0)
+                IntellisenseEntityTriggerCharacter = "$";
+
+            if (IntellisenseFieldTriggerCharacter.Length == 0)
+                IntellisenseFieldTriggerCharacter = "_";
+
             OnApplied(e);
             base.OnApply(e);
         }
@@ -122,8 +144,6 @@ namespace CrmDeveloperExtensions2.Core.UserOptions
         {
             Applied?.Invoke(this, e);
         }
-
-        #endregion
 
         private void NotifyPropertyChanged([CallerMemberName] string value = null)
         {

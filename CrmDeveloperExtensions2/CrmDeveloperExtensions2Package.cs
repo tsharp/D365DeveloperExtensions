@@ -1,18 +1,24 @@
+using CrmDeveloperExtensions2.Core;
+using CrmDeveloperExtensions2.Core.Connection;
+using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
+using CrmDeveloperExtensions2.Core.Models;
+using CrmDeveloperExtensions2.Core.UserOptions;
+using CrmDeveloperExtensions2.Resources;
+using CrmDeveloperExtensions2.Vs;
+using CrmIntellisense.Crm;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using NLog;
-using System;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.UserOptions;
-using CrmDeveloperExtensions2.Resources;
-//using CrmIntellisense;
 using PluginDeployer;
 using PluginTraceViewer;
 using SolutionPackager;
+using System;
+using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
+using System.Windows;
 using TemplateWizards;
 using WebResourceDeployer;
 using ExLogger = CrmDeveloperExtensions2.Core.Logging.ExtensionLogger;
@@ -38,7 +44,7 @@ namespace CrmDeveloperExtensions2
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "2.0.17364.0508", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "2.0.1822.0451", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
@@ -53,21 +59,32 @@ namespace CrmDeveloperExtensions2
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Logging", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Web Browser", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "External Tools", 0, 0, true)]
-    //[ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Intellisense", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Intellisense", 0, 0, true)]
     [ProvideOptionPage(typeof(UserOptionsGrid), "Crm DevEx", "Templates", 0, 0, true)]
 
     public sealed class CrmDeveloperExtensions2Package : Package
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static DTE _dte;
+        private IVsSolution _vsSolution;
+        private IVsSolutionEvents _vsSolutionEvents;
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            DTE dte = GetGlobalService(typeof(DTE)) as DTE;
-            StartupTasks.Run(dte);
+            _dte = GetGlobalService(typeof(DTE)) as DTE;
+            if (_dte == null)
+                return;
+
+            StartupTasks.Run(_dte);
 
             ExLogger.LogToFile(Logger, Resource.TraceInfo_InitializingExtension, LogLevel.Info);
+
+            AdviseSolutionEvents();
+            var events = _dte.Events;
+
+            BindSolutionEvents(events);
 
             if (!(GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs))
                 return;
@@ -92,6 +109,26 @@ namespace CrmDeveloperExtensions2
             OleMenuCommand ptvWindowItem = new OleMenuCommand(ShowToolWindow<PluginTraceViewerHost>, ptvWindowCommandId);
             mcs.AddCommand(ptvWindowItem);
 
+            //CRM Intellisense On
+            CommandID crmIntellisenseOnCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidCrmIntellisenseOn);
+            OleMenuCommand crmIntellisenseOnItem =
+                new OleMenuCommand(ToggleCrmIntellisense, crmIntellisenseOnCommandId)
+                {
+                    Visible = false
+                };
+            crmIntellisenseOnItem.BeforeQueryStatus += DisplayCrmIntellisense;
+            mcs.AddCommand(crmIntellisenseOnItem);
+
+            //CRM Intellisense Off
+            CommandID crmIntellisenseOffCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidCrmIntellisenseOff);
+            OleMenuCommand crmIntellisenseOffItem =
+                new OleMenuCommand(ToggleCrmIntellisense, crmIntellisenseOffCommandId)
+                {
+                    Visible = false
+                };
+            crmIntellisenseOffItem.BeforeQueryStatus += DisplayCrmIntellisense;
+            mcs.AddCommand(crmIntellisenseOffItem);
+
             //NuGet SDK Tools - Core Tools
             CommandID nugetSdkToolsCoreCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidNuGetSdkToolsCore);
             OleMenuCommand nugetSdkToolsCoreItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsCoreCommandId);
@@ -101,6 +138,82 @@ namespace CrmDeveloperExtensions2
             CommandID nugetSdkToolsPrtCommandId = new CommandID(PackageGuids.GuidCrmDevExCmdSet, PackageIds.CmdidNuGetSdkToolsPrt);
             OleMenuCommand nugetSdkToolsPrtItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsPrtCommandId);
             mcs.AddCommand(nugetSdkToolsPrtItem);
+        }
+
+        private static void DisplayCrmIntellisense(object sender, EventArgs eventArgs)
+        {
+            if (!(sender is OleMenuCommand menuCommand))
+                return;
+
+            bool useIntellisense = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseIntellisense);
+            if (!useIntellisense)
+                return;
+
+            var value = SharedGlobals.GetGlobal("UseCrmIntellisense", _dte);
+            if (value == null)
+            {
+                menuCommand.Visible = menuCommand.CommandID.ID == 264;
+                return;
+            }
+
+            bool isEnabled = (bool)value;
+            if (isEnabled)
+                menuCommand.Visible = menuCommand.CommandID.ID != 264;
+            else
+                menuCommand.Visible = menuCommand.CommandID.ID == 264;
+        }
+
+        private static void ToggleCrmIntellisense(object sender, EventArgs e)
+        {
+            bool isEnabled;
+            var value = SharedGlobals.GetGlobal("UseCrmIntellisense", _dte);
+            if (value == null)
+            {
+                isEnabled = false;
+                SharedGlobals.SetGlobal("UseCrmIntellisense", true, _dte);
+            }
+            else
+            {
+                isEnabled = (bool)value;
+                SharedGlobals.SetGlobal("UseCrmIntellisense", !isEnabled, _dte);
+            }
+
+            if (!isEnabled) //On
+            {
+                if (HostWindow.IsCrmDexWindowOpen(_dte) && SharedGlobals.GetGlobal("CrmService", _dte) != null)
+                    return;
+            }
+            else
+            {
+                if (!HostWindow.IsCrmDexWindowOpen(_dte) && SharedGlobals.GetGlobal("CrmService", _dte) != null)
+                    SharedGlobals.SetGlobal("CrmService", null, _dte);
+
+                CrmMetadata.Metadata = null;
+                SharedGlobals.SetGlobal("CrmMetadata", null, _dte);
+                OutputLogger.WriteToOutputWindow("Clearing metadata", MessageType.Info);
+
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show(Resource.MessageBox_ConnectToCrm, Resource.MessageBox_ConnectToCrm_Title,
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            ConnectToCrm();
+        }
+
+        private static void ConnectToCrm()
+        {
+            CrmLoginForm ctrl = new CrmLoginForm(false);
+            ctrl.ConnectionToCrmCompleted += CtrlOnConnectionToCrmCompleted;
+            ctrl.ShowDialog();
+        }
+
+        private static void CtrlOnConnectionToCrmCompleted(object sender, EventArgs eventArgs)
+        {
+            ((CrmLoginForm)sender).Close();
         }
 
         private static void InstallNuGetCliPackage(object sender, EventArgs e)
@@ -126,6 +239,33 @@ namespace CrmDeveloperExtensions2
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
+        private void AdviseSolutionEvents()
+        {
+            _vsSolutionEvents = new VsSolutionEvents(_dte, this);
+            _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
+            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out uint solutionEventsCookie);
+        }
+
+        private void BindSolutionEvents(Events events)
+        {
+            var solutionEvents = events.SolutionEvents;
+            solutionEvents.BeforeClosing += SolutionEventsOnBeforeClosing;
+        }
+
+        public void SolutionEventsOnBeforeClosing()
+        {
+            SharedGlobals.SetGlobal("UseCrmIntellisense", null, _dte);
+
+            if (SharedGlobals.GetGlobal("CrmService", _dte) != null)
+                SharedGlobals.SetGlobal("CrmService", null, _dte);
+
+            if (SharedGlobals.GetGlobal("CrmMetadata", _dte) != null)
+            {
+                SharedGlobals.SetGlobal("CrmMetadata", null, _dte);
+                OutputLogger.WriteToOutputWindow("Clearing metadata", MessageType.Info);
+            }
         }
     }
 }

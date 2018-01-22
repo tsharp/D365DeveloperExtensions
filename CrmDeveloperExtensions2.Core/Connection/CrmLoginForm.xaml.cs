@@ -1,6 +1,9 @@
-﻿using CrmDeveloperExtensions2.Core.Logging;
+﻿using CrmDeveloperExtensions2.Core.Enums;
+using CrmDeveloperExtensions2.Core.Logging;
 using CrmDeveloperExtensions2.Core.Models;
 using CrmDeveloperExtensions2.Core.UserOptions;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Tooling.CrmConnectControl;
 using System;
@@ -136,7 +139,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
                                {
                                    Title = string.IsNullOrWhiteSpace(e.StatusMessage) ? e.ErrorMessage : e.StatusMessage;
                                }));
-
         }
 
         private void mgr_ConnectionCheckComplete(object sender, ServerConnectStatusEventArgs e)
@@ -163,8 +165,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
                            Title = "Failed to Login with cached credentials.";
                            MessageBox.Show(Title, "Notification from ConnectionManager", MessageBoxButton.OK, MessageBoxImage.Error);
                            CrmLoginCtrl.IsEnabled = true;
-                       }
-                        ));
+                       }));
+
                 _resetUiFlag = false;
             }
             else
@@ -172,6 +174,8 @@ namespace CrmDeveloperExtensions2.Core.Connection
                 // Good Login Get back on the UI 
                 if (e.Connected && !_bIsConnectedComplete)
                     ProcessSuccess();
+
+                OutputLogger.WriteToOutputWindow(HostWindow.GetCaption(string.Empty, _mgr.CrmSvc).Substring(3), MessageType.Info);
             }
         }
 
@@ -183,8 +187,7 @@ namespace CrmDeveloperExtensions2.Core.Connection
                                {
                                    Title = "Starting Login Process. ";
                                    CrmLoginCtrl.IsEnabled = true;
-                               }
-                                   ));
+                               }));
         }
 
         private void CrmLoginCtrl_ConnectionStatusEvent(object sender, ConnectStatusEventArgs e)
@@ -192,7 +195,6 @@ namespace CrmDeveloperExtensions2.Core.Connection
             //Here we are using the bIsConnectedComplete bool to check to make sure we only process this call once. 
             if (e.ConnectSucceeded && !_bIsConnectedComplete)
                 ProcessSuccess();
-
         }
 
         private void CrmLoginCtrl_ConnectErrorEvent(object sender, ConnectErrorEventArgs e)
@@ -219,8 +221,9 @@ namespace CrmDeveloperExtensions2.Core.Connection
                    {
                        Title = "Notification from Parent";
                        CrmLoginCtrl.IsEnabled = true;
-                   }
-                ));
+                   }));
+
+            SetGlobalConnection(_mgr.CrmSvc);
 
             // Notify Caller that we are done with success. 
             ConnectionToCrmCompleted?.Invoke(this, null);
@@ -236,6 +239,14 @@ namespace CrmDeveloperExtensions2.Core.Connection
             TraceControlSettings.TraceLevel = SourceLevels.All;
             string logPath = XrmToolingLogging.GetLogFilePath();
             TraceControlSettings.AddTraceListener(new TextWriterTraceListener(logPath));
+        }
+
+        private void SetGlobalConnection(CrmServiceClient client)
+        {
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                return;
+
+            SharedGlobals.SetGlobal("CrmService", client, dte);
         }
     }
 

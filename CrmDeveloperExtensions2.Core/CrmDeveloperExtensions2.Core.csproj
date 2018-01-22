@@ -65,6 +65,9 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <ForceIncludeInVSIX>true</ForceIncludeInVSIX>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6071\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
       <Private>True</Private>
@@ -94,9 +97,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.10.0.10.0.30319\lib\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <ForceIncludeInVSIX>true</ForceIncludeInVSIX>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
@@ -229,6 +238,7 @@
     <Compile Include="DataGrid\GridFilters.cs" />
     <Compile Include="DateFormatting.cs" />
     <Compile Include="Enums\FileExtensionType.cs" />
+    <Compile Include="Enums\MetadataType.cs" />
     <Compile Include="Enums\SolutionPackagerAction.cs" />
     <Compile Include="Enums\ProjectType.cs" />
     <Compile Include="Enums\MapTypes.cs" />
@@ -238,6 +248,7 @@
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExtensionMethods\CheckBoxExtensions.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
+    <Compile Include="InfoBar.cs" />
     <Compile Include="Localization\LocalizedCategoryAttribute.cs" />
     <Compile Include="Localization\LocalizedDescriptionAttribute.cs" />
     <Compile Include="Localization\LocalizedDisplayNameAttribute.cs" />
@@ -250,6 +261,7 @@
     <Compile Include="Logging\ExtensionLogger.cs" />
     <Compile Include="Logging\XrmToolingLogging.cs" />
     <Compile Include="DataGrid\IFilterProperty.cs" />
+    <Compile Include="Models\InfobarActionItemEventArgs.cs" />
     <Compile Include="Models\MockingFramework.cs" />
     <Compile Include="Models\MovedProjectItem.cs" />
     <Compile Include="Models\NpmHistory.cs" />
@@ -261,6 +273,12 @@
     <Compile Include="Models\SpklConfig.cs" />
     <Compile Include="Models\ToolWindow.cs" />
     <Compile Include="Models\WebResourceType.cs" />
+    <Compile Include="MonikerHelper.cs" />
+    <Compile Include="Resources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="StringFormatting.cs" />
     <Compile Include="TemplateHandler.cs" />
     <Compile Include="Models\UserOptionProperties.cs" />
@@ -269,11 +287,6 @@
     <Compile Include="Vs\ProjectItemWorker.cs" />
     <Compile Include="Vs\ProjectWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="SharedGlobals.cs" />
     <Compile Include="Vs\SolutionWorker.cs" />
     <Compile Include="StatusBar.cs" />
@@ -361,8 +374,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
