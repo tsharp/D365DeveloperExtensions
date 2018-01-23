@@ -1,19 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 SDK Plug-in Base Class</Name>
-    <Description>Dynamics CRM/365 SDK Plug-in Base Class</Description>
+    <Name>CRM/365 SDK Workflow Base Class</Name>
+    <Description>Dynamics CRM/365 SDK Workflow Base Class</Description>
     <Icon>icon.png</Icon>
-    <TemplateID>7f0cc81b-c95b-4c9b-b723-f145af1e559c</TemplateID>
+    <TemplateID>accfb5a0-af40-4416-b896-066f8fb67526</TemplateID>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
-    <DefaultName>PluginBase.cs</DefaultName>
+    <DefaultName>WorkFlowActivityBase.cs</DefaultName>
   </TemplateData>
   <TemplateContent>
     <References>
       <Reference>
+        <Assembly>PresentationFramework</Assembly>
+      </Reference>
+      <Reference>
         <Assembly>System</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Workflow.Activities</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Workflow.ComponentModel</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Workflow.Runtime</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Activities</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Activities.Presentation</Assembly>
       </Reference>
       <Reference>
         <Assembly>System.Core</Assembly>
@@ -55,12 +73,9 @@
         <Assembly>System.ServiceModel.Web</Assembly>
       </Reference>
       <Reference>
-        <Assembly>System.Globalization</Assembly>
-      </Reference>
-      <Reference>
         <Assembly>System.Web</Assembly>
       </Reference>
     </References>
-    <ProjectItem ReplaceParameters="true" OpenInEditor="false">PluginBase.cs</ProjectItem>
+    <ProjectItem ReplaceParameters="true" OpenInEditor="false">WorkFlowActivityBase.cs</ProjectItem>
   </TemplateContent>
 </VSTemplate>

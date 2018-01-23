@@ -2,7 +2,7 @@
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
     <Name>CRM/365 SDK Plug-in From Base Class</Name>
-    <Description>Dynamics SDK Plug-in From Base Class</Description>
+    <Description>Dynamics CRM/365 SDK Plug-in From Base Class</Description>
     <Icon>icon.png</Icon>
     <TemplateID>72bdaba9-e225-4dfe-b3d8-e7fe28a1d724</TemplateID>
     <ProjectType>CSharp</ProjectType>

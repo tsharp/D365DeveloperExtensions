@@ -149,6 +149,20 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowBaseClass\CSharpSdkWorkflowBaseClass.csproj">
+      <Project>{DE98394E-6FB5-49C2-9F3B-FE0AE1C36BF4}</Project>
+      <Name>CSharpSdkWorkflowBaseClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowFromBaseClass\CSharpSdkWorkflowFromBaseClass.csproj">
+      <Project>{C39D35B0-897D-4BDD-B050-29B7C529A3E1}</Project>
+      <Name>CSharpSdkWorkflowFromBaseClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSolutionPackagerMap\CSharpSolutionPackagerMap.csproj">
       <Project>{E8D7659C-BB6B-4FDF-B0D8-6E6007F4696F}</Project>
       <Name>CSharpSolutionPackagerMap</Name>
