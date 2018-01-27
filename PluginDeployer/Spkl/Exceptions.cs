@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PluginDeployer.Spkl
 {
@@ -11,7 +15,12 @@ namespace PluginDeployer.Spkl
             CONFIG_NOTFOUND,
             NO_TASK_SUPPLIED,
             AUTH_ERROR,
-            UTILSNOTFOUND
+            UTILSNOTFOUND,
+            MISSING_PREFIX,
+            IMPORT_ERROR,
+            CRMSVCUTIL_ERROR,
+            SOLUTIONPACKAGER_ERROR,
+            NO_WEBRESOURCES_FOUND
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }

@@ -44,7 +44,7 @@ namespace CrmDeveloperExtensions2
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "2.0.1823.0453", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "2.0.1827.2046", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
