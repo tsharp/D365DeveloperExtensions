@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
 
 namespace PluginDeployer.Spkl.Tasks
 {
@@ -21,7 +22,7 @@ namespace PluginDeployer.Spkl.Tasks
         {
             _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
-            var matches = DirectoryEx.Search(filePath, "*.cs", null);
+            var matches = ServiceLocator.DirectoryService.Search(filePath, "*.cs");
 
             if (matches == null)
                 return;
@@ -77,7 +78,7 @@ namespace PluginDeployer.Spkl.Tasks
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // If so, search CRM for matches
-            var steps = ctx.GetWorkflowPluginActivities(pluginType);
+            var steps = ServiceLocator.Queries.GetWorkflowPluginActivities(ctx, pluginType);
 
             if (steps != null)
             {
@@ -91,7 +92,7 @@ namespace PluginDeployer.Spkl.Tasks
                         activity.FriendlyName,
                         activity.Description,
                         activity.WorkflowActivityGroupName,
-                        activity.pluginassembly_plugintype.IsolationMode.Value == 2 ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
+                        activity.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     ;
                     // Add attribute
@@ -103,7 +104,7 @@ namespace PluginDeployer.Spkl.Tasks
         private void AddPluginAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // Get existing Steps
-            var steps = ctx.GetPluginSteps(pluginType);
+            var steps = ServiceLocator.Queries.GetPluginSteps(ctx, pluginType);
 
             // Check that there are no duplicates
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
@@ -122,11 +123,11 @@ namespace PluginDeployer.Spkl.Tasks
                     // If there is an entity filter then get it
                     if (step.SdkMessageFilterId!=null)
                     {
-                        filter = ctx.GetMessageFilter(step.SdkMessageFilterId.Id);
+                        filter = ServiceLocator.Queries.GetMessageFilter(ctx, step.SdkMessageFilterId.Id);
                     }
 
                     // Get the images
-                    SdkMessageProcessingStepImage[] images = ctx.GetPluginStepImages(step);
+                    SdkMessageProcessingStepImage[] images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
 
                     // Only support two images - Why would you need more?!
                     if (images.Length > 2)
@@ -142,7 +143,7 @@ namespace PluginDeployer.Spkl.Tasks
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2 
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox 
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     { Id = step.Id.ToString() };

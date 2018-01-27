@@ -28,6 +28,8 @@ namespace CrmIntellisense
                 return false;
 
             var value = SharedGlobals.GetGlobal("UseCrmIntellisense", dte);
+            if (value == null)
+                return false;
 
             bool? isEnabled = (bool?)value;
             return !(bool)!isEnabled;
@@ -42,7 +44,7 @@ namespace CrmIntellisense
             }
 
             var bgw = new BackgroundWorker();
-            
+
             bgw.DoWork += (_, __) => CrmMetadata.GetMetadata(client);
 
             bgw.RunWorkerCompleted += (_, __) => infoBar.HideInfoBar();

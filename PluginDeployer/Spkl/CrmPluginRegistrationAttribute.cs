@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace PluginDeployer.Spkl
 {
+
     [Serializable]
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class CrmPluginRegistrationAttribute : Attribute
@@ -22,7 +22,7 @@ namespace PluginDeployer.Spkl
             int executionOrder,
             IsolationModeEnum isolationModel
 
-        )
+            )
         {
             Message = message;
             EntityLogicalName = entityLogicalName;
@@ -59,9 +59,10 @@ namespace PluginDeployer.Spkl
             int executionOrder,
             IsolationModeEnum isolationModel
 
-        ) : this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName,
-            executionOrder, isolationModel)
-        { }
+            ) : this(message.ToString(), entityLogicalName, stage, executionMode, filteringAttributes, stepName, executionOrder, isolationModel)
+        {
+
+        }
 
         /// <summary>
         /// Create workflow activity registration
@@ -76,7 +77,7 @@ namespace PluginDeployer.Spkl
             string description,
             string groupName,
             IsolationModeEnum isolationModel
-        )
+            )
         {
             Name = name;
             FriendlyName = friendlyName;
@@ -85,9 +86,7 @@ namespace PluginDeployer.Spkl
             IsolationMode = isolationModel;
 
         }
-
         #region Named Properties
-
         public string Id { get; set; }
         public string FriendlyName { get; set; }
         public string GroupName { get; set; }
@@ -104,7 +103,6 @@ namespace PluginDeployer.Spkl
         public ImageTypeEnum Image1Type { get; set; }
         public ImageTypeEnum Image2Type { get; set; }
         public PluginStepOperationEnum? Action { get; set; }
-
         #endregion
 
         #region Constructor Mandatory Properties
