@@ -1,10 +1,10 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.ExtensionMethods;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.Vs;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.ExtensionMethods;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Win32;
@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SolutionType = CrmDeveloperExtensions2.Core.Enums.SolutionType;
+using SolutionType = D365DeveloperExtensions.Core.Enums.SolutionType;
 using Task = System.Threading.Tasks.Task;
 using Window = EnvDTE.Window;
 
@@ -115,7 +115,7 @@ namespace SolutionPackager
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+            if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
             //Window was already loaded
@@ -374,7 +374,7 @@ namespace SolutionPackager
             Overlay.ShowMessage(_dte, $"{Resource.Message_PublishingCustomizations}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
             success =
-                await Task.Run(() => CrmDeveloperExtensions2.Core.Crm.Publish.PublishAllCustomizations(ConnPane.CrmService));
+                await Task.Run(() => D365DeveloperExtensions.Core.Crm.Publish.PublishAllCustomizations(ConnPane.CrmService));
 
             return success;
         }

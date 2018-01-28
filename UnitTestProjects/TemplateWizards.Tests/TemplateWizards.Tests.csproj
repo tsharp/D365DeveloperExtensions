@@ -61,9 +61,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CrmDeveloperExtensions2.Core\CrmDeveloperExtensions2.Core.csproj">
+    <ProjectReference Include="..\..\D365DeveloperExtensions.Core\D365DeveloperExtensions.Core.csproj">
       <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
-      <Name>CrmDeveloperExtensions2.Core</Name>
+      <Name>D365DeveloperExtensions2.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\TemplateWizards\TemplateWizards.csproj">
       <Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>

@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using EnvDTE;
 using NLog;
 using SolutionPackager.Resources;
@@ -126,7 +126,7 @@ namespace SolutionPackager
         {
             string latestSolutionPath = null;
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             string solutionProjectFolder = Path.Combine(projectPath, solutionFolder.Replace("/", String.Empty));
 
             DirectoryInfo d = new DirectoryInfo(solutionProjectFolder);
@@ -136,7 +136,7 @@ namespace SolutionPackager
 
             foreach (FileInfo file in files)
             {
-                Version v = CrmDeveloperExtensions2.Core.Versioning.SolutionNameToVersion(file.Name);
+                Version v = D365DeveloperExtensions.Core.Versioning.SolutionNameToVersion(file.Name);
                 if (v <= currentVersion)
                     continue;
 

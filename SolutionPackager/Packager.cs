@@ -1,8 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using NLog;
@@ -187,7 +187,7 @@ namespace SolutionPackager
                 if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
                 {
                     name = new DirectoryInfo(name).Name;
-                    if (name == projectFolder || name.Equals(CrmDeveloperExtensions2.Core.Resources.Resource.Constant_PropertiesFolder,
+                    if (name == projectFolder || name.Equals(D365DeveloperExtensions.Core.Resources.Resource.Constant_PropertiesFolder,
                         StringComparison.CurrentCultureIgnoreCase))
                         continue;
 
@@ -217,7 +217,7 @@ namespace SolutionPackager
             if (projectFolder.StartsWith("/", StringComparison.CurrentCultureIgnoreCase))
                 projectFolder = projectFolder.Substring(1);
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             projectPath = Path.Combine(projectPath, projectFolder);
 
             if (!Directory.Exists(projectPath))

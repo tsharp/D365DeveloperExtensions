@@ -619,7 +619,7 @@ namespace SolutionPackager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx: Solution Packager.
+        ///   Looks up a localized string similar to D365 DevEx: Solution Packager.
         /// </summary>
         public static string SolutionPackager_Window_Title {
             get {

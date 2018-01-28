@@ -12,7 +12,7 @@ Write-Host "New Revision:" $revision
 $script_path = $myinvocation.mycommand.path
 $script_folder = Split-Path $script_path -Parent
 $project_path = Split-Path $script_folder -Parent
-$assemblyinfo_path = Join-Path $project_path "CrmDeveloperExtensions2/Properties"
+$assemblyinfo_path = Join-Path $project_path "D365DeveloperExtensions/Properties"
 $assemblyinfo = Join-Path $assemblyinfo_path "AssemblyInfo.cs"
 
 $assemblyinfo_content = [System.IO.File]::ReadAllText($assemblyinfo)
@@ -45,7 +45,7 @@ $assemblyinfo_content = [Regex]::Replace($assemblyinfo_content, $copyrightPatter
 $script_path = $myinvocation.mycommand.path
 $script_folder = Split-Path $script_path -Parent
 $project_path = Split-Path $script_folder -Parent
-$manifest_path = Join-Path $project_path "CrmDeveloperExtensions2"
+$manifest_path = Join-Path $project_path "D365DeveloperExtensions"
 $manifest = Join-Path $manifest_path "source.extension.vsixmanifest"
 
 $manifest_content = [System.IO.File]::ReadAllText($manifest)
@@ -64,12 +64,12 @@ $manifest_content = [Regex]::Replace($manifest_content, $manifestPattern, 'Versi
 
 [System.IO.File]::WriteAllText($manifest, $manifest_content)
 
-#Update package version in CrmDeveloperExtensions2Package.cs
+#Update package version in D365DeveloperExtensionsPackage.cs
 $script_path = $myinvocation.mycommand.path
 $script_folder = Split-Path $script_path -Parent
 $project_path = Split-Path $script_folder -Parent
-$package_path = Join-Path $project_path "CrmDeveloperExtensions2"
-$package = Join-Path $package_path "CrmDeveloperExtensions2Package.cs"
+$package_path = Join-Path $project_path "D365DeveloperExtensions"
+$package = Join-Path $package_path "D365DeveloperExtensionsPackage.cs"
 
 $package_content = [System.IO.File]::ReadAllText($package)
 

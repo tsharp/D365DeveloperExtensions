@@ -205,7 +205,7 @@
     <value>Failed to add NuGet package</value>
   </data>
   <data name="MessageBox_MissingTemplateFolder" xml:space="preserve">
-    <value>Please specify a template folder under Tools -&gt; Options -&gt; Crm DevEx -&gt; Template Options</value>
+    <value>Please specify a template folder under Tools -&gt; Options -&gt; D365 DevEx -&gt; Template Options</value>
   </data>
   <data name="ErrorMessage_NoSelectedTemplate" xml:space="preserve">
     <value>TemplatePicker had no selected template</value>
@@ -274,10 +274,10 @@
     <value>Update user setting</value>
   </data>
   <data name="ConfirmMessage_UpdatePrtPath" xml:space="preserve">
-    <value>Update Crm DevEx Plug-in Registration Tool path?</value>
+    <value>Update D365 DevEx Plug-in Registration Tool path?</value>
   </data>
   <data name="ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath" xml:space="preserve">
-    <value>Update Crm DevEx CrmSvcUtil &amp; Solution Packager paths?</value>
+    <value>Update D365 DevEx CrmSvcUtil &amp; Solution Packager paths?</value>
   </data>
   <data name="ErrorMessage_WizardCancelInternalError" xml:space="preserve">
     <value>Internal error</value>

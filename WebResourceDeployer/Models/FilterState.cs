@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.DataGrid;
+﻿using D365DeveloperExtensions.Core.DataGrid;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

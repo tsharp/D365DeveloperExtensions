@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 
 namespace PluginDeployer.Spkl
 {

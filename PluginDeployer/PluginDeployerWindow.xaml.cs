@@ -1,8 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.ExtensionMethods;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.Vs;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.ExtensionMethods;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
@@ -102,7 +102,7 @@ namespace PluginDeployer
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+            if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
             //Data is populated already
@@ -453,7 +453,7 @@ namespace PluginDeployer
         {
             CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
 
-            CrmDeveloperExtensions2.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
+            D365DeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
-using CrmIntellisense.Crm;
+﻿using CrmIntellisense.Crm;
 using CrmIntellisense.Resources;
+using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;

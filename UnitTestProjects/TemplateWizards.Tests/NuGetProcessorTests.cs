@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CrmDeveloperExtensions2.Core.Enums;
+using D365DeveloperExtensions.Core.Enums;
 
 namespace TemplateWizards.Tests
 {

@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Models;
 using NuGet;
 using System.Collections.Generic;
 using System.Linq;

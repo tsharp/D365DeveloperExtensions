@@ -1,10 +1,11 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +16,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using NLog;
 using WebResourceDeployer.Resources;
 using WebResourceDeployer.ViewModels;
 
@@ -80,7 +80,7 @@ namespace WebResourceDeployer
 
             Files.ItemsSource = projectFiles;
             WebResourceTypes =
-                CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
+                D365DeveloperExtensions.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
         }
 
         private async void Create_OnClick(object sender, RoutedEventArgs e)
@@ -181,7 +181,7 @@ namespace WebResourceDeployer
                 return;
             }
 
-            FileExtensionType extensionType = CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetExtensionType(fileName);
+            FileExtensionType extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
             Type.SelectedItem = extensionType == FileExtensionType.Map
                 ? WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper())
                 : WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());

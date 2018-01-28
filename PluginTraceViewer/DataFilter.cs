@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.DataGrid;
-using CrmDeveloperExtensions2.Core.ExtensionMethods;
+﻿using D365DeveloperExtensions.Core.DataGrid;
+using D365DeveloperExtensions.Core.ExtensionMethods;
 using PluginTraceViewer.Models;
 using PluginTraceViewer.ViewModels;
 using System;

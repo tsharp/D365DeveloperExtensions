@@ -1,6 +1,6 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;

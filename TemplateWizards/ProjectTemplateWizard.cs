@@ -1,8 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
-using CrmDeveloperExtensions2.Core.Vs;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
+using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;

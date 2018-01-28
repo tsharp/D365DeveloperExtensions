@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
+﻿using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;

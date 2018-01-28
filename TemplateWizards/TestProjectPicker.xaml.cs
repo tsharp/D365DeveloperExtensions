@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
@@ -68,10 +68,10 @@ namespace TemplateWizards
             MockingFrameworks = new ObservableCollection<MockingFrameworkListItem>();
             UnitTestFramework.SelectedIndex = -1;
 
-            string version = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
-            Version coreVerion = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(version);
+            string version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
+            Version coreVerion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
 
-            foreach (MockingFramework mockingFramework in CrmDeveloperExtensions2.Core.Models.MockingFrameworks.GetMockingFrameworks())
+            foreach (MockingFramework mockingFramework in D365DeveloperExtensions.Core.Models.MockingFrameworks.GetMockingFrameworks())
             {
                 if (mockingFramework.CrmMajorVersion != coreVerion.Major)
                     continue;
@@ -96,7 +96,7 @@ namespace TemplateWizards
         private void GetProjects()
         {
             Projects = new ObservableCollection<ProjectListItem>();
-            IList<Project> projects = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjects(true);
+            IList<Project> projects = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjects(true);
 
             foreach (Project project in projects)
             {

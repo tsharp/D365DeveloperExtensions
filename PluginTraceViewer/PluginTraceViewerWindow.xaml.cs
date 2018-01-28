@@ -1,8 +1,8 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.DataGrid;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.DataGrid;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
@@ -23,7 +23,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Task = System.Threading.Tasks.Task;
-using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
+using WebBrowser = D365DeveloperExtensions.Core.WebBrowser;
 
 namespace PluginTraceViewer
 {
@@ -140,7 +140,7 @@ namespace PluginTraceViewer
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+            if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
             //Grid is populated already

@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using EnvDTE;
 using PluginDeployer.Models;
 using PluginDeployer.Spkl;

@@ -1,12 +1,12 @@
-﻿using CrmDeveloperExtensions2.Core.ExtensionMethods;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.ExtensionMethods;
+using D365DeveloperExtensions.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using TemplateWizards.Resources;
-using NpmHistory = CrmDeveloperExtensions2.Core.Models.NpmHistory;
+using NpmHistory = D365DeveloperExtensions.Core.Models.NpmHistory;
 
 namespace TemplateWizards
 {
@@ -97,7 +97,7 @@ namespace TemplateWizards
                 versions = new List<string>()
             };
 
-            Version firstVersion = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(history.versions[0]);
+            Version firstVersion = D365DeveloperExtensions.Core.Versioning.StringToVersion(history.versions[0]);
             var currentMajor = firstVersion.Major;
             var currentMinor = firstVersion.Minor;
             var currentBuild = firstVersion.Build;
@@ -108,7 +108,7 @@ namespace TemplateWizards
                 if (i == history.versions.Count - 1)
                     filteredHistory.versions.Add(history.versions[i]);
 
-                Version ver = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(history.versions[i]);
+                Version ver = D365DeveloperExtensions.Core.Versioning.StringToVersion(history.versions[i]);
 
                 if (ver.Major > currentMajor)
                 {

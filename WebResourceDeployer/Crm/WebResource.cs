@@ -1,7 +1,7 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
@@ -426,14 +426,14 @@ namespace WebResourceDeployer.Crm
             string currentPartialPath = String.Empty;
             for (int i = 0; i < folders.Length - 1; i++)
             {
-                string currentFolder = CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.CreateValidFolderName(folders[i]);
+                string currentFolder = D365DeveloperExtensions.Core.Vs.ProjectItemWorker.CreateValidFolderName(folders[i]);
                 currentFullPath = Path.Combine(currentFullPath, currentFolder);
                 currentPartialPath = Path.Combine(currentPartialPath, currentFolder);
                 bool exists = Directory.Exists(currentFullPath);
                 if (!exists)
                     Directory.CreateDirectory(currentFullPath);
 
-                CrmDeveloperExtensions2.Core.Vs.ProjectItemWorker.GetProjectItems(project, currentPartialPath, true);
+                D365DeveloperExtensions.Core.Vs.ProjectItemWorker.GetProjectItems(project, currentPartialPath, true);
             }
 
             return Path.Combine(currentFullPath, folders[folders.Length - 1]);

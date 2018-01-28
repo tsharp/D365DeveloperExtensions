@@ -1,6 +1,6 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Config;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +14,7 @@ namespace WebResourceDeployer.Config
     {
         public static ObservableCollection<WebResourceItem> HandleSpklMappings(Project project, string profile, ObservableCollection<WebResourceItem> webResourceItems)
         {
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
+            SpklConfig spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
 
             List<SpklConfigWebresourceFile> mappingsToRemove = new List<SpklConfigWebresourceFile>();
 
@@ -69,7 +69,7 @@ namespace WebResourceDeployer.Config
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, WebResourceItem webResourceItem)
         {
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(project);
+            SpklConfig spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
 
             List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = GetSpklConfigWebresourceFiles(profile, spklConfig) ??
                                                                          new List<SpklConfigWebresourceFile>();
@@ -110,13 +110,13 @@ namespace WebResourceDeployer.Config
                     webresourceDeployConfig.files = spklConfigWebresourceFiles;
             }
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 
         public static void RemoveSpklMappings(SpklConfig spklConfig, Project project, string profile, List<SpklConfigWebresourceFile> crmDexExConfigWebResources)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.webresources[0].files
@@ -142,7 +142,7 @@ namespace WebResourceDeployer.Config
             else
                 spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files.Add(spklConfigWebresourceFile);
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 

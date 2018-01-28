@@ -61,7 +61,7 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Crm DevEx CrmSvcUtil &amp; Solution Packager paths?.
+        ///   Looks up a localized string similar to Update D365 DevEx CrmSvcUtil &amp; Solution Packager paths?.
         /// </summary>
         public static string ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath {
             get {
@@ -70,7 +70,7 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Crm DevEx Plug-in Registration Tool path?.
+        ///   Looks up a localized string similar to Update D365 DevEx Plug-in Registration Tool path?.
         /// </summary>
         public static string ConfirmMessage_UpdatePrtPath {
             get {
@@ -268,7 +268,7 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please specify a template folder under Tools -&gt; Options -&gt; Crm DevEx -&gt; Template Options.
+        ///   Looks up a localized string similar to Please specify a template folder under Tools -&gt; Options -&gt; D365 DevEx -&gt; Template Options.
         /// </summary>
         public static string MessageBox_MissingTemplateFolder {
             get {

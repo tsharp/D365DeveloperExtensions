@@ -1,11 +1,11 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using Newtonsoft.Json;
 using NLog;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using Process = System.Diagnostics.Process;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
+using StatusBar = D365DeveloperExtensions.Core.StatusBar;
 
 namespace TemplateWizards
 {

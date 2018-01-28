@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using SolutionPackager.ViewModels;
 using System.IO;

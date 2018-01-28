@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PluginDeployer_Window_Title" xml:space="preserve">
-    <value>Crm DevEx: Plug-in Deployer</value>
+    <value>D365 DevEx: Plug-in Deployer</value>
   </data>
   <data name="PluginDeployer_Publish_Button_Content" xml:space="preserve">
     <value>Publish</value>
@@ -241,7 +241,7 @@
     <value>Adding registration details</value>
   </data>
   <data name="MessageBox_SetPRTOptionsPath" xml:space="preserve">
-    <value>Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; CRM DevEx</value>
+    <value>Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; D365 DevEx</value>
   </data>
   <data name="MessageBox_PRTNotFound" xml:space="preserve">
     <value>PluginRegistration.exe not found</value>

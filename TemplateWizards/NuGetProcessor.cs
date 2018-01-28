@@ -1,11 +1,11 @@
-using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
+using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
 using EnvDTE;
 using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Windows;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
+using StatusBar = D365DeveloperExtensions.Core.StatusBar;
 
 namespace TemplateWizards
 {

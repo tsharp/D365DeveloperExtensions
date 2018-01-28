@@ -781,7 +781,7 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx: Web Resource Deployer.
+        ///   Looks up a localized string similar to D365 DevEx: Web Resource Deployer.
         /// </summary>
         public static string WebResourceDeployer_Window_Title {
             get {
