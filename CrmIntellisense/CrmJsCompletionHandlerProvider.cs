@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;

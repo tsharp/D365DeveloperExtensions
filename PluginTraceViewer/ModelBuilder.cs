@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using Microsoft.Xrm.Sdk;
 using PluginTraceViewer.ViewModels;
 using System;

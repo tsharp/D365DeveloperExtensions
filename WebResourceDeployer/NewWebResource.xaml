@@ -3,7 +3,7 @@
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
+                         xmlns:coreControls="clr-namespace:D365DeveloperExtensions.Core.Controls;assembly=D365DeveloperExtensions.Core"
                          xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
                          xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
@@ -12,8 +12,8 @@
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DialogWindowStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/DialogWindowStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <converters:NewWebResourceCreateConverter x:Key="NewWebResourceCreateConverter"/>
         </ResourceDictionary>

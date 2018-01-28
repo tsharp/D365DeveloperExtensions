@@ -1,0 +1,23 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="clr-namespace:D365DeveloperExtensions.Core.Converters"
+    xmlns:resources="clr-namespace:D365DeveloperExtensions.Core.Resources"
+    x:Class="D365DeveloperExtensions.Core.Controls.CustomizationButton"
+             mc:Ignorable="d"
+             d:DesignHeight="20" d:DesignWidth="120" SnapsToDevicePixels="True">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ToolBarStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Button x:Name="Customizations" Click="Customizations_OnClick" Style="{DynamicResource ToolBarButtonStyle}" Loaded="Customizations_OnLoaded"
+            IsEnabled="{Binding Path=IsConnected, FallbackValue=false, Mode=TwoWay}"
+            Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.CustomizationsButton_Customizations_Button_Content}}"
+            ToolTip="{x:Static resources:Resource.CustomizationsButton_Customizations_Button_ToolTip}"/>
+</UserControl>

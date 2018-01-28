@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WebResourceDeployer_Window_Title" xml:space="preserve">
-    <value>Crm DevEx: Web Resource Deployer</value>
+    <value>D365 DevEx: Web Resource Deployer</value>
   </data>
   <data name="WebResourceDeployer_SolutionsLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>

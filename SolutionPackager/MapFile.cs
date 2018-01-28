@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Models;
 using System.IO;
 using System.Xml.Linq;
 

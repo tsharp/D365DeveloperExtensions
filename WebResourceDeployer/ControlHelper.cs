@@ -1,6 +1,4 @@
-﻿using System;
-using CrmDeveloperExtensions2.Core.DataGrid;
-using System.Collections.ObjectModel;
+﻿using D365DeveloperExtensions.Core.DataGrid;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;

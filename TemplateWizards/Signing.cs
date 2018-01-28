@@ -1,13 +1,13 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.UserOptions;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using EnvDTE;
 using NLog;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
+using StatusBar = D365DeveloperExtensions.Core.StatusBar;
 
 namespace TemplateWizards
 {
@@ -58,7 +58,7 @@ namespace TemplateWizards
         {
             string defaultKeyName = UserOptionsHelper.GetOption<string>(UserOptionProperties.DefaultKeyFileName);
             if (!FileSystem.IsValidFilename(defaultKeyName, destDirectory))
-                defaultKeyName = CrmDeveloperExtensions2.Core.Resources.Resource.DefaultKeyName;
+                defaultKeyName = D365DeveloperExtensions.Core.Resources.Resource.DefaultKeyName;
 
             if (!defaultKeyName.EndsWith(".snk", StringComparison.CurrentCultureIgnoreCase))
                 defaultKeyName = $"{defaultKeyName}.snk";

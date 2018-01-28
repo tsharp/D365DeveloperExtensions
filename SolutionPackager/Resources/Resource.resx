@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SolutionPackager_Window_Title" xml:space="preserve">
-    <value>Crm DevEx: Solution Packager</value>
+    <value>D365 DevEx: Solution Packager</value>
   </data>
   <data name="SolutionPackager_PackageSolution_Button_Content" xml:space="preserve">
     <value>Package</value>

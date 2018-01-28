@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
+﻿using D365DeveloperExtensions.Core.Enums;
 using System;
 using System.Drawing.Imaging;
 using System.IO;

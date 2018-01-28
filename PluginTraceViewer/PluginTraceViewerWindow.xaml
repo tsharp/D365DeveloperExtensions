@@ -2,9 +2,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
-             xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
-             xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
+             xmlns:connection="clr-namespace:D365DeveloperExtensions.Core.Connection;assembly=D365DeveloperExtensions.Core"
+             xmlns:coreControls="clr-namespace:D365DeveloperExtensions.Core.Controls;assembly=D365DeveloperExtensions.Core"
+             xmlns:coreConverters="clr-namespace:D365DeveloperExtensions.Core.Converters;assembly=D365DeveloperExtensions.Core"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
@@ -13,10 +13,10 @@
     <UserControl.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DataGridStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/DataGridStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/UserControlStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
             <Style x:Key="DataGridColumnHeaderNoMouseOverStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">

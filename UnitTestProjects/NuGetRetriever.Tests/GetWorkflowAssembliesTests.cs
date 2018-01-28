@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CrmDeveloperExtensions2.Core.Models;
+using D365DeveloperExtensions.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NuGetRetriever.Tests

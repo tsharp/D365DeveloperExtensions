@@ -1,5 +1,5 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using System;

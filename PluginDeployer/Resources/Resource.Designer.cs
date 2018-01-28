@@ -349,7 +349,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; CRM DevEx.
+        ///   Looks up a localized string similar to Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; D365 DevEx.
         /// </summary>
         public static string MessageBox_SetPRTOptionsPath {
             get {
@@ -484,7 +484,7 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx: Plug-in Deployer.
+        ///   Looks up a localized string similar to D365 DevEx: Plug-in Deployer.
         /// </summary>
         public static string PluginDeployer_Window_Title {
             get {

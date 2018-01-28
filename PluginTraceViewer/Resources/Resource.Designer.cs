@@ -349,7 +349,7 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx: Plug-in Trace Viewer.
+        ///   Looks up a localized string similar to D365 DevEx: Plug-in Trace Viewer.
         /// </summary>
         public static string PluginTraceViewerWindow_Window_Title {
             get {
