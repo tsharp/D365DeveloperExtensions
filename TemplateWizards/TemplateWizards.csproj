@@ -229,7 +229,7 @@
   <ItemGroup>
     <ProjectReference Include="..\D365DeveloperExtensions.Core\D365DeveloperExtensions.Core.csproj">
       <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
-      <Name>D365DeveloperExtensions2.Core</Name>
+      <Name>D365DeveloperExtensions.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuGetRetriever\NuGetRetriever.csproj">
       <Project>{bd5abc7e-6459-4cfb-82bd-39643599a285}</Project>
