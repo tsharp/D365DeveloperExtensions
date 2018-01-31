@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D365DeveloperExtensions", "D365DeveloperExtensions\D365DeveloperExtensions.csproj", "{EE23D830-8EB4-4313-9971-53A44900C169}"
 EndProject
@@ -83,6 +83,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSdkWorkflowFromBaseCl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenVsixSignTool", "OpenVsixSignTool", "{04F167B2-FBCC-4314-9241-7D8C331CD7D8}"
 	ProjectSection(SolutionItems) = preProject
+		certificate.pfx.template = certificate.pfx.template
 		Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.Core.dll = Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.Core.dll
 		Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.Cryptography.dll = Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.Cryptography.dll
 		Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.dll = Build\OpenVsixSignTool\Microsoft.Azure.KeyVault.dll
