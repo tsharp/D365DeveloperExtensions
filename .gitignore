@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # Software signing certificate
-/Build/OpenVsixSignTool/certificate.pfx
+*.pfx
