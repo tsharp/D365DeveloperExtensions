@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="110" xml:space="preserve">
-    <value>Dynamics CRM/365 Developer Extensions 2017</value>
+    <value>D365 Developer Extensions</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>Dynamics CRM/365 2011/2013/2015/2016 Developer Extensions 2017</value>
+    <value>D365 Developer Extensions</value>
   </data>
 </root>
