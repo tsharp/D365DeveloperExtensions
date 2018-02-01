@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="CSharpWorkflowTestProject.vstemplate">
-      <OutputSubPath>Crm DevEx</OutputSubPath>
+      <OutputSubPath>D365 DevEx</OutputSubPath>
       <SubType>Designer</SubType>
     </VSTemplate>
   </ItemGroup>

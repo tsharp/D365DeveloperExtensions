@@ -60,7 +60,7 @@
   <ItemGroup>
     <VSTemplate Include="CSharpCustom.vstemplate">
       <SubType>Designer</SubType>
-      <OutputSubPath>Crm DevEx</OutputSubPath>
+      <OutputSubPath>D365 DevEx</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

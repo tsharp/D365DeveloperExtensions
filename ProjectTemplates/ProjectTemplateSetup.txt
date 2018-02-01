@@ -1,12 +1,12 @@
 1. Add project to solution
 2. Unload project
 3. Edit .csproj file
-4. Add <OutputSubPath>Crm DevEx</OutputSubPath> under <VSTemplate Include="CSharpPluginProject.vstemplate">
+4. Add <OutputSubPath>D365 DevEx</OutputSubPath> under <VSTemplate Include="CSharpPluginProject.vstemplate">
 
 
     <VSTemplate Include="CSharpPluginProject.vstemplate">
       <SubType>Designer</SubType>
-      <OutputSubPath>Crm DevEx</OutputSubPath>
+      <OutputSubPath>D365 DevEx</OutputSubPath>
     </VSTemplate>
 	
 http://www.dotnetfunda.com/articles/show/1899/creating-a-new-category-for-custom-templates-with-a-new-entry-to-insta
