@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="CSharpSpklRegAttributes.vstemplate">
-      <OutputSubPath>Crm DevEx</OutputSubPath>
+      <OutputSubPath>D365 DevEx</OutputSubPath>
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
