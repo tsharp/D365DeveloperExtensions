@@ -11,9 +11,9 @@ Build Status: ![Build status](https://jlattimer.visualstudio.com/_apis/public/bu
 
 What's it's got currently:
 * Web resource deployer*
-* Plug-in deployer & registration*
+* Plug-in deployer & registration*  
+*Compatible with Scott Durrow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework
 * Solution packager UI  
-*All compatible with Scott Durrow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework
 * Plug-in trace log viewer
 * Numerous project & item templates
 * Intellisense for organization entity & attribute names
