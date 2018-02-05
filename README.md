@@ -18,4 +18,4 @@ What's it's got currently:
 * Numerous project & item templates
 * Intellisense for organization entity & attribute names
 
-Post any bugs, ideas, or thoughts in the [Issues](https://github.com/jlattimer/CrmDeveloperExtensions2/issues) area.
+Post any bugs, ideas, or thoughts in the [Issues](https://github.com/jlattimer/D365DeveloperExtensions/issues) area.
