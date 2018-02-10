@@ -282,4 +282,7 @@
   <data name="ErrorMessage_WizardCancelInternalError" xml:space="preserve">
     <value>Internal error</value>
   </data>
+  <data name="MessageBox_NPMError" xml:space="preserve">
+    <value>NPM is required to download the XRM type definitions. Install Node.js and the npm package manager. https://nodejs.org</value>
+  </data>
 </root>
