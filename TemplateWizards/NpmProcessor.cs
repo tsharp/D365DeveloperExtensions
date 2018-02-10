@@ -1,9 +1,11 @@
-﻿using D365DeveloperExtensions.Core.Models;
+﻿using System;
+using D365DeveloperExtensions.Core.Models;
 using Newtonsoft.Json;
 using NLog;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
+using TemplateWizards.Resources;
 using Process = System.Diagnostics.Process;
 using StatusBar = D365DeveloperExtensions.Core.StatusBar;
 
@@ -53,7 +55,7 @@ namespace TemplateWizards
             var process = Process.Start(processStartInfo);
             if (process == null)
             {
-                MessageBox.Show($"{Resources.Resource.NpmPackageInstallFailureMessage}");
+                MessageBox.Show($"{Resource.NpmPackageInstallFailureMessage}");
                 return null;
             }
 

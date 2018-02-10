@@ -277,6 +277,15 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NPM is required to download the XRM type definitions. Install Node.js and the npm package manager. https://nodejs.org.
+        /// </summary>
+        public static string MessageBox_NPMError {
+            get {
+                return ResourceManager.GetString("MessageBox_NPMError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string MessageBox_Title_ConfirmCreateConfigFile {

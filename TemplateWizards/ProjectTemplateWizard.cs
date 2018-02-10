@@ -201,6 +201,11 @@ namespace TemplateWizards
         {
             NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
 
+            if (history == null) {
+                MessageBox.Show(Resource.MessageBox_NPMError);
+                throw new WizardBackoutException();
+            }
+
             NpmPicker npmPicker = new NpmPicker(history);
             bool? result = npmPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
