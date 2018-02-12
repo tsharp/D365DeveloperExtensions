@@ -83,6 +83,9 @@ namespace D365DeveloperExtensions.Core.Connection
             // if you are using an unmanaged client, excel for example, and need to store the config in the users local directory
             // set this option to true. 
             _mgr.UseUserLocalDirectoryForConfigStore = true;
+
+            _mgr.ClientId = "2ad88395-b77d-4561-9441-d0e40824f9bc";
+            _mgr.RedirectUri = new Uri("app://5d3e90d6-aa8e-48a8-8f2c-58b45cc67315");
             // if you are using an unmanaged client,  you need to provide the name of an exe to use to create app config key's for. 
             //mgr.HostApplicatioNameOveride = "MyExecName.exe";
             // CrmLoginCtrl is the Login control,  this sets the CrmConnection Manager into it. 
