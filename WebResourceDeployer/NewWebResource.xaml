@@ -8,6 +8,7 @@
                          xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
                          mc:Ignorable="d" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
+                         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
                          Title="{x:Static resources:Resource.NewWebResource_Window_Title}" Height="275" Width="400">
     <Window.Resources>
         <ResourceDictionary >

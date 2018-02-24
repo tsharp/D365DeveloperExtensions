@@ -7,6 +7,7 @@
                          xmlns:resx="clr-namespace:TemplateWizards.Resources"
                          mc:Ignorable="d" WindowStyle="ToolWindow"
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
+                         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
                          Height="315" Width="375">
     <Window.Resources>
         <ResourceDictionary >
