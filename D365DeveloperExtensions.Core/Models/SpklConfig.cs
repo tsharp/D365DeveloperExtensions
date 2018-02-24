@@ -23,6 +23,7 @@ namespace D365DeveloperExtensions.Core.Models
         public string uniquename { get; set; }
         public string file { get; set; }
         public string description { get; set; }
+        public string ts { get; set; }
     }
 
     public class PluginDeployConfig

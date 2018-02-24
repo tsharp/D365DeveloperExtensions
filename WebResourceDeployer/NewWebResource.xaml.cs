@@ -29,6 +29,7 @@ namespace WebResourceDeployer
         private readonly CrmServiceClient _client;
         private readonly DTE _dte;
         private ObservableCollection<WebResourceType> _webResourceTypes;
+        private readonly Project _selectedProject;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace WebResourceDeployer
         public string NewBoundFile;
         public string NewDescription;
         public Guid NewSolutionId;
+
         public ObservableCollection<WebResourceType> WebResourceTypes
         {
             get => _webResourceTypes;
@@ -63,12 +65,13 @@ namespace WebResourceDeployer
 
         #endregion
 
-        public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
+        public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId, Project selectedProject)
         {
             InitializeComponent();
             DataContext = this;
             _client = client;
             _dte = dte;
+            _selectedProject = selectedProject;
 
             bool result = GetSolutions(selectedSolutionId);
             if (!result)
@@ -102,7 +105,7 @@ namespace WebResourceDeployer
             Overlay.ShowMessage(_dte, $"{Resource.Message_Creating}...");
 
             Entity webResource =
-                Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath);
+                Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath, _selectedProject);
 
             Guid webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
             if (webResourceId == Guid.Empty)
@@ -171,6 +174,10 @@ namespace WebResourceDeployer
             }
 
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
+            FileExtensionType extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
+            if (extensionType == FileExtensionType.Ts)
+                fileName = fileName.Replace(".ts", ".js");
+
             DisplayName.Text = FileNameToDisplayName(fileName);
             string extension = Path.GetExtension(fileName);
             UniqueName.Text = fileName;
@@ -181,10 +188,19 @@ namespace WebResourceDeployer
                 return;
             }
 
-            FileExtensionType extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
-            Type.SelectedItem = extensionType == FileExtensionType.Map
-                ? WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper())
-                : WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());
+            switch (extensionType)
+            {
+                case FileExtensionType.Map:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper());
+                    break;
+                case FileExtensionType.Ts:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Js.ToString().ToUpper());
+
+                    break;
+                default:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());
+                    break;
+            }
         }
 
         private string FileNameToDisplayName(string fileName)

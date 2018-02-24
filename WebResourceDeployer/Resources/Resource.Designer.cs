@@ -70,6 +70,24 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error encoding image.
+        /// </summary>
+        public static string Error_ErrorEncodingImage {
+            get {
+                return ResourceManager.GetString("Error_ErrorEncodingImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get &apos;outDir&apos; from tsconfig.json.
+        /// </summary>
+        public static string Error_UnableToGetTsconfigOutdir {
+            get {
+                return ResourceManager.GetString("Error_UnableToGetTsconfigOutdir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error adding web resource to solution.
         /// </summary>
         public static string ErrorMessage_ErrorAddingWebResourceSolution {
@@ -655,6 +673,15 @@ namespace WebResourceDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keep bound to file not in project.
+        /// </summary>
+        public static string WebResourceDeployer_Locked_CheckBox_Tooltip {
+            get {
+                return ResourceManager.GetString("WebResourceDeployer_Locked_CheckBox_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mapped To.
         /// </summary>
         public static string WebResourceDeployer_MappedTo_DataGridTemplateColumn_Header {
@@ -786,15 +813,6 @@ namespace WebResourceDeployer.Resources {
         public static string WebResourceDeployer_Window_Title {
             get {
                 return ResourceManager.GetString("WebResourceDeployer_Window_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type.
-        /// </summary>
-        public static string WebResourceTypeLabel_Label_Content {
-            get {
-                return ResourceManager.GetString("WebResourceTypeLabel_Label_Content", resourceCulture);
             }
         }
     }

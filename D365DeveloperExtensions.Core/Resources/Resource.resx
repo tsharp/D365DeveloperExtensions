@@ -423,4 +423,7 @@
   <data name="ErrorMessage_IntellisenseTriggerCharacterLength" xml:space="preserve">
     <value>Intellisense: Entity/Field trigger character can only be 1 character long</value>
   </data>
+  <data name="Error_UnableToReadProjectFile" xml:space="preserve">
+    <value>Unable to read project file</value>
+  </data>
 </root>

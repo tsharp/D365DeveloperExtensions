@@ -166,7 +166,8 @@ namespace WebResourceDeployer.Crm
             }
         }
 
-        public static Entity CreateNewWebResourceEntity(int type, string prefix, string name, string displayName, string description, string filePath)
+        public static Entity CreateNewWebResourceEntity(int type, string prefix, string name, string displayName, string description,
+            string filePath, Project project)
         {
             Entity webResource = new Entity("webresource")
             {
@@ -181,28 +182,41 @@ namespace WebResourceDeployer.Crm
             if (type == 8)
                 webResource["silverlightversion"] = "4.0";
 
-            webResource["content"] = GetFileContent(filePath);
+            webResource["content"] = GetFileContent(filePath, project);
 
             return webResource;
         }
 
-        private static string GetFileContent(string filePath)
+        private static string GetFileContent(string filePath, Project project)
         {
             FileExtensionType extension = WebResourceTypes.GetExtensionType(filePath);
-
-            string content;
 
             //Images
             if (WebResourceTypes.IsImageType(extension))
             {
-                content = EncodedImage(filePath, extension);
+                var content = EncodedImage(filePath, extension);
                 return content;
             }
 
-            //Everything else
-            content = File.ReadAllText(filePath);
+            //TypeScript
+            if (extension == FileExtensionType.Ts)
+            {
+                string jsPath = TsHelper.GetJsForTsPath(filePath, project);
+                jsPath = FileSystem.BoundFileToLocalPath(jsPath,
+                    D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project));
+                return GetNonImageFileContext(jsPath);
+            }
 
-            return EncodeString(content);
+            //Everything else    
+            return GetNonImageFileContext(filePath);
+        }
+
+        private static string GetNonImageFileContext(string filePath)
+        {
+            string content = FileSystem.GetFileText(filePath);
+            return content == null
+                ? null
+                : EncodeString(content);
         }
 
         public static Guid CreateWebResourceInCrm(CrmServiceClient client, Entity webResource)
@@ -223,7 +237,7 @@ namespace WebResourceDeployer.Crm
             }
         }
 
-        public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string description, string projectFullName)
+        public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string description, Project project)
         {
             Entity webResource = new Entity("webresource")
             {
@@ -231,9 +245,9 @@ namespace WebResourceDeployer.Crm
                 ["description"] = description
             };
 
-            string filePath = Path.GetDirectoryName(projectFullName) + boundFile.Replace("/", "\\");
+            string filePath = Path.GetDirectoryName(project.FullName) + boundFile.Replace("/", "\\");
 
-            webResource["content"] = GetFileContent(filePath);
+            webResource["content"] = GetFileContent(filePath, project);
 
             return webResource;
         }
@@ -373,8 +387,8 @@ namespace WebResourceDeployer.Crm
 
         public static byte[] GetDecodedContent(Entity webResource)
         {
-            string content = WebResource.GetWebResourceContent(webResource);
-            byte[] decodedContent = WebResource.DecodeWebResource(content);
+            string content = GetWebResourceContent(webResource);
+            byte[] decodedContent = DecodeWebResource(content);
 
             return decodedContent;
         }
@@ -391,18 +405,27 @@ namespace WebResourceDeployer.Crm
 
         public static string EncodedImage(string filePath, FileExtensionType extension)
         {
-            switch (extension)
+            try
             {
-                case FileExtensionType.Ico:
-                    return ImageEncoding.EncodeIco(filePath);
-                case FileExtensionType.Gif:
-                case FileExtensionType.Jpg:
-                case FileExtensionType.Png:
-                    return ImageEncoding.EncodeImage(filePath, extension);
-                case FileExtensionType.Svg:
-                    return ImageEncoding.EncodeSvg(filePath);
-                default:
-                    return null;
+                switch (extension)
+                {
+                    case FileExtensionType.Ico:
+                        return ImageEncoding.EncodeIco(filePath);
+                    case FileExtensionType.Gif:
+                    case FileExtensionType.Jpg:
+                    case FileExtensionType.Png:
+                        return ImageEncoding.EncodeImage(filePath, extension);
+                    case FileExtensionType.Svg:
+                        return ImageEncoding.EncodeSvg(filePath);
+                    default:
+                        return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputLogger.WriteToOutputWindow(Resource.Error_ErrorEncodingImage, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.Error_ErrorEncodingImage, ex);
+                return null;
             }
         }
 

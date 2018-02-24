@@ -29,7 +29,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         int IVsHierarchyEvents.OnItemAdded(uint itemidParent, uint itemidSiblingPrev, uint itemidAdded)
         {
-            if (_hierarchy.GetProperty(itemidAdded, (int) __VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) != VSConstants.S_OK)
+            if (_hierarchy.GetProperty(itemidAdded, (int)__VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) != VSConstants.S_OK)
                 return VSConstants.S_OK;
 
             if (!(itemExtObject is ProjectItem projectItem))
@@ -44,7 +44,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         int IVsHierarchyEvents.OnItemDeleted(uint itemid)
         {
-            if (_hierarchy.GetProperty(itemid, (int) __VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) !=VSConstants.S_OK)
+            if (_hierarchy.GetProperty(itemid, (int)__VSHPROPID.VSHPROPID_ExtObject, out var itemExtObject) != VSConstants.S_OK)
                 return VSConstants.S_OK;
 
             if (!(itemExtObject is ProjectItem projectItem))
