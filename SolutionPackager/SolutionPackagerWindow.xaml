@@ -74,7 +74,7 @@
                         <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                 Content="{x:Static resources:Resource.SolutionPackager_SolutionsLabel_Label_Content}" />
                         <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" VerticalAlignment="Top" 
-                                  ToolTip="{x:Static resources:Resource.SolutionList_ComboBox_ToolTip}" 
+                                  ToolTip="{x:Static resources:Resource.SolutionList_ComboBox_ToolTip}" DisplayMemberPath="NameVersion"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding SolutionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="{x:Static resources:Resource.SolutionPackager_PackageTypeLabel_Label_Content}"/>
