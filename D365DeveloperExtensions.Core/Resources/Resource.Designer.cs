@@ -187,6 +187,15 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear filters.
+        /// </summary>
+        public static string DataGridHeaderClearFilterButton_Button_Button_ToolTip {
+            get {
+                return ResourceManager.GetString("DataGridHeaderClearFilterButton_Button_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MyKey.
         /// </summary>
         public static string DefaultKeyName {
