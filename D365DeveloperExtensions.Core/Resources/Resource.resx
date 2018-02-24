@@ -426,4 +426,7 @@
   <data name="Error_UnableToReadProjectFile" xml:space="preserve">
     <value>Unable to read project file</value>
   </data>
+  <data name="DataGridHeaderClearFilterButton_Button_Button_ToolTip" xml:space="preserve">
+    <value>Clear filters</value>
+  </data>
 </root>

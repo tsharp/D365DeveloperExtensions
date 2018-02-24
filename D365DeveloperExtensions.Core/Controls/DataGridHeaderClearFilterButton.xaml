@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:Resources="clr-namespace:D365DeveloperExtensions.Core.Resources"
              mc:Ignorable="d"
              d:DesignHeight="20" d:DesignWidth="20" SnapsToDevicePixels="True">
     <UserControl.Resources>
@@ -14,7 +15,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Button Style="{DynamicResource DataGridHeaderButtonWithTextBlockStyle}" Click="Button_Click" Height="20" Width="20">
+    <Button Style="{DynamicResource DataGridHeaderButtonWithTextBlockStyle}" Click="Button_Click" Height="20" Width="20"
+            ToolTip="{x:Static Resources:Resource.DataGridHeaderClearFilterButton_Button_Button_ToolTip}">
         <imaging:CrispImage x:Name="FilterImage" Moniker="{x:Static catalog:KnownMonikers.StopFilter}" Height="15" Width="15" />
     </Button>
 </UserControl>
