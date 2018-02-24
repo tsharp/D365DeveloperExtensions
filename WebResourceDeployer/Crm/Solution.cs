@@ -22,7 +22,7 @@ namespace WebResourceDeployer.Crm
                 QueryExpression query = new QueryExpression
                 {
                     EntityName = "solution",
-                    ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename"),
+                    ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename", "version"),
                     Criteria = new FilterExpression
                     {
                         Conditions =

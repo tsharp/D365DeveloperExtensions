@@ -20,7 +20,8 @@ namespace PluginDeployer
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
-                    UniqueName = entity.GetAttributeValue<string>("uniquename")
+                    UniqueName = entity.GetAttributeValue<string>("uniquename"),
+                    NameVersion = $"{entity.GetAttributeValue<string>("friendlyname")} {entity.GetAttributeValue<string>("version")}"
                 };
 
                 crmSolutions.Add(solution);

@@ -266,7 +266,7 @@ namespace SolutionPackager
                 return false;
 
             SolutionData = ModelBuilder.CreateCrmSolutionView(results);
-            SolutionList.DisplayMemberPath = "NameVersion";
+            //SolutionList.DisplayMemberPath = "NameVersion";
 
             SolutionPackageConfig solutionPackageConfig = Config.Mapping.GetSolutionPackageConfig(ConnPane.SelectedProject,
                 ConnPane.SelectedProfile, SolutionData);

@@ -86,7 +86,7 @@
                     <Label x:Name="SolutionsLabel" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}"
                            Content="{x:Static resources:Resource.WebResourceDeployer_SolutionsLabel_Label_Content}" Style="{DynamicResource ToolBarLabelStyle}" />
                     <ComboBox x:Name="SolutionList" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" SelectionChanged="SolutionList_OnSelectionChanged" 
-                              DisplayMemberPath="Name" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False"/>
+                              DisplayMemberPath="NameVersion" Width="200" Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="False"/>
                     <Label x:Name="ItemCount" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}">
                         <TextBlock IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Style="{DynamicResource ToolBarTextBlockStyle}">
                             <TextBlock.Text>

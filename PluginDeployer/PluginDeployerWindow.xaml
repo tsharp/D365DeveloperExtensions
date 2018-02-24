@@ -75,7 +75,7 @@
                     <Label x:Name="SolutionLabel" Grid.Column="0" Grid.Row="1"
                            Content="{x:Static resources:Resource.PluginDeployer_SolutionLabel_Label_Content}" IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" />
                     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-                        <ComboBox x:Name="SolutionList" Margin="5,5,0,0" DisplayMemberPath="Name" Width="350"
+                        <ComboBox x:Name="SolutionList" Margin="5,5,0,0" DisplayMemberPath="NameVersion" Width="350"
                                   Template="{DynamicResource ComboBoxControlTemplate}" IsEnabled="{Binding IsConnected, ElementName=ConnPane, Mode=TwoWay}" />
                         <Button x:Name="OpenInCrm" VerticalAlignment="Bottom" Click="OpenInCrm_Click" Style="{DynamicResource ImageButtonStyle}" 
                                 IsEnabled="{Binding IsEnabled, ElementName=SolutionList}" Margin="2,0,0,0">
