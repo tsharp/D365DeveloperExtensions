@@ -52,6 +52,7 @@ namespace TemplateWizards
         {
             InitializeComponent();
             DataContext = this;
+            Owner = Application.Current.MainWindow;
 
             GetProjects();
             GetMockingFrameworks();

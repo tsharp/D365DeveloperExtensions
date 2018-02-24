@@ -26,6 +26,7 @@ namespace TemplateWizards
         public SdkVersionPicker(bool getWorkflow, bool getClient)
         {
             InitializeComponent();
+            Owner = Application.Current.MainWindow;
 
             GetWorkflow = getWorkflow;
             GetClient = getClient;

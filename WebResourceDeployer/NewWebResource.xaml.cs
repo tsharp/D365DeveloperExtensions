@@ -69,6 +69,8 @@ namespace WebResourceDeployer
         {
             InitializeComponent();
             DataContext = this;
+            Owner = Application.Current.MainWindow;
+
             _client = client;
             _dte = dte;
             _selectedProject = selectedProject;

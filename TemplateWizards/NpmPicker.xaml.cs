@@ -18,6 +18,7 @@ namespace TemplateWizards
         public NpmPicker(NpmHistory history)
         {
             InitializeComponent();
+            Owner = Application.Current.MainWindow;
 
             _npmHistory = history;
 

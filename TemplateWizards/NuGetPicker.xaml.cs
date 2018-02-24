@@ -17,6 +17,7 @@ namespace TemplateWizards
         public NuGetPicker(string packageName, List<NuGetPackage> packageVersions)
         {
             InitializeComponent();
+            Owner = Application.Current.MainWindow;
 
             _packageName = packageName;
             _packageVersions = packageVersions;
