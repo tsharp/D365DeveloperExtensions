@@ -127,7 +127,7 @@ namespace WebResourceDeployer
 
         public WebResourceDeployerWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             DataContext = this;
 
             _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
@@ -214,7 +214,8 @@ namespace WebResourceDeployer
         {
             ResetCollections();
 
-            ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+            bool hasTsConfig = TsHelper.HasTsConfig(ConnPane.SelectedProject);
+            ProjectFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject, hasTsConfig);
             ProjectFolders = ProjectWorker.GetProjectFolders(ConnPane.SelectedProject, ProjectType.WebResource);
 
             SetWindowCaption(_dte.ActiveWindow.Caption);
@@ -236,9 +237,10 @@ namespace WebResourceDeployer
 
         private void AddWebResource_OnClick(object sender, RoutedEventArgs e)
         {
-            ObservableCollection<ComboBoxItem> projectsFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject);
+            bool hasTsConfig = TsHelper.HasTsConfig(ConnPane.SelectedProject);
+            ObservableCollection<ComboBoxItem> projectsFiles = ProjectWorker.GetProjectFilesForComboBox(ConnPane.SelectedProject, hasTsConfig);
             Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ?? Guid.Empty;
-            NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, _dte, projectsFiles, solutionId);
+            NewWebResource newWebResource = new NewWebResource(ConnPane.CrmService, _dte, projectsFiles, solutionId, ConnPane.SelectedProject);
             bool? result = newWebResource.ShowModal();
 
             if (result != true)
@@ -288,10 +290,6 @@ namespace WebResourceDeployer
                 }
             }
 
-            //Build TypeScript project
-            if (selectedItems.Any(p => p.BoundFile.ToUpper().EndsWith("TS")))
-                ProjectWorker.BuildProject(ConnPane.SelectedProject);
-
             UpdateWebResources(selectedItems);
         }
 
@@ -305,7 +303,7 @@ namespace WebResourceDeployer
                 foreach (WebResourceItem webResourceItem in items)
                 {
                     Entity webResource = WebResource.CreateUpdateWebResourceEntity(webResourceItem.WebResourceId,
-                        webResourceItem.BoundFile, webResourceItem.Description, ConnPane.SelectedProject.FullName);
+                        webResourceItem.BoundFile, webResourceItem.Description, ConnPane.SelectedProject);
                     webResources.Add(webResource);
                 }
 
@@ -349,7 +347,7 @@ namespace WebResourceDeployer
         private void UpdateWebResourceItemsBoundFile(string oldValue, string newValue)
         {
             foreach (WebResourceItem webResourceItem in WebResourceItems
-                .Where(w => w.BoundFile != null && w.BoundFile.Equals(oldValue, StringComparison.InvariantCultureIgnoreCase)))
+                .Where(w => w.BoundFile?.Equals(oldValue, StringComparison.InvariantCultureIgnoreCase) == true))
             {
                 webResourceItem.BoundFile = newValue;
             }
@@ -379,7 +377,7 @@ namespace WebResourceDeployer
         private void UpdateWebResourceItemsBoundFilePath(string oldName, string newName)
         {
             foreach (WebResourceItem webResourceItem in WebResourceItems.Where(
-                w => w.BoundFile != null && w.BoundFile.StartsWith(oldName)))
+                w => w.BoundFile?.StartsWith(oldName) == true))
             {
                 webResourceItem.BoundFile = string.IsNullOrEmpty(newName)
                     ? null
@@ -436,6 +434,7 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnProjectItemAdded(object sender, ProjectItemAddedEventArgs e)
         {
+            //Web Application project does not execute this on an item being moved
             ProjectItem projectItem = e.ProjectItem;
             if (projectItem.ContainingProject != ConnPane.SelectedProject) return;
 
@@ -459,6 +458,7 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnProjectItemRemoved(object sender, ProjectItemRemovedEventArgs e)
         {
+            //Web application projects do not execute this when an item being moved
             _movedWebResourceItems = new List<MovedWebResourceItem>();
 
             ProjectItem projectItem = e.ProjectItem;
@@ -476,9 +476,14 @@ namespace WebResourceDeployer
                     Publish = n.Publish
                 }));
 
-                UpdateWebResourceItemsBoundFile(itemName, null);
+                if (_movedWebResourceItems.Any()) {
+                    if (!_movedWebResourceItems[0].WebResourceItem.Locked) {
+                        UpdateWebResourceItemsBoundFile(itemName, null);
+                    }
+                }
 
                 UpdateProjectFilesAfterChange(itemName, null);
+                
             }
 
             if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
@@ -499,6 +504,7 @@ namespace WebResourceDeployer
 
         private void ConnPane_OnProjectItemMoved(object sender, ProjectItemMovedEventArgs e)
         {
+            //Web application projects do not execute this when an item being moved
             ProjectItem postMoveProjectItem = e.PostMoveProjectItem;
 
             string oldItemName = e.PreMoveName;
@@ -588,6 +594,10 @@ namespace WebResourceDeployer
             FileId.Content = webResourceId;
 
             WebResourceItem webResourceItem = WebResourceItems.FirstOrDefault(w => w.WebResourceId == webResourceId);
+
+            if (webResourceItem?.Locked == true)
+                return;
+
             ProjectFileList.SelectedIndex = -1;
             if (webResourceItem != null)
             {
@@ -911,6 +921,14 @@ namespace WebResourceDeployer
                 Publish.IsEnabled = WebResourceItems.Count(w => w.Publish) > 0;
                 ControlHelper.SetPublishAll(WebResourceGrid);
             }
+
+            if (e.PropertyName == "Locked")
+            {
+                foreach (WebResourceItem webResourceItem in WebResourceItems.Where(w => w.WebResourceId == item.WebResourceId && w.SolutionId == solutionId))
+                {
+                    webResourceItem.Locked = item.Locked;
+                }
+            }
         }
 
         private void CreateFilterTypeNameList()
@@ -1167,7 +1185,7 @@ namespace WebResourceDeployer
 
         private void ConnPane_ProfileChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ConnPane.CrmService == null || !ConnPane.CrmService.IsReady)
+            if (!ConnPane.CrmService?.IsReady != true)
                 return;
 
             foreach (WebResourceItem webResourceItem in WebResourceItems

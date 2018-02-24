@@ -248,8 +248,14 @@ namespace D365DeveloperExtensions.Core.Connection
             /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
             existing events here fixes the issue. Moves first do a delete then an add*/
-            Project p = projectItem.ContainingProject;
-            if (p.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite)
+            Project project = projectItem.ContainingProject;
+            if (project.IsDirty)
+                project.Save();
+
+            string relativePath = ProjectItemWorker.GetRelativePath(projectItem);
+            bool isMove = ProjectWorker.IsFileInProjectFile(project.FullName, relativePath);
+
+            if (project.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite && !isMove)
                 return;
 
             ProjectItemsEvents_ItemRemoved(projectItem);
@@ -272,8 +278,14 @@ namespace D365DeveloperExtensions.Core.Connection
             /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
             existing events here fixes the issue. Moves first do a delete then an add*/
-            Project p = projectItem.ContainingProject;
-            if (p.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite)
+            Project project = projectItem.ContainingProject;
+            if (project.IsDirty)
+                project.Save();
+
+            uint addedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, projectItem);
+            MovedProjectItem movedProjectItem = _movedProjectItems.FirstOrDefault(m => m.ProjectItemId == addedProjectId);
+
+            if (project.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite && movedProjectItem == null)
                 return;
 
             ProjectItemsEvents_ItemAdded(projectItem);
@@ -284,9 +296,6 @@ namespace D365DeveloperExtensions.Core.Connection
             if (_movedProjectItems.Count == 0)
                 return;
 
-            uint addedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, projectItem);
-
-            MovedProjectItem movedProjectItem = _movedProjectItems.FirstOrDefault(m => m.ProjectItemId == addedProjectId);
             if (movedProjectItem == null)
                 return;
 
@@ -345,7 +354,7 @@ namespace D365DeveloperExtensions.Core.Connection
             ResetForm();
             ClearConnection();
             ToolWindow = null;
-          
+
             SolutionProjectsList.SelectionChanged -= SolutionProjectsList_OnSelectionChanged;
 
             SolutionBeforeClosing?.Invoke(this, EventArgs.Empty);

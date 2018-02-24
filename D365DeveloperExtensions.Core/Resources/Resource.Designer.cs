@@ -196,6 +196,15 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to read project file.
+        /// </summary>
+        public static string Error_UnableToReadProjectFile {
+            get {
+                return ResourceManager.GetString("Error_UnableToReadProjectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error creating file from template.
         /// </summary>
         public static string ErrorMessage_CreateFileFromTemplate {

@@ -123,9 +123,6 @@
   <data name="WebResourceDeployer_SolutionsLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>
-  <data name="WebResourceTypeLabel_Label_Content" xml:space="preserve">
-    <value>Type</value>
-  </data>
   <data name="WebResourceDeployer_AddWebResource_Button_Content" xml:space="preserve">
     <value>New Item</value>
   </data>
@@ -362,5 +359,14 @@
   </data>
   <data name="Message_Updating" xml:space="preserve">
     <value>Updating</value>
+  </data>
+  <data name="Error_UnableToGetTsconfigOutdir" xml:space="preserve">
+    <value>Unable to get 'outDir' from tsconfig.json</value>
+  </data>
+  <data name="Error_ErrorEncodingImage" xml:space="preserve">
+    <value>Error encoding image</value>
+  </data>
+  <data name="WebResourceDeployer_Locked_CheckBox_Tooltip" xml:space="preserve">
+    <value>Keep bound to file not in project</value>
   </data>
 </root>

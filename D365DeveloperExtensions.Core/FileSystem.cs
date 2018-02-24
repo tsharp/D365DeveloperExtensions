@@ -1,4 +1,6 @@
-﻿using D365DeveloperExtensions.Core.Resources;
+﻿using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Resources;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -75,7 +77,10 @@ namespace D365DeveloperExtensions.Core
             if (string.IsNullOrEmpty(boundFile))
                 return "";
 
-            string path = Path.GetDirectoryName(projectPath);
+            var path = File.Exists(projectPath)
+                ? Path.GetDirectoryName(projectPath)
+                : projectPath;
+
             if (path == null)
                 return null;
 
@@ -87,7 +92,10 @@ namespace D365DeveloperExtensions.Core
 
         public static string LocalPathToCrmPath(string projectPath, string filename)
         {
-            return filename.Replace(projectPath, String.Empty).Replace("\\", "/");
+            string newName = filename.Replace(projectPath, String.Empty).Replace("\\", "/");
+            if (!newName.StartsWith("/"))
+                newName = "/" + newName;
+            return newName;
         }
 
         public static bool DoesFileExist(string[] files, bool checkAll)
@@ -114,6 +122,7 @@ namespace D365DeveloperExtensions.Core
             catch (Exception ex)
             {
                 ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_UnableRenameFile}: {path}", ex);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_UnableRenameFile, MessageType.Error);
                 throw;
             }
         }
@@ -156,7 +165,21 @@ namespace D365DeveloperExtensions.Core
             catch (Exception ex)
             {
                 ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_ReadFile}: {path}", ex);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ReadFile, MessageType.Error);
+                return null;
+            }
+        }
 
+        public static string GetFileText(string path)
+        {
+            try
+            {
+                return File.ReadAllText(path);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_ReadFile}: {path}", ex);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ReadFile, MessageType.Error);
                 return null;
             }
         }

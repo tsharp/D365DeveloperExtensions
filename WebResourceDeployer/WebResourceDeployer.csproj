@@ -144,6 +144,9 @@
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.0.7\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -183,9 +186,11 @@
     <Compile Include="Config\Mapping.cs" />
     <Compile Include="Models\FilterCriteria.cs" />
     <Compile Include="Models\MovedWebResourceItem.cs" />
+    <Compile Include="Models\TsConfig.cs" />
     <Compile Include="NewWebResource.xaml.cs">
       <DependentUpon>NewWebResource.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TsHelper.cs" />
     <Compile Include="ViewModels\CrmSolution.cs" />
     <Compile Include="Models\FilterState.cs" />
     <Compile Include="Models\FilterTypeName.cs" />

@@ -3,6 +3,7 @@ using D365DeveloperExtensions.Core.Logging;
 using D365DeveloperExtensions.Core.Resources;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -15,13 +16,15 @@ using System.Linq;
 using System.Windows.Controls;
 using VSLangProj;
 using Constants = EnvDTE.Constants;
+using Project = EnvDTE.Project;
+using ProjectItem = EnvDTE.ProjectItem;
 
 namespace D365DeveloperExtensions.Core.Vs
 {
     public static class ProjectWorker
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static readonly string[] Extensions = { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "SVG", "RESX", "MAP" };
+        private static readonly List<string> Extensions = new List<string> { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "SVG", "RESX", "MAP", "TS" };
         private static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
         private static readonly string[] IgnoreFolders = { "/TYPINGS", "/NODE_MODULES" };
 
@@ -210,8 +213,10 @@ namespace D365DeveloperExtensions.Core.Vs
             return projectFolders;
         }
 
-        public static ObservableCollection<ComboBoxItem> GetProjectFilesForComboBox(Project project)
+        public static ObservableCollection<ComboBoxItem> GetProjectFilesForComboBox(Project project, bool hasTsConfig)
         {
+            SetProjectExtensions(hasTsConfig);
+
             ObservableCollection<ComboBoxItem> projectFiles = new ObservableCollection<ComboBoxItem>();
             if (project == null)
                 return projectFiles;
@@ -238,6 +243,22 @@ namespace D365DeveloperExtensions.Core.Vs
             }
 
             return projectFiles;
+        }
+
+        private static void SetProjectExtensions(bool hasTsConfig)
+        {
+            if (!hasTsConfig)
+            {
+                Extensions.Remove("MAP");
+                Extensions.Remove("TS");
+            }
+            else
+            {
+                if (!Extensions.Contains("MAP"))
+                    Extensions.Add("MAP");
+                if (!Extensions.Contains("TS"))
+                    Extensions.Add("TS");
+            }
         }
 
         private static ObservableCollection<ComboBoxItem> GetFiles(ProjectItem projectItem, string path)
@@ -352,7 +373,8 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             string path = project.FullName;
 
-            path = Path.GetDirectoryName(path);
+            if (File.Exists(path))
+                path = Path.GetDirectoryName(path);
 
             if (!string.IsNullOrEmpty(path))
                 return path;
@@ -441,6 +463,26 @@ namespace D365DeveloperExtensions.Core.Vs
             {
                 ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_ErrorAddProjectReference}: {referenceName}", ex);
             }
+        }
+
+        public static bool IsFileInProjectFile(string projectFilePath, string fileRelativePath)
+        {
+            try
+            {
+                Microsoft.Build.Evaluation.Project p = new Microsoft.Build.Evaluation.Project(projectFilePath, null, null, new ProjectCollection());
+
+                foreach (Microsoft.Build.Evaluation.ProjectItem projectItem in p.Items)
+                {
+                    if (projectItem.EvaluatedInclude == fileRelativePath)
+                        return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resource.Error_UnableToReadProjectFile, ex);
+            }
+
+            return false;
         }
     }
 }

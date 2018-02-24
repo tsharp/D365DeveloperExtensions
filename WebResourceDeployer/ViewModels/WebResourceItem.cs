@@ -11,6 +11,7 @@ namespace WebResourceDeployer.ViewModels
         private string _boundFile;
         private bool _publish;
         private string _description;
+        private bool _locked;
         public bool Publish
         {
             get => _publish;
@@ -19,6 +20,17 @@ namespace WebResourceDeployer.ViewModels
                 if (_publish == value) return;
 
                 _publish = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool Locked
+        {
+            get => _locked;
+            set
+            {
+                if (_locked == value) return;
+
+                _locked = value;
                 OnPropertyChanged();
             }
         }

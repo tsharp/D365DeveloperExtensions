@@ -251,5 +251,16 @@ namespace D365DeveloperExtensions.Core.Vs
                 return projectItems.AddFolder(folderName);
             }
         }
+
+        public static string GetRelativePath(ProjectItem projectItem)
+        {
+            Project project = projectItem.ContainingProject;
+            var fullName = projectItem.Properties.Item("FullPath").Value.ToString();
+            var relativePath = fullName.Replace(ProjectWorker.GetProjectPath(project), string.Empty);
+            if (relativePath.StartsWith("\\"))
+                relativePath = relativePath.TrimStart('\\');
+
+            return relativePath;
+        }
     }
 }

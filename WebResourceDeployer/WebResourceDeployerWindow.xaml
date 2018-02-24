@@ -200,6 +200,15 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Lock" CanUserSort="False" CanUserResize="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox x:Name="Locked" IsChecked="{Binding Locked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllowPublish, Mode=OneWay}"
+                                              ToolTip="{x:Static resources:Resource.WebResourceDeployer_Locked_CheckBox_Tooltip}" Style="{DynamicResource DataGridCheckBoxStyle}" 
+                                              HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}" 
                                                 CellStyle="{StaticResource DataGridImageButtonCellStyle}">
                             <DataGridTemplateColumn.CellTemplate>
