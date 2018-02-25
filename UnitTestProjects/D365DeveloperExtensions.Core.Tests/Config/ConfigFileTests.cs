@@ -3,37 +3,44 @@ using System.IO;
 using D365DeveloperExtensions.Core.Config;
 using D365DeveloperExtensions.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using EnvDTE;
+using Moq;
 
 namespace D365DeveloperExtensions.Core.Tests.Config
 {
     [TestClass]
     public class ConfigFileTests
     {
-        //private static string _testFilepath;
+        private static string _testFilepath;
+
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-            //DirectoryInfo currentFolder = new DirectoryInfo(Environment.CurrentDirectory);
-            //if (currentFolder.Parent?.Parent != null)
-            //    _testFilepath = currentFolder.Parent.Parent.FullName + "\\TestConfigFiles";
+            DirectoryInfo currentFolder = new DirectoryInfo(Environment.CurrentDirectory);
+            if (currentFolder.Parent?.Parent != null)
+                _testFilepath = currentFolder.Parent.Parent.FullName + "\\TestConfigFiles";
         }
 
         [TestMethod]
-        public void ConfigFileExists_False()
+        public void SpklConfigFileExists_False()
         {
-            //Assert.IsFalse(ConfigFile.ConfigFileExists(Environment.CurrentDirectory));
+            Assert.IsFalse(ConfigFile.SpklConfigFileExists(Environment.CurrentDirectory));
         }
 
         [TestMethod]
-        public void ConfigFileExists_True()
+        public void SpklConfigFileExists_True()
         {
-            //Assert.IsTrue(ConfigFile.ConfigFileExists(_testFilepath));
+            Assert.IsTrue(ConfigFile.SpklConfigFileExists(_testFilepath));
         }
 
         [TestMethod]
-        public void GetConfigFile()
+        public void GetSpklConfigFile()
         {
-            //CrmDexExConfig config = ConfigFile.GetConfigFile(_testFilepath);
+            //var mock = new Mock<Project>(); 
+            //Project project = mock.Object;
+            //project.Properties["FullName"] = "";
+
+            //SpklConfig config = ConfigFile.GetSpklConfigFile(_testFilepath);
 
             //Assert.IsNotNull(config);
         }
