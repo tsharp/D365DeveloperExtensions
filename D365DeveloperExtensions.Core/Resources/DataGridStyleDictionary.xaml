@@ -148,8 +148,8 @@
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
                             <Border x:Name="Border" Width="15" Height="15" CornerRadius="0" Background="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBackgroundBrushKey}}"
-                                    BorderThickness="1" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBorderBrushKey}}" Margin="0" Padding="0">
-                                <Path Width="8" Height="8" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"
+                                    BorderThickness="1" BorderBrush="{DynamicResource {x:Static vsp:CommonControlsColors.CheckBoxBorderBrushKey}}" Margin="0" Padding="2 3 0 0">
+                                <Path Width="9" Height="9" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{DynamicResource {x:Static vsp:EnvironmentColors.ToolWindowTextBrushKey}}"
                                       StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0" />
                             </Border>
                         </BulletDecorator.Bullet>
