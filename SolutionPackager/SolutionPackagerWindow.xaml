@@ -23,121 +23,126 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"
                                          SolutionProjectRemoved="ConnPane_OnSolutionProjectRemoved" SelectedProjectChanged="ConnPane_OnSelectedProjectChanged" 
                                          ProjectItemAdded="ConnPane_OnProjectItemAdded" ProfileChanged="ConnPane_ProfileChanged" SolutionOpened="ConnPane_OnSolutionOpened"
                                          ProjectItemRemoved="ConnPane_OnProjectItemRemoved" ProjectItemRenamed="ConnPane_OnProjectItemRenamed" />
-        <Grid Grid.Column="1" HorizontalAlignment="Stretch">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                    <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
+            <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
+                        <Button x:Name="UnpackageSolution" Click="UnpackageSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}" 
                             IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" ToolTip="{x:Static resources:Resource.SolutionPackager_UnpackageSolution_Button_ToolTip}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_UnpackageSolution_Button_Content}}" />
-                    <Button x:Name="PackageSolution" Click="PackageSolution_OnClick" 
+                        <Button x:Name="PackageSolution" Click="PackageSolution_OnClick" 
                             IsEnabled="{Binding SolutionXmlExists, FallbackValue=false, Mode=OneWay, TargetNullValue=false, UpdateSourceTrigger=PropertyChanged}" 
                             Style="{DynamicResource ToolBarButtonStyle}" ToolTip="{x:Static resources:Resource.SolutionPackager_PackageSolution_Button_ToolTip}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_PackageSolution_Button_Content}}" />
-                    <Button x:Name="ImportSolution" Click="ImportSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
+                        <Button x:Name="ImportSolution" Click="ImportSolution_OnClick" Style="{DynamicResource ToolBarButtonStyle}"
                             Content="{Binding Converter={StaticResource ToUpperConverter}, Mode=OneWay, Source={x:Static resources:Resource.SolutionPackager_ImportSolution_Button_Content}}" 
                             ToolTip="{x:Static resources:Resource.SolutionPackager_ImportSolution_Button_ToolTip}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-                    <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-                    <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-                </StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid HorizontalAlignment="Left" Grid.Column="0">
+                        <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                        <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                    </StackPanel>
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                        <Grid HorizontalAlignment="Left" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                 Content="{x:Static resources:Resource.SolutionPackager_SolutionsLabel_Label_Content}" />
-                        <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" VerticalAlignment="Top" 
+                            <ComboBox x:Name="SolutionList" Grid.Column="1" Grid.Row="0" Margin="5,5,0,0" VerticalAlignment="Top" 
                                   ToolTip="{x:Static resources:Resource.SolutionList_ComboBox_ToolTip}" DisplayMemberPath="NameVersion"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding SolutionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="{x:Static resources:Resource.SolutionPackager_PackageTypeLabel_Label_Content}"/>
-                        <ComboBox x:Name="PackageType" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" VerticalAlignment="Top"
+                            <Label x:Name="PackageTypeLabel" Grid.Column="0" Grid.Row="1" Content="{x:Static resources:Resource.SolutionPackager_PackageTypeLabel_Label_Content}"/>
+                            <ComboBox x:Name="PackageType" Grid.Column="1" Grid.Row="1" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" ItemsSource="{Binding PackageTypes}" />
-                        <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="2" 
+                            <Label x:Name="EnableSolutionPackagerLogLabel" Grid.Column="0" Grid.Row="2" 
                                Content="{x:Static resources:Resource.SolutionPackager_EnableSolutionPackagerLogLabel_Label_Content}"/>
-                        <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                            <CheckBox x:Name="EnableSolutionPackagerLog" Grid.Column="1" Grid.Row="2" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="UseMapFileLabel" Grid.Column="0" Grid.Row="3" Content="{x:Static resources:Resource.SolutionPackager_UseMapFileLabel_Label_Content}"/>
-                        <CheckBox x:Name="UseMapFile" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                            <Label x:Name="UseMapFileLabel" Grid.Column="0" Grid.Row="3" Content="{x:Static resources:Resource.SolutionPackager_UseMapFileLabel_Label_Content}"/>
+                            <CheckBox x:Name="UseMapFile" Grid.Column="1" Grid.Row="3" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="ExtractOptionsLabel"  Grid.Column="0" Grid.Row="4" FontWeight="Bold" 
+                            <Label x:Name="ExtractOptionsLabel"  Grid.Column="0" Grid.Row="4" FontWeight="Bold" 
                                Content="{x:Static resources:Resource.SolutionPackager_ExtractOptionsLabel_Label_Content}" />
-                        <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            <Label x:Name="SaveSolutionsLabel" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                Content="{x:Static resources:Resource.SolutionPackager_SaveSolutionsLabel_Label_Content}" />
-                        <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                            <CheckBox x:Name="SaveSolutions" Grid.Column="1" Grid.Row="5" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                        <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="6" Content="{x:Static resources:Resource.SolutionPackager_SolutionFolderLabe_Label_Content}"/>
-                        <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
+                            <Label x:Name="SolutionFolderLabel" Grid.Column="0" Grid.Row="6" Content="{x:Static resources:Resource.SolutionPackager_SolutionFolderLabe_Label_Content}"/>
+                            <ComboBox x:Name="SolutionFolder" Grid.Column="1" Grid.Row="6" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="{Binding IsEnabled, ElementName=SaveSolutions}" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="7" Content="{x:Static resources:Resource.SolutionPackager_PackageFolderLabel_Label_Content}"/>
-                        <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="7" Margin="5,5,0,0" VerticalAlignment="Top"
+                            <Label x:Name="PackageFolderLabel" Grid.Column="0" Grid.Row="7" Content="{x:Static resources:Resource.SolutionPackager_PackageFolderLabel_Label_Content}"/>
+                            <ComboBox x:Name="PackageFolder" Grid.Column="1" Grid.Row="7" Margin="5,5,0,0" VerticalAlignment="Top"
                                   IsEnabled="False" MinWidth="200" Template="{DynamicResource ComboBoxControlTemplate}" 
                                   ItemsSource="{Binding ProjectFolders, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Label x:Name="PackOptionsLabel" Grid.Column="0" Grid.Row="8" FontWeight="Bold" 
+                            <Label x:Name="PackOptionsLabel" Grid.Column="0" Grid.Row="8" FontWeight="Bold" 
                                Content="{x:Static resources:Resource.SolutionPackager_PackOptionsLabel_Label_Content}" />
-                        <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            <Label x:Name="SolutionNameLabel" Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                Content="{x:Static resources:Resource.SolutionPackager_SolutionNameLabel_Label_Content}"/>
-                        <StackPanel Grid.Column="1" Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <TextBox x:Name="SolutionName" Margin="5,5,0,0" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                            <StackPanel Grid.Column="1" Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                <TextBox x:Name="SolutionName" Margin="5,5,0,0" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" Style="{DynamicResource TextBoxStyle}"/>
-                            <TextBox x:Name="VersionMajor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                                <TextBox x:Name="VersionMajor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
-                            <TextBox x:Name="VersionMinor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                                <TextBox x:Name="VersionMinor" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
-                            <TextBox x:Name="VersionBuild" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                                <TextBox x:Name="VersionBuild" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
-                            <TextBox x:Name="VersionRevision" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
+                                <TextBox x:Name="VersionRevision" Margin="5,5,0,0" Width="20" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False" 
                                      TextAlignment="Right" PreviewTextInput="Version_OnPreviewTextInput" Style="{DynamicResource TextBoxStyle}"/>
-                            <StackPanel Margin="5,5,0,0">
-                                <Button x:Name="UpdateVersion" Style="{DynamicResource ImageButtonStyle}" 
+                                <StackPanel Margin="5,5,0,0">
+                                    <Button x:Name="UpdateVersion" Style="{DynamicResource ImageButtonStyle}" 
                                         IsEnabled="false" Click="UpdateVersion_OnClick">
-                                    <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.Version}"                                           
+                                        <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.Version}"                                           
                                                         ToolTip="{x:Static resources:Resource.SolutionPackager_UpdateVersionImage_Button_ToolTip}" />
-                                </Button>
+                                    </Button>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                        <Label x:Name="ImportOptionsLabel" Grid.Column="0" Grid.Row="10" FontWeight="Bold" 
+                            <Label x:Name="ImportOptionsLabel" Grid.Column="0" Grid.Row="10" FontWeight="Bold" 
                                Content="{x:Static resources:Resource.SolutionPackager_ImportOptionsLabel_Label_Content}"/>
-                        <Label x:Name="PublishAllLabel" Grid.Column="0" Grid.Row="11" Content="{x:Static resources:Resource.SolutionPackager_PublishAllLabel_Label_Content}" />
-                        <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="11" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
+                            <Label x:Name="PublishAllLabel" Grid.Column="0" Grid.Row="11" Content="{x:Static resources:Resource.SolutionPackager_PublishAllLabel_Label_Content}" />
+                            <CheckBox x:Name="PublishAll" Grid.Column="1" Grid.Row="11" Margin="5,5,0,0" Width="20" HorizontalAlignment="Left" 
                                   IsThreeState="False" IsEnabled="False" />
-                    </Grid>
-                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">
-                        <Label x:Name="CommandOutputLabel" Content="Output" FontWeight="Bold"/>
-                        <TextBox x:Name="CommandOutput" Style="{DynamicResource TextBoxStyle}" Width="500" Height="200" VerticalAlignment="Top"
+                        </Grid>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">
+                            <Label x:Name="CommandOutputLabel" Content="Output" FontWeight="Bold"/>
+                            <TextBox x:Name="CommandOutput" Style="{DynamicResource TextBoxStyle}" Width="500" Height="200" VerticalAlignment="Top"
                                  VerticalContentAlignment="Top" IsReadOnly="True" TextWrapping="Wrap" Text="{Binding Command}" IsEnabled="False"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-            <coreControls:LockOverlay x:Name="Overlay" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
         </Grid>
+        <coreControls:LockOverlay x:Name="Overlay" Grid.Column="0" />
     </Grid>
 </UserControl>
