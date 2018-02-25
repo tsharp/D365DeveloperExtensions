@@ -489,8 +489,12 @@ namespace WebResourceDeployer
                 if (!Path.GetExtension(projectItem.Name).Equals(".exclude", StringComparison.CurrentCultureIgnoreCase))
                 {
                     if (_movedWebResourceItems.Any())
+                    {
                         if (!_movedWebResourceItems[0].WebResourceItem.Locked)
                             UpdateWebResourceItemsBoundFile(itemName, null);
+                    }
+                    else
+                        UpdateWebResourceItemsBoundFile(itemName, null);
                 }
 
                 UpdateProjectFilesAfterChange(itemName, null);
@@ -734,6 +738,8 @@ namespace WebResourceDeployer
                 var projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
                 var fullname = projectItem.FileNames[1];
                 var boundName = fullname.Replace(projectPath, String.Empty).Replace("\\", "/");
+                if (!boundName.StartsWith("/"))
+                    boundName = $"/{boundName}";
 
                 foreach (WebResourceItem item in WebResourceItems.Where(w => w.WebResourceId == webResourceId))
                 {
