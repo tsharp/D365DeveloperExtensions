@@ -183,6 +183,9 @@ namespace D365DeveloperExtensions.Core.Connection
                 _projectEventsRegistered = true;
             }
 
+            if (Expander.IsExpanded)
+                Connect.Focus();
+
             if (CrmService != null)
                 return;
 
@@ -546,6 +549,7 @@ namespace D365DeveloperExtensions.Core.Connection
             Profiles = new List<string>();
             SelectedProject = null;
             SelectedProfile = null;
+            Expander.IsExpanded = true;
         }
 
         private void ClearConnection()

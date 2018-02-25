@@ -45,10 +45,12 @@
                       SelectionChanged="ProfileList_SelectionChanged" Template="{DynamicResource ComboBoxControlTemplate}" />
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" Content="{x:Static resources:Resource.XrmToolingConnection_Connect_Label_Content}" />
             <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
-                <Button x:Name="Connect" IsEnabled="True" Click="Connect_OnClick" VerticalAlignment="Bottom" Style="{DynamicResource ImageButtonStyle}">
-                    <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" 
-                                        ToolTip="{x:Static resources:Resource.XrmToolingConnection_ConnectImage_Button_Tooltip}" />
-                </Button>
+                <Border x:Name="ConnectBorder" BorderThickness="1" BorderBrush="CornflowerBlue">
+                    <Button x:Name="Connect" IsEnabled="True" Click="Connect_OnClick" VerticalAlignment="Bottom" Style="{DynamicResource ImageButtonStyle}">
+                        <imaging:CrispImage x:Name="ConnectImage" Moniker="{x:Static catalog:KnownMonikers.AddConnection}" 
+                                            ToolTip="{x:Static resources:Resource.XrmToolingConnection_ConnectImage_Button_Tooltip}" />
+                    </Button>
+                </Border>
                 <CheckBox x:Name="AutoLogin" Margin="5,0,0,0" Padding="2,2,2,2" ToolTip="{x:Static resources:Resource.XrmToolingConnection_AutoLogin_Button_ToolTip}" 
                           IsChecked="True" Content="Auto-login" IsThreeState="False" Checked="AutoLogin_Checked" Unchecked="AutoLogin_Checked" VerticalAlignment="Center" />
             </StackPanel>
