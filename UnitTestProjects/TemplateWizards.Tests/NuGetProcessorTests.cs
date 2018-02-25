@@ -9,10 +9,10 @@ using D365DeveloperExtensions.Core.Enums;
 
 namespace TemplateWizards.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class NuGetProcessorTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling1()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -20,7 +20,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling2()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -28,7 +28,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling3Preview()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -36,7 +36,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidExtensions1()
         {
             string expected = "Microsoft.CrmSdk.Extensions";
@@ -44,7 +44,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidExtensions2()
         {
             string expected = "Microsoft.CrmSdk.Extensions";
@@ -52,7 +52,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestNextWorkflow1()
         {
             int expected = 2;
@@ -60,7 +60,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestNextClient()
         {
             int expected = 3;
@@ -68,7 +68,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestClose1()
         {
             int expected = 0;
@@ -76,7 +76,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestClose2()
         {
             int expected = 0;
