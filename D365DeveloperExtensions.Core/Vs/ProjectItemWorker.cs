@@ -262,5 +262,14 @@ namespace D365DeveloperExtensions.Core.Vs
 
             return relativePath;
         }
+
+        public static string GetRelativePathFromPath(string projectPath, string filePath)
+        {
+            var relativePath = filePath.Replace(projectPath, string.Empty);
+            if (relativePath.StartsWith("\\"))
+                relativePath = relativePath.TrimStart('\\');
+
+            return relativePath;
+        }
     }
 }

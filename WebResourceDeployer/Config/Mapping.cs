@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using D365DeveloperExtensions.Core.Vs;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Config
@@ -52,12 +53,14 @@ namespace WebResourceDeployer.Config
             foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
                 string mappedFilePath = FileSystem.BoundFileToLocalPath(spklConfigWebresourceFile.file, project.FullName);
-                if (File.Exists(mappedFilePath))
+                string relativePath = ProjectItemWorker.GetRelativePathFromPath(ProjectWorker.GetProjectPath(project), mappedFilePath);
+                bool inProject = ProjectWorker.IsFileInProjectFile(project.FullName, relativePath);
+                if (File.Exists(mappedFilePath) && inProject)
                     continue;
 
                 if (!string.IsNullOrEmpty(spklConfigWebresourceFile.ts))
                     mappedFilePath = FileSystem.BoundFileToLocalPath(spklConfigWebresourceFile.ts, project.FullName);
-                if (File.Exists(mappedFilePath))
+                if (File.Exists(mappedFilePath) && inProject)
                     continue;
 
                 webResourceItems.Where(w => w.BoundFile == spklConfigWebresourceFile.file).ToList().ForEach(w => w.Locked = true);
