@@ -40,10 +40,17 @@ namespace D365DeveloperExtensions.Core.Vs
                 if (project == null)
                     continue;
 
-                if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
-                    list.AddRange(GetSolutionFolderProjects(project));
-                else
-                    list.Add(project);
+                switch (project.Kind)
+                {
+                    case ProjectKinds.vsProjectKindSolutionFolder:
+                        list.AddRange(GetSolutionFolderProjects(project));
+                        break;
+                    case Constants.vsProjectKindMisc:
+                        continue;
+                    default:
+                        list.Add(project);
+                        break;
+                }
             }
 
             return list;
