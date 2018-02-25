@@ -23,9 +23,11 @@ namespace WebResourceDeployer.Config
             //Lock mappings where CRM web resource was deleted
             foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
-                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) != 0)
+                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) == 0)
+                {
                     webResourceItems.Where(w => w.Name == spklConfigWebresourceFile.uniquename).ToList()
                         .ForEach(ww => ww.Locked = true);
+                }
             }
 
             //Add bound file & description from mapping
