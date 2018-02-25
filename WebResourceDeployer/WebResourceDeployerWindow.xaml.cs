@@ -409,6 +409,7 @@ namespace WebResourceDeployer
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
                 string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
+
                 string oldItemName = newItemName.Replace(Path.GetFileName(projectItem.Name), oldName).Replace("//", "/");
 
                 UpdateWebResourceItemsBoundFile(oldItemName, newItemName);
@@ -437,10 +438,14 @@ namespace WebResourceDeployer
             //Web Application project does not execute this on an item being moved
             ProjectItem projectItem = e.ProjectItem;
             if (projectItem.ContainingProject != ConnPane.SelectedProject) return;
+            if (projectItem.Name == null) return;
 
             Guid itemType = new Guid(projectItem.Kind);
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
+                if (Path.GetExtension(projectItem.Name).Equals(".exclude", StringComparison.CurrentCultureIgnoreCase))
+                    return;
+
                 var projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
                 string newItemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
 
@@ -463,6 +468,7 @@ namespace WebResourceDeployer
 
             ProjectItem projectItem = e.ProjectItem;
             if (projectItem.ContainingProject != ConnPane.SelectedProject) return;
+            if (projectItem.Name == null) return;
 
             var projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
 
@@ -470,20 +476,24 @@ namespace WebResourceDeployer
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
                 string itemName = LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
-                _movedWebResourceItems.AddRange(WebResourceItems.Where(w => w.BoundFile == itemName).Select(n => new MovedWebResourceItem
-                {
-                    WebResourceItem = n,
-                    Publish = n.Publish
-                }));
+                Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ??
+                                  ExtensionConstants.DefaultSolutionId;
 
-                if (_movedWebResourceItems.Any()) {
-                    if (!_movedWebResourceItems[0].WebResourceItem.Locked) {
-                        UpdateWebResourceItemsBoundFile(itemName, null);
-                    }
+                _movedWebResourceItems.AddRange(WebResourceItems
+                    .Where(w => w.BoundFile == itemName && w.SolutionId == solutionId).Select(n => new MovedWebResourceItem
+                    {
+                        WebResourceItem = n,
+                        Publish = n.Publish
+                    }));
+
+                if (!Path.GetExtension(projectItem.Name).Equals(".exclude", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (_movedWebResourceItems.Any())
+                        if (!_movedWebResourceItems[0].WebResourceItem.Locked)
+                            UpdateWebResourceItemsBoundFile(itemName, null);
                 }
 
                 UpdateProjectFilesAfterChange(itemName, null);
-                
             }
 
             if (itemType == VSConstants.GUID_ItemType_PhysicalFolder)
@@ -515,6 +525,10 @@ namespace WebResourceDeployer
             if (itemType == VSConstants.GUID_ItemType_PhysicalFile)
             {
                 string newItemName = LocalPathToCrmPath(projectPath, postMoveProjectItem.FileNames[1]);
+                if (newItemName == null) return;
+
+                if (Path.GetExtension(newItemName).Equals(".exclude", StringComparison.CurrentCultureIgnoreCase))
+                    return;
 
                 UpdateMovedWebResourceItemsBoundFile(newItemName);
 
@@ -592,8 +606,10 @@ namespace WebResourceDeployer
 
             Guid webResourceId = new Guid(textBlock.Tag.ToString());
             FileId.Content = webResourceId;
+            Guid solutionId = ((CrmSolution)SolutionList.SelectedItem)?.SolutionId ??
+                              ExtensionConstants.DefaultSolutionId;
 
-            WebResourceItem webResourceItem = WebResourceItems.FirstOrDefault(w => w.WebResourceId == webResourceId);
+            WebResourceItem webResourceItem = WebResourceItems.FirstOrDefault(w => w.WebResourceId == webResourceId && w.SolutionId == solutionId);
 
             if (webResourceItem?.Locked == true)
                 return;
