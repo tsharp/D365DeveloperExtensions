@@ -310,7 +310,7 @@ namespace PluginDeployer
             PluginAssembly pluginAssembly = new PluginAssembly { Id = assemblyId };
             string assemblyFullName = SpklHelpers.AssemblyFullName(assemblyFilePath, isWorkflow);
 
-            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
             var ctx = new OrganizationServiceContext(service);
 
             using (ctx)
@@ -359,7 +359,7 @@ namespace PluginDeployer
                     ? solution.UniqueName
                     : null;
 
-                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
                 var ctx = new OrganizationServiceContext(service);
 
                 using (ctx)
@@ -430,7 +430,7 @@ namespace PluginDeployer
 
         private void GetRegistrationDetailsWithoutContext(string customClassRegex, bool backupFiles)
         {
-            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
+            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
             var ctx = new OrganizationServiceContext(service);
 
             GetRegistrationDetailsWithContext(customClassRegex, backupFiles, ctx);
