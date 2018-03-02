@@ -367,9 +367,13 @@ namespace PluginDeployer
                     PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
 
                     if (isWorkflow)
+                    {
                         await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyFilePath, solutionName));
+                    }
                     else
+                    {
                         await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyFilePath, solutionName));
+                    }
 
                     GetRegistrationDetailsWithContext(pluginDeployConfig.classRegex, backupFiles, ctx);
                 }

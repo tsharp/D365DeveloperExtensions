@@ -19,7 +19,7 @@ namespace PluginDeployer
             {
                 string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
-                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath);
 
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
@@ -42,7 +42,7 @@ namespace PluginDeployer
             {
                 string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
-                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath);
 
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 

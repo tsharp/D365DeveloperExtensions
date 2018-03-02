@@ -87,7 +87,7 @@ namespace PluginDeployer
 
                 string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
-                container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, assemblyFolderPath, true);
+                container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, assemblyFolderPath);
 
                 return container.PluginDatas.First().CrmPluginRegistrationAttributes.Count > 0;
             }

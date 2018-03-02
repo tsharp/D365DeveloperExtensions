@@ -62,7 +62,7 @@ namespace PluginDeployer.Spkl
         /// <param name="assemblyFolderPath"></param>
         /// <param name="reflectionOnly"></param>
         /// <returns></returns>
-        public static AssemblyContainer LoadAssembly(byte[] assemblyBytes, bool isWorkflow, string assemblyFolderPath, bool reflectionOnly = false)
+        public static AssemblyContainer LoadAssembly(byte[] assemblyBytes, bool isWorkflow, string assemblyFolderPath)
         {
             var containerAppDomain = AppDomain.CreateDomain(
                 "AssemblyContainer",
@@ -77,7 +77,7 @@ namespace PluginDeployer.Spkl
             AssemblyContainer assemblyContainer = new AssemblyContainer()
             {
                 AssemblyData = assemblyBytes,
-                ReflectionOnly = reflectionOnly,
+                ReflectionOnly = false,
                 Container = containerAppDomain,
                 IsWorkflow = isWorkflow
             };
