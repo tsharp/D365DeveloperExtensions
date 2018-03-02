@@ -60,7 +60,7 @@ namespace PluginDeployer.Spkl
 
                 //Load the assembly in its own AppDomain to prevent load errors & file locking
                 var assemblyBytes = File.ReadAllBytes(file);
-                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, true, assemblyFolderPath, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, true, assemblyFolderPath);
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)
@@ -180,7 +180,7 @@ namespace PluginDeployer.Spkl
 
                 //Load the assembly in its own AppDomain to prevent load errors & file locking
                 var assemblyBytes = File.ReadAllBytes(file);
-                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, false, assemblyFolderPath, true);
+                assemblyContainer = AssemblyContainer.LoadAssembly(assemblyBytes, false, assemblyFolderPath);
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
                 if (pluginDatas.Count <= 0)
