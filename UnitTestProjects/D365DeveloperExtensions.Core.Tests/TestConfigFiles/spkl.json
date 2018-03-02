@@ -1,0 +1,81 @@
+{
+  "webresources": [
+    {
+      "profile": "default,debug",
+      "root": "Webresources/",
+      "solution": null,
+      "files": [
+        {
+          "uniquename": "new_file2.js",
+          "file": "/js/file2.js",
+          "description": "Testing",
+          "ts": "/ts/file2.ts"
+        },
+        {
+          "uniquename": "new_file.js.map",
+          "file": "/js/file.js.map",
+          "description": null,
+          "ts": null
+        },
+        {
+          "uniquename": "new_file.js",
+          "file": "/js/file.js",
+          "description": null,
+          "ts": null
+        },
+        {
+          "uniquename": "new_JavaScript.js",
+          "file": "/js/file2.js.map",
+          "description": null,
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "profile": "default,debug",
+      "assemblypath": "bin\\Debug",
+      "classRegex": null
+    }
+  ],
+  "earlyboundtypes": [
+    {
+      "entities": "account,contact,quote",
+      "actions": "dev1_simpleaction",
+      "generateOptionsetEnums": true,
+      "generateGlobalOptionsets": false,
+      "generateStateEnums": true,
+      "filename": "EarlyBoundTypes.cs",
+      "classNamespace": "",
+      "serviceContextName": "XrmSvc"
+    }
+  ],
+  "solutions": [
+    {
+      "profile": "default,debug",
+      "solution_uniquename": "spkltestsolution",
+      "packagepath": "package",
+      "solutionpath": "solution_{0}_{1}_{2}_{3}.zip",
+      "packagetype": "unmanaged",
+      "increment_on_import": false,
+      "map": [
+        {
+          "map": "path",
+          "from": "PluginAssemblies\\**\\*.*",
+          "to": "..\\..\\Plugins\\bin\\**"
+        },
+        {
+          "map": "path",
+          "from": "WebResources\\*.*",
+          "to": "..\\..\\Webresources\\Webresources\\**"
+        },
+        {
+          "map": "path",
+          "from": "WebResources\\**\\*.*",
+          "to": "..\\..\\Webresources\\Webresources\\**"
+        }
+      ]
+    }
+  ]
+}

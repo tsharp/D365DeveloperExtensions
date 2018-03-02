@@ -117,23 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DefaultKeyName" xml:space="preserve">
-    <value>MyKey.snk</value>
-  </data>
   <data name="GeneratingKeyFailureMessage" xml:space="preserve">
-    <value>Error Processing Template: Error Generating Key</value>
+    <value>Error generating key</value>
   </data>
   <data name="GeneratingKeyStatusBarMessage" xml:space="preserve">
     <value>Generating Key...</value>
   </data>
+  <data name="NpmPackageInstallFailureMessage" xml:space="preserve">
+    <value>Error installing NPM package</value>
+  </data>
+  <data name="NpmPackageInstallingStatusBarMessage" xml:space="preserve">
+    <value>Installing NPM package</value>
+  </data>
+  <data name="NpmPickerCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NpmPickerCancelTooltipText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NpmPickerOKButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NpmPickerOKTooltipText" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="NuGetPackageInstallFailureMessage" xml:space="preserve">
-    <value>Error Processing Template: Error Installing NuGet Package</value>
+    <value>Error installing NuGet package</value>
   </data>
   <data name="NuGetPackageInstallingStatusBarMessage" xml:space="preserve">
-    <value>Installing NuGet Package</value>
+    <value>Installing NuGet package</value>
   </data>
   <data name="NuGetPackageUninstallingStatusBarMessage" xml:space="preserve">
-    <value>Uninstalling NuGet Package</value>
+    <value>Uninstalling NuGet package</value>
   </data>
   <data name="NuGetPickerCancelButtonText" xml:space="preserve">
     <value>Cancel</value>
@@ -146,9 +161,6 @@
   </data>
   <data name="NuGetPickerOKTooltipText" xml:space="preserve">
     <value>OK</value>
-  </data>
-  <data name="NuGetPickerTitle" xml:space="preserve">
-    <value>Crm DevEx</value>
   </data>
   <data name="SdkAssemblyCore" xml:space="preserve">
     <value>Microsoft.CrmSdk.CoreAssemblies</value>
@@ -174,19 +186,103 @@
   <data name="SdkVersionPickerOKTooltipText" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="TestProjectPickerCreateProjectButtonText" xml:space="preserve">
-    <value>Create Project</value>
+  <data name="TestProjectPicker_CreateProject_Button_Tooltip" xml:space="preserve">
+    <value>Create a unit test project targeting the selected project &amp; the selected unit test framework</value>
   </data>
-  <data name="TestProjectPickerCreateProjectTooltipText" xml:space="preserve">
-    <value>Create Project</value>
-  </data>
-  <data name="TestProjectPickerProjectToTestLabel" xml:space="preserve">
+  <data name="TestProjectPicker_ProjectToTest_Label_Content" xml:space="preserve">
     <value>Project To Test</value>
   </data>
-  <data name="TestProjectPickerTitle" xml:space="preserve">
-    <value>Crm DevEx</value>
+  <data name="TestProjectPicker_Window_Title" xml:space="preserve">
+    <value>Unit testing framework</value>
   </data>
-  <data name="TestProjectPickerUnitTestFrameworkLabel" xml:space="preserve">
+  <data name="TestProjectPicker_UnitTestFramework_Label_Content" xml:space="preserve">
     <value>Unit Test Framework</value>
+  </data>
+  <data name="ErrorMessage_UnableReadDeserializeConfig" xml:space="preserve">
+    <value>Unable to read or deserialize template configuration file</value>
+  </data>
+  <data name="ErrorMessage_FailedToAddNuGetPackage" xml:space="preserve">
+    <value>Failed to add NuGet package</value>
+  </data>
+  <data name="MessageBox_MissingTemplateFolder" xml:space="preserve">
+    <value>Please specify a template folder under Tools -&gt; Options -&gt; D365 DevEx -&gt; Template Options</value>
+  </data>
+  <data name="ErrorMessage_NoSelectedTemplate" xml:space="preserve">
+    <value>TemplatePicker had no selected template</value>
+  </data>
+  <data name="MessageBox_CreateConfigFile" xml:space="preserve">
+    <value>Create custom template configuration file here?</value>
+  </data>
+  <data name="MessageBox_AddTemplateFiles" xml:space="preserve">
+    <value>Add template files and try again</value>
+  </data>
+  <data name="MessageBox_Title_ConfirmCreateConfigFile" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="CustomTemplatePicker_Window_Title" xml:space="preserve">
+    <value>Custom template</value>
+  </data>
+  <data name="CustomTemplateWindow_Ok_Button_Content" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CustomTemplateWindow_Ok_Button_Tooltip" xml:space="preserve">
+    <value>Create item from template</value>
+  </data>
+  <data name="CustomTemplateWindow_Canel_Button_Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CustomTemplateWindow_Cancel_Button_Tooltip" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NuGetPicker_LimitVersions_CheckBox_Content" xml:space="preserve">
+    <value>Latest Versions Only</value>
+  </data>
+  <data name="NuGetPackageUninstallFailureMessage" xml:space="preserve">
+    <value>Error uninstalling NuGet package</value>
+  </data>
+  <data name="ErrorMessage_TemplateWizardError" xml:space="preserve">
+    <value>Error occurred running template wizard</value>
+  </data>
+  <data name="MessageBox_AddCustomTemplate" xml:space="preserve">
+    <value>Add custom templates to continue</value>
+  </data>
+  <data name="ErrorMessage_ErrorProcessingTemplate" xml:space="preserve">
+    <value>Error processing template</value>
+  </data>
+  <data name="Version_Window_Title" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="TestProjectPicker_Cancel_Button_Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TestProjectPicker_CreateProject_Button_Content" xml:space="preserve">
+    <value>Create Project</value>
+  </data>
+  <data name="Message_InstallingNuGetPackage" xml:space="preserve">
+    <value>Installing NuGet package</value>
+  </data>
+  <data name="Message_InstalledNuGetPackage" xml:space="preserve">
+    <value>Installed NuGet package</value>
+  </data>
+  <data name="Message_ErrorInstallingNuGetPackage" xml:space="preserve">
+    <value>Error installing NuGet package</value>
+  </data>
+  <data name="Message_TimeoutInstallingNuGetPackage" xml:space="preserve">
+    <value>Timeout installing NuGet package</value>
+  </data>
+  <data name="ConfirmMessage_UpdateUserSetting_Title" xml:space="preserve">
+    <value>Update user setting</value>
+  </data>
+  <data name="ConfirmMessage_UpdatePrtPath" xml:space="preserve">
+    <value>Update D365 DevEx Plug-in Registration Tool path?</value>
+  </data>
+  <data name="ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath" xml:space="preserve">
+    <value>Update D365 DevEx CrmSvcUtil &amp; Solution Packager paths?</value>
+  </data>
+  <data name="ErrorMessage_WizardCancelInternalError" xml:space="preserve">
+    <value>Internal error</value>
+  </data>
+  <data name="MessageBox_NPMError" xml:space="preserve">
+    <value>NPM is required to download the XRM type definitions. Install Node.js and the npm package manager. https://nodejs.org</value>
   </data>
 </root>

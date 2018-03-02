@@ -1,0 +1,6 @@
+﻿
+Anything under the Spkl folder is taken from or based on work done by Scott Durow
+
+https://github.com/scottdurow/SparkleXrm/wiki/spkl
+
+Also trying to minimze edits to these files to make it easier to merge updates as they become available

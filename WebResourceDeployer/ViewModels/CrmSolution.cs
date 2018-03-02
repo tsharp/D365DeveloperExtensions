@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebResourceDeployer.ViewModels
 {
@@ -12,5 +8,6 @@ namespace WebResourceDeployer.ViewModels
         public string Name { get; set; }
         public string Prefix { get; set; }
         public string UniqueName { get; set; }
+        public string NameVersion { get; set; }
     }
 }

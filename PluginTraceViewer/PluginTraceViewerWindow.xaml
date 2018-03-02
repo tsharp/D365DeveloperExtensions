@@ -1,24 +1,22 @@
-﻿<UserControl x:Name="Root"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
-    xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
-    xmlns:connection="clr-namespace:CrmDeveloperExtensions2.Core.Connection;assembly=CrmDeveloperExtensions2.Core"
-    xmlns:coreControls="clr-namespace:CrmDeveloperExtensions2.Core.Controls;assembly=CrmDeveloperExtensions2.Core"
-    xmlns:coreConverters="clr-namespace:CrmDeveloperExtensions2.Core.Converters;assembly=CrmDeveloperExtensions2.Core"
-    xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-    xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
-    x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
-    mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:connection="clr-namespace:D365DeveloperExtensions.Core.Connection;assembly=D365DeveloperExtensions.Core"
+             xmlns:coreControls="clr-namespace:D365DeveloperExtensions.Core.Controls;assembly=D365DeveloperExtensions.Core"
+             xmlns:coreConverters="clr-namespace:D365DeveloperExtensions.Core.Converters;assembly=D365DeveloperExtensions.Core"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:resources="clr-namespace:PluginTraceViewer.Resources"
+             x:Class="PluginTraceViewer.PluginTraceViewerWindow" 
+             mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="1100">
     <UserControl.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DataGridStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/UserControlStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/DataGridStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/UserControlStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ToolBarStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <coreConverters:ToUpperConverter x:Key="ToUpperConverter"/>
             <Style x:Key="DataGridColumnHeaderNoMouseOverStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
@@ -32,190 +30,218 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <connection:XrmToolingConnection Grid.Column="0" x:Name="ConnPane" Connected="ConnPane_OnConnected" SolutionBeforeClosing="ConnPane_OnSolutionBeforeClosing"
                                          SolutionOpened="ConnPane_OnSolutionOpened"/>
-        <Grid Grid.Column="1" HorizontalAlignment="Stretch">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="31" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
-                    <Button x:Name="Poll" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Source={x:Static resources:Resource.Poll_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                            ToolTip="{x:Static resources:Resource.Poll_Button_ToolTip}" />
-                    <Button x:Name="PollOff" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
-                            Content="{Binding Source={x:Static resources:Resource.PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
-                            ToolTip="{x:Static resources:Resource.PollOff_Button_ToolTip}" Visibility="Collapsed"/>
-                    <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-                    <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
-                </StackPanel>
-                <DataGrid x:Name="CrmPluginTraces" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Margin="5,0,0,0" IsEnabled="False"
+            <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="31" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource StacKPanelToolbar}">
+                        <Button x:Name="Poll" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
+                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_Content}, Converter={StaticResource ToUpperConverter}, Mode=OneWay}" 
+                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_Poll_Button_ToolTip}" />
+                        <Button x:Name="PollOff" Click="Poll_OnClick" Style="{DynamicResource ToolBarButtonStyle}" IsEnabled="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}"
+                            Content="{Binding Source={x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_Content}, Converter={StaticResource ToUpperConverter},Mode=OneWay}" 
+                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_PollOff_Button_ToolTip}" Visibility="Collapsed"/>
+                        <coreControls:CustomizationButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                        <coreControls:SolutionsButton IsConnected="{Binding ElementName=ConnPane, Path=IsConnected, Mode=TwoWay}" />
+                        <Label x:Name="PollTime" Margin="10,0,0,0" VerticalAlignment="Center" Style="{DynamicResource ToolBarLabelStyle}" Visibility="Collapsed" />
+                    </StackPanel>
+                    <DataGrid x:Name="CrmPluginTraces" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Margin="5,0,0,0" IsEnabled="False"
                           BorderThickness="0" Background="Transparent" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" CanUserResizeColumns="False" 
                           CanUserResizeRows="False" RowDetailsVisibilityMode="Collapsed" ItemsSource="{Binding Traces, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                           Style="{DynamicResource DataGridStyle}" CellStyle="{StaticResource DataGridCellStyle}" RowStyle="{StaticResource DataGridRowStyle}" 
                           SelectionChanged="CrmPluginTraces_SelectionChanged">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn CanUserSort="False">
-                            <DataGridTemplateColumn.Header>
-                                <StackPanel Background="Transparent">
-                                    <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
-                                        <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}"
-                                                        ToolTip="{x:Static resources:Resource.RefreshImage_Button_ToolTip}" />
-                                    </Button>
-                                </StackPanel>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
-                                        <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
-                                                        ToolTip="{x:Static resources:Resource.ViewDetailsImage_Button_ToolTip}" />
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False" Width="24" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" CommandParameter="{Binding PluginTraceLogidId}">
-                                        <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
-                                                        ToolTip="{x:Static resources:Resource.OpenInCrmImage_Button_ToolTip}" />
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="False">
-                            <DataGridTemplateColumn.Header>
-                                <StackPanel>
-                                    <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
-                                        <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
-                                                        ToolTip="{x:Static resources:Resource.DeleteLogsImage_Button_ToolTip}" />
-                                    </Button>
-                                </StackPanel>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding PendingDelete, UpdateSourceTrigger=PropertyChanged}" 
-                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.CreatonOn_DataGridTextColumn_Header}" Binding="{Binding CreatedOn}"/>
-                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Entity">
-                            <DataGridTemplateColumn.Header>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="16"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Entity_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByEntity" Click="FilterByEntity_Click"/>
-                                </Grid>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Entity}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MessageName">
-                            <DataGridTemplateColumn.Header>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="16"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Message_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMessage" Click="FilterByMessage_Click"/>
-                                </Grid>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding MessageName}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.CorrelationId_DataGridTextColumn_Header}" Binding="{Binding CorrelationId}"/>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Mode">
-                            <DataGridTemplateColumn.Header>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="16"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.Mode_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMode" Click="FilterByMode_Click"/>
-                                </Grid>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Mode}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn CanUserSort="True" SortMemberPath="TypeName">
-                            <DataGridTemplateColumn.Header>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="16"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.TypeName_DataGridTextColumn_Header}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                    <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByTypeName" Click="FilterByTypeName_Click"/>
-                                </Grid>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding TypeName}" Style="{DynamicResource DataGridTextBlockStyle}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="{x:Static resources:Resource.ExecutionDuration_DataGridTextColumn_Header}" Binding="{Binding ExecutionDuration}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="HorizontalAlignment" Value="Right" />
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTemplateColumn CanUserSort="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
-                            <DataGridTemplateColumn.Header>
-                                <StackPanel Background="Transparent" Orientation="Horizontal">
-                                    <AdornerDecorator>
-                                        <TextBox x:Name="DetailsSearch" Width="200" Height="20" TextChanged="DetailsSearch_TextChanged" Style="{DynamicResource ToolBarTextBoxStyle}">
-                                            <coreConverters:WatermarkService.Watermark>
-                                                <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="Search trace details"/>
-                                            </coreConverters:WatermarkService.Watermark>
-                                        </TextBox>
-                                    </AdornerDecorator>
-                                    <coreControls:DataGridHeaderClearFilterButton x:Name="ClearFilters" Click="ClearFilters_Click" Margin="5,0,0,0"/>
-                                </StackPanel>
-                            </DataGridTemplateColumn.Header>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.RowDetailsTemplate>
-                        <DataTemplate>
-                            <TextBox Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn CanUserSort="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel Background="Transparent">
+                                        <Button x:Name="Refresh" Click="Refresh_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
+                                            <imaging:CrispImage x:Name="RefreshImage" Moniker="{x:Static catalog:KnownMonikers.Refresh}" Style="{DynamicResource DataGridImageEnabled}"
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_RefreshImage_Button_ToolTip}" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="ViewDetails" Click="ViewDetails_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
+                                            <imaging:CrispImage x:Name="ViewDetailsImage" Moniker="{x:Static catalog:KnownMonikers.ShowDetailsPane}" 
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserSort="False" Width="24" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="OpenInCrm" Click="OpenInCrm_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}" CommandParameter="{Binding PluginTraceLogidId}">
+                                            <imaging:CrispImage x:Name="OpenInCrmImage" Moniker="{x:Static catalog:KnownMonikers.OpenWebSite}" 
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserSort="False">
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel>
+                                        <Button x:Name="Delete" Click="Delete_OnClick" Style="{DynamicResource DataGridHeaderButtonStyle}">
+                                            <imaging:CrispImage x:Name="DeleteLogsImage" Moniker="{x:Static catalog:KnownMonikers.DeleteGroup}" 
+                                                            ToolTip="{x:Static resources:Resource.PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip}" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding PendingDelete, UpdateSourceTrigger=PropertyChanged}" 
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.PluginTraceViewerWindow_CreatonOn_DataGridTextColumn_Header}" 
+                                                SortMemberPath="CreatedOn">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding CreatedOn}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Entity">
+                                <DataGridTemplateColumn.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="16"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Entity_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                        <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByEntity" Click="FilterByEntity_Click"/>
+                                    </Grid>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Entity}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserSort="True" SortMemberPath="MessageName">
+                                <DataGridTemplateColumn.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="16"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Message_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                        <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMessage" Click="FilterByMessage_Click"/>
+                                    </Grid>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MessageName}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserResize="False" CanUserSort="True" Header="{x:Static resources:Resource.PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header}" 
+                                                SortMemberPath="CorrelationId">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding CorrelationId}" Style="{DynamicResource DataGridTextBoxStyle}" IsReadOnly="True" 
+                                             BorderThickness="0" Background="Transparent" MouseDoubleClick="TextBox_MouseDoubleClick" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{x:Static resources:Resource.PluginTraceViewerWindow_Depth_DataGridTextColumn_Header}" Binding="{Binding Depth}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn CanUserSort="True" SortMemberPath="Mode">
+                                <DataGridTemplateColumn.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="16"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_Mode_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                        <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByMode" Click="FilterByMode_Click"/>
+                                    </Grid>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Mode}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn CanUserSort="True" SortMemberPath="TypeName">
+                                <DataGridTemplateColumn.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="16"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static resources:Resource.PluginTraceViewerWindow_TypeName_DataGridTextColumn_Header}" 
+                                               Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                        <coreControls:DataGridHeaderFilterButton Grid.Column="1" x:Name="FilterByTypeName" Click="FilterByTypeName_Click"/>
+                                    </Grid>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TypeName}" Style="{DynamicResource DataGridTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{x:Static resources:Resource.PluginTraceViewerWindow_ExecutionDuration_DataGridTextColumn_Header}" 
+                                            Binding="{Binding ExecutionDuration}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
+                                        <Setter Property="Padding" Value="2,0,2,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn CanUserSort="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel Background="Transparent" Orientation="Horizontal">
+                                        <AdornerDecorator>
+                                            <TextBox x:Name="DetailsSearch" Width="200" Height="20" TextChanged="DetailsSearch_TextChanged" Style="{DynamicResource ToolBarTextBoxStyle}">
+                                                <coreConverters:WatermarkService.Watermark>
+                                                    <TextBlock Margin="5,1,0,0" Foreground="DarkGray" Text="{x:Static resources:Resource.PluginTraceViewerWindow_DetailsSearch_TextBlock_Text}"/>
+                                                </coreConverters:WatermarkService.Watermark>
+                                            </TextBox>
+                                        </AdornerDecorator>
+                                        <coreControls:DataGridHeaderClearFilterButton x:Name="ClearFilters" Click="ClearFilters_Click" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <TextBox Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  Style="{DynamicResource DataGridTextBoxStyle}"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto" BorderThickness="0" ScrollViewer.CanContentScroll="True" 
                                      MaxHeight="200" Text="{Binding Details}" IsReadOnly="True" Margin="10" TextWrapping="Wrap" />
-                        </DataTemplate>
-                    </DataGrid.RowDetailsTemplate>
-                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </Grid>
+                <coreControls:DataGridHeaderFilterPopup x:Name="FilterEntityPopup" BindingPath="FilterEntities" />
+                <coreControls:DataGridHeaderFilterPopup x:Name="FilterMessagePopup" BindingPath="FilterMessages" />
+                <coreControls:DataGridHeaderFilterPopup x:Name="FilterModePopup" BindingPath="FilterModes" />
+                <coreControls:DataGridHeaderFilterPopup x:Name="FilterTypeNamePopup" BindingPath="FilterTypeNames" />
             </Grid>
-            <coreControls:LockOverlay x:Name="Overlay" />
-            <coreControls:DataGridHeaderFilterPopup x:Name="FilterEntityPopup" BindingPath="FilterEntities" />
-            <coreControls:DataGridHeaderFilterPopup x:Name="FilterMessagePopup" BindingPath="FilterMessages" />
-            <coreControls:DataGridHeaderFilterPopup x:Name="FilterModePopup" BindingPath="FilterModes" />
-            <coreControls:DataGridHeaderFilterPopup x:Name="FilterTypeNamePopup" BindingPath="FilterTypeNames" />
         </Grid>
+        <coreControls:LockOverlay x:Name="Overlay" Grid.Column="0" />
     </Grid>
 </UserControl>

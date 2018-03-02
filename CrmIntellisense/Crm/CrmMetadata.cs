@@ -1,70 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmIntellisense.Models;
+﻿using CrmIntellisense.Models;
+using CrmIntellisense.Resources;
+using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CrmIntellisense.Crm
 {
     public static class CrmMetadata
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static List<CompletionValue> Metadata { get; set; }
+
 
         public static void GetMetadata(CrmServiceClient client)
         {
             try
             {
-                using (client)
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievingMetadata, MessageType.Info);
+
+                RetrieveAllEntitiesRequest metaDataRequest = new RetrieveAllEntitiesRequest
                 {
-                    RetrieveAllEntitiesRequest metaDataRequest = new RetrieveAllEntitiesRequest
-                    {
-                        EntityFilters = EntityFilters.Entity | EntityFilters.Attributes
-                    };
+                    EntityFilters = EntityFilters.Entity | EntityFilters.Attributes
+                };
 
-                    RetrieveAllEntitiesResponse metaDataResponse = (RetrieveAllEntitiesResponse)client.Execute(metaDataRequest);
+                RetrieveAllEntitiesResponse metaDataResponse = (RetrieveAllEntitiesResponse)client.Execute(metaDataRequest);
 
-                    ProcessMetadata(metaDataResponse);
-                }
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Metadata From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedMetadata, MessageType.Info);
+
+                ProcessMetadata(metaDataResponse);
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Metadata From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.Message_ErrorRetrievingMetadata, ex);
             }
         }
 
         private static void ProcessMetadata(RetrieveAllEntitiesResponse metaDataResponse)
         {
+            OutputLogger.WriteToOutputWindow(Resource.Message_ProcessingMetadata, MessageType.Info);
+
             var entities = metaDataResponse.EntityMetadata;
 
             Metadata = new List<CompletionValue>();
 
+            string entityTriggerCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseEntityTriggerCharacter);
+            string entityFieldCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseFieldTriggerCharacter);
+
             foreach (EntityMetadata entityMetadata in entities)
             {
-                Metadata.Add(new CompletionValue("$" + entityMetadata.LogicalName, entityMetadata.LogicalName, "Entity name"));
-                Metadata.Add(new CompletionValue("$" + entityMetadata.LogicalName + "_?field?",
-                    "$" + entityMetadata.LogicalName, "Entity field"));
+                Metadata.Add(new CompletionValue($"{entityTriggerCharacter}{entityMetadata.LogicalName}", entityMetadata.LogicalName,
+                    GetDisplayName(entityMetadata.DisplayName), MetadataType.Entity));
+                Metadata.Add(new CompletionValue($"{entityTriggerCharacter}{entityMetadata.LogicalName}{entityFieldCharacter}?field?",
+                    $"{entityTriggerCharacter}{entityMetadata.LogicalName}", GetDisplayName(entityMetadata.DisplayName), MetadataType.None));
 
-                foreach (AttributeMetadata attribute in entityMetadata.Attributes)
+                foreach (var attribute in entityMetadata.Attributes.Where(attribute =>
+                    attribute.IsValidForCreate.GetValueOrDefault() || attribute.IsValidForUpdate.GetValueOrDefault() || attribute.IsValidForRead.GetValueOrDefault()))
                 {
-                    if (attribute.AttributeType != null)
-                        Metadata.Add(new CompletionValue("$" + entityMetadata.LogicalName + "_" + attribute.LogicalName,
-                            attribute.LogicalName, attribute.LogicalName + ": " + attribute.AttributeType.Value));
+                    Metadata.Add(new CompletionValue($"{entityTriggerCharacter}{entityMetadata.LogicalName}_{attribute.LogicalName}",
+                        attribute.LogicalName, $"{GetDisplayName(attribute.DisplayName)}: {attribute.AttributeType.GetValueOrDefault()}", MetadataType.Attribute));
                 }
             }
 
             Metadata = Metadata.OrderBy(m => m.Name).ToList();
+        }
+
+        private static string GetDisplayName(Label label)
+        {
+            return label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == 1033)?.Label;
         }
     }
 }

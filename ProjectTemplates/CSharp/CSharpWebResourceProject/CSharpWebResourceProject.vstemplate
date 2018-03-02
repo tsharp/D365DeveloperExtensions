@@ -1,0 +1,35 @@
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>CRM/365 Web Resource Project</Name>
+    <Description>Dynamics CRM/365 Web Resource Project</Description>
+    <Icon>icon.png</Icon>
+    <TemplateID>4feef2e3-885b-4be6-aff3-dfe832468b7d</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1000</SortOrder>
+    <RequiredFrameworkVersion>4.5</RequiredFrameworkVersion>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CSharpWebResourceProject</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="ProjectTemplate.webproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="ProjectTemplate.webproj">ProjectTemplate.webproj</ProjectItem>
+      <Folder Name="css"/>
+      <Folder Name="js"/>
+      <Folder Name="images"/>
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>TemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>TemplateWizards.ProjectTemplateWizard</FullClassName>
+  </WizardExtension>
+  <WizardData>
+    <CRMProjectType>WebResource</CRMProjectType>
+    <NeedsCore>false</NeedsCore>
+    <NeedsWorkflow>false</NeedsWorkflow>
+    <NeedsClient>false</NeedsClient>
+    <IsUnitTest>false</IsUnitTest>
+    <IsUnitTestItem>false</IsUnitTestItem>
+    <SignAssembly>false</SignAssembly>
+  </WizardData>
+</VSTemplate>

@@ -8,5 +8,6 @@ namespace PluginDeployer.ViewModels
         public string Name { get; set; }
         public string Prefix { get; set; }
         public string UniqueName { get; set; }
+        public string NameVersion { get; set; }
     }
 }

@@ -1,52 +1,53 @@
-using CrmDeveloperExtensions2.Core;
+using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
 using EnvDTE;
+using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Windows;
-using TemplateWizards.Enums;
-using StatusBar = CrmDeveloperExtensions2.Core.StatusBar;
+using StatusBar = D365DeveloperExtensions.Core.StatusBar;
 
 namespace TemplateWizards
 {
     public static class NuGetProcessor
     {
-        public static void InstallPackage(DTE dte, IVsPackageInstaller installer, Project project, string package, string version)
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public static void InstallPackage(IVsPackageInstaller installer, Project project, string package, string version)
         {
             try
             {
                 string nuGetSource = "https://www.nuget.org/api/v2/";
-                StatusBar.SetStatusBarValue(dte,
-                    Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
+                StatusBar.SetStatusBarValue(Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
                 installer.InstallPackage(nuGetSource, project, package, version, false);
             }
             catch (Exception ex)
             {
-
-                //TODO: handle this error better if unable to connect - displays large error detail otherwise
-                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resources.Resource.NuGetPackageInstallFailureMessage, ex);
+                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage);
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue();
             }
         }
 
-        public static void UnInstallPackage(DTE dte, IVsPackageUninstaller uninstaller, Project project, string package)
+        public static void UnInstallPackage(IVsPackageUninstaller uninstaller, Project project, string package)
         {
             try
             {
-                StatusBar.SetStatusBarValue(dte, Resources.Resource.NuGetPackageUninstallingStatusBarMessage + ": " + package);
+                StatusBar.SetStatusBarValue(Resources.Resource.NuGetPackageUninstallingStatusBarMessage + ": " + package);
 
                 uninstaller.UninstallPackage(project, package, true);
             }
             catch (Exception ex)
             {
-
-                //MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resources.Resource.NuGetPackageInstallFailureMessage, ex);
+                MessageBox.Show(Resources.Resource.NuGetPackageInstallFailureMessage + ": " + ex.Message);
             }
             finally
             {
-                StatusBar.ClearStatusBarValue(dte);
+                StatusBar.ClearStatusBarValue();
             }
         }
 
@@ -58,16 +59,19 @@ namespace TemplateWizards
                                : Resources.Resource.SdkAssemblyExtensions;
         }
 
-        public static int GetNextPackage(PackageValue package, bool getWorkflow, bool getClient)
+        public static int GetNextPackage(TemplatePackageType templatePackage, bool getWorkflow, bool getClient)
         {
-            switch (package)
+            switch (templatePackage)
             {
-                case PackageValue.Core:
-                    if (getWorkflow) return 2;
-                    if (getClient) return 3;
+                case TemplatePackageType.Core:
+                    if (getWorkflow)
+                        return 2;
+                    if (getClient)
+                        return 3;
                     return 0;
-                case PackageValue.Workflow:
-                    if (getClient) return 3;
+                case TemplatePackageType.Workflow:
+                    if (getClient)
+                        return 3;
                     return 0;
                 default:
                     return 0;

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using WebResourceDeployer.Resources;
 
 namespace WebResourceDeployer.ViewModels
 {
@@ -10,6 +11,7 @@ namespace WebResourceDeployer.ViewModels
         private string _boundFile;
         private bool _publish;
         private string _description;
+        private bool _locked;
         public bool Publish
         {
             get => _publish;
@@ -21,13 +23,24 @@ namespace WebResourceDeployer.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool Locked
+        {
+            get => _locked;
+            set
+            {
+                if (_locked == value) return;
+
+                _locked = value;
+                OnPropertyChanged();
+            }
+        }
         public Guid WebResourceId { get; set; }
         public int Type { get; set; }
         public string TypeName { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public bool IsManaged { get; set; }
-        public string State => IsManaged ? "Managed" : "Unmanaged";
+        public string State => IsManaged ? Resource.Managed : Resource.Unmanaged;
         public bool AllowCompare => SetAllowCompare();
         public bool AllowPublish => SetAllowPublish();
         public string BoundFile
@@ -78,12 +91,12 @@ namespace WebResourceDeployer.ViewModels
                 Publish = false;
                 return false;
             }
-            if (string.IsNullOrEmpty(BoundFile))
-            {
-                Publish = false;
-                return false;
-            }
-            return true;
+
+            if (!string.IsNullOrEmpty(BoundFile))
+                return true;
+
+            Publish = false;
+            return false;
         }
     }
 }

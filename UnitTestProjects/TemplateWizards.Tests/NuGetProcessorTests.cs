@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TemplateWizards.Enums;
+using D365DeveloperExtensions.Core.Enums;
 
 namespace TemplateWizards.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class NuGetProcessorTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling1()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -20,7 +20,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling2()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -28,7 +28,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidXrmTooling3Preview()
         {
             string expected = "Microsoft.CrmSdk.XrmTooling.CoreAssembly";
@@ -36,7 +36,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidExtensions1()
         {
             string expected = "Microsoft.CrmSdk.Extensions";
@@ -44,7 +44,7 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetermineClientTypeTest_ValidExtensions2()
         {
             string expected = "Microsoft.CrmSdk.Extensions";
@@ -52,35 +52,35 @@ namespace TemplateWizards.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestNextWorkflow1()
         {
             int expected = 2;
-            int result = NuGetProcessor.GetNextPackage(PackageValue.Core, true, true);
+            int result = NuGetProcessor.GetNextPackage(TemplatePackageType.Core, true, true);
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestNextClient()
         {
             int expected = 3;
-            int result = NuGetProcessor.GetNextPackage(PackageValue.Workflow, false, true);
+            int result = NuGetProcessor.GetNextPackage(TemplatePackageType.Workflow, false, true);
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestClose1()
         {
             int expected = 0;
-            int result = NuGetProcessor.GetNextPackage(PackageValue.Core, false, false);
+            int result = NuGetProcessor.GetNextPackage(TemplatePackageType.Core, false, false);
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetNextPackageTestClose2()
         {
             int expected = 0;
-            int result = NuGetProcessor.GetNextPackage(PackageValue.Client, true, true);
+            int result = NuGetProcessor.GetNextPackage(TemplatePackageType.Client, true, true);
             Assert.AreEqual(expected, result);
         }
     }

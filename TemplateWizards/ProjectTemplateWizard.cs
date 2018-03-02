@@ -1,9 +1,13 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Vs;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
+using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
+using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -11,16 +15,19 @@ using System.IO;
 using System.Windows;
 using System.Xml;
 using TemplateWizards.Models;
+using TemplateWizards.Resources;
+using WizardCancelledException = Microsoft.VisualStudio.TemplateWizard.WizardCancelledException;
 
 namespace TemplateWizards
 {
     public class ProjectTemplateWizard : IWizard
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private DTE _dte;
         private string _coreVersion;
         private string _clientVersion;
         private string _clientPackage;
-        private string _crmProjectType = "Plug-in";
+        private ProjectType _crmProjectType = ProjectType.Plugin;
         private bool _needsCore;
         private bool _needsWorkflow;
         private bool _needsClient;
@@ -30,6 +37,7 @@ namespace TemplateWizards
         private string _unitTestFrameworkPackage;
         private CustomTemplate _customTemplate;
         private bool _addFile = true;
+        private string _typesXrmVersion;
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
@@ -53,8 +61,11 @@ namespace TemplateWizards
                 if (_needsCore)
                     PreHandleCrmAssemblyProjects(replacementsDictionary);
 
-                if (_crmProjectType == "CustomItem")
+                if (_crmProjectType == ProjectType.CustomItem)
                     replacementsDictionary = PreHandleCustomItem(replacementsDictionary);
+
+                if (_crmProjectType == ProjectType.TypeScript)
+                    PreHandleTypeScriptProjects();
             }
             catch (WizardBackoutException)
             {
@@ -74,14 +85,15 @@ namespace TemplateWizards
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error occurred running wizard:\n\n{ex}");
-                throw new WizardCancelledException("Internal error", ex);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_TemplateWizardError, ex);
+                MessageBox.Show(Resource.ErrorMessage_TemplateWizardError);
+                throw new WizardCancelledException(Resource.ErrorMessage_WizardCancelInternalError, ex);
             }
         }
 
         private Dictionary<string, string> PreHandleCustomItem(Dictionary<string, string> replacementsDictionary)
         {
-            string templateFolder = UserOptionsGrid.GetCustomTemplatesPath(_dte);
+            string templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
             _addFile = CustomTemplateHandler.ValidateTemplateFolder(templateFolder);
             if (!_addFile)
                 return replacementsDictionary;
@@ -100,7 +112,7 @@ namespace TemplateWizards
             List<CustomTemplate> results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
             if (results.Count == 0)
             {
-                MessageBox.Show("Add custom templates to continue");
+                MessageBox.Show(Resource.MessageBox_AddCustomTemplate);
                 _addFile = false;
                 return replacementsDictionary;
             }
@@ -185,10 +197,26 @@ namespace TemplateWizards
             }
         }
 
+        private void PreHandleTypeScriptProjects()
+        {
+            NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
+
+            if (history == null) {
+                MessageBox.Show(Resource.MessageBox_NPMError);
+                throw new WizardBackoutException();
+            }
+
+            NpmPicker npmPicker = new NpmPicker(history);
+            bool? result = npmPicker.ShowModal();
+            if (!result.HasValue || result.Value == false)
+                throw new WizardBackoutException();
+
+            _typesXrmVersion = npmPicker.SelectedPackage.Version;
+        }
+
         public bool ShouldAddProjectItem(string filePath)
         {
             return _addFile;
-            //return true;
         }
 
         public void RunFinished()
@@ -197,7 +225,6 @@ namespace TemplateWizards
 
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
-
         }
 
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
@@ -205,7 +232,7 @@ namespace TemplateWizards
             if (!_addFile)
                 return;
 
-            if (_crmProjectType != "CustomItem")
+            if (_crmProjectType != ProjectType.CustomItem)
                 return;
 
             if (_customTemplate == null)
@@ -224,33 +251,33 @@ namespace TemplateWizards
         public void ProjectFinishedGenerating(Project project)
         {
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-            if (componentModel == null) return;
+            if (componentModel == null)
+                return;
 
             var installer = componentModel.GetService<IVsPackageInstaller>();
 
             switch (_crmProjectType)
             {
-                case "Unit":
+                case ProjectType.UnitTest:
                     PostHandleUnitTestProjects(project, installer);
                     break;
-                case "Console":
-                case "Plug-in":
-                case "Workflow":
+                case ProjectType.Console:
+                case ProjectType.Plugin:
+                case ProjectType.Workflow:
                     PostHandleCrmAssemblyProjects(project, installer);
                     break;
-                case "WebResource":
-                    PostHandleWebResourceProjects(project);
+                case ProjectType.TypeScript:
+                    PostHandleTypeScriptProject(project);
                     break;
-                //case "TypeScript":
-                //    HandleTypeScriptProject(project, installer);
-                //    break;
-                case "SolutionPackage":
+                case ProjectType.SolutionPackage:
                     PostHandleSolutionPackagerProject(project);
                     break;
             }
 
             if (_isUnitTest)
                 PostHandleUnitTestProjects(project, installer);
+
+            _dte.ExecuteCommand("File.SaveAll");
         }
 
         private void PostHandleSolutionPackagerProject(Project project)
@@ -266,21 +293,20 @@ namespace TemplateWizards
             project.ProjectItems.AddFolder("package");
         }
 
-        private void PostHandleWebResourceProjects(Project project)
+        private void PostHandleTypeScriptProject(Project project)
         {
-            //Turn off Build option in build configurations
-            SolutionConfigurations solutionConfigurations = _dte.Solution.SolutionBuild.SolutionConfigurations;
-            string folderProjectFileName = ProjectWorker.GetFolderProjectFileName(project.FullName);
-            SolutionWorker.SetBuildConfigurationOff(solutionConfigurations, folderProjectFileName);
+            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project));
+
+            _dte.ExecuteCommand("ProjectandSolutionContextMenus.CrossProjectMultiItem.RefreshFolder");
         }
 
         private void PostHandleUnitTestProjects(Project project, IVsPackageInstaller installer)
         {
-            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestAdapter", "1.1.18");
-            NuGetProcessor.InstallPackage(_dte, installer, project, "MSTest.TestFramework", "1.1.18");
+            NuGetProcessor.InstallPackage(installer, project, ExtensionConstants.MsTestTestAdapter, null);
+            NuGetProcessor.InstallPackage(installer, project, ExtensionConstants.MsTestTestFramework, null);
 
             if (_unitTestFrameworkPackage != null)
-                NuGetProcessor.InstallPackage(_dte, installer, project, _unitTestFrameworkPackage, null);
+                NuGetProcessor.InstallPackage(installer, project, _unitTestFrameworkPackage, null);
         }
 
         private void PostHandleCrmAssemblyProjects(Project project, IVsPackageInstaller installer)
@@ -292,24 +318,31 @@ namespace TemplateWizards
                 //Pre-2015 use .NET 4.0
                 if (Versioning.StringToVersion(_coreVersion).Major < 7)
                     project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
+                //Plug-in & workflows use .NET 4.5.2
+                else if (_crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
+                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5.2";
+                //Console v9+ use .NET 4.6.2 //TODO: Getting "Project Unavailable" message when finished but project builds fine
+                //else if (_crmProjectType == ProjectType.Console && Versioning.StringToVersion(_coreVersion).Major >= 9)
+                //    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
 
                 //Install all the NuGet packages
                 project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
-                NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyCore, _coreVersion);
+                NuGetProcessor.InstallPackage(installer, project, Resource.SdkAssemblyCore, _coreVersion);
                 if (_needsWorkflow)
-                    NuGetProcessor.InstallPackage(_dte, installer, project, Resources.Resource.SdkAssemblyWorkflow, _coreVersion);
+                    NuGetProcessor.InstallPackage(installer, project, Resource.SdkAssemblyWorkflow, _coreVersion);
                 if (_needsClient)
-                    NuGetProcessor.InstallPackage(_dte, installer, project, _clientPackage, _clientVersion);
+                    NuGetProcessor.InstallPackage(installer, project, _clientPackage, _clientVersion);
 
                 ProjectWorker.ExcludeFolder(project, "bin");
                 ProjectWorker.ExcludeFolder(project, "performance");
 
                 if (_signAssembly)
-                    Signing.GenerateKey(_dte, project, _destDirectory);
+                    Signing.GenerateKey(project, _destDirectory);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Processing Template: " + ex.Message);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorProcessingTemplate, ex);
+                MessageBox.Show(Resource.ErrorMessage_ErrorProcessingTemplate);
             }
         }
 
@@ -331,7 +364,7 @@ namespace TemplateWizards
                             switch (el)
                             {
                                 case "CRMProjectType":
-                                    _crmProjectType = reader.Value;
+                                    _crmProjectType = (ProjectType)Enum.Parse(typeof(ProjectType), reader.Value);
                                     break;
                                 case "NeedsCore":
                                     _needsCore = bool.Parse(reader.Value);

@@ -1,18 +1,19 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
-using CrmDeveloperExtensions2.Core.Vs;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.ExtensionMethods;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using NLog;
+using PluginDeployer.Resources;
 using PluginDeployer.Spkl;
 using PluginDeployer.Spkl.Tasks;
 using PluginDeployer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -27,12 +28,18 @@ namespace PluginDeployer
 {
     public partial class PluginDeployerWindow : INotifyPropertyChanged
     {
+        #region Private
+
         private readonly DTE _dte;
         private readonly EnvDTE.Solution _solution;
-        private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private bool _isIlMergeInstalled;
         private ObservableCollection<CrmSolution> _crmSolutions;
         private ObservableCollection<CrmAssembly> _crmAssemblies;
+
+        #endregion
+
+        #region Public
 
         public ObservableCollection<CrmSolution> CrmSolutions
         {
@@ -52,12 +59,19 @@ namespace PluginDeployer
                 OnPropertyChanged();
             }
         }
+
+        #endregion
+
+        #region Events
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
 
         public PluginDeployerWindow()
         {
@@ -88,28 +102,34 @@ namespace PluginDeployer
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
             //so we don't want to contine further unless our window is active
-            if (!HostWindow.IsCrmDevExWindow(gotFocus))
+            if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
             //Data is populated already
             if (_crmSolutions != null)
                 return;
 
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
-            {
-                SetWindowCaption(gotFocus.Caption);
-                LoadData();
-            }
+            if (ConnPane.CrmService?.IsReady == true)
+                InitializeForm();
+        }
+
+        private void InitializeForm()
+        {
+            ResetCollections();
+            LoadData();
+            ProjectName.Content = ConnPane.SelectedProject.Name;
+            SetWindowCaption(_dte.ActiveWindow.Caption);
         }
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
+            InitializeForm();
+        }
+
+        private void ResetCollections()
+        {
             _crmSolutions = new ObservableCollection<CrmSolution>();
             _crmAssemblies = new ObservableCollection<CrmAssembly>();
-            LoadData();
-            ProjectName.Content = ConnPane.SelectedProject.Name;
-
-            SetWindowCaption(_dte.ActiveWindow.Caption);
         }
 
         private async void LoadData()
@@ -125,7 +145,7 @@ namespace PluginDeployer
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnSolutionBeforeClosing(object sender, EventArgs e)
@@ -163,9 +183,8 @@ namespace PluginDeployer
 
         private void ResetForm()
         {
-            _crmSolutions = new ObservableCollection<CrmSolution>();
+            ResetCollections();
             SolutionList.ItemsSource = null;
-            _crmAssemblies = new ObservableCollection<CrmAssembly>();
             DeploymentType.ItemsSource = null;
             ProjectName.Content = string.Empty;
             BackupFiles.IsChecked = false;
@@ -173,11 +192,13 @@ namespace PluginDeployer
 
         private async Task GetCrmData()
         {
+            ConnPane.CollapsePane();
+
             bool result = false;
 
             try
             {
-                Overlay.ShowMessage(_dte, "Getting CRM data...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_RetrievingSolutions}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var solutionTask = GetSolutions();
                 await Task.WhenAll(solutionTask);
@@ -188,7 +209,7 @@ namespace PluginDeployer
                 Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
 
                 if (!result)
-                    MessageBox.Show("Error Retrieving Solutions. See the Output Window for additional details.");
+                    MessageBox.Show(Resource.MessageBox_ErrorRetrievingSolutions);
             }
         }
 
@@ -197,8 +218,6 @@ namespace PluginDeployer
             EntityCollection results = await Task.Run(() => Crm.Solution.RetrieveSolutionsFromCrm(ConnPane.CrmService));
             if (results == null)
                 return false;
-
-            OutputLogger.WriteToOutputWindow("Retrieved Solutions From CRM", MessageType.Info);
 
             _crmSolutions = ModelBuilder.CreateCrmSolutionView(results);
 
@@ -211,14 +230,15 @@ namespace PluginDeployer
         private async void Publish_OnClick(object sender, RoutedEventArgs e)
         {
             int deploymentType = (int)DeploymentType.SelectedValue;
+            CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
 
             switch (deploymentType)
             {
                 case 1:
-                    await PublishAssemblySpklAsync();
+                    bool backupFiles = BackupFiles.ReturnValue();
+                    await Task.Run(() => PublishAssemblySpklAsync(solution, backupFiles));
                     break;
                 default:
-                    CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
                     await Task.Run(() => PublishAssemblyAsync(solution));
                     break;
             }
@@ -226,40 +246,30 @@ namespace PluginDeployer
 
         private async Task PublishAssemblyAsync(CrmSolution solution)
         {
-            bool buildOk = ProjectWorker.BuildProject(ConnPane.SelectedProject);
-            if (!buildOk)
+            if (!ProjectWorker.BuildProject(ConnPane.SelectedProject))
                 return;
 
             try
             {
-                Overlay.ShowMessage(_dte, "Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_Deploying}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 string projectAssemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
                 string assemblyFolderPath = ProjectWorker.GetOutputPath(ConnPane.SelectedProject);
-                if (!SpklHelpers.ValidateAssemblyPath(assemblyFolderPath))
+                if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
                     return;
 
+                bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
                 string assemblyFilePath = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
-                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath);
+                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath, isWorkflow);
 
-                CrmAssembly assembly = new CrmAssembly
-                {
-                    Name = projectAssemblyName,
-                    AssemblyPath = assemblyFilePath,
-                    Version = assemblyProperties[2],
-                    Culture = assemblyProperties[4],
-                    PublicKeyToken = assemblyProperties[6],
-                    //TODO: option to make none?
-                    IsolationMode = IsolationModeEnum.Sandbox
-                };
+                var assembly = ModelBuilder.CreateCrmAssembly(projectAssemblyName, assemblyFilePath, assemblyProperties);
 
                 Entity foundAssembly = Assembly.RetrieveAssemblyFromCrm(ConnPane.CrmService, projectAssemblyName);
                 if (foundAssembly != null)
                 {
-
                     Version projectAssemblyVersion = Versioning.StringToVersion(assemblyProperties[2]);
 
-                    if (!SpklHelpers.ValidateAssemblyVersion(ConnPane.CrmService, foundAssembly, projectAssemblyName, projectAssemblyVersion))
+                    if (!AssemblyValidation.ValidateAssemblyVersion(ConnPane.CrmService, foundAssembly, projectAssemblyName, projectAssemblyVersion))
                         return;
 
                     assembly.AssemblyId = foundAssembly.Id;
@@ -267,7 +277,10 @@ namespace PluginDeployer
 
                 Guid assemblyId = await Task.Run(() => Assembly.UpdateCrmAssembly(ConnPane.CrmService, assembly));
                 if (assemblyId == Guid.Empty)
-                    MessageBox.Show("Error Deploying Assembly In CRM: See Output Window for details.");
+                    MessageBox.Show(Resource.MEssageBox_ErrorDeployingAssembly);
+
+                if (foundAssembly == null)
+                    CreatePluginType(assemblyProperties, assemblyId, assemblyFilePath, isWorkflow);
 
                 if (solution.SolutionId == ExtensionConstants.DefaultSolutionId)
                     return;
@@ -278,7 +291,7 @@ namespace PluginDeployer
 
                 bool result = Assembly.AddAssemblyToSolution(ConnPane.CrmService, assemblyId, solution.UniqueName);
                 if (!result)
-                    MessageBox.Show("Error Adding Assembly To Solution In CRM: See Output Window for details.");
+                    MessageBox.Show(Resource.MessageBox_ErrorAddingAssemblyToSolution);
             }
             finally
             {
@@ -286,58 +299,68 @@ namespace PluginDeployer
             }
         }
 
-        private async Task PublishAssemblySpklAsync()
+        private void CreatePluginType(string[] assemblyProperties, Guid assemblyId, string assemblyFilePath, bool isWorkflow)
         {
-            bool buildOk = ProjectWorker.BuildProject(ConnPane.SelectedProject);
-            if (!buildOk)
+            List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes = new List<CrmPluginRegistrationAttribute>();
+            CrmPluginRegistrationAttribute crmPluginRegistrationAttribute =
+                new CrmPluginRegistrationAttribute(ConnPane.SelectedProject.Name, Guid.NewGuid().ToString(),
+                    String.Empty, $"{ConnPane.SelectedProject.Name} ({assemblyProperties[2]})", IsolationModeEnum.Sandbox);
+
+            crmPluginRegistrationAttributes.Add(crmPluginRegistrationAttribute);
+            PluginAssembly pluginAssembly = new PluginAssembly { Id = assemblyId };
+            string assemblyFullName = SpklHelpers.AssemblyFullName(assemblyFilePath, isWorkflow);
+
+            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
+            var ctx = new OrganizationServiceContext(service);
+
+            using (ctx)
+            {
+                PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
+
+                pluginRegistraton.RegisterActivities(crmPluginRegistrationAttributes, pluginAssembly, assemblyFullName);
+            }
+        }
+
+        private async Task PublishAssemblySpklAsync(CrmSolution solution, bool backupFiles)
+        {
+            if (!ProjectWorker.BuildProject(ConnPane.SelectedProject))
                 return;
 
             try
             {
-                Overlay.ShowMessage(_dte, "Deploying...", vsStatusAnimation.vsStatusAnimationDeploy);
-
-                string projectAssemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
+                Overlay.ShowMessage(_dte, $"{Resource.Message_Deploying}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
-                if (pluginDeployConfig == null)
-                {
-                    MessageBox.Show($"Missing 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
+                if (!AssemblyValidation.ValidatePluginDeployConfig(pluginDeployConfig))
                     return;
-                }
-
-                if (string.IsNullOrEmpty(pluginDeployConfig.assemblypath))
-                {
-                    MessageBox.Show($"Missing 'assemblypath' in 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
-                    return;
-                }
 
                 string projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
                 string assemblyFolderPath = Path.Combine(projectPath, pluginDeployConfig.assemblypath);
-                if (!SpklHelpers.ValidateAssemblyPath(assemblyFolderPath))
+                if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
                     return;
 
                 bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
                 string assemblyFilePath = Path.Combine(assemblyFolderPath, ConnPane.SelectedProject.Properties.Item("OutputFileName").Value.ToString());
-                if (!SpklHelpers.ValidateRegistraionDetails(assemblyFilePath, isWorkflow))
+                if (!AssemblyValidation.ValidateRegistraionDetails(assemblyFilePath, isWorkflow))
                     return;
 
-                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath);
+                string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath, isWorkflow);
                 Version projectAssemblyVersion = Version.Parse(assemblyProperties[2]);
 
+                string projectAssemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
                 Entity foundAssembly = Assembly.RetrieveAssemblyFromCrm(ConnPane.CrmService, projectAssemblyName);
                 if (foundAssembly != null)
                 {
-                    if (!SpklHelpers.ValidateAssemblyVersion(ConnPane.CrmService, foundAssembly, projectAssemblyName, projectAssemblyVersion))
+                    if (!AssemblyValidation.ValidateAssemblyVersion(ConnPane.CrmService, foundAssembly, projectAssemblyName, projectAssemblyVersion))
                         return;
                 }
 
-                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
-                var ctx = new OrganizationServiceContext(service);
-
-                CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
                 string solutionName = solution.SolutionId != ExtensionConstants.DefaultSolutionId
                     ? solution.UniqueName
                     : null;
+
+                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
+                var ctx = new OrganizationServiceContext(service);
 
                 using (ctx)
                 {
@@ -348,7 +371,7 @@ namespace PluginDeployer
                     else
                         await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyFilePath, solutionName));
 
-                    GetRegistrationDetails(pluginDeployConfig.classRegex);
+                    GetRegistrationDetailsWithContext(pluginDeployConfig.classRegex, backupFiles, ctx);
                 }
             }
             finally
@@ -359,45 +382,10 @@ namespace PluginDeployer
 
         private void IlMerge_OnClick(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (ConnPane.SelectedProject == null)
-                    return;
+            if (ConnPane.SelectedProject == null)
+                return;
 
-                if (!_isIlMergeInstalled)
-                {
-                    bool installed = IlMergeHandler.Install(_dte, ConnPane.SelectedProject);
-
-                    //CRM Assemblies shouldn't be copied local to prevent merging
-                    if (installed)
-                        IlMergeHandler.SetReferenceCopyLocal(ConnPane.SelectedProject, false);
-
-                    SetIlMergeTooltip(true);
-                    _isIlMergeInstalled = true;
-                }
-                else
-                {
-                    bool uninstalled = IlMergeHandler.Uninstall(_dte, ConnPane.SelectedProject);
-
-                    // Reset CRM Assemblies to copy local
-                    if (uninstalled)
-                        IlMergeHandler.SetReferenceCopyLocal(ConnPane.SelectedProject, true);
-
-                    SetIlMergeTooltip(false);
-                    _isIlMergeInstalled = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error installing : " + Environment.NewLine + Environment.NewLine + ex.Message);
-            }
-        }
-
-        private void SetIlMergeTooltip(bool installed)
-        {
-            IlMerge.ToolTip = installed ?
-                PluginDeployer.Resources.Resource.ILMergeTooltipRemove :
-                PluginDeployer.Resources.Resource.ILMergeTooltipEnable;
+            _isIlMergeInstalled = IlMergeHandler.TogleIlMerge(_dte, ConnPane.SelectedProject, _isIlMergeInstalled);
         }
 
         private void AddRegistration_OnClick(object sender, RoutedEventArgs e)
@@ -405,27 +393,31 @@ namespace PluginDeployer
             PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
             if (pluginDeployConfig == null)
             {
-                MessageBox.Show($"Missing 'plugins' configuration in {ExtensionConstants.SpklConfigFile}");
+                MessageBox.Show($"{Resource.MessageBox_MissingPluginsSpklConfig}: {ExtensionConstants.SpklConfigFile}");
                 return;
             }
 
-            GetRegistrationDetails(pluginDeployConfig.classRegex);
+            bool hasRegAttributeClass = SpklHelpers.RegAttributeDefinitionExists(_dte, ConnPane.SelectedProject);
+            if (!hasRegAttributeClass)
+            {
+                //TODO: If VB support is added this would need to be addressed
+                TemplateHandler.AddFileFromTemplate(ConnPane.SelectedProject,
+                    "CSharpSpklRegAttributes\\CSharpSpklRegAttributes", $"{ExtensionConstants.SpklRegAttrClassName}.cs");
+            }
+
+            GetRegistrationDetailsWithoutContext(pluginDeployConfig.classRegex, BackupFiles.ReturnValue());
         }
 
-        private void GetRegistrationDetails(string customClassRegex)
+        private void GetRegistrationDetailsWithContext(string customClassRegex, bool backupFiles, OrganizationServiceContext ctx)
         {
             try
             {
-                Overlay.ShowMessage(_dte, "Adding Registration Details...", vsStatusAnimation.vsStatusAnimationSync);
-
-                var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy;
-                var ctx = new OrganizationServiceContext(service);
+                Overlay.ShowMessage(_dte, $"{Resource.Message_AddingRegistrationDetails}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 Project project = ConnPane.SelectedProject;
                 ProjectWorker.BuildProject(project);
 
                 string path = Path.GetDirectoryName(project.FullName);
-                bool backupFiles = BackupFiles.IsChecked.HasValue && BackupFiles.IsChecked.Value;
 
                 DownloadPluginMetadataTask downloadPluginMetadataTask = new DownloadPluginMetadataTask(ctx, new TraceLogger());
                 downloadPluginMetadataTask.Execute(path, backupFiles, customClassRegex);
@@ -436,34 +428,17 @@ namespace PluginDeployer
             }
         }
 
+        private void GetRegistrationDetailsWithoutContext(string customClassRegex, bool backupFiles)
+        {
+            var service = (IOrganizationService)ConnPane.CrmService.OrganizationServiceProxy ?? ConnPane.CrmService.OrganizationWebProxyClient;
+            var ctx = new OrganizationServiceContext(service);
+
+            GetRegistrationDetailsWithContext(customClassRegex, backupFiles, ctx);
+        }
+
         private void RegistrationTool_OnClick(object sender, RoutedEventArgs e)
         {
-            string path = UserOptionsGrid.GetPluginRegistraionToolPath(_dte);
-
-            if (string.IsNullOrEmpty(path))
-            {
-                MessageBox.Show("Set Plug-in Registraion Tool path under Tools -> Options -> CRM Developer Extensions");
-                return;
-            }
-
-            if (!path.EndsWith("exe", StringComparison.CurrentCultureIgnoreCase))
-                path = Path.Combine(path, "PluginRegistration.exe");
-
-
-            if (!File.Exists(path))
-            {
-                MessageBox.Show("PluginRegistration.exe not found at: " + path);
-                return;
-            }
-
-            try
-            {
-                System.Diagnostics.Process.Start(path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error launching Plug-in Registration Tool: " + Environment.NewLine + Environment.NewLine + ex.Message);
-            }
+            PrtHelper.OpenPrt();
         }
 
         private void ConnPane_SelectedProjectChanged(object sender, SelectionChangedEventArgs e)
@@ -474,16 +449,11 @@ namespace PluginDeployer
             ProjectName.Content = ConnPane.SelectedProject.Name;
         }
 
-        private void SpklHelp_Click(object sender, RoutedEventArgs e)
-        {
-            CrmDeveloperExtensions2.Core.WebBrowser.OpenUrl(_dte, "https://github.com/scottdurow/SparkleXrm/wiki/spkl");
-        }
-
         private void OpenInCrm_Click(object sender, RoutedEventArgs e)
         {
             CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
 
-            CrmDeveloperExtensions2.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
+            D365DeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
         }
     }
 }

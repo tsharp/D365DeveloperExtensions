@@ -1,12 +1,14 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Connection;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.DataGrid;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Sdk;
 using NLog;
+using PluginTraceViewer.Models;
+using PluginTraceViewer.Resources;
 using PluginTraceViewer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,27 +20,33 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Threading;
-using CrmDeveloperExtensions2.Core.DataGrid;
-using PluginTraceViewer.Models;
 using Task = System.Threading.Tasks.Task;
-using WebBrowser = CrmDeveloperExtensions2.Core.WebBrowser;
+using WebBrowser = D365DeveloperExtensions.Core.WebBrowser;
 
 namespace PluginTraceViewer
 {
     public partial class PluginTraceViewerWindow : INotifyPropertyChanged
     {
+        #region Private
+
         private readonly DTE _dte;
         private readonly Solution _solution;
-        private static readonly Logger ExtensionLogger = LogManager.GetCurrentClassLogger();
-        private readonly BackgroundWorker _worker;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private DateTime _lastLogDate = DateTime.MinValue;
         private ObservableCollection<CrmPluginTrace> _traces;
         private ObservableCollection<FilterEntity> _filterEntities;
         private ObservableCollection<FilterMessage> _filterMessages;
         private ObservableCollection<FilterMode> _filterModes;
         private ObservableCollection<FilterTypeName> _filterTypeNames;
+        private static int _pollTime;
+        private static DispatcherTimer _pollTimer;
+        private DateTime _nextPollTime;
+
+        #endregion
+
+        #region Public
 
         public ObservableCollection<CrmPluginTrace> Traces
         {
@@ -86,12 +94,18 @@ namespace PluginTraceViewer
             }
         }
 
+        #endregion
+
+        #region Events
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
 
         public PluginTraceViewerWindow()
         {
@@ -109,13 +123,32 @@ namespace PluginTraceViewer
             var events = _dte.Events;
             var windowEvents = events.WindowEvents;
             windowEvents.WindowActivated += WindowEventsOnWindowActivated;
-            
-            _worker = new BackgroundWorker
+        }
+
+        private void WindowEventsOnWindowActivated(EnvDTE.Window gotFocus, EnvDTE.Window lostFocus)
+        {
+            //No solution loaded
+            if (_solution.Count == 0)
             {
-                WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
-            };
-            _worker.DoWork += WorkerOnDoWork;
+                ResetForm();
+                return;
+            }
+
+            //Should be that the tool window case closed
+            if (lostFocus == null)
+                return;
+
+            //WindowEventsOnWindowActivated in this project can be called when activating another window
+            //so we don't want to contine further unless our window is active
+            if (!HostWindow.IsD365DevExWindow(gotFocus))
+                return;
+
+            //Grid is populated already
+            if (CrmPluginTraces.ItemsSource != null)
+                return;
+
+            if (ConnPane.CrmService?.IsReady == true)
+                InitializeForm();
         }
 
         private delegate void UpdateGridDelegate(ObservableCollection<CrmPluginTrace> pluginTraces);
@@ -127,16 +160,27 @@ namespace PluginTraceViewer
 
             newTraces = new ObservableCollection<CrmPluginTrace>(newTraces.OrderBy(t => t.CreatedOn));
 
-            OutputLogger.WriteToOutputWindow("Adding new traces: " + newTraces.Count, MessageType.Info);
             foreach (CrmPluginTrace crmPluginTrace in newTraces)
+            {
                 Traces.Insert(0, crmPluginTrace);
+            }
 
             _lastLogDate = GetLastDate();
+
+            CreateFilters();
         }
 
-        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        private void InitializeForm()
         {
-            while (!_worker.CancellationPending)
+            ResetFilterCollections();
+            PrepareWindow(_dte.ActiveWindow.Caption);
+        }
+
+        private void PollTimerTick(object sender, EventArgs e)
+        {
+            _pollTime--;
+
+            if (DateTime.Now > _nextPollTime)
             {
                 EntityCollection results =
                     Crm.PluginTrace.RetrievePluginTracesFromCrm(ConnPane.CrmService, _lastLogDate);
@@ -144,25 +188,39 @@ namespace PluginTraceViewer
 
                 if (newTraces.Count > 0)
                 {
-                    OutputLogger.WriteToOutputWindow("Retrieved new traces: " + newTraces.Count, MessageType.Info);
-
                     UpdateGridDelegate updateGridDelegate = UpdateDelegateGrid;
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, updateGridDelegate, newTraces);
                 }
-                else
-                {
-                    OutputLogger.WriteToOutputWindow("No new traces", MessageType.Info);
-                }
 
-                System.Threading.Thread.Sleep(30000);
+                FindNextPollTime();
+
+                _pollTime = CalculateSecondsToNextPoll();
             }
+
+            SetPollTimeValue();
+
+            CommandManager.InvalidateRequerySuggested();
         }
 
-        private void CancelBackgroundWorker()
+        private void FindNextPollTime()
         {
-            _worker.CancelAsync();
-            Refresh.IsEnabled = true;
-            OutputLogger.WriteToOutputWindow("Stopped polling for plug-in trace log records", MessageType.Info);
+            _nextPollTime = _lastLogDate;
+
+            while (_nextPollTime < DateTime.Now)
+            {
+                _nextPollTime = _nextPollTime.AddSeconds(30);
+            }
+
+            _nextPollTime = _nextPollTime.AddSeconds(2);
+        }
+
+        private int CalculateSecondsToNextPoll()
+        {
+            var secondsToNextPoll = (int)_nextPollTime.Subtract(DateTime.Now).TotalSeconds;
+
+            OutputLogger.WriteToOutputWindow($"{Resource.Message_LastLogCreatedTime}: {_lastLogDate} {Resource.Message_AdjustingNextPollTo}: {_nextPollTime}", MessageType.Info);
+
+            return secondsToNextPoll;
         }
 
         private DateTime GetLastDate()
@@ -177,72 +235,54 @@ namespace PluginTraceViewer
 
         private void Poll_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_worker.IsBusy)
+            if (PollOff.Visibility == Visibility.Visible)
             {
-                CancelBackgroundWorker();
+                _pollTimer.Stop();
+                _pollTimer.Tick -= PollTimerTick;
+                OutputLogger.WriteToOutputWindow(Resource.PluginTraceViewerWindow_Info_StoppedPolling, MessageType.Info);
 
+                Refresh.IsEnabled = true;
                 PollOff.Visibility = Visibility.Collapsed;
                 Poll.Visibility = Visibility.Visible;
+                PollTime.Visibility = Visibility.Collapsed;
             }
             else
             {
-                OutputLogger.WriteToOutputWindow("Started polling for plug-in trace log records: Interval 30 seconds",
-                    MessageType.Info);
                 Refresh.IsEnabled = false;
                 PollOff.Visibility = Visibility.Visible;
                 Poll.Visibility = Visibility.Collapsed;
+                PollTime.Visibility = Visibility.Visible;
 
-                _worker.RunWorkerAsync();
+                FindNextPollTime();
+                _pollTime = CalculateSecondsToNextPoll();
+                _pollTimer = new DispatcherTimer();
+                _pollTimer.Tick += PollTimerTick;
+                _pollTimer.Interval = new TimeSpan(0, 0, 1);
+                _pollTimer.Start();
+                OutputLogger.WriteToOutputWindow(Resource.PluginTraceViewerWindow_StartedPolling, MessageType.Info);
+
+                SetPollTimeValue();
             }
         }
 
-        private void WindowEventsOnWindowActivated(EnvDTE.Window gotFocus, EnvDTE.Window lostFocus)
+        private void SetPollTimeValue()
         {
-            //No solution loaded
-            if (_solution.Count == 0)
-            {
-                ResetForm();
-                return;
-            }
-
-            //Should be that the tool window case closed
-            if (lostFocus == null)
-            {
-                //_worker.CancelAsync();
-                CancelBackgroundWorker();
-                return;
-            }
-
-            //WindowEventsOnWindowActivated in this project can be called when activating another window
-            //so we don't want to contine further unless our window is active
-            if (!HostWindow.IsCrmDevExWindow(gotFocus))
-                return;
-
-            //Grid is populated already
-            if (CrmPluginTraces.ItemsSource != null)
-                return;
-
-            if (ConnPane.CrmService != null && ConnPane.CrmService.IsReady)
-            {
-                SetWindowCaption(gotFocus.Caption);
-                SetButtonState(true);
-                LoadData();
-            }
+            PollTime.Content = $"{Resource.PluginTraceViewer_PollTime_Label_Content}: {_pollTime}";
         }
 
         private void SetWindowCaption(string currentCaption)
         {
-            _dte.ActiveWindow.Caption = HostWindow.SetCaption(currentCaption, ConnPane.CrmService);
+            _dte.ActiveWindow.Caption = HostWindow.GetCaption(currentCaption, ConnPane.CrmService);
         }
 
         private void ConnPane_OnConnected(object sender, ConnectEventArgs e)
         {
-            FilterEntities = new ObservableCollection<FilterEntity>();
-            FilterMessages = new ObservableCollection<FilterMessage>();
-            FilterModes = new ObservableCollection<FilterMode>();
-            FilterTypeNames = new ObservableCollection<FilterTypeName>();
+            InitializeForm();
+        }
 
-            SetWindowCaption(_dte.ActiveWindow.Caption);
+        private void PrepareWindow(string caption)
+        {
+            SetWindowCaption(caption);
             SetButtonState(true);
             LoadData();
         }
@@ -256,7 +296,7 @@ namespace PluginTraceViewer
 
         private void ConnPane_OnSolutionOpened(object sender, EventArgs e)
         {
-            ClearConnection();
+            //ClearConnection();
         }
 
         private void ClearConnection()
@@ -268,33 +308,33 @@ namespace PluginTraceViewer
 
         private void ResetForm()
         {
-            FilterEntities = new ObservableCollection<FilterEntity>();
-            FilterMessages = new ObservableCollection<FilterMessage>();
-            FilterModes = new ObservableCollection<FilterMode>();
-            FilterTypeNames = new ObservableCollection<FilterTypeName>();
+            ResetFilterCollections();
 
             CrmPluginTraces.ItemsSource = null;
             CrmPluginTraces.IsEnabled = false;
             SetButtonState(false);
-            if (_worker.IsBusy)
-                _worker.CancelAsync();
+        }
+
+        private void ResetFilterCollections()
+        {
+            FilterEntities = new ObservableCollection<FilterEntity>();
+            FilterMessages = new ObservableCollection<FilterMessage>();
+            FilterModes = new ObservableCollection<FilterMode>();
+            FilterTypeNames = new ObservableCollection<FilterTypeName>();
         }
 
         private async Task GetCrmData()
         {
             try
             {
-                Overlay.ShowMessage(_dte, "Getting plug-in trace logs...", vsStatusAnimation.vsStatusAnimationSync);
+                Overlay.ShowMessage(_dte, $"{Resource.PluginTraceViewerWindow_Message_GettingTraces}...", vsStatusAnimation.vsStatusAnimationSync);
 
                 var traceTask = GetCrmPluginTraces();
 
                 await Task.WhenAll(traceTask);
 
                 if (!traceTask.Result)
-                {
-                    Overlay.HideMessage(_dte, vsStatusAnimation.vsStatusAnimationSync);
-                    MessageBox.Show("Error Plug-in Trace Logs. See the Output Window for additional details.");
-                }
+                    MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingTraces);
             }
             finally
             {
@@ -313,64 +353,140 @@ namespace PluginTraceViewer
 
             Traces = ModelBuilder.CreateCrmPluginTraceView(results);
             CrmPluginTraces.IsEnabled = true;
-            Refresh.Opacity = 1;
 
-            CreateFilterEntityList();
-            CreateFilterMessageList();
-            CreateFilterModeList();
-            CreateFilterTypeNameList();
+            CreateFilters();
 
             _lastLogDate = GetLastDate();
 
             return true;
         }
 
+        private void CreateFilters()
+        {
+            CreateFilterEntityList();
+            CreateFilterMessageList();
+            CreateFilterModeList();
+            CreateFilterTypeNameList();
+        }
+
         private void CreateFilterEntityList()
         {
-            FilterEntities = FilterEntity.CreateFilterList(Traces);
+            List<FilterEntity> selectedFilters = FilterEntities.Where(f => f.IsSelected).ToList();
 
+            FilterEntities = FilterEntity.CreateFilterList(Traces);
             foreach (FilterEntity filterEntity in FilterEntities)
             {
-                filterEntity.PropertyChanged += FilterEntity_PropertyChanged;
+                filterEntity.PropertyChanged += Filter_PropertyChanged;
             }
 
             FilterByEntity.IsEnabled = FilterEntities.Count > 2;
+            if (FilterEntities.Count <= 2 || selectedFilters.Count == 0)
+                return;
+
+            if (selectedFilters.Count(f => f.Name == Resource.FilterEntity_Select_All) == 1)
+                return;
+
+            for (int i = 1; i < FilterEntities.Count; i++)
+            {
+                FilterEntities[i].IsSelected = false;
+                foreach (FilterEntity selectedFilter in selectedFilters)
+                {
+                    if (selectedFilter.Name == FilterEntities[i].Name)
+                        FilterEntities[i].IsSelected = true;
+                }
+            }
+
+            FilterEntities[0].IsSelected = false;
         }
 
         private void CreateFilterMessageList()
         {
-            FilterMessages = FilterMessage.CreateFilterList(Traces);
+            List<FilterMessage> selectedFilters = FilterMessages.Where(f => f.IsSelected).ToList();
 
+            FilterMessages = FilterMessage.CreateFilterList(Traces);
             foreach (FilterMessage filterMessage in FilterMessages)
             {
-                filterMessage.PropertyChanged += FilterMessage_PropertyChanged;
+                filterMessage.PropertyChanged += Filter_PropertyChanged;
             }
 
             FilterByMessage.IsEnabled = FilterMessages.Count > 2;
+            if (FilterMessages.Count <= 2 || selectedFilters.Count == 0)
+                return;
+
+            if (selectedFilters.Count(f => f.Name == Resource.FilterEntity_Select_All) == 1)
+                return;
+
+            for (int i = 1; i < FilterMessages.Count; i++)
+            {
+                FilterMessages[i].IsSelected = false;
+                foreach (FilterMessage selectedFilter in selectedFilters)
+                {
+                    if (selectedFilter.Name == FilterMessages[i].Name)
+                        FilterMessages[i].IsSelected = true;
+                }
+            }
+
+            FilterMessages[0].IsSelected = false;
         }
 
         private void CreateFilterModeList()
         {
-            FilterModes = FilterMode.CreateFilterList(Traces);
+            List<FilterMode> selectedFilters = FilterModes.Where(f => f.IsSelected).ToList();
 
+            FilterModes = FilterMode.CreateFilterList(Traces);
             foreach (FilterMode filterMode in FilterModes)
             {
-                filterMode.PropertyChanged += FilterMode_PropertyChanged;
+                filterMode.PropertyChanged += Filter_PropertyChanged;
             }
 
             FilterByMode.IsEnabled = FilterModes.Count > 2;
+            if (FilterModes.Count <= 2 || selectedFilters.Count == 0)
+                return;
+
+            if (selectedFilters.Count(f => f.Name == Resource.FilterEntity_Select_All) == 1)
+                return;
+
+            for (int i = 1; i < FilterModes.Count; i++)
+            {
+                FilterModes[i].IsSelected = false;
+                foreach (FilterMode selectedFilter in selectedFilters)
+                {
+                    if (selectedFilter.Name == FilterModes[i].Name)
+                        FilterModes[i].IsSelected = true;
+                }
+            }
+
+            FilterModes[0].IsSelected = false;
         }
 
         private void CreateFilterTypeNameList()
         {
-            FilterTypeNames = FilterTypeName.CreateFilterList(Traces);
+            List<FilterTypeName> selectedFilters = FilterTypeNames.Where(f => f.IsSelected).ToList();
 
+            FilterTypeNames = FilterTypeName.CreateFilterList(Traces);
             foreach (FilterTypeName filterTypeName in FilterTypeNames)
             {
-                filterTypeName.PropertyChanged += FilterTypeName_PropertyChanged;
+                filterTypeName.PropertyChanged += Filter_PropertyChanged;
             }
 
             FilterByTypeName.IsEnabled = FilterTypeNames.Count > 2;
+            if (FilterTypeNames.Count <= 2 || selectedFilters.Count == 0)
+                return;
+
+            if (selectedFilters.Count(f => f.Name == Resource.FilterEntity_Select_All) == 1)
+                return;
+
+            for (int i = 1; i < FilterTypeNames.Count; i++)
+            {
+                FilterTypeNames[i].IsSelected = false;
+                foreach (FilterTypeName selectedFilter in selectedFilters)
+                {
+                    if (selectedFilter.Name == FilterTypeNames[i].Name)
+                        FilterTypeNames[i].IsSelected = true;
+                }
+            }
+
+            FilterTypeNames[0].IsSelected = false;
         }
 
         private void ViewDetails_OnClick(object sender, RoutedEventArgs e)
@@ -390,6 +506,8 @@ namespace PluginTraceViewer
 
         private async void LoadData()
         {
+            ConnPane.CollapsePane();
+
             await GetCrmData();
         }
 
@@ -414,6 +532,8 @@ namespace PluginTraceViewer
                 var pluginTraceLog = Traces.FirstOrDefault(t => t.PluginTraceLogidId == pluginTraceLogId);
                 Traces.Remove(pluginTraceLog);
             }
+
+            CreateFilters();
         }
 
         private void CrmPluginTraces_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -424,6 +544,9 @@ namespace PluginTraceViewer
 
         public void FilterTraces()
         {
+            if (Traces.Count == 0)
+                return;
+
             ICollectionView icv = CollectionViewSource.GetDefaultView(CrmPluginTraces.ItemsSource);
             if (icv == null) return;
 
@@ -432,87 +555,31 @@ namespace PluginTraceViewer
 
         public bool GetFilteredView(object sourceObject)
         {
-            CrmPluginTrace crmPluginTrace = (CrmPluginTrace)sourceObject;
-
-            if (EntityCondition(crmPluginTrace) && MessageCondition(crmPluginTrace) && ModeCondition(crmPluginTrace) &&
-                (CorrelationIdCondition(crmPluginTrace) || DetailsCondition(crmPluginTrace)) && TypeNameCondition(crmPluginTrace))
+            FilterCriteria filterCriteria = new FilterCriteria
             {
-                return true;
-            }
-            return false;
+                CrmPluginTrace = (CrmPluginTrace)sourceObject,
+                FilterEntities = FilterEntities,
+                FilterMessages = FilterMessages,
+                FilterModes = FilterModes,
+                FilterTypeNames = FilterTypeNames,
+                SearchText = DetailsSearch.Text.Trim()
+            };
+
+            return DataFilter.FilterItems(filterCriteria);
         }
 
-        public bool EntityCondition(CrmPluginTrace crmPluginTrace)
+        private void Filter_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            return IsStringFilterValid(new ObservableCollection<IFilterProperty>(FilterEntities), crmPluginTrace.Entity);
-        }
+            var type = sender.GetType();
 
-        public bool MessageCondition(CrmPluginTrace crmPluginTrace)
-        {
-            return IsStringFilterValid(new ObservableCollection<IFilterProperty>(FilterMessages), crmPluginTrace.MessageName);
-        }
-
-        public bool ModeCondition(CrmPluginTrace crmPluginTrace)
-        {
-            return IsStringFilterValid(new ObservableCollection<IFilterProperty>(FilterModes), crmPluginTrace.Mode);
-        }
-
-        public bool TypeNameCondition(CrmPluginTrace crmPluginTrace)
-        {
-            return IsStringFilterValid(new ObservableCollection<IFilterProperty>(FilterTypeNames), crmPluginTrace.TypeName);
-        }
-
-        public bool DetailsCondition(CrmPluginTrace crmPluginTrace)
-        {
-            if (string.IsNullOrEmpty(crmPluginTrace.Details))
-                return false;
-
-            string search = DetailsSearch.Text.Trim();
-            if (string.IsNullOrEmpty(search))
-                return true;
-
-            return crmPluginTrace.Details.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        public bool CorrelationIdCondition(CrmPluginTrace crmPluginTrace)
-        {
-            string search = DetailsSearch.Text.Trim();
-            if (string.IsNullOrEmpty(search))
-                return true;
-
-            return crmPluginTrace.CorrelationId.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-  
-        public bool IsStringFilterValid(ObservableCollection<IFilterProperty> list, string name)
-        {
-            return list.Count(e => e.IsSelected) != 0 &&
-                   list.Where(e => e.IsSelected).Select(e => e.Name).Contains(name);
-        }
-
-        private void FilterEntity_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            GridFilters.SetSelectAll(sender, FilterEntities);
-
-            FilterTraces();
-        }
-
-        private void FilterMessage_PropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            GridFilters.SetSelectAll(sender, FilterMessages);
-
-            FilterTraces();
-        }
-
-        private void FilterMode_PropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            GridFilters.SetSelectAll(sender, FilterModes);
-
-            FilterTraces();
-        }
-
-        private void FilterTypeName_PropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            GridFilters.SetSelectAll(sender, FilterTypeNames);
+            if (type == typeof(FilterEntity))
+                GridFilters.SetSelectAll(sender, FilterEntities);
+            else if (type == typeof(FilterMessage))
+                GridFilters.SetSelectAll(sender, FilterMessages);
+            else if (type == typeof(FilterMode))
+                GridFilters.SetSelectAll(sender, FilterModes);
+            else if (type == typeof(FilterTypeName))
+                GridFilters.SetSelectAll(sender, FilterTypeNames);
 
             FilterTraces();
         }
@@ -538,21 +605,21 @@ namespace PluginTraceViewer
 
         private void ClearFilters_Click(object sender, RoutedEventArgs e)
         {
-            if (FilterEntities[0].IsSelected != true)
-                FilterEntities[0].IsSelected = true;
-            if (FilterMessages[0].IsSelected != true)
-                FilterMessages[0].IsSelected = true;
-            if (FilterModes[0].IsSelected != true)
-                FilterModes[0].IsSelected = true;
-            if (FilterTypeNames[0].IsSelected != true)
-                FilterTypeNames[0].IsSelected = true;
-
+            FilterEntities = FilterEntity.ResetFilter(FilterEntities);
+            FilterMessages = FilterMessage.ResetFilter(FilterMessages);
+            FilterModes = FilterMode.ResetFilter(FilterModes);
+            FilterTypeNames = FilterTypeName.ResetFilter(FilterTypeNames);
             DetailsSearch.Text = string.Empty;
         }
 
         private void DetailsSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             FilterTraces();
+        }
+
+        private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
         }
     }
 }

@@ -46,14 +46,19 @@ namespace TemplateWizards
         {
             templates.ForEach(delegate (CustomTemplate template)
             {
-                Templates.Add(new CustomTemplateListItem
-                {
-                    Name = template.DisplayName,
-                    Template = template,
-                    Description = template.Description,
-                    Selected = false
-                });
+                Templates.Add(CreateCustomTemplateListItem(template));
             });
+        }
+
+        private static CustomTemplateListItem CreateCustomTemplateListItem(CustomTemplate template)
+        {
+            return new CustomTemplateListItem
+            {
+                Name = template.DisplayName,
+                Template = template,
+                Description = template.Description,
+                Selected = false
+            };
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

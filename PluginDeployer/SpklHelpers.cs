@@ -1,69 +1,25 @@
-﻿using CrmDeveloperExtensions2.Core;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
+﻿using D365DeveloperExtensions.Core;
+using EnvDTE;
+using PluginDeployer.Models;
 using PluginDeployer.Spkl;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 
 namespace PluginDeployer
 {
     public class SpklHelpers
     {
-        public static bool ValidateRegistraionDetails(string assemblyPath, bool isWorkflow)
-        {
-            bool hasRegistrion = RegistrationDetailsPresent(assemblyPath, isWorkflow);
-            if (hasRegistrion)
-                return true;
-
-            MessageBox.Show("You haven't addedd any registration details to the assembly class.");
-            return false;
-        }
-
-        public static bool ValidateAssemblyVersion(CrmServiceClient client, Entity foundAssembly, string projectAssemblyName, Version projectAssemblyVersion)
-        {
-            Version serverVersion = Versioning.StringToVersion(foundAssembly.GetAttributeValue<string>("version"));
-            bool versionMatch = Versioning.DoAssemblyVersionsMatch(projectAssemblyVersion, serverVersion);
-            if (!versionMatch)
-            {
-                MessageBox.Show("Error Updating Assembly In CRM: Changes To Major & Minor Versions Require Redeployment");
-                return false;
-            }
-
-            if (!projectAssemblyName.Equals(foundAssembly.GetAttributeValue<string>("name"), StringComparison.InvariantCultureIgnoreCase))
-            {
-                MessageBox.Show("Error Updating Assembly In CRM: Changes To Assembly Name Require Redeployment");
-                return false;
-            }
-            return true;
-        }
-
-        private static bool RegistrationDetailsPresent(string assemblyPath, bool isWorkflow)
-        {
-            AssemblyContainer container = null;
-            try
-            {
-                var assemblyBytes = File.ReadAllBytes(assemblyPath);
-
-                container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, true);
-
-                return container.PluginDatas.First().CrmPluginRegistrationAttributes.Count > 0;
-            }
-            finally
-            {
-                container?.Unload();
-            }
-        }
-
-        public static string[] AssemblyProperties(string assemblyPath)
+        public static string[] AssemblyProperties(string assemblyPath, bool isWorkflow)
         {
             AssemblyContainer assemblyContainer = null;
             try
             {
-                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), false, true);
+                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
 
                 List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
 
@@ -79,21 +35,50 @@ namespace PluginDeployer
             }
         }
 
-        public static bool ValidateAssemblyPath(string assemblyPath)
+        public static string AssemblyFullName(string assemblyPath, bool isWorkflow)
         {
-            if (string.IsNullOrEmpty(assemblyPath))
+            AssemblyContainer assemblyContainer = null;
+            try
             {
-                MessageBox.Show("Error assembly path is empty");
-                return false;
+                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+
+                assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath, true);
+
+                List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
+
+                return pluginDatas.First().AssemblyFullName;
+            }
+            finally
+            {
+                assemblyContainer?.Unload();
+            }
+        }
+
+        public static bool RegAttributeDefinitionExists(DTE dte, Project project)
+        {
+            foreach (CodeElement codeElement in project.CodeModel.CodeElements)
+            {
+                if (codeElement.Kind != vsCMElement.vsCMElementNamespace)
+                    continue;
+
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                CodeNamespace codeNamespace = codeElement as CodeNamespace;
+                if (codeNamespace?.Members == null)
+                    continue;
+
+                foreach (CodeElement codeNamespaceMember in codeNamespace?.Members)
+                {
+                    if (codeNamespaceMember.Kind != vsCMElement.vsCMElementClass)
+                        continue;
+
+                    // ReSharper disable once SuspiciousTypeConversion.Global
+                    CodeClass codeClass = codeNamespaceMember as CodeClass;
+                    if (codeClass != null && codeClass.FullName.Contains(ExtensionConstants.SpklRegAttrClassName))
+                        return true;
+                }
             }
 
-            if (!Directory.Exists(assemblyPath))
-            {
-                MessageBox.Show("Error locating assembly path");
-                return false;
-            }
-
-            return true;
+            return false;
         }
     }
 }

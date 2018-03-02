@@ -8,7 +8,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 
-namespace CRMSimpleConsole
+namespace $safeprojectname$
 {
     class Program
     {
@@ -42,11 +42,12 @@ using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Client.Services;
 using Microsoft.Xrm.Sdk;
 
-namespace CRMSimpleConsole
+namespace $safeprojectname$
 {
     class Program
     {
         private static OrganizationService _orgService;
+		
         static void Main(string[] args)
         {
             try

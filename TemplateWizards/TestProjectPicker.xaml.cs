@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
@@ -52,6 +52,7 @@ namespace TemplateWizards
         {
             InitializeComponent();
             DataContext = this;
+            Owner = Application.Current.MainWindow;
 
             GetProjects();
             GetMockingFrameworks();
@@ -68,36 +69,39 @@ namespace TemplateWizards
             MockingFrameworks = new ObservableCollection<MockingFrameworkListItem>();
             UnitTestFramework.SelectedIndex = -1;
 
-            string version = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
-            Version coreVerion = CrmDeveloperExtensions2.Core.Versioning.StringToVersion(version);
+            string version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
+            Version coreVerion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
 
-            foreach (MockingFramework mockingFramework in CrmDeveloperExtensions2.Core.Models.MockingFrameworks.GetMockingFrameworks())
+            foreach (MockingFramework mockingFramework in D365DeveloperExtensions.Core.Models.MockingFrameworks.GetMockingFrameworks())
             {
                 if (mockingFramework.CrmMajorVersion != coreVerion.Major)
                     continue;
 
-                MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
-                {
-                    Name = mockingFramework.NugetName,
-                    MockingFramework = mockingFramework
-                };
+                var mockingFrameworkListItem = CreateMockingFrameworkItem(mockingFramework);
 
                 MockingFrameworks.Add(mockingFrameworkListItem);
             }
         }
 
+        private static MockingFrameworkListItem CreateMockingFrameworkItem(MockingFramework mockingFramework)
+        {
+            MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
+            {
+                Name = mockingFramework.NugetName,
+                MockingFramework = mockingFramework
+            };
+
+            return mockingFrameworkListItem;
+        }
+
         private void GetProjects()
         {
             Projects = new ObservableCollection<ProjectListItem>();
-            IList<Project> projects = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjects(true);
+            IList<Project> projects = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjects(true);
 
             foreach (Project project in projects)
             {
-                ProjectListItem projectListItem = new ProjectListItem
-                {
-                    Name = project.Name,
-                    Project = project
-                };
+                var projectListItem = CreateProjectItem(project);
 
                 Projects.Add(projectListItem);
             }
@@ -105,6 +109,17 @@ namespace TemplateWizards
             ProjectToTest.SelectionChanged += ProjectToTest_OnSelectionChanged;
             ProjectToTest.SelectedIndex = 0;
             SelectedProject = Projects[0].Project;
+        }
+
+        private static ProjectListItem CreateProjectItem(Project project)
+        {
+            ProjectListItem projectListItem = new ProjectListItem
+            {
+                Name = project.Name,
+                Project = project
+            };
+
+            return projectListItem;
         }
 
         private void UnitTestFramework_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

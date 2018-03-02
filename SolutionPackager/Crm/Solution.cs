@@ -1,12 +1,14 @@
-﻿using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
+using SolutionPackager.Resources;
 using SolutionPackager.ViewModels;
 using System;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
@@ -14,6 +16,8 @@ namespace SolutionPackager.Crm
 {
     public static class Solution
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static EntityCollection RetrieveSolutionsFromCrm(CrmServiceClient client)
         {
             try
@@ -64,18 +68,14 @@ namespace SolutionPackager.Crm
 
                 EntityCollection solutions = client.RetrieveMultiple(query);
 
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
+
                 return solutions;
-            }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Solutions From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    "Error Retrieving Solutions From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingSolutions, ex);
+
                 return null;
             }
         }
@@ -85,6 +85,7 @@ namespace SolutionPackager.Crm
             try
             {
                 // Hardcode connection timeout to one-hour to support large solutions.
+                //TODO: Find a better way to handle this
                 if (client.OrganizationServiceProxy != null)
                     client.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
                 if (client.OrganizationWebProxyClient != null)
@@ -97,51 +98,45 @@ namespace SolutionPackager.Crm
                 };
                 ExportSolutionResponse response = await Task.Run(() => (ExportSolutionResponse)client.Execute(request));
 
+                OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolution, MessageType.Info);
+
                 string fileName = FileHandler.FormatSolutionVersionString(selectedSolution.UniqueName, selectedSolution.Version, managed);
                 string tempFile = FileHandler.WriteTempFile(fileName, response.ExportSolutionFile);
 
                 return tempFile;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Solution From CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return null;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Retrieving Solution From CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorRetrievingSolution, ex);
+
                 return null;
             }
         }
 
         public static bool ImportSolution(CrmServiceClient client, string path)
         {
-            byte[] solutionBytes = CrmDeveloperExtensions2.Core.FileSystem.GetFileBytes(path);
+            byte[] solutionBytes = FileSystem.GetFileBytes(path);
             if (solutionBytes == null)
                 return false;
-            
+
             try
             {
                 ImportSolutionRequest request = new ImportSolutionRequest
                 {
                     CustomizationFile = solutionBytes,
                     OverwriteUnmanagedCustomizations = true,
-                    PublishWorkflows = true, 
-                    ImportJobId = Guid.NewGuid()                  
+                    PublishWorkflows = true,
+                    ImportJobId = Guid.NewGuid()
                 };
 
                 client.Execute(request);
 
                 return true;
             }
-            catch (FaultException<OrganizationServiceFault> crmEx)
-            {
-                OutputLogger.WriteToOutputWindow("Error Importing Solution To CRM: " + crmEx.Message + Environment.NewLine + crmEx.StackTrace, MessageType.Error);
-                return false;
-            }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error Importing Solution To CRM: " + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorImportingSolution, ex);
+
                 return false;
             }
         }

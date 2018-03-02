@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.1860.1440" Language="en-US" Publisher="Jason Lattimer" />
+        <DisplayName>D365 Developer Extensions</DisplayName>
+        <Description xml:space="preserve">Dynamics 365 Developer Extensions for Dynamics CRM/365 Customer Engagement versions 2011+</Description>
+        <MoreInfo>https://github.com/jlattimer/D365DeveloperExtensions</MoreInfo>
+        <License>License.txt</License>
+        <GettingStartedGuide>https://github.com/jlattimer/D365DeveloperExtensions</GettingStartedGuide>
+        <ReleaseNotes>https://github.com/jlattimer/D365DeveloperExtensions/wiki/0.-Change-Log</ReleaseNotes>
+        <Icon>Resources\icon.ico</Icon>
+        <PreviewImage>Resources\preview.png</PreviewImage>
+        <Tags>Dynamics 365, D365, Dynamics 365 Customer Engagement, Dynamics CRM, Jason Lattimer</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,15.0]" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.6.2,)" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0,15.0)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpPluginProject" d:TargetPath="|CSharpPluginProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NuGetRetriever" Path="|NuGetRetriever|" AssemblyName="|NuGetRetriever;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="TemplateWizards" Path="|TemplateWizards|" AssemblyName="|TemplateWizards;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="WebResourceDeployer" Path="|WebResourceDeployer|" AssemblyName="|WebResourceDeployer;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpWorkflowProject" d:TargetPath="|CSharpWorkflowProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginDeployer" Path="|PluginDeployer|" AssemblyName="|PluginDeployer;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="SolutionPackager" Path="|SolutionPackager|" AssemblyName="|SolutionPackager;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpConsole" d:TargetPath="|CSharpConsole;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpPluginTestProject" d:TargetPath="|CSharpPluginTestProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpWorkflowTestProject" d:TargetPath="|CSharpWorkflowTestProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpPluginClass" d:TargetPath="|CSharpPluginClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpWorkflowClass" d:TargetPath="|CSharpWorkflowClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginTraceViewer" Path="|PluginTraceViewer|" AssemblyName="|PluginTraceViewer;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSpklRegAttributes" d:TargetPath="|CSharpSpklRegAttributes;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpCustom" d:TargetPath="|CSharpCustom;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpWebResourceProject" d:TargetPath="|CSharpWebResourceProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="CSharpTypeScriptProject" d:TargetPath="|CSharpTypeScriptProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSpklConfig" d:TargetPath="|CSharpSpklConfig;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkPluginBaseClass" d:TargetPath="|CSharpSdkPluginBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkPluginFromBaseClass" d:TargetPath="|CSharpSdkPluginFromBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.Xrm.Tooling.Ui.Styles.dll" AssemblyName="Microsoft.Xrm.Tooling.Ui.Styles, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Newtonsoft.Json.dll" AssemblyName="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkWorkflowBaseClass" d:TargetPath="|CSharpSdkWorkflowBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkWorkflowFromBaseClass" d:TargetPath="|CSharpSdkWorkflowFromBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%.Core" Path="|D365DeveloperExtensions.Core|" AssemblyName="|D365DeveloperExtensions.Core;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="CrmIntellisense" Path="|CrmIntellisense|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,16.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.JavaScript.TypeScript" Version="[15.0.27005.2,16.0)" DisplayName="JavaScript and TypeScript language support" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Web" Version="[15.0.26606.0,16.0)" DisplayName="ASP.NET and web development tools" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0.27019.1,16.0)" DisplayName="C# and Visual Basic" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.NuGet" Version="[15.0.27128.1,16.0)" DisplayName="NuGet package manager" />
+        <Prerequisite Id="Microsoft.Net.Component.4.6.2.TargetingPack" Version="[14.0,16.0)" DisplayName=".NET Framework 4.6.2 targeting pack" />
+    </Prerequisites>
+</PackageManifest>

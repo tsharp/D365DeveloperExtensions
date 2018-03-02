@@ -61,16 +61,133 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MyKey.snk.
+        ///   Looks up a localized string similar to Update D365 DevEx CrmSvcUtil &amp; Solution Packager paths?.
         /// </summary>
-        public static string DefaultKeyName {
+        public static string ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath {
             get {
-                return ResourceManager.GetString("DefaultKeyName", resourceCulture);
+                return ResourceManager.GetString("ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error Processing Template: Error Generating Key.
+        ///   Looks up a localized string similar to Update D365 DevEx Plug-in Registration Tool path?.
+        /// </summary>
+        public static string ConfirmMessage_UpdatePrtPath {
+            get {
+                return ResourceManager.GetString("ConfirmMessage_UpdatePrtPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update user setting.
+        /// </summary>
+        public static string ConfirmMessage_UpdateUserSetting_Title {
+            get {
+                return ResourceManager.GetString("ConfirmMessage_UpdateUserSetting_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom template.
+        /// </summary>
+        public static string CustomTemplatePicker_Window_Title {
+            get {
+                return ResourceManager.GetString("CustomTemplatePicker_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CustomTemplateWindow_Cancel_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("CustomTemplateWindow_Cancel_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CustomTemplateWindow_Canel_Button_Content {
+            get {
+                return ResourceManager.GetString("CustomTemplateWindow_Canel_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string CustomTemplateWindow_Ok_Button_Content {
+            get {
+                return ResourceManager.GetString("CustomTemplateWindow_Ok_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create item from template.
+        /// </summary>
+        public static string CustomTemplateWindow_Ok_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("CustomTemplateWindow_Ok_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error processing template.
+        /// </summary>
+        public static string ErrorMessage_ErrorProcessingTemplate {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorProcessingTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to add NuGet package.
+        /// </summary>
+        public static string ErrorMessage_FailedToAddNuGetPackage {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailedToAddNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TemplatePicker had no selected template.
+        /// </summary>
+        public static string ErrorMessage_NoSelectedTemplate {
+            get {
+                return ResourceManager.GetString("ErrorMessage_NoSelectedTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occurred running template wizard.
+        /// </summary>
+        public static string ErrorMessage_TemplateWizardError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_TemplateWizardError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read or deserialize template configuration file.
+        /// </summary>
+        public static string ErrorMessage_UnableReadDeserializeConfig {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnableReadDeserializeConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal error.
+        /// </summary>
+        public static string ErrorMessage_WizardCancelInternalError {
+            get {
+                return ResourceManager.GetString("ErrorMessage_WizardCancelInternalError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error generating key.
         /// </summary>
         public static string GeneratingKeyFailureMessage {
             get {
@@ -88,7 +205,151 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error Processing Template: Error Installing NuGet Package.
+        ///   Looks up a localized string similar to Error installing NuGet package.
+        /// </summary>
+        public static string Message_ErrorInstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_ErrorInstallingNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installed NuGet package.
+        /// </summary>
+        public static string Message_InstalledNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_InstalledNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing NuGet package.
+        /// </summary>
+        public static string Message_InstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_InstallingNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout installing NuGet package.
+        /// </summary>
+        public static string Message_TimeoutInstallingNuGetPackage {
+            get {
+                return ResourceManager.GetString("Message_TimeoutInstallingNuGetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add custom templates to continue.
+        /// </summary>
+        public static string MessageBox_AddCustomTemplate {
+            get {
+                return ResourceManager.GetString("MessageBox_AddCustomTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add template files and try again.
+        /// </summary>
+        public static string MessageBox_AddTemplateFiles {
+            get {
+                return ResourceManager.GetString("MessageBox_AddTemplateFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create custom template configuration file here?.
+        /// </summary>
+        public static string MessageBox_CreateConfigFile {
+            get {
+                return ResourceManager.GetString("MessageBox_CreateConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please specify a template folder under Tools -&gt; Options -&gt; D365 DevEx -&gt; Template Options.
+        /// </summary>
+        public static string MessageBox_MissingTemplateFolder {
+            get {
+                return ResourceManager.GetString("MessageBox_MissingTemplateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NPM is required to download the XRM type definitions. Install Node.js and the npm package manager. https://nodejs.org.
+        /// </summary>
+        public static string MessageBox_NPMError {
+            get {
+                return ResourceManager.GetString("MessageBox_NPMError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string MessageBox_Title_ConfirmCreateConfigFile {
+            get {
+                return ResourceManager.GetString("MessageBox_Title_ConfirmCreateConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error installing NPM package.
+        /// </summary>
+        public static string NpmPackageInstallFailureMessage {
+            get {
+                return ResourceManager.GetString("NpmPackageInstallFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing NPM package.
+        /// </summary>
+        public static string NpmPackageInstallingStatusBarMessage {
+            get {
+                return ResourceManager.GetString("NpmPackageInstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NpmPickerCancelButtonText {
+            get {
+                return ResourceManager.GetString("NpmPickerCancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string NpmPickerCancelTooltipText {
+            get {
+                return ResourceManager.GetString("NpmPickerCancelTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NpmPickerOKButtonText {
+            get {
+                return ResourceManager.GetString("NpmPickerOKButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string NpmPickerOKTooltipText {
+            get {
+                return ResourceManager.GetString("NpmPickerOKTooltipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error installing NuGet package.
         /// </summary>
         public static string NuGetPackageInstallFailureMessage {
             get {
@@ -97,7 +358,7 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing NuGet Package.
+        ///   Looks up a localized string similar to Installing NuGet package.
         /// </summary>
         public static string NuGetPackageInstallingStatusBarMessage {
             get {
@@ -106,11 +367,29 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uninstalling NuGet Package.
+        ///   Looks up a localized string similar to Error uninstalling NuGet package.
+        /// </summary>
+        public static string NuGetPackageUninstallFailureMessage {
+            get {
+                return ResourceManager.GetString("NuGetPackageUninstallFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstalling NuGet package.
         /// </summary>
         public static string NuGetPackageUninstallingStatusBarMessage {
             get {
                 return ResourceManager.GetString("NuGetPackageUninstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Versions Only.
+        /// </summary>
+        public static string NuGetPicker_LimitVersions_CheckBox_Content {
+            get {
+                return ResourceManager.GetString("NuGetPicker_LimitVersions_CheckBox_Content", resourceCulture);
             }
         }
         
@@ -147,15 +426,6 @@ namespace TemplateWizards.Resources {
         public static string NuGetPickerOKTooltipText {
             get {
                 return ResourceManager.GetString("NuGetPickerOKTooltipText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx.
-        /// </summary>
-        public static string NuGetPickerTitle {
-            get {
-                return ResourceManager.GetString("NuGetPickerTitle", resourceCulture);
             }
         }
         
@@ -232,47 +502,65 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Project.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string TestProjectPickerCreateProjectButtonText {
+        public static string TestProjectPicker_Cancel_Button_Content {
             get {
-                return ResourceManager.GetString("TestProjectPickerCreateProjectButtonText", resourceCulture);
+                return ResourceManager.GetString("TestProjectPicker_Cancel_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Create Project.
         /// </summary>
-        public static string TestProjectPickerCreateProjectTooltipText {
+        public static string TestProjectPicker_CreateProject_Button_Content {
             get {
-                return ResourceManager.GetString("TestProjectPickerCreateProjectTooltipText", resourceCulture);
+                return ResourceManager.GetString("TestProjectPicker_CreateProject_Button_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a unit test project targeting the selected project &amp; the selected unit test framework.
+        /// </summary>
+        public static string TestProjectPicker_CreateProject_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("TestProjectPicker_CreateProject_Button_Tooltip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Project To Test.
         /// </summary>
-        public static string TestProjectPickerProjectToTestLabel {
+        public static string TestProjectPicker_ProjectToTest_Label_Content {
             get {
-                return ResourceManager.GetString("TestProjectPickerProjectToTestLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Crm DevEx.
-        /// </summary>
-        public static string TestProjectPickerTitle {
-            get {
-                return ResourceManager.GetString("TestProjectPickerTitle", resourceCulture);
+                return ResourceManager.GetString("TestProjectPicker_ProjectToTest_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unit Test Framework.
         /// </summary>
-        public static string TestProjectPickerUnitTestFrameworkLabel {
+        public static string TestProjectPicker_UnitTestFramework_Label_Content {
             get {
-                return ResourceManager.GetString("TestProjectPickerUnitTestFrameworkLabel", resourceCulture);
+                return ResourceManager.GetString("TestProjectPicker_UnitTestFramework_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit testing framework.
+        /// </summary>
+        public static string TestProjectPicker_Window_Title {
+            get {
+                return ResourceManager.GetString("TestProjectPicker_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string Version_Window_Title {
+            get {
+                return ResourceManager.GetString("Version_Window_Title", resourceCulture);
             }
         }
     }

@@ -1,5 +1,6 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using Microsoft.Xrm.Sdk;
+using PluginDeployer.Spkl;
 using PluginDeployer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
@@ -19,7 +20,8 @@ namespace PluginDeployer
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
-                    UniqueName = entity.GetAttributeValue<string>("uniquename")
+                    UniqueName = entity.GetAttributeValue<string>("uniquename"),
+                    NameVersion = $"{entity.GetAttributeValue<string>("friendlyname")} {entity.GetAttributeValue<string>("version")}"
                 };
 
                 crmSolutions.Add(solution);
@@ -53,7 +55,7 @@ namespace PluginDeployer
                     AssemblyId = assembly.Id,
                     Name = assembly.GetAttributeValue<string>("name"),
                     Version = assembly.GetAttributeValue<string>("version"),
-                    DisplayName = assembly.GetAttributeValue<string>("name") + " (" + assembly.GetAttributeValue<string>("version") + ")",
+                    DisplayName = $"{assembly.GetAttributeValue<string>("name")} ({assembly.GetAttributeValue<string>("version")})",
                     SolutionId = ((EntityReference)assembly.GetAttributeValue<AliasedValue>("solutioncomponent.solutionid").Value).Id
                 };
 
@@ -72,6 +74,22 @@ namespace PluginDeployer
             });
 
             return crmAssemblies;
+        }
+
+        public static CrmAssembly CreateCrmAssembly(string projectAssemblyName, string assemblyFilePath,
+            string[] assemblyProperties)
+        {
+            CrmAssembly assembly = new CrmAssembly
+            {
+                Name = projectAssemblyName,
+                AssemblyPath = assemblyFilePath,
+                Version = assemblyProperties[2],
+                Culture = assemblyProperties[4],
+                PublicKeyToken = assemblyProperties[6],
+                //TODO: option to make none?
+                IsolationMode = IsolationModeEnum.Sandbox
+            };
+            return assembly;
         }
     }
 }

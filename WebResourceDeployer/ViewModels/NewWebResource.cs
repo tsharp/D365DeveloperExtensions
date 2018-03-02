@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
+using System;
 
 namespace WebResourceDeployer.ViewModels
 {

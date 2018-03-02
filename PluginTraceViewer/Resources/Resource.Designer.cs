@@ -61,155 +61,308 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error deleting plug-in trace log.
+        /// </summary>
+        public static string ErrorMessage_ErrorDeletingTrace {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorDeletingTrace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error deleting plug-in trace logs.
+        /// </summary>
+        public static string ErrorMessage_ErrorDeletingTraces {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorDeletingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error retrieving plug-in trace logs.
+        /// </summary>
+        public static string ErrorMessage_ErrorRetrievingTraces {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorRetrievingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string FilterEntity_Select_All {
+            get {
+                return ResourceManager.GetString("FilterEntity_Select_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No new traces.
+        /// </summary>
+        public static string Info_NoNewTraces {
+            get {
+                return ResourceManager.GetString("Info_NoNewTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieved new traces.
+        /// </summary>
+        public static string Info_RetrievedNewTraces {
+            get {
+                return ResourceManager.GetString("Info_RetrievedNewTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjusting next poll time to.
+        /// </summary>
+        public static string Message_AdjustingNextPollTo {
+            get {
+                return ResourceManager.GetString("Message_AdjustingNextPollTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted plug-in trace log.
+        /// </summary>
+        public static string Message_DeletedTraceLog {
+            get {
+                return ResourceManager.GetString("Message_DeletedTraceLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting plug-in trace logs.
+        /// </summary>
+        public static string Message_DeletingTraces {
+            get {
+                return ResourceManager.GetString("Message_DeletingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last plug-in trace log created time.
+        /// </summary>
+        public static string Message_LastLogCreatedTime {
+            get {
+                return ResourceManager.GetString("Message_LastLogCreatedTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving plug-in traces.
+        /// </summary>
+        public static string Message_RetrievingTraces {
+            get {
+                return ResourceManager.GetString("Message_RetrievingTraces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next poll in.
+        /// </summary>
+        public static string PluginTraceViewer_PollTime_Label_Content {
+            get {
+                return ResourceManager.GetString("PluginTraceViewer_PollTime_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correlation Id.
         /// </summary>
-        public static string CorrelationId_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("CorrelationId_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Created On.
         /// </summary>
-        public static string CreatonOn_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_CreatonOn_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("CreatonOn_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_CreatonOn_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Delete Logs.
         /// </summary>
-        public static string DeleteLogsImage_Button_ToolTip {
+        public static string PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("DeleteLogsImage_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Depth.
         /// </summary>
-        public static string Depth_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_Depth_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("Depth_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Depth_DataGridTextColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search trace logs.
+        /// </summary>
+        public static string PluginTraceViewerWindow_DetailsSearch_TextBlock_Text {
+            get {
+                return ResourceManager.GetString("PluginTraceViewerWindow_DetailsSearch_TextBlock_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Entity.
         /// </summary>
-        public static string Entity_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_Entity_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("Entity_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Entity_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Execution Duration.
         /// </summary>
-        public static string ExecutionDuration_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_ExecutionDuration_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("ExecutionDuration_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_ExecutionDuration_DataGridTextColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopped polling for plug-in trace log records.
+        /// </summary>
+        public static string PluginTraceViewerWindow_Info_StoppedPolling {
+            get {
+                return ResourceManager.GetString("PluginTraceViewerWindow_Info_StoppedPolling", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
-        public static string Message_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_Message_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("Message_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Message_DataGridTextColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving plug-in trace logs.
+        /// </summary>
+        public static string PluginTraceViewerWindow_Message_GettingTraces {
+            get {
+                return ResourceManager.GetString("PluginTraceViewerWindow_Message_GettingTraces", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Mode.
         /// </summary>
-        public static string Mode_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_Mode_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("Mode_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Mode_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open In CRM/365.
+        ///   Looks up a localized string similar to Open in CRM/365.
         /// </summary>
-        public static string OpenInCrmImage_Button_ToolTip {
+        public static string PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("OpenInCrmImage_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Start Polling.
         /// </summary>
-        public static string Poll_Button_Content {
+        public static string PluginTraceViewerWindow_Poll_Button_Content {
             get {
-                return ResourceManager.GetString("Poll_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Poll_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start polling CRM/365 for new plug-in trace logs.
+        ///   Looks up a localized string similar to Start polling for new plug-in trace logs.
         /// </summary>
-        public static string Poll_Button_ToolTip {
+        public static string PluginTraceViewerWindow_Poll_Button_ToolTip {
             get {
-                return ResourceManager.GetString("Poll_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_Poll_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Stop Polling.
         /// </summary>
-        public static string PollOff_Button_Content {
+        public static string PluginTraceViewerWindow_PollOff_Button_Content {
             get {
-                return ResourceManager.GetString("PollOff_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_PollOff_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop polling CRM/365 for plug-in trace logs.
+        ///   Looks up a localized string similar to Stop polling for plug-in trace logs.
         /// </summary>
-        public static string PollOff_Button_ToolTip {
+        public static string PluginTraceViewerWindow_PollOff_Button_ToolTip {
             get {
-                return ResourceManager.GetString("PollOff_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_PollOff_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh.
+        ///   Looks up a localized string similar to Refresh logs.
         /// </summary>
-        public static string RefreshImage_Button_ToolTip {
+        public static string PluginTraceViewerWindow_RefreshImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("RefreshImage_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_RefreshImage_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm Dev: Plug-in Trace Viewer.
+        ///   Looks up a localized string similar to Started polling for plug-in trace log records: Interval 30 seconds.
         /// </summary>
-        public static string ToolWindowTitle {
+        public static string PluginTraceViewerWindow_StartedPolling {
             get {
-                return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_StartedPolling", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type Name.
         /// </summary>
-        public static string TypeName_DataGridTextColumn_Header {
+        public static string PluginTraceViewerWindow_TypeName_DataGridTextColumn_Header {
             get {
-                return ResourceManager.GetString("TypeName_DataGridTextColumn_Header", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_TypeName_DataGridTextColumn_Header", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View Details.
+        ///   Looks up a localized string similar to View details.
         /// </summary>
-        public static string ViewDetailsImage_Button_ToolTip {
+        public static string PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("ViewDetailsImage_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D365 DevEx: Plug-in Trace Viewer.
+        /// </summary>
+        public static string PluginTraceViewerWindow_Window_Title {
+            get {
+                return ResourceManager.GetString("PluginTraceViewerWindow_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search trace details.
+        /// </summary>
+        public static string PluginTraceViewWindow_DetailsSearch_TextBlock_Text {
+            get {
+                return ResourceManager.GetString("PluginTraceViewWindow_DetailsSearch_TextBlock_Text", resourceCulture);
             }
         }
     }

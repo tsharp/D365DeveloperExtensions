@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using Microsoft.Xrm.Sdk;
 using PluginTraceViewer.ViewModels;
 using System;
@@ -11,6 +11,9 @@ namespace PluginTraceViewer
         public static ObservableCollection<CrmPluginTrace> CreateCrmPluginTraceView(EntityCollection pluginTraces)
         {
             ObservableCollection<CrmPluginTrace> crmPluginTraces = new ObservableCollection<CrmPluginTrace>();
+
+            if (pluginTraces == null)
+                return crmPluginTraces;
 
             foreach (Entity pluginTrace in pluginTraces.Entities)
             {

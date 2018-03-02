@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CrmDeveloperExtensions2.Core.Models;
+using D365DeveloperExtensions.Core.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NuGetRetriever.Tests
@@ -11,7 +11,7 @@ namespace NuGetRetriever.Tests
         private const string PackageId = "Microsoft.CrmSdk.CoreAssemblies";
         private static List<NuGetPackage> _packages;
 
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             _packages = PackageLister.GetPackagesbyId(PackageId);

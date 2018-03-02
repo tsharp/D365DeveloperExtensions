@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using SolutionPackager.ViewModels;
 using System.IO;
@@ -19,5 +19,6 @@ namespace SolutionPackager.Models
         public string ProjectSolutionFolder { get; set; }
         public string DownloadedZipPath { get; set; }
         public DirectoryInfo ExtractedFolder { get; set; }
+        public bool UseMapFile { get; set; }
     }
 }

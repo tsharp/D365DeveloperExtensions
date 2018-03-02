@@ -1,24 +1,38 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
+using D365DeveloperExtensions.Core.UserOptions;
 using EnvDTE;
 using Microsoft.VisualStudio;
+using NLog;
 using SolutionPackager.Models;
+using SolutionPackager.Resources;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Windows;
 
 namespace SolutionPackager
 {
     public static class Packager
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static bool CreatePackage(DTE dte, string toolPath, PackSettings packSettings, string commandArgs)
         {
-            dte.ExecuteCommand($"shell {toolPath}", commandArgs);
+            SolutionPackagerCommand command = new SolutionPackagerCommand
+            {
+                Action = SolutionPackagerAction.Pack.ToString(),
+                CommandArgs = commandArgs,
+                ToolPath = toolPath,
+                SolutionName = packSettings.CrmSolution.Name
+            };
 
-            //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Better way?
-            System.Threading.Thread.Sleep(5000);
+            ExecuteSolutionPackager(command);
 
             if (!packSettings.SaveSolutions)
                 return true;
@@ -48,14 +62,22 @@ namespace SolutionPackager
 
         public static bool ExtractPackage(DTE dte, string toolPath, UnpackSettings unpackSettings, string commandArgs)
         {
-            dte.ExecuteCommand($"shell {toolPath}", commandArgs);
+            SolutionPackagerCommand command = new SolutionPackagerCommand
+            {
+                Action = SolutionPackagerAction.Extract.ToString(),
+                CommandArgs = commandArgs,
+                ToolPath = toolPath,
+                SolutionName = unpackSettings.CrmSolution.Name
+            };
 
-            //Need this. Extend to allow bigger solutions to unpack
-            //TODO: Better way?
-            System.Threading.Thread.Sleep(10000);
+            ExecuteSolutionPackager(command);
 
-            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName, unpackSettings.Project.ProjectItems, unpackSettings.SolutionPackageConfig.packagepath);
-            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder, unpackSettings.ProjectPackageFolder, unpackSettings.Project.ProjectItems);
+            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName,
+                unpackSettings.Project.ProjectItems,
+                unpackSettings.SolutionPackageConfig.packagepath);
+            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder,
+                unpackSettings.ProjectPackageFolder,
+                unpackSettings.Project.ProjectItems);
 
             Directory.Delete(unpackSettings.ExtractedFolder.FullName, true);
 
@@ -76,7 +98,7 @@ namespace SolutionPackager
                 string filename = Path.GetFileName(unpackSettings.DownloadedZipPath);
                 if (string.IsNullOrEmpty(filename))
                 {
-                    OutputLogger.WriteToOutputWindow("Error getting file name from temp path: " + unpackSettings.DownloadedZipPath, MessageType.Error);
+                    OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_ErrorGettingFileNameFromTemp}: {unpackSettings.DownloadedZipPath}", MessageType.Error);
                     return false;
                 }
 
@@ -96,8 +118,8 @@ namespace SolutionPackager
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow("Error adding solution file to project: " + unpackSettings.DownloadedZipPath +
-                    Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace, MessageType.Error);
+                ExceptionHandler.LogException(Logger, Resource.ErrorMessage_ErrorAddingSolutionFileProject, ex);
+
                 return false;
             }
         }
@@ -146,7 +168,7 @@ namespace SolutionPackager
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
+                if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFile.ToString())
                 {
                     name = Path.GetFileName(name);
                     // Do not delete the mapping file
@@ -162,10 +184,11 @@ namespace SolutionPackager
                     itemChanged = true;
                 }
 
-                if (StringFormatting.FormatProjectKind(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
+                if (StringFormatting.RemoveBracesToUpper(projectItem.Kind) == VSConstants.GUID_ItemType_PhysicalFolder.ToString())
                 {
                     name = new DirectoryInfo(name).Name;
-                    if (name == projectFolder || name == "Properties")
+                    if (name == projectFolder || name.Equals(D365DeveloperExtensions.Core.Resources.Resource.Constant_PropertiesFolder,
+                        StringComparison.CurrentCultureIgnoreCase))
                         continue;
 
                     if (!Directory.Exists(Path.Combine(extractedFolder, name)))
@@ -191,10 +214,10 @@ namespace SolutionPackager
 
         public static string GetProjectPackageFolder(Project project, string projectFolder)
         {
-            if (projectFolder.StartsWith("/"))
+            if (projectFolder.StartsWith("/", StringComparison.CurrentCultureIgnoreCase))
                 projectFolder = projectFolder.Substring(1);
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             projectPath = Path.Combine(projectPath, projectFolder);
 
             if (!Directory.Exists(projectPath))
@@ -203,18 +226,16 @@ namespace SolutionPackager
             return projectPath;
         }
 
-        public static string CreateToolPath(DTE dte)
+        public static string CreateToolPath()
         {
-            UserOptionsGrid.GetSolutionPackagerToolPath(dte);
-            string spPath = UserOptionsGrid.GetSolutionPackagerToolPath(dte);
-
+            string spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
             if (string.IsNullOrEmpty(spPath))
             {
-                OutputLogger.WriteToOutputWindow("Please set the Solution Packager path in options", MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_SetSolutionPackagerPath, MessageType.Error);
                 return null;
             }
 
-            if (!spPath.EndsWith("\\"))
+            if (!spPath.EndsWith("\\", StringComparison.CurrentCultureIgnoreCase))
                 spPath += "\\";
 
             string toolPath = @"""" + spPath + "SolutionPackager.exe" + @"""";
@@ -222,23 +243,19 @@ namespace SolutionPackager
             if (File.Exists(spPath + "SolutionPackager.exe"))
                 return toolPath;
 
-            OutputLogger.WriteToOutputWindow($"SolutionPackager.exe not found at: {spPath}", MessageType.Error);
+            OutputLogger.WriteToOutputWindow($"S{Resource.ErrorMessage_SolutionPackagerNotFound}: {spPath}", MessageType.Error);
             return null;
         }
 
         private static string CreatePackCommandArgs(PackSettings packSettings)
         {
-            var zipFolder = packSettings.SaveSolutions
-                ? packSettings.ProjectSolutionFolder
-                : packSettings.ProjectPackageFolder;
-
             StringBuilder command = new StringBuilder();
             command.Append(" /action: Pack");
-            command.Append($" /zipfile: \"{Path.Combine(zipFolder, packSettings.FileName)}\"");
+            command.Append($" /zipfile: \"{Path.Combine(packSettings.ProjectSolutionFolder, packSettings.FileName)}\"");
             command.Append($" /folder: \"{packSettings.ProjectPackageFolder}\"");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (packSettings.SolutionPackageConfig.map != null)
+            if (packSettings.SolutionPackageConfig.map != null && packSettings.UseMapFile)
             {
                 MapFile.Create(packSettings.SolutionPackageConfig, Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
                 if (File.Exists(Path.Combine(packSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
@@ -264,7 +281,7 @@ namespace SolutionPackager
             command.Append(" /clobber");
 
             // Add a mapping file which should be in the root folder of the project and be named mapping.xml
-            if (unpackSettings.SolutionPackageConfig.map != null)
+            if (unpackSettings.SolutionPackageConfig.map != null && unpackSettings.UseMapFile)
             {
                 MapFile.Create(unpackSettings.SolutionPackageConfig, Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile));
                 if (File.Exists(Path.Combine(unpackSettings.ProjectPath, ExtensionConstants.SolutionPackagerMapFile)))
@@ -279,6 +296,90 @@ namespace SolutionPackager
             command.Append($" /packagetype:{unpackSettings.SolutionPackageConfig.packagetype}");
 
             return command.ToString();
+        }
+
+        public static bool ExecuteSolutionPackager(SolutionPackagerCommand command)
+        {
+            OutputLogger.WriteToOutputWindow($"{Resource.Message_Begin} {command.Action}: {command.SolutionName}", MessageType.Info);
+
+            int timeout = 60000;
+            string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (string.IsNullOrEmpty(workingDirectory))
+            {
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_CouldNotSetWorkingDirectory, MessageType.Error);
+                return false;
+            }
+
+            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            {
+                var processStartInfo = CreateProcessStartInfo(command);
+                process.StartInfo = processStartInfo;
+                process.StartInfo.WorkingDirectory = workingDirectory;
+
+                StringBuilder output = new StringBuilder();
+                StringBuilder errorDataReceived = new StringBuilder();
+
+                using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+                {
+                    using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+                    {
+                        process.OutputDataReceived += (sender, e) =>
+                        {
+                            if (e.Data == null)
+                                outputWaitHandle.Set();
+                            else
+                                output.AppendLine(e.Data);
+                        };
+                        process.ErrorDataReceived += (sender, e) =>
+                        {
+                            if (e.Data == null)
+                                errorWaitHandle.Set();
+                            else
+                                errorDataReceived.AppendLine(e.Data);
+                        };
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+
+                        string message;
+                        if (process.WaitForExit(timeout) && outputWaitHandle.WaitOne(timeout) && errorWaitHandle.WaitOne(timeout))
+                        {
+                            if (process.ExitCode == 0)
+                            {
+                                OutputLogger.WriteToOutputWindow($"{Resource.Message_End} {command.Action}: {command.SolutionName}", MessageType.Info);
+                                return true;
+                            }
+
+                            message = $"{Resource.Message_ErrorExecutingSolutionPackager}: {command.Action}: {command.SolutionName}";
+                        }
+                        else
+                        {
+                            message = $"{Resource.Message_TimoutExecutingSolutionPackager}: {command.Action}: {command.SolutionName}";
+                        }
+
+                        ExceptionHandler.LogProcessError(Logger, message, errorDataReceived.ToString());
+                        MessageBox.Show(message);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static ProcessStartInfo CreateProcessStartInfo(SolutionPackagerCommand command)
+        {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd",
+                Arguments = $"/c \"{command.ToolPath} {command.CommandArgs}\"",
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+
+            return processStartInfo;
         }
     }
 }

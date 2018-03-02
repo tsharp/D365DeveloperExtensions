@@ -3,16 +3,16 @@
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                         xmlns:resx="clr-namespace:TemplateWizards.Resources"
-                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="Choose custom template"
+                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+                         xmlns:resources="clr-namespace:TemplateWizards.Resources"
+                         mc:Ignorable="d" WindowStyle="ToolWindow" Title="{x:Static resources:Resource.CustomTemplatePicker_Window_Title}"
                          Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
                          Height="315" Width="375">
     <Window.Resources>
         <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/DialogWindowStyleDictionary.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/CrmDeveloperExtensions2.Core;component/Resources/ControlsStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/DialogWindowStyleDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/D365DeveloperExtensions.Core;component/Resources/ControlsStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -40,12 +40,12 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,3">
-            <Button x:Name="Ok" Content="OK" Margin="0,5,10,0" MinWidth="70"
-              Template="{DynamicResource FormButtonControlTemplate}" IsEnabled="False"
-              Click="Ok_OnClick" ToolTip="Create item" Height="23"/>
-            <Button x:Name="Cancel" Content="Cancel" Margin="0,5,10,0" MinWidth="70"
-              Template="{DynamicResource FormButtonControlTemplate}" Height="23" ToolTip="Cancel"
-              Click="Cancel_Click"/>
+            <Button x:Name="Ok" Content="{x:Static resources:Resource.CustomTemplateWindow_Ok_Button_Content}" Margin="0,5,10,0" MinWidth="70"
+                    Template="{DynamicResource FormButtonControlTemplate}" IsEnabled="False"
+                    Click="Ok_OnClick" ToolTip="{x:Static resources:Resource.CustomTemplateWindow_Ok_Button_Tooltip}" Height="23"/>
+            <Button x:Name="Cancel" Content="{x:Static resources:Resource.CustomTemplateWindow_Canel_Button_Content}" Margin="0,5,10,0" MinWidth="70"
+                    Template="{DynamicResource FormButtonControlTemplate}" Height="23" ToolTip="{x:Static resources:Resource.CustomTemplateWindow_Cancel_Button_Tooltip}"
+                    Click="Cancel_Click"/>
         </StackPanel>
     </Grid>
 </platformUi:DialogWindow>

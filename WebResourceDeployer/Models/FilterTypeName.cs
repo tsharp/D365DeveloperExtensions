@@ -1,10 +1,10 @@
-﻿using CrmDeveloperExtensions2.Core.DataGrid;
+﻿using D365DeveloperExtensions.Core.DataGrid;
+using D365DeveloperExtensions.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Models
 {
@@ -32,15 +32,19 @@ namespace WebResourceDeployer.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public static ObservableCollection<FilterTypeName> CreateFilterList(ObservableCollection<WebResourceItem> webResourceItems)
+        public static ObservableCollection<FilterTypeName> CreateFilterList(int majorVersion)
         {
-            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>(webResourceItems.GroupBy(t => t.TypeName).Select(x =>
-                new FilterTypeName
+            ObservableCollection<FilterTypeName> filterTypeNames = new ObservableCollection<FilterTypeName>();
+
+            foreach (WebResourceType webResourceType in WebResourceTypes.GetTypes(majorVersion, false))
+            {
+                filterTypeNames.Add(new FilterTypeName
                 {
-                    Name = x.Key,
-                    Value = x.Key,
+                    Name = webResourceType.Name,
+                    Value = webResourceType.Name,
                     IsSelected = true
-                }).ToList());
+                });
+            }
 
             filterTypeNames = new ObservableCollection<FilterTypeName>(filterTypeNames.OrderBy(e => e.Name));
 
@@ -50,6 +54,14 @@ namespace WebResourceDeployer.Models
                 Value = String.Empty,
                 IsSelected = true
             });
+
+            return filterTypeNames;
+        }
+
+        public static ObservableCollection<FilterTypeName> ResetFilter(ObservableCollection<FilterTypeName> filterTypeNames)
+        {
+            if (filterTypeNames[0].IsSelected != true)
+                filterTypeNames[0].IsSelected = true;
 
             return filterTypeNames;
         }

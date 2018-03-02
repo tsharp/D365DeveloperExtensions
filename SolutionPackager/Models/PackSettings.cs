@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using SolutionPackager.ViewModels;
 using System;
@@ -20,5 +20,6 @@ namespace SolutionPackager.Models
         public string FileName { get; set; }
         public string FullFilePath { get; set; }
         public Version Version { get; set; }
+        public bool UseMapFile { get; set; }
     }
 }

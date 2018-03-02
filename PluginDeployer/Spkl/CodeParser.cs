@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PluginDeployer.Spkl
 {
@@ -22,7 +24,6 @@ namespace PluginDeployer.Spkl
 
         #region Private Constants
         private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
-        //private const string _attributeRegex = @"[\r\n][\r\n]([ ]*?)#region[\s\S]*([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n)).+?(?:#endregion)";
         private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion

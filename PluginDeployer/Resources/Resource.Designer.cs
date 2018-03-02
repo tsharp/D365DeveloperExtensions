@@ -61,110 +61,434 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error adding assembly to solution.
+        /// </summary>
+        public static string ErrorMessage_ErrorAddingAssemblySolution {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorAddingAssemblySolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding web resource to solution.
+        /// </summary>
+        public static string ErrorMessage_ErrorAddingWebResourceSolution {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorAddingWebResourceSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error checking for assembly in solution.
+        /// </summary>
+        public static string ErrorMessage_ErrorCheckingAssemblyInSolution {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorCheckingAssemblyInSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating or updating assembly.
+        /// </summary>
+        public static string ErrorMessage_ErrorCreatingOrUpdatingAssembly {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorCreatingOrUpdatingAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error installing MSBuild.ILMerge.Task.
+        /// </summary>
+        public static string ErrorMessage_ErrorInstallingILMerge {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorInstallingILMerge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error launching Plug-in Registration Tool.
+        /// </summary>
+        public static string ErrorMessage_ErrorLaunchingPRT {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorLaunchingPRT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error retrieving assembly.
+        /// </summary>
+        public static string ErrorMessage_ErrorRetrievingAssembly {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorRetrievingAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error retrieving solutions.
+        /// </summary>
+        public static string ErrorMessage_ErrorRetrievingSolutions {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorRetrievingSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error uninstalling MSBuild.ILMerge.Task.
+        /// </summary>
+        public static string ErrorMessage_ErrorUninstallingILMerge {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorUninstallingILMerge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding registration details.
+        /// </summary>
+        public static string Message_AddingRegistrationDetails {
+            get {
+                return ResourceManager.GetString("Message_AddingRegistrationDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly added to solution.
+        /// </summary>
+        public static string Message_AssemblyAddedSolution {
+            get {
+                return ResourceManager.GetString("Message_AssemblyAddedSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly in solution.
+        /// </summary>
+        public static string Message_AssemblyInSolution {
+            get {
+                return ResourceManager.GetString("Message_AssemblyInSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly path is empty.
+        /// </summary>
+        public static string Message_AssemblyPathEmpty {
+            get {
+                return ResourceManager.GetString("Message_AssemblyPathEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created assembly.
+        /// </summary>
+        public static string Message_CreatedAssembly {
+            get {
+                return ResourceManager.GetString("Message_CreatedAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying.
+        /// </summary>
+        public static string Message_Deploying {
+            get {
+                return ResourceManager.GetString("Message_Deploying", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MSBuild.ILMerge.Task installed.
+        /// </summary>
+        public static string Message_ILMergeInstalled {
+            get {
+                return ResourceManager.GetString("Message_ILMergeInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MSBuild.ILMerge.Task uninstalled.
+        /// </summary>
+        public static string Message_ILMergeUninstalled {
+            get {
+                return ResourceManager.GetString("Message_ILMergeUninstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New web resource added to solution.
+        /// </summary>
+        public static string Message_NewWebResourceAddedSolution {
+            get {
+                return ResourceManager.GetString("Message_NewWebResourceAddedSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You haven&apos;t added any registration details to the assembly class.
+        /// </summary>
+        public static string Message_NoRegistrationDetails {
+            get {
+                return ResourceManager.GetString("Message_NoRegistrationDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieved assembly.
+        /// </summary>
+        public static string Message_RetrievedAssembly {
+            get {
+                return ResourceManager.GetString("Message_RetrievedAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieved solutions.
+        /// </summary>
+        public static string Message_RetrievedSolutions {
+            get {
+                return ResourceManager.GetString("Message_RetrievedSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving solutions.
+        /// </summary>
+        public static string Message_RetrievingSolutions {
+            get {
+                return ResourceManager.GetString("Message_RetrievingSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated assembly.
+        /// </summary>
+        public static string Message_UpdatedAssembly {
+            get {
+                return ResourceManager.GetString("Message_UpdatedAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error updating assembly: changes to major &amp; minor versions require redeployment.
+        /// </summary>
+        public static string Message_UpdatingMajorMinorRequireRedeployment {
+            get {
+                return ResourceManager.GetString("Message_UpdatingMajorMinorRequireRedeployment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error updating assembly: changes to assembly name require redeployment.
+        /// </summary>
+        public static string Message_UpdatingNameRequireRedeployment {
+            get {
+                return ResourceManager.GetString("Message_UpdatingNameRequireRedeployment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding assembly to solution.
+        /// </summary>
+        public static string MessageBox_ErrorAddingAssemblyToSolution {
+            get {
+                return ResourceManager.GetString("MessageBox_ErrorAddingAssemblyToSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error deploying assembly.
+        /// </summary>
+        public static string MEssageBox_ErrorDeployingAssembly {
+            get {
+                return ResourceManager.GetString("MEssageBox_ErrorDeployingAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error locating assembly path.
+        /// </summary>
+        public static string MessageBox_ErrorLocatingAssemblyPath {
+            get {
+                return ResourceManager.GetString("MessageBox_ErrorLocatingAssemblyPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error retrieving solutions.
+        /// </summary>
+        public static string MessageBox_ErrorRetrievingSolutions {
+            get {
+                return ResourceManager.GetString("MessageBox_ErrorRetrievingSolutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing &apos;assemblypath&apos; in &apos;plugins&apos; configuration in configuration file.
+        /// </summary>
+        public static string MessageBox_MissingAssemblyPathSpklConfig {
+            get {
+                return ResourceManager.GetString("MessageBox_MissingAssemblyPathSpklConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing &apos;plugins&apos; configuration in configuration file.
+        /// </summary>
+        public static string MessageBox_MissingPluginsSpklConfig {
+            get {
+                return ResourceManager.GetString("MessageBox_MissingPluginsSpklConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PluginRegistration.exe not found.
+        /// </summary>
+        public static string MessageBox_PRTNotFound {
+            get {
+                return ResourceManager.GetString("MessageBox_PRTNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; D365 DevEx.
+        /// </summary>
+        public static string MessageBox_SetPRTOptionsPath {
+            get {
+                return ResourceManager.GetString("MessageBox_SetPRTOptionsPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Registration.
         /// </summary>
-        public static string AddRegistration_Button_Content {
+        public static string PluginDeployer_AddRegistration_Button_Content {
             get {
-                return ResourceManager.GetString("AddRegistration_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_AddRegistration_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Add Spkl registration attributes.
         /// </summary>
-        public static string AddRegistration_Button_ToolTip {
+        public static string PluginDeployer_AddRegistration_Button_ToolTip {
             get {
-                return ResourceManager.GetString("AddRegistration_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_AddRegistration_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IlMerge.
+        ///   Looks up a localized string similar to Backup Files?.
         /// </summary>
-        public static string IlMerge_Button_Content {
+        public static string PluginDeployer_BackupFilesLabel_Label_Content {
             get {
-                return ResourceManager.GetString("IlMerge_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_BackupFilesLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath location in the config file.
+        /// </summary>
+        public static string PluginDeployer_DeploymentType_Label_Toolip {
+            get {
+                return ResourceManager.GetString("PluginDeployer_DeploymentType_Label_Toolip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deployment Type.
+        /// </summary>
+        public static string PluginDeployer_DeploymentTypeLabel_Label_Content {
+            get {
+                return ResourceManager.GetString("PluginDeployer_DeploymentTypeLabel_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ILMerge.
+        /// </summary>
+        public static string PluginDeployer_IlMerge_Button_Content {
+            get {
+                return ResourceManager.GetString("PluginDeployer_IlMerge_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Toggle ILMerging Referenced Assemblies.
         /// </summary>
-        public static string IlMerge_Button_ToolTip {
+        public static string PluginDeployer_IlMerge_Button_ToolTip {
             get {
-                return ResourceManager.GetString("IlMerge_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_IlMerge_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ILMerge Referenced Assemblies.
+        ///   Looks up a localized string similar to Open in CRM/365.
         /// </summary>
-        public static string ILMergeTooltipEnable {
+        public static string PluginDeployer_OpenInCrmImage_Button_ToolTip {
             get {
-                return ResourceManager.GetString("ILMergeTooltipEnable", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_OpenInCrmImage_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove ILMerge.
+        ///   Looks up a localized string similar to Project Name.
         /// </summary>
-        public static string ILMergeTooltipRemove {
+        public static string PluginDeployer_ProjectNameLabel_Label_Content {
             get {
-                return ResourceManager.GetString("ILMergeTooltipRemove", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_ProjectNameLabel_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Publish.
         /// </summary>
-        public static string Publish_Button_Content {
+        public static string PluginDeployer_Publish_Button_Content {
             get {
-                return ResourceManager.GetString("Publish_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_Publish_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Publish to CRM/365.
         /// </summary>
-        public static string Publish_Button_ToolTip {
+        public static string PluginDeployer_Publish_Button_ToolTip {
             get {
-                return ResourceManager.GetString("Publish_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_Publish_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Registration Tool.
         /// </summary>
-        public static string RegistrationTool_Button_Content {
+        public static string PluginDeployer_RegistrationTool_Button_Content {
             get {
-                return ResourceManager.GetString("RegistrationTool_Button_Content", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_RegistrationTool_Button_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launch Plug-in Registrion Tool.
+        ///   Looks up a localized string similar to Launch Plug-in Registration Tool.
         /// </summary>
-        public static string RegistrationTool_Button_ToolTip {
+        public static string PluginDeployer_RegistrationTool_Button_ToolTip {
             get {
-                return ResourceManager.GetString("RegistrationTool_Button_ToolTip", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_RegistrationTool_Button_ToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Solution.
         /// </summary>
-        public static string SolutionLabel_Label_Content {
+        public static string PluginDeployer_SolutionLabel_Label_Content {
             get {
-                return ResourceManager.GetString("SolutionLabel_Label_Content", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_SolutionLabel_Label_Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crm Dev: Plug-in Deployer.
+        ///   Looks up a localized string similar to D365 DevEx: Plug-in Deployer.
         /// </summary>
-        public static string ToolWindowTitle {
+        public static string PluginDeployer_Window_Title {
             get {
-                return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+                return ResourceManager.GetString("PluginDeployer_Window_Title", resourceCulture);
             }
         }
     }

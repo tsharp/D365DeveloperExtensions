@@ -1,4 +1,4 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
 using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -6,9 +6,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using System.ComponentModel.Composition;
-using CrmIntellisense.Crm;
 using Microsoft.Xrm.Tooling.Connector;
+using System.ComponentModel.Composition;
 
 namespace CrmIntellisense
 {
@@ -16,7 +15,7 @@ namespace CrmIntellisense
     [Name("CRM CSharp Token Completion Handler")]
     [ContentType("CSharp")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-    internal class CrmCSharpCompletionHandlerProvider : Package, IVsTextViewCreationListener
+    internal class CrmCSharpCompletionHandlerProvider : CrmCompletionHandlerProviderBase, IVsTextViewCreationListener
     {
         [Import]
         internal IVsEditorAdaptersFactoryService AdapterService;
@@ -27,27 +26,32 @@ namespace CrmIntellisense
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            //This gets executed as each code file is loaded
-            //1st
-            if (!(GetGlobalService(typeof(DTE)) is DTE dte))
-                return;
-
-            bool useIntellisense = UserOptionsGrid.GetUseIntellisense(dte);
-            if (!useIntellisense)
+            //This gets executed 1st as each code file is loaded
+            if (!(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider.GetService(typeof(DTE)) is DTE dte))
                 return;
 
             if (!(SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client))
+                return;
+
+            if (!IsIntellisenseEnabled(dte))
                 return;
 
             ITextView textView = AdapterService.GetWpfTextView(textViewAdapter);
             if (textView == null)
                 return;
 
-            CrmCompletionCommandHandler CreateCommandHandler() => new CrmCompletionCommandHandler(textViewAdapter, textView, this);
+            CrmCSharpCompletionCommandHandler CreateCommandHandler() => new CrmCSharpCompletionCommandHandler(textViewAdapter, textView, this);
             textView.Properties.GetOrCreateSingletonProperty(CreateCommandHandler);
 
-            if (CrmMetadata.Metadata == null)
-                CrmMetadata.GetMetadata(client);
+            var metadata = SharedGlobals.GetGlobal("CrmMetadata", dte);
+            if (metadata != null)
+                return;
+
+            InfoBar infoBar = new InfoBar(false);
+            InfoBarModel infoBarModel = CreateMetadataInfoBar();
+            infoBar.ShowInfoBar(infoBarModel);
+
+            GetData(client, infoBar);
         }
     }
 }

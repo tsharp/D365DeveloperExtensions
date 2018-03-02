@@ -1,10 +1,11 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,15 +16,24 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using WebResourceDeployer.Resources;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
 {
     public partial class NewWebResource
     {
+        #region Private
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly CrmServiceClient _client;
         private readonly DTE _dte;
         private ObservableCollection<WebResourceType> _webResourceTypes;
+        private readonly Project _selectedProject;
+
+        #endregion
+
+        #region Public
 
         public Guid NewId;
         public int NewType;
@@ -32,6 +42,7 @@ namespace WebResourceDeployer
         public string NewBoundFile;
         public string NewDescription;
         public Guid NewSolutionId;
+
         public ObservableCollection<WebResourceType> WebResourceTypes
         {
             get => _webResourceTypes;
@@ -42,30 +53,39 @@ namespace WebResourceDeployer
             }
         }
 
-        public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId)
+        #endregion
+
+        #region  Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        public NewWebResource(CrmServiceClient client, DTE dte, ObservableCollection<ComboBoxItem> projectFiles, Guid selectedSolutionId, Project selectedProject)
         {
             InitializeComponent();
             DataContext = this;
+            Owner = Application.Current.MainWindow;
+
             _client = client;
             _dte = dte;
+            _selectedProject = selectedProject;
 
             bool result = GetSolutions(selectedSolutionId);
             if (!result)
             {
-                MessageBox.Show("Error Retrieving Solutions From CRM. See the Output Window for additional details.");
+                MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingSolutions);
                 DialogResult = false;
                 Close();
             }
 
             Files.ItemsSource = projectFiles;
             WebResourceTypes =
-                CrmDeveloperExtensions2.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                D365DeveloperExtensions.Core.Models.WebResourceTypes.GetTypes(client.ConnectedOrgVersion.Major, false);
         }
 
         private async void Create_OnClick(object sender, RoutedEventArgs e)
@@ -78,16 +98,16 @@ namespace WebResourceDeployer
                 return;
 
             string relativePath = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
-            string name = Name.Text.Trim();
+            string name = UniqueName.Text.Trim();
             string prefix = Prefix.Text;
             int type = ((WebResourceType)Type.SelectedItem).Type;
             string displayName = DisplayName.Text.Trim();
             string description = Description.Text.Trim();
 
-            Overlay.ShowMessage(_dte, "Creating...");
+            Overlay.ShowMessage(_dte, $"{Resource.Message_Creating}...");
 
             Entity webResource =
-                Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath);
+                Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath, _selectedProject);
 
             Guid webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
             if (webResourceId == Guid.Empty)
@@ -131,18 +151,18 @@ namespace WebResourceDeployer
             if (File.Exists(filePath))
                 return filePath;
 
-            OutputLogger.WriteToOutputWindow("Missing File: " + filePath, MessageType.Error);
-            MessageBox.Show("File does not exist");
+            OutputLogger.WriteToOutputWindow($"{Resource.Message_MissingFile}: " + filePath, MessageType.Error);
+            MessageBox.Show(Resource.MessageBox_FileDoesNotExist);
             return null;
         }
 
         private bool ValidateForm()
         {
-            if (Crm.WebResource.ValidateName(Name.Text))
+            if (Crm.WebResource.ValidateName(UniqueName.Text))
                 return true;
 
-            MessageBox.Show("Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters");
-            Name.Focus();
+            MessageBox.Show(Resource.Message_InvalidWebResourceName);
+            UniqueName.Focus();
             return false;
         }
 
@@ -150,24 +170,19 @@ namespace WebResourceDeployer
         {
             if (Files.SelectedItem == null)
             {
-                Name.Text = String.Empty;
+                UniqueName.Text = String.Empty;
                 DisplayName.Text = String.Empty;
                 return;
             }
 
             string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
+            FileExtensionType extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
+            if (extensionType == FileExtensionType.Ts)
+                fileName = fileName.Replace(".ts", ".js");
 
             DisplayName.Text = FileNameToDisplayName(fileName);
-
             string extension = Path.GetExtension(fileName);
-
-            if (extension.ToUpper() == ".TS")
-            {
-                DisplayName.Text = Path.ChangeExtension(DisplayName.Text, ".js");
-                Name.Text = Path.ChangeExtension(fileName, ".js");
-            }
-            else
-                Name.Text = fileName;
+            UniqueName.Text = fileName;
 
             if (string.IsNullOrEmpty(extension))
             {
@@ -175,7 +190,19 @@ namespace WebResourceDeployer
                 return;
             }
 
-            Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == extension.Replace(".", string.Empty).ToUpper());
+            switch (extensionType)
+            {
+                case FileExtensionType.Map:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Xml.ToString().ToUpper());
+                    break;
+                case FileExtensionType.Ts:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == FileExtensionType.Js.ToString().ToUpper());
+
+                    break;
+                default:
+                    Type.SelectedItem = WebResourceTypes.FirstOrDefault(t => t.Name == extensionType.ToString().ToUpper());
+                    break;
+            }
         }
 
         private string FileNameToDisplayName(string fileName)
@@ -199,12 +226,12 @@ namespace WebResourceDeployer
                 Prefix.Text = solution.Prefix + "_";
             }
             else
-                Prefix.Text = "new_";
+                Prefix.Text = Resource.DefaultPrefix;
         }
 
         private bool GetSolutions(Guid selectedSolutionId)
         {
-            Overlay.ShowMessage(_dte, "Getting solutions from CRM...");
+            Overlay.ShowMessage(_dte, $"{Resource.Message_RetrievingSolutions}...");
 
             EntityCollection results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
 

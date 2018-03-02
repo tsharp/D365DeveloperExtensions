@@ -1,8 +1,10 @@
-﻿using CrmDeveloperExtensions2.Core;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Models;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer
@@ -20,7 +22,7 @@ namespace WebResourceDeployer
                     WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
                     Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
                     IsManaged = (bool)webResource.GetAttributeValue<AliasedValue>("webresource.ismanaged").Value,
-                    TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
+                    TypeName = WebResourceTypes.GetWebResourceTypeNameByNumber(((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value.ToString()),
                     Type = ((OptionSetValue)webResource.GetAttributeValue<AliasedValue>("webresource.webresourcetype").Value).Value,
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
@@ -38,6 +40,8 @@ namespace WebResourceDeployer
                 webResourceItems.Add(webResourceItem);
             }
 
+            webResourceItems = new ObservableCollection<WebResourceItem>(webResourceItems.OrderBy(w => w.Name));
+
             return webResourceItems;
         }
 
@@ -52,7 +56,8 @@ namespace WebResourceDeployer
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
                     Prefix = entity.GetAttributeValue<AliasedValue>("publisher.customizationprefix").Value.ToString(),
-                    UniqueName = entity.GetAttributeValue<string>("uniquename")
+                    UniqueName = entity.GetAttributeValue<string>("uniquename"),
+                    NameVersion = $"{entity.GetAttributeValue<string>("friendlyname")} {entity.GetAttributeValue<string>("version")}"
                 };
 
                 crmSolutions.Add(solution);
@@ -81,7 +86,7 @@ namespace WebResourceDeployer
                 WebResourceId = newWebResource.NewId,
                 Name = newWebResource.NewName,
                 DisplayName = newWebResource.NewDisplayName,
-                TypeName = Crm.WebResource.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
+                TypeName = WebResourceTypes.GetWebResourceTypeNameByNumber(newWebResource.NewType.ToString()),
                 Type = newWebResource.NewType,
                 SolutionId = solutionId,
                 Description = newWebResource.NewDescription,

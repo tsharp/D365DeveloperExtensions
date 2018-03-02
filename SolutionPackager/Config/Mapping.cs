@@ -1,12 +1,12 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Config;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using SolutionPackager.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using CoreMapping = CrmDeveloperExtensions2.Core.Config.Mapping;
+using CoreMapping = D365DeveloperExtensions.Core.Config.Mapping;
 
 namespace SolutionPackager.Config
 {
@@ -14,8 +14,7 @@ namespace SolutionPackager.Config
     {
         public static SolutionPackageConfig GetSolutionPackageConfig(Project project, string profile, ObservableCollection<CrmSolution> crmSolutions)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
 
             List<SolutionPackageConfig> spklSolutionPackageConfigs = spklConfig.solutions;
             if (spklSolutionPackageConfigs == null)
@@ -30,8 +29,7 @@ namespace SolutionPackager.Config
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, SolutionPackageConfig solutionPackageConfig)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.solutions[0] = solutionPackageConfig;
@@ -49,6 +47,7 @@ namespace SolutionPackager.Config
                 }
             }
 
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 

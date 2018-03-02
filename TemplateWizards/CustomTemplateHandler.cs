@@ -1,11 +1,12 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Enums;
-using CrmDeveloperExtensions2.Core.Logging;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
 using Newtonsoft.Json;
+using NLog;
 using NuGet.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Resources;
 using TemplateWizards.Models;
+using TemplateWizards.Resources;
 using VSLangProj;
 
 namespace TemplateWizards
 {
     public class CustomTemplateHandler
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static CustomTemplates GetTemplateConfig(string templateFolder)
         {
             string path = Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile);
@@ -37,9 +41,12 @@ namespace TemplateWizards
 
                 return templates;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception($"Unable to read or deserialize {path}");
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_UnableReadDeserializeConfig}: {path}", ex);
+                MessageBox.Show($"{Resource.ErrorMessage_UnableReadDeserializeConfig}: {path}");
+
+                return null;
             }
         }
 
@@ -78,10 +85,10 @@ namespace TemplateWizards
             var installer = componentModel.GetService<IVsPackageInstaller>();
 
             foreach (CustomTemplateNuGetPackage package in customTemplate.CustomTemplateNuGetPackages)
-                AddPackage(dte, installer, package, project);
+                AddPackage(installer, package, project);
         }
 
-        private static void AddPackage(DTE dte, IVsPackageInstaller installer, CustomTemplateNuGetPackage package, Project project)
+        private static void AddPackage(IVsPackageInstaller installer, CustomTemplateNuGetPackage package, Project project)
         {
             string packageVersion = string.IsNullOrEmpty(package.Version) ?
                 null :
@@ -89,12 +96,11 @@ namespace TemplateWizards
 
             try
             {
-                NuGetProcessor.InstallPackage(dte, installer, project, package.Name, packageVersion);
+                NuGetProcessor.InstallPackage(installer, project, package.Name, packageVersion);
             }
             catch (Exception ex)
             {
-                OutputLogger.WriteToOutputWindow(
-                    $"Failed to add NuGet package {package.Name} {packageVersion}: {Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}", MessageType.Error);
+                ExceptionHandler.LogException(Logger, $"{Resource.ErrorMessage_FailedToAddNuGetPackage}: {package.Name} {packageVersion}", ex);
             }
         }
 
@@ -107,7 +113,7 @@ namespace TemplateWizards
                 return;
 
             foreach (CustomTemplateReference reference in customTemplate.CustomTemplateReferences)
-                CrmDeveloperExtensions2.Core.Vs.ProjectWorker.AddProjectReference(vsproject, reference.Name);
+                D365DeveloperExtensions.Core.Vs.ProjectWorker.AddProjectReference(vsproject, reference.Name);
         }
 
         public static string GetTemplateFileTemplate()
@@ -137,15 +143,13 @@ namespace TemplateWizards
         {
             if (string.IsNullOrEmpty(templateFolder))
             {
-                MessageBox.Show(
-                    "Please specify a template folder under Tools -> Options -> Crm DevEx -> Template Options");
+                MessageBox.Show(Resource.MessageBox_MissingTemplateFolder);
                 return false;
             }
 
             if (!Directory.Exists(templateFolder))
             {
-                MessageBox.Show(
-                    "Please specify a valid template folder under Tools -> Options -> Crm DevEx -> Template Options");
+                MessageBox.Show(Resource.MessageBox_MissingTemplateFolder);
                 return false;
             }
 
@@ -157,11 +161,14 @@ namespace TemplateWizards
             if (File.Exists(Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile)))
                 return true;
 
-            MessageBoxResult createResult = MessageBox.Show($"Create custom template configuration file at: {templateFolder} ? {Environment.NewLine + Environment.NewLine}" +
-                                                            "Once created, add template files and try again.",
-                "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            if (createResult == MessageBoxResult.Yes)
-                CreateTemplateFileTemplate(templateFolder);
+            MessageBoxResult createResult = MessageBox.Show($"{Resource.MessageBox_CreateConfigFile}: {templateFolder}",
+                Resource.MessageBox_Title_ConfirmCreateConfigFile, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+
+            if (createResult != MessageBoxResult.Yes)
+                return false;
+
+            CreateTemplateFileTemplate(templateFolder);
+            MessageBox.Show(Resource.MessageBox_AddTemplateFiles);
 
             return false;
         }
@@ -174,7 +181,7 @@ namespace TemplateWizards
                 throw new WizardBackoutException();
 
             if (templatePicker.SelectedTemplate == null)
-                OutputLogger.WriteToOutputWindow("TemplatePicker had no selected template", MessageType.Error);
+                OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_NoSelectedTemplate, MessageType.Error);
 
             return templatePicker;
         }

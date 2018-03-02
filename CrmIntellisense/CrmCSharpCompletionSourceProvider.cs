@@ -16,7 +16,7 @@ namespace CrmIntellisense
 
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
-            return new CrmCompletionSource(this, textBuffer);
+            return new CrmCSharpCompletionSource(this, textBuffer);
         }
     }
 }

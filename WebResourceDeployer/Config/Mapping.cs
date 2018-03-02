@@ -1,11 +1,12 @@
-﻿using CrmDeveloperExtensions2.Core;
-using CrmDeveloperExtensions2.Core.Config;
-using CrmDeveloperExtensions2.Core.Models;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.Config;
+using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using D365DeveloperExtensions.Core.Vs;
 using WebResourceDeployer.ViewModels;
 
 namespace WebResourceDeployer.Config
@@ -14,32 +15,21 @@ namespace WebResourceDeployer.Config
     {
         public static ObservableCollection<WebResourceItem> HandleSpklMappings(Project project, string profile, ObservableCollection<WebResourceItem> webResourceItems)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
 
-            List<SpklConfigWebresourceFile> mappingsToRemove = new List<SpklConfigWebresourceFile>();
-
-            List<WebresourceDeployConfig> spklWebresourceDeployConfig = spklConfig.webresources;
-            if (spklWebresourceDeployConfig == null)
-                return webResourceItems;
-
-            List<SpklConfigWebresourceFile> mappedWebResources = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklWebresourceDeployConfig[0].files
-                : spklWebresourceDeployConfig.FirstOrDefault(w => w.profile == profile)?.files;
-
+            var mappedWebResources = GetSpklConfigWebresourceFiles(profile, spklConfig);
             if (mappedWebResources == null)
                 return webResourceItems;
 
-            //Remove mappings where CRM web resource was deleted
+            //Lock mappings where CRM web resource was deleted
             foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
-                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) != 0)
-                    continue;
-
-                mappingsToRemove.Add(spklConfigWebresourceFile);
+                if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) == 0)
+                {
+                    webResourceItems.Where(w => w.Name == spklConfigWebresourceFile.uniquename).ToList()
+                        .ForEach(ww => ww.Locked = true);
+                }
             }
-
-            mappedWebResources = mappedWebResources.Except(mappingsToRemove).ToList();
 
             //Add bound file & description from mapping
             foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
@@ -47,43 +37,44 @@ namespace WebResourceDeployer.Config
                 if (webResourceItems.Count(w => w.Name == spklConfigWebresourceFile.uniquename) <= 0)
                     continue;
 
-                List<WebResourceItem> matches = webResourceItems
-                    .Where(w => w.Name == spklConfigWebresourceFile.uniquename).ToList();
+                List<WebResourceItem> matches = webResourceItems.Where(w => w.Name == spklConfigWebresourceFile.uniquename).ToList();
                 foreach (WebResourceItem match in matches)
                 {
                     match.Description = string.IsNullOrEmpty(spklConfigWebresourceFile.description)
                         ? null
                         : spklConfigWebresourceFile.description;
-                    match.BoundFile = spklConfigWebresourceFile.file;
+                    match.BoundFile = string.IsNullOrEmpty(spklConfigWebresourceFile.ts)
+                        ? spklConfigWebresourceFile.file
+                        : spklConfigWebresourceFile.ts;
                 }
             }
 
-            //Remove mappings where project file was deleted
+            //Lock mappings where project file was deleted
             foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in mappedWebResources)
             {
                 string mappedFilePath = FileSystem.BoundFileToLocalPath(spklConfigWebresourceFile.file, project.FullName);
-                if (File.Exists(mappedFilePath))
+                string relativePath = ProjectItemWorker.GetRelativePathFromPath(ProjectWorker.GetProjectPath(project), mappedFilePath);
+                bool inProject = ProjectWorker.IsFileInProjectFile(project.FullName, relativePath);
+                if (File.Exists(mappedFilePath) && inProject)
                     continue;
 
-                mappingsToRemove.Add(spklConfigWebresourceFile);
-                webResourceItems.Where(w => w.BoundFile == spklConfigWebresourceFile.file).ToList().ForEach(w => w.BoundFile = null);
-            }
+                if (!string.IsNullOrEmpty(spklConfigWebresourceFile.ts))
+                    mappedFilePath = FileSystem.BoundFileToLocalPath(spklConfigWebresourceFile.ts, project.FullName);
+                if (File.Exists(mappedFilePath) && inProject)
+                    continue;
 
-            if (mappingsToRemove.Count > 0)
-                RemoveSpklMappings(spklConfig, project, profile, mappingsToRemove);
+                webResourceItems.Where(w => w.BoundFile == spklConfigWebresourceFile.file).ToList().ForEach(w => w.Locked = true);
+            }
 
             return webResourceItems;
         }
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, WebResourceItem webResourceItem)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
-            SpklConfig spklConfig = CrmDeveloperExtensions2.Core.Config.Mapping.GetSpklConfigFile(projectPath, project);
+            SpklConfig spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
 
-            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklConfig.webresources[0].files
-                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files ??
-                                             new List<SpklConfigWebresourceFile>();
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = GetSpklConfigWebresourceFiles(profile, spklConfig) ??
+                                                                         new List<SpklConfigWebresourceFile>();
 
             SpklConfigWebresourceFile spklConfigWebresourceFile =
                 spklConfigWebresourceFiles.FirstOrDefault(w => w.uniquename == webResourceItem.Name);
@@ -96,20 +87,25 @@ namespace WebResourceDeployer.Config
 
         private static void UpdateSpklMapping(SpklConfig spklConfig, Project project, string profile, WebResourceItem webResourceItem)
         {
-            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
-                ? spklConfig.webresources[0].files
-                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files;
-
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = GetSpklConfigWebresourceFiles(profile, spklConfig);
             if (spklConfigWebresourceFiles == null)
                 return;
 
             if (!string.IsNullOrEmpty(webResourceItem.BoundFile))
             {
+                bool isTs = WebResourceTypes.GetExtensionType(webResourceItem.BoundFile) == D365DeveloperExtensions.Core.Enums.FileExtensionType.Ts;
                 foreach (SpklConfigWebresourceFile spklConfigWebresourceFile in
                     spklConfigWebresourceFiles.Where(w => w.uniquename == webResourceItem.Name))
                 {
                     spklConfigWebresourceFile.file = webResourceItem.BoundFile;
                     spklConfigWebresourceFile.description = webResourceItem.Description;
+                    spklConfigWebresourceFile.ts = null;
+
+                    if (!isTs)
+                        continue;
+
+                    spklConfigWebresourceFile.file = TsHelper.GetJsForTsPath(webResourceItem.BoundFile, project);
+                    spklConfigWebresourceFile.ts = webResourceItem.BoundFile;
                 }
             }
             else
@@ -124,17 +120,17 @@ namespace WebResourceDeployer.Config
                     webresourceDeployConfig.files = spklConfigWebresourceFiles;
             }
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 
         public static void RemoveSpklMappings(SpklConfig spklConfig, Project project, string profile, List<SpklConfigWebresourceFile> crmDexExConfigWebResources)
         {
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.webresources[0].files
-                .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
+                    .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
             else
                 spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files
                     .RemoveAll(w => crmDexExConfigWebResources.Any(m => m.uniquename == w.uniquename));
@@ -151,13 +147,28 @@ namespace WebResourceDeployer.Config
                 description = webResourceItem.Description
             };
 
+            if (WebResourceTypes.GetExtensionType(webResourceItem.BoundFile) == D365DeveloperExtensions.Core.Enums.FileExtensionType.Ts)
+            {
+                spklConfigWebresourceFile.file = TsHelper.GetJsForTsPath(webResourceItem.BoundFile, project);
+                spklConfigWebresourceFile.ts = webResourceItem.BoundFile;
+            }
+
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.webresources[0].files.Add(spklConfigWebresourceFile);
             else
                 spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files.Add(spklConfigWebresourceFile);
 
-            string projectPath = CrmDeveloperExtensions2.Core.Vs.ProjectWorker.GetProjectPath(project);
+            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
+        }
+
+        private static List<SpklConfigWebresourceFile> GetSpklConfigWebresourceFiles(string profile, SpklConfig spklConfig)
+        {
+            List<SpklConfigWebresourceFile> spklConfigWebresourceFiles = profile.StartsWith(ExtensionConstants.NoProfilesText)
+                ? spklConfig.webresources[0].files
+                : spklConfig.webresources.FirstOrDefault(w => w.profile == profile)?.files;
+
+            return spklConfigWebresourceFiles;
         }
     }
 }

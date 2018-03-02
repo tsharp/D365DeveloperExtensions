@@ -117,55 +117,106 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ToolWindowTitle" xml:space="preserve">
-    <value>Crm Dev: Plug-in Trace Viewer</value>
+  <data name="PluginTraceViewerWindow_Window_Title" xml:space="preserve">
+    <value>D365 DevEx: Plug-in Trace Viewer</value>
   </data>
-  <data name="Poll_Button_Content" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_Poll_Button_Content" xml:space="preserve">
     <value>Start Polling</value>
   </data>
-  <data name="Poll_Button_ToolTip" xml:space="preserve">
-    <value>Start polling CRM/365 for new plug-in trace logs</value>
+  <data name="PluginTraceViewerWindow_Poll_Button_ToolTip" xml:space="preserve">
+    <value>Start polling for new plug-in trace logs</value>
   </data>
-  <data name="PollOff_Button_Content" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_PollOff_Button_Content" xml:space="preserve">
     <value>Stop Polling</value>
   </data>
-  <data name="PollOff_Button_ToolTip" xml:space="preserve">
-    <value>Stop polling CRM/365 for plug-in trace logs</value>
+  <data name="PluginTraceViewerWindow_PollOff_Button_ToolTip" xml:space="preserve">
+    <value>Stop polling for plug-in trace logs</value>
   </data>
-  <data name="RefreshImage_Button_ToolTip" xml:space="preserve">
-    <value>Refresh</value>
+  <data name="PluginTraceViewerWindow_RefreshImage_Button_ToolTip" xml:space="preserve">
+    <value>Refresh logs</value>
   </data>
-  <data name="ViewDetailsImage_Button_ToolTip" xml:space="preserve">
-    <value>View Details</value>
+  <data name="PluginTraceViewerWindow_ViewDetailsImage_Button_ToolTip" xml:space="preserve">
+    <value>View details</value>
   </data>
-  <data name="OpenInCrmImage_Button_ToolTip" xml:space="preserve">
-    <value>Open In CRM/365</value>
+  <data name="PluginTraceViewerWindow_OpenInCrmImage_Button_ToolTip" xml:space="preserve">
+    <value>Open in CRM/365</value>
   </data>
-  <data name="DeleteLogsImage_Button_ToolTip" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_DeleteLogsImage_Button_ToolTip" xml:space="preserve">
     <value>Delete Logs</value>
   </data>
-  <data name="CreatonOn_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_CreatonOn_DataGridTextColumn_Header" xml:space="preserve">
     <value>Created On</value>
   </data>
-  <data name="Entity_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_Entity_DataGridTextColumn_Header" xml:space="preserve">
     <value>Entity</value>
   </data>
-  <data name="Message_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_Message_DataGridTextColumn_Header" xml:space="preserve">
     <value>Message</value>
   </data>
-  <data name="CorrelationId_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_CorrelationId_DataGridTextColumn_Header" xml:space="preserve">
     <value>Correlation Id</value>
   </data>
-  <data name="Depth_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_Depth_DataGridTextColumn_Header" xml:space="preserve">
     <value>Depth</value>
   </data>
-  <data name="Mode_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_Mode_DataGridTextColumn_Header" xml:space="preserve">
     <value>Mode</value>
   </data>
-  <data name="TypeName_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_TypeName_DataGridTextColumn_Header" xml:space="preserve">
     <value>Type Name</value>
   </data>
-  <data name="ExecutionDuration_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="PluginTraceViewerWindow_ExecutionDuration_DataGridTextColumn_Header" xml:space="preserve">
     <value>Execution Duration</value>
+  </data>
+  <data name="PluginTraceViewerWindow_DetailsSearch_TextBlock_Text" xml:space="preserve">
+    <value>Search trace logs</value>
+  </data>
+  <data name="FilterEntity_Select_All" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="PluginTraceViewerWindow_Info_StoppedPolling" xml:space="preserve">
+    <value>Stopped polling for plug-in trace log records</value>
+  </data>
+  <data name="PluginTraceViewerWindow_Message_GettingTraces" xml:space="preserve">
+    <value>Retrieving plug-in trace logs</value>
+  </data>
+  <data name="PluginTraceViewerWindow_StartedPolling" xml:space="preserve">
+    <value>Started polling for plug-in trace log records: Interval 30 seconds</value>
+  </data>
+  <data name="PluginTraceViewWindow_DetailsSearch_TextBlock_Text" xml:space="preserve">
+    <value>Search trace details</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingTraces" xml:space="preserve">
+    <value>Error retrieving plug-in trace logs</value>
+  </data>
+  <data name="ErrorMessage_ErrorDeletingTrace" xml:space="preserve">
+    <value>Error deleting plug-in trace log</value>
+  </data>
+  <data name="ErrorMessage_ErrorDeletingTraces" xml:space="preserve">
+    <value>Error deleting plug-in trace logs</value>
+  </data>
+  <data name="Info_RetrievedNewTraces" xml:space="preserve">
+    <value>Retrieved new traces</value>
+  </data>
+  <data name="Info_NoNewTraces" xml:space="preserve">
+    <value>No new traces</value>
+  </data>
+  <data name="Message_DeletedTraceLog" xml:space="preserve">
+    <value>Deleted plug-in trace log</value>
+  </data>
+  <data name="Message_DeletingTraces" xml:space="preserve">
+    <value>Deleting plug-in trace logs</value>
+  </data>
+  <data name="Message_RetrievingTraces" xml:space="preserve">
+    <value>Retrieving plug-in traces</value>
+  </data>
+  <data name="Message_LastLogCreatedTime" xml:space="preserve">
+    <value>Last plug-in trace log created time</value>
+  </data>
+  <data name="Message_AdjustingNextPollTo" xml:space="preserve">
+    <value>Adjusting next poll time to</value>
+  </data>
+  <data name="PluginTraceViewer_PollTime_Label_Content" xml:space="preserve">
+    <value>Next poll in</value>
   </data>
 </root>

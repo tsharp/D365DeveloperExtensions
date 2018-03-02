@@ -117,40 +117,148 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ILMergeTooltipEnable" xml:space="preserve">
-    <value>ILMerge Referenced Assemblies</value>
+  <data name="PluginDeployer_Window_Title" xml:space="preserve">
+    <value>D365 DevEx: Plug-in Deployer</value>
   </data>
-  <data name="ILMergeTooltipRemove" xml:space="preserve">
-    <value>Remove ILMerge</value>
-  </data>
-  <data name="ToolWindowTitle" xml:space="preserve">
-    <value>Crm Dev: Plug-in Deployer</value>
-  </data>
-  <data name="Publish_Button_Content" xml:space="preserve">
+  <data name="PluginDeployer_Publish_Button_Content" xml:space="preserve">
     <value>Publish</value>
   </data>
-  <data name="Publish_Button_ToolTip" xml:space="preserve">
+  <data name="PluginDeployer_Publish_Button_ToolTip" xml:space="preserve">
     <value>Publish to CRM/365</value>
   </data>
-  <data name="IlMerge_Button_Content" xml:space="preserve">
-    <value>IlMerge</value>
+  <data name="PluginDeployer_IlMerge_Button_Content" xml:space="preserve">
+    <value>ILMerge</value>
   </data>
-  <data name="IlMerge_Button_ToolTip" xml:space="preserve">
+  <data name="PluginDeployer_IlMerge_Button_ToolTip" xml:space="preserve">
     <value>Toggle ILMerging Referenced Assemblies</value>
   </data>
-  <data name="AddRegistration_Button_Content" xml:space="preserve">
+  <data name="PluginDeployer_AddRegistration_Button_Content" xml:space="preserve">
     <value>Add Registration</value>
   </data>
-  <data name="AddRegistration_Button_ToolTip" xml:space="preserve">
+  <data name="PluginDeployer_AddRegistration_Button_ToolTip" xml:space="preserve">
     <value>Add Spkl registration attributes</value>
   </data>
-  <data name="RegistrationTool_Button_Content" xml:space="preserve">
+  <data name="PluginDeployer_RegistrationTool_Button_Content" xml:space="preserve">
     <value>Registration Tool</value>
   </data>
-  <data name="RegistrationTool_Button_ToolTip" xml:space="preserve">
-    <value>Launch Plug-in Registrion Tool</value>
+  <data name="PluginDeployer_RegistrationTool_Button_ToolTip" xml:space="preserve">
+    <value>Launch Plug-in Registration Tool</value>
   </data>
-  <data name="SolutionLabel_Label_Content" xml:space="preserve">
+  <data name="PluginDeployer_SolutionLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
+  </data>
+  <data name="PluginDeployer_DeploymentType_Label_Toolip" xml:space="preserve">
+    <value>Assembly Only ignores the config file and deploys the assembly created by the current Visual Studio build configuration - Spkl deploys the assembly located in the assemblypath location in the config file</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingAssembly" xml:space="preserve">
+    <value>Error retrieving assembly</value>
+  </data>
+  <data name="ErrorMessage_ErrorCreatingOrUpdatingAssembly" xml:space="preserve">
+    <value>Error creating or updating assembly</value>
+  </data>
+  <data name="ErrorMessage_ErrorAddingAssemblySolution" xml:space="preserve">
+    <value>Error adding assembly to solution</value>
+  </data>
+  <data name="Message_AssemblyAddedSolution" xml:space="preserve">
+    <value>Assembly added to solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorCheckingAssemblyInSolution" xml:space="preserve">
+    <value>Error checking for assembly in solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingSolutions" xml:space="preserve">
+    <value>Error retrieving solutions</value>
+  </data>
+  <data name="ErrorMessage_ErrorAddingWebResourceSolution" xml:space="preserve">
+    <value>Error adding web resource to solution</value>
+  </data>
+  <data name="Message_NewWebResourceAddedSolution" xml:space="preserve">
+    <value>New web resource added to solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorInstallingILMerge" xml:space="preserve">
+    <value>Error installing MSBuild.ILMerge.Task</value>
+  </data>
+  <data name="ErrorMessage_ErrorUninstallingILMerge" xml:space="preserve">
+    <value>Error uninstalling MSBuild.ILMerge.Task</value>
+  </data>
+  <data name="Message_ILMergeInstalled" xml:space="preserve">
+    <value>MSBuild.ILMerge.Task installed</value>
+  </data>
+  <data name="Message_ILMergeUninstalled" xml:space="preserve">
+    <value>MSBuild.ILMerge.Task uninstalled</value>
+  </data>
+  <data name="Message_NoRegistrationDetails" xml:space="preserve">
+    <value>You haven't added any registration details to the assembly class</value>
+  </data>
+  <data name="Message_UpdatingMajorMinorRequireRedeployment" xml:space="preserve">
+    <value>Error updating assembly: changes to major &amp; minor versions require redeployment</value>
+  </data>
+  <data name="Message_UpdatingNameRequireRedeployment" xml:space="preserve">
+    <value>Error updating assembly: changes to assembly name require redeployment</value>
+  </data>
+  <data name="Message_AssemblyPathEmpty" xml:space="preserve">
+    <value>Assembly path is empty</value>
+  </data>
+  <data name="MessageBox_ErrorLocatingAssemblyPath" xml:space="preserve">
+    <value>Error locating assembly path</value>
+  </data>
+  <data name="PluginDeployer_ProjectNameLabel_Label_Content" xml:space="preserve">
+    <value>Project Name</value>
+  </data>
+  <data name="PluginDeployer_OpenInCrmImage_Button_ToolTip" xml:space="preserve">
+    <value>Open in CRM/365</value>
+  </data>
+  <data name="PluginDeployer_DeploymentTypeLabel_Label_Content" xml:space="preserve">
+    <value>Deployment Type</value>
+  </data>
+  <data name="PluginDeployer_BackupFilesLabel_Label_Content" xml:space="preserve">
+    <value>Backup Files?</value>
+  </data>
+  <data name="Message_RetrievingSolutions" xml:space="preserve">
+    <value>Retrieving solutions</value>
+  </data>
+  <data name="MessageBox_ErrorRetrievingSolutions" xml:space="preserve">
+    <value>Error retrieving solutions</value>
+  </data>
+  <data name="Message_RetrievedSolutions" xml:space="preserve">
+    <value>Retrieved solutions</value>
+  </data>
+  <data name="Message_Deploying" xml:space="preserve">
+    <value>Deploying</value>
+  </data>
+  <data name="MEssageBox_ErrorDeployingAssembly" xml:space="preserve">
+    <value>Error deploying assembly</value>
+  </data>
+  <data name="MessageBox_ErrorAddingAssemblyToSolution" xml:space="preserve">
+    <value>Error adding assembly to solution</value>
+  </data>
+  <data name="MessageBox_MissingPluginsSpklConfig" xml:space="preserve">
+    <value>Missing 'plugins' configuration in configuration file</value>
+  </data>
+  <data name="MessageBox_MissingAssemblyPathSpklConfig" xml:space="preserve">
+    <value>Missing 'assemblypath' in 'plugins' configuration in configuration file</value>
+  </data>
+  <data name="Message_AddingRegistrationDetails" xml:space="preserve">
+    <value>Adding registration details</value>
+  </data>
+  <data name="MessageBox_SetPRTOptionsPath" xml:space="preserve">
+    <value>Set Plug-in Registration Tool path under Tools -&gt; Options -&gt; D365 DevEx</value>
+  </data>
+  <data name="MessageBox_PRTNotFound" xml:space="preserve">
+    <value>PluginRegistration.exe not found</value>
+  </data>
+  <data name="ErrorMessage_ErrorLaunchingPRT" xml:space="preserve">
+    <value>Error launching Plug-in Registration Tool</value>
+  </data>
+  <data name="Message_RetrievedAssembly" xml:space="preserve">
+    <value>Retrieved assembly</value>
+  </data>
+  <data name="Message_CreatedAssembly" xml:space="preserve">
+    <value>Created assembly</value>
+  </data>
+  <data name="Message_UpdatedAssembly" xml:space="preserve">
+    <value>Updated assembly</value>
+  </data>
+  <data name="Message_AssemblyInSolution" xml:space="preserve">
+    <value>Assembly in solution</value>
   </data>
 </root>

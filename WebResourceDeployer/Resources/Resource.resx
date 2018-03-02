@@ -117,73 +117,256 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ToolWindowTitle" xml:space="preserve">
-    <value>Crm Dev: Web Resource Deployer</value>
+  <data name="WebResourceDeployer_Window_Title" xml:space="preserve">
+    <value>D365 DevEx: Web Resource Deployer</value>
   </data>
-  <data name="SolutionsLabel_Label_Content" xml:space="preserve">
+  <data name="WebResourceDeployer_SolutionsLabel_Label_Content" xml:space="preserve">
     <value>Solution</value>
   </data>
-  <data name="WebResourceTypeLabel_Label_Content" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="AddWebResource_Button_Content" xml:space="preserve">
+  <data name="WebResourceDeployer_AddWebResource_Button_Content" xml:space="preserve">
     <value>New Item</value>
   </data>
-  <data name="AddWebResource_Button_ToolTip" xml:space="preserve">
-    <value>New Web Resource</value>
+  <data name="WebResourceDeployer_AddWebResource_Button_ToolTip" xml:space="preserve">
+    <value>New web resource</value>
   </data>
-  <data name="Publish_Button_Content" xml:space="preserve">
+  <data name="WebResourceDeployer_Publish_Button_Content" xml:space="preserve">
     <value>Publish</value>
   </data>
-  <data name="Publish_Button_ToolTip" xml:space="preserve">
+  <data name="WebResourceDeployer_Publish_Button_ToolTip" xml:space="preserve">
     <value>Publish to CRM/365</value>
   </data>
-  <data name="ShowManaged_CheckBox_Content" xml:space="preserve">
-    <value>Show Managed</value>
-  </data>
-  <data name="Type_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_Type_DataGridTextColumn_Header" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="Publish_DataGridTemplateColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_Publish_DataGridTemplateColumn_Header" xml:space="preserve">
     <value>Publish</value>
   </data>
-  <data name="PublishSelectAll_CheckBox_ToolTip" xml:space="preserve">
-    <value>Publish - Select/Unselect All</value>
-  </data>
-  <data name="PublishItem_CheckBox_ToolTip" xml:space="preserve">
+  <data name="WebResourceDeployer_PublishItem_CheckBox_ToolTip" xml:space="preserve">
     <value>Publish</value>
   </data>
-  <data name="Name_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_Name_DataGridTextColumn_Header" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="DisplayName_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_DisplayName_DataGridTextColumn_Header" xml:space="preserve">
     <value>Display Name</value>
   </data>
-  <data name="MappedTo_DataGridTemplateColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_MappedTo_DataGridTemplateColumn_Header" xml:space="preserve">
     <value>Mapped To</value>
   </data>
-  <data name="ClickToMapLabel_TextBlock_ToolTip" xml:space="preserve">
-    <value>Click to Map File</value>
+  <data name="WebResourceDeployer_ClickToMapLabel_TextBlock_ToolTip" xml:space="preserve">
+    <value>Click to map file</value>
   </data>
-  <data name="GetWebResource_Button_ToolTip" xml:space="preserve">
+  <data name="WebResourceDeployer_GetWebResource_Button_ToolTip" xml:space="preserve">
     <value>Download: Right-click to specify folder</value>
   </data>
-  <data name="DownloadImage_Button_ToolTip" xml:space="preserve">
+  <data name="WebResourceDeployer_DownloadImage_Button_ToolTip" xml:space="preserve">
     <value>Download from CRM/365</value>
   </data>
-  <data name="OpenInCrmImage_Button_ToolTip" xml:space="preserve">
+  <data name="WebResourceDeployer_OpenInCrmImage_Button_ToolTip" xml:space="preserve">
     <value>Open in CRM/365</value>
   </data>
-  <data name="CompareImage_Button_ToolTip" xml:space="preserve">
-    <value>Compare With CRM/365</value>
+  <data name="WebResourceDeployer_CompareImage_Button_ToolTip" xml:space="preserve">
+    <value>Compare with CRM/365</value>
   </data>
-  <data name="DeleteImage_Button_ToolTip" xml:space="preserve">
-    <value>Delete From CRM/365</value>
+  <data name="WebResourceDeployer_DeleteImage_Button_ToolTip" xml:space="preserve">
+    <value>Delete from CRM/365</value>
   </data>
-  <data name="ItemCount_Label_Content" xml:space="preserve">
+  <data name="WebResourceDeployer_ItemCount_Label_Content" xml:space="preserve">
     <value>Item Count</value>
   </data>
-  <data name="State_DataGridTextColumn_Header" xml:space="preserve">
+  <data name="WebResourceDeployer_State_DataGridTextColumn_Header" xml:space="preserve">
     <value>State</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingSolutions" xml:space="preserve">
+    <value>Error retrieving solutions</value>
+  </data>
+  <data name="Message_NewWebResourceAddedSolution" xml:space="preserve">
+    <value>New web resource added to solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorAddingWebResourceSolution" xml:space="preserve">
+    <value>Error adding web resource to solution</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingWebResources" xml:space="preserve">
+    <value>Error retrieving web resources</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingWebResource" xml:space="preserve">
+    <value>Error retrieving web resource</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingWebResourceContent" xml:space="preserve">
+    <value>Error retrieving web resource content</value>
+  </data>
+  <data name="ErrorMessage_ErrorRetrievingWebResourceDescription" xml:space="preserve">
+    <value>Error retrieving web resource description</value>
+  </data>
+  <data name="ErrorMessage_ErrorDeletingWebResource" xml:space="preserve">
+    <value>Error deleting web resource</value>
+  </data>
+  <data name="Message_NewWebResourceCreated" xml:space="preserve">
+    <value>New web resource created</value>
+  </data>
+  <data name="ErrorMessage_ErrorCreatingWebResource" xml:space="preserve">
+    <value>Error creating web resource</value>
+  </data>
+  <data name="Message_UploadedWebResource" xml:space="preserve">
+    <value>Uploaded web resource</value>
+  </data>
+  <data name="Message_PublishedWebResources" xml:space="preserve">
+    <value>Published web resource(s)</value>
+  </data>
+  <data name="ErrorMessage_ErrorUpdatingPublishingWebResources" xml:space="preserve">
+    <value>Error updating and publishing web resource(s)</value>
+  </data>
+  <data name="Message_UpdatedPublishedWebResources" xml:space="preserve">
+    <value>Updated and published web resource(s)</value>
+  </data>
+  <data name="NewWebResource_Window_Title" xml:space="preserve">
+    <value>New Web Resource</value>
+  </data>
+  <data name="NewWebResource_SolutionsLabel_Label_Content" xml:space="preserve">
+    <value>Solution</value>
+  </data>
+  <data name="NewWebResource_FilesLabel_Label_Content" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="NewWebResource_NameLabel_Label_Content" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NewWebResource_DisplayNameLabel_Label_Content" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="NewWebResource_TypeLabel_Label_Content" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="NewWebResource_DescriptionLabel_Label_Content" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="NewWebResource_Create_Button_Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="NewWebResource_Cancel_Button_Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Message_Creating" xml:space="preserve">
+    <value>Creating</value>
+  </data>
+  <data name="MessageBox_FileDoesNotExist" xml:space="preserve">
+    <value>File does not exist</value>
+  </data>
+  <data name="Message_MissingFile" xml:space="preserve">
+    <value>Missing file</value>
+  </data>
+  <data name="Message_InvalidWebResourceName" xml:space="preserve">
+    <value>Web resource names may only include letters, numbers, periods, and nonconsecutive forward slash characters</value>
+  </data>
+  <data name="NewWebResource_Prefix_TextBox_Text" xml:space="preserve">
+    <value>new_</value>
+  </data>
+  <data name="DefaultPrefix" xml:space="preserve">
+    <value>new_</value>
+  </data>
+  <data name="Message_RetrievingSolutions" xml:space="preserve">
+    <value>Retrieving solutions</value>
+  </data>
+  <data name="Managed" xml:space="preserve">
+    <value>Managed</value>
+  </data>
+  <data name="Unmanaged" xml:space="preserve">
+    <value>Unmanaged</value>
+  </data>
+  <data name="WebResourceDeployer_ViewDetailsImage_Button_ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="WebResourceDeployer_DownloadAllImage_Button_ToolTip" xml:space="preserve">
+    <value>Download all items</value>
+  </data>
+  <data name="WebResourceDeployer_Description_DataGridTextColumn_Header" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="WebResourceDeployer_EditDescriptionImage_Button_ToolTip" xml:space="preserve">
+    <value>Edit description</value>
+  </data>
+  <data name="WebResourceDeployer_UndoEditDescriptionImage_Button_ToolTip" xml:space="preserve">
+    <value>Undo from server if you've edited configuration file directly</value>
+  </data>
+  <data name="WebResourceDeployer_CancelEditDescriptionImage_Button_ToolTip" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="WebResourceDeployer_SaveDescriptionImage_Button_ToolTip" xml:space="preserve">
+    <value>Save description</value>
+  </data>
+  <data name="WebResourceDeployer_SearchText_TextBlock_Text" xml:space="preserve">
+    <value>Search web resources</value>
+  </data>
+  <data name="MessageBox_CouldNotFindFile" xml:space="preserve">
+    <value>Could not find file</value>
+  </data>
+  <data name="Message_UpdatingPublishing" xml:space="preserve">
+    <value>Updating and publishing</value>
+  </data>
+  <data name="Message_DownloadingFiles" xml:space="preserve">
+    <value>Downloading file(s)</value>
+  </data>
+  <data name="Message_DownloadAllWebResources" xml:space="preserve">
+    <value>This will download all web resources in the current view to a matching folder structure</value>
+  </data>
+  <data name="Message_OkProceed" xml:space="preserve">
+    <value>OK to proceed?</value>
+  </data>
+  <data name="MessageBox_WebResourceDownload" xml:space="preserve">
+    <value>Web Resource Download</value>
+  </data>
+  <data name="Message_DownloadedWebResource" xml:space="preserve">
+    <value>Downloaded web resource</value>
+  </data>
+  <data name="MessageBox_OkOverwrite" xml:space="preserve">
+    <value>OK to overwrite?</value>
+  </data>
+  <data name="Message_DownloadingFile" xml:space="preserve">
+    <value>Downloading file</value>
+  </data>
+  <data name="Message_DownloadingFileForCompare" xml:space="preserve">
+    <value>Downloading file for compare</value>
+  </data>
+  <data name="Message_RetrievedWebResourceContent" xml:space="preserve">
+    <value>Retrieved web resource content</value>
+  </data>
+  <data name="Message_AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="Message_WillAttemptToDelete" xml:space="preserve">
+    <value>This will attempt to delete the web resource</value>
+  </data>
+  <data name="Message_DeleteWebResource" xml:space="preserve">
+    <value>Delete Web Resource</value>
+  </data>
+  <data name="Message_DeletingWebResource" xml:space="preserve">
+    <value>Deleting web resource</value>
+  </data>
+  <data name="Message_DeletedWebResource" xml:space="preserve">
+    <value>Deleted web resource</value>
+  </data>
+  <data name="Message_RetrievingSolutionsWebResources" xml:space="preserve">
+    <value>Retrieving solutions and web resources</value>
+  </data>
+  <data name="Message_RetrievedSolutions" xml:space="preserve">
+    <value>Retrieved solutions</value>
+  </data>
+  <data name="Message_RetrievedWebResources" xml:space="preserve">
+    <value>Retrieved web resources</value>
+  </data>
+  <data name="Message_RetrievingWebResources" xml:space="preserve">
+    <value>Retrieving web resources</value>
+  </data>
+  <data name="Message_Updating" xml:space="preserve">
+    <value>Updating</value>
+  </data>
+  <data name="Error_UnableToGetTsconfigOutdir" xml:space="preserve">
+    <value>Unable to get 'outDir' from tsconfig.json</value>
+  </data>
+  <data name="Error_ErrorEncodingImage" xml:space="preserve">
+    <value>Error encoding image</value>
+  </data>
+  <data name="WebResourceDeployer_Locked_CheckBox_Tooltip" xml:space="preserve">
+    <value>Keep bound to file not in project</value>
   </data>
 </root>
