@@ -205,6 +205,15 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error moving PDB file to temporary location for debugging.
+        /// </summary>
+        public static string Error_ErrorMovingPDB {
+            get {
+                return ResourceManager.GetString("Error_ErrorMovingPDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to read project file.
         /// </summary>
         public static string Error_UnableToReadProjectFile {
