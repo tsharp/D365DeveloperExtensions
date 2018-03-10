@@ -364,7 +364,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
             SolutionBuild solutionBuild = dte.Solution.SolutionBuild;
             solutionBuild.BuildProject(dte.Solution.SolutionBuild.ActiveConfiguration.Name, project.UniqueName, true);
-
+            
             //0 = no errors
             return solutionBuild.LastBuildInfo <= 0;
         }
@@ -483,6 +483,25 @@ namespace D365DeveloperExtensions.Core.Vs
             }
 
             return false;
+        }
+
+        public static void MovePdbFile(Project project, string assemblyFilePath)
+        {
+            try
+            {
+                string pdbPath = Path.ChangeExtension(assemblyFilePath, "pdb");
+                if (pdbPath == null)
+                    return;
+
+                FileInfo pdbFile = new FileInfo(pdbPath);
+                if (pdbFile.Exists)
+                    pdbFile.MoveTo(Path.Combine(Path.GetTempPath(), Guid.NewGuid() + Path.GetFileName(pdbPath)));
+
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resource.Error_ErrorMovingPDB, ex);
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -246,7 +247,18 @@ namespace PluginDeployer
 
         private async Task PublishAssemblyAsync(CrmSolution solution)
         {
-            if (!ProjectWorker.BuildProject(ConnPane.SelectedProject))
+            PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
+            if (!AssemblyValidation.ValidatePluginDeployConfig(pluginDeployConfig))
+                return;
+
+            string projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
+            string assemblyFolderPath = Path.Combine(projectPath, pluginDeployConfig.assemblypath);
+            if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
+                return;
+
+            string assemblyFilePath = Path.Combine(assemblyFolderPath, ConnPane.SelectedProject.Properties.Item("OutputFileName").Value.ToString());
+
+            if (!BuildProject(assemblyFilePath))
                 return;
 
             try
@@ -254,12 +266,8 @@ namespace PluginDeployer
                 Overlay.ShowMessage(_dte, $"{Resource.Message_Deploying}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
                 string projectAssemblyName = ConnPane.SelectedProject.Properties.Item("AssemblyName").Value.ToString();
-                string assemblyFolderPath = ProjectWorker.GetOutputPath(ConnPane.SelectedProject);
-                if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
-                    return;
 
                 bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
-                string assemblyFilePath = ProjectWorker.GetAssemblyPath(ConnPane.SelectedProject);
                 string[] assemblyProperties = SpklHelpers.AssemblyProperties(assemblyFilePath, isWorkflow);
 
                 var assembly = ModelBuilder.CreateCrmAssembly(projectAssemblyName, assemblyFilePath, assemblyProperties);
@@ -299,6 +307,22 @@ namespace PluginDeployer
             }
         }
 
+        private bool BuildProject(string assemblyFilePath)
+        {
+            // ReSharper disable once JoinDeclarationAndInitializer
+            bool buildResult;
+#if DEBUG
+            ProjectWorker.MovePdbFile(ConnPane.SelectedProject, assemblyFilePath);
+            //Initial build fails when debugging because of locked PDB file (which was already moved)
+            //Adding a re-build step
+            buildResult = ProjectWorker.BuildProject(ConnPane.SelectedProject);
+#endif
+            if (!buildResult)
+                buildResult = ProjectWorker.BuildProject(ConnPane.SelectedProject);
+
+            return buildResult;
+        }
+
         private void CreatePluginType(string[] assemblyProperties, Guid assemblyId, string assemblyFilePath, bool isWorkflow)
         {
             List<CrmPluginRegistrationAttribute> crmPluginRegistrationAttributes = new List<CrmPluginRegistrationAttribute>();
@@ -323,24 +347,25 @@ namespace PluginDeployer
 
         private async Task PublishAssemblySpklAsync(CrmSolution solution, bool backupFiles)
         {
-            if (!ProjectWorker.BuildProject(ConnPane.SelectedProject))
+            PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
+            if (!AssemblyValidation.ValidatePluginDeployConfig(pluginDeployConfig))
+                return;
+
+            string projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
+            string assemblyFolderPath = Path.Combine(projectPath, pluginDeployConfig.assemblypath);
+            if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
+                return;
+
+            string assemblyFilePath = Path.Combine(assemblyFolderPath, ConnPane.SelectedProject.Properties.Item("OutputFileName").Value.ToString());
+
+            if (!BuildProject(assemblyFilePath))
                 return;
 
             try
             {
                 Overlay.ShowMessage(_dte, $"{Resource.Message_Deploying}...", vsStatusAnimation.vsStatusAnimationDeploy);
 
-                PluginDeployConfig pluginDeployConfig = Config.Mapping.GetSpklPluginConfig(ConnPane.SelectedProject, ConnPane.SelectedProfile);
-                if (!AssemblyValidation.ValidatePluginDeployConfig(pluginDeployConfig))
-                    return;
-
-                string projectPath = ProjectWorker.GetProjectPath(ConnPane.SelectedProject);
-                string assemblyFolderPath = Path.Combine(projectPath, pluginDeployConfig.assemblypath);
-                if (!AssemblyValidation.ValidateAssemblyPath(assemblyFolderPath))
-                    return;
-
                 bool isWorkflow = ProjectWorker.IsWorkflowProject(ConnPane.SelectedProject);
-                string assemblyFilePath = Path.Combine(assemblyFolderPath, ConnPane.SelectedProject.Properties.Item("OutputFileName").Value.ToString());
                 if (!AssemblyValidation.ValidateRegistraionDetails(assemblyFilePath, isWorkflow))
                     return;
 
@@ -367,13 +392,9 @@ namespace PluginDeployer
                     PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
 
                     if (isWorkflow)
-                    {
                         await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyFilePath, solutionName));
-                    }
                     else
-                    {
                         await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyFilePath, solutionName));
-                    }
 
                     GetRegistrationDetailsWithContext(pluginDeployConfig.classRegex, backupFiles, ctx);
                 }
