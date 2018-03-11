@@ -563,6 +563,11 @@ namespace WebResourceDeployer
             SolutionList.ItemsSource = null;
             WebResourceGrid.IsEnabled = false;
             Publish.IsEnabled = false;
+            CheckBox publishAll =
+                DataGridHelpers.FindVisualChildren<CheckBox>(WebResourceGrid)
+                    .FirstOrDefault(t => t.Name == "PublishSelectAll");
+            if (publishAll != null)
+                publishAll.IsChecked = false;
 
             ClearConnection();
         }
