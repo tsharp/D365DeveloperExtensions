@@ -432,4 +432,16 @@
   <data name="Error_ErrorMovingPDB" xml:space="preserve">
     <value>Error moving PDB file to temporary location for debugging</value>
   </data>
+  <data name="Error_InvalidFolderPath" xml:space="preserve">
+    <value>Invalid folder path</value>
+  </data>
+  <data name="Error_CouldNotLocatePluginRegistrationTool" xml:space="preserve">
+    <value>Couuld not locate Plug-in Registration Tool</value>
+  </data>
+  <data name="Error_CouldNotLocateSolutionPackager" xml:space="preserve">
+    <value>Couuld not locate Solution Packager</value>
+  </data>
+  <data name="Error_CouldNotLocateCrmSvcUtil" xml:space="preserve">
+    <value>Couuld not locate CrmSvcUtil</value>
+  </data>
 </root>

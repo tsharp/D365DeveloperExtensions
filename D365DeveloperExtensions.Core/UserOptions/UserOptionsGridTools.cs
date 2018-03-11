@@ -4,8 +4,10 @@ using Microsoft.VisualStudio.Shell;
 using NLog;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace D365DeveloperExtensions.Core.UserOptions
 {
@@ -21,7 +23,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
         private string _crmSvcUtilToolPath = String.Empty;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Tools", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_RegToolPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_RegToolPath", typeof(Resource))]
@@ -38,7 +39,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
             }
         }
 
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Tools", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_SolutionPackToolPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_SolutionPackToolPath", typeof(Resource))]
@@ -55,7 +55,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
             }
         }
 
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Tools", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_CrmSvcToolPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_CrmSvcToolPath", typeof(Resource))]
@@ -78,6 +77,27 @@ namespace D365DeveloperExtensions.Core.UserOptions
 
         protected override void OnApply(PageApplyEventArgs e)
         {
+            if (!DoesToolExist(PluginRegistrationToolPath, "PluginRegistration.exe"))
+            {
+                MessageBox.Show(Resource.Error_CouldNotLocatePluginRegistrationTool);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
+            if (!DoesToolExist(SolutionPackagerToolPath, "SolutionPackager.exe"))
+            {
+                MessageBox.Show(Resource.Error_CouldNotLocateSolutionPackager);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
+            if (!DoesToolExist(CrmSvcUtilToolPath, "CrmSvcUtil.exe"))
+            {
+                MessageBox.Show(Resource.Error_CouldNotLocateCrmSvcUtil);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
             OnApplied(e);
             base.OnApply(e);
         }
@@ -103,6 +123,23 @@ namespace D365DeveloperExtensions.Core.UserOptions
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(value));
+        }
+
+        private static bool DoesToolExist(string folder, string tool)
+        {
+            if (string.IsNullOrEmpty(folder))
+                return true;
+
+            try
+            {
+                FileInfo file = new FileInfo(Path.Combine(folder, tool));
+
+                return file.Exists;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

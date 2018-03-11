@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace D365DeveloperExtensions.Core.UserOptions
 {
@@ -20,7 +21,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
         private string _defaultKeyFileName = Resource.DefaultKeyName;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Templates", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_TemplatesPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_TemplatesPath", typeof(Resource))]
@@ -59,6 +59,13 @@ namespace D365DeveloperExtensions.Core.UserOptions
 
         protected override void OnApply(PageApplyEventArgs e)
         {
+            if (!FileSystem.IsValidFolder(CustomTemplatesPath))
+            {
+                MessageBox.Show(Resource.Error_InvalidFolderPath);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
             OnApplied(e);
             base.OnApply(e);
         }
