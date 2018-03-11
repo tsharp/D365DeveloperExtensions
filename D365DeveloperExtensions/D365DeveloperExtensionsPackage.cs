@@ -44,7 +44,7 @@ namespace D365DeveloperExtensions
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "2.0.1869.2314", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "2.0.1870.0233", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
@@ -56,11 +56,11 @@ namespace D365DeveloperExtensions
 
     //User Settings - Sections
     //TODO: find way to replace strings
-    [ProvideOptionPage(typeof(UserOptionsGrid), "D365 DevEx", "Logging", 0, 0, true)]
-    [ProvideOptionPage(typeof(UserOptionsGrid), "D365 DevEx", "Web Browser", 0, 0, true)]
-    [ProvideOptionPage(typeof(UserOptionsGrid), "D365 DevEx", "External Tools", 0, 0, true)]
-    [ProvideOptionPage(typeof(UserOptionsGrid), "D365 DevEx", "Intellisense", 0, 0, true)]
-    [ProvideOptionPage(typeof(UserOptionsGrid), "D365 DevEx", "Templates", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGridLogging), "D365 DevEx", "Logging", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGridWebBrowser), "D365 DevEx", "Web Browser", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGridTools), "D365 DevEx", "External Tools", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGridIntellisense), "D365 DevEx", "Intellisense", 0, 0, true)]
+    [ProvideOptionPage(typeof(UserOptionsGridTemplates), "D365 DevEx", "Templates", 0, 0, true)]
 
     public sealed class D365DeveloperExtensionsPackage : Package
     {

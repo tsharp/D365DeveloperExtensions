@@ -284,6 +284,18 @@
     <Compile Include="TemplateHandler.cs" />
     <Compile Include="Models\UserOptionProperties.cs" />
     <Compile Include="Models\UserOptionProperty.cs" />
+    <Compile Include="UserOptions\UserOptionsGridIntellisense.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserOptions\UserOptionsGridTemplates.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserOptions\UserOptionsGridTools.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserOptions\UserOptionsGridLogging.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserOptions\UserOptionsHelper.cs" />
     <Compile Include="Vs\ProjectItemWorker.cs" />
     <Compile Include="Vs\ProjectWorker.cs" />
@@ -291,7 +303,7 @@
     <Compile Include="SharedGlobals.cs" />
     <Compile Include="Vs\SolutionWorker.cs" />
     <Compile Include="StatusBar.cs" />
-    <Compile Include="UserOptions\UserOptionsGrid.cs">
+    <Compile Include="UserOptions\UserOptionsGridWebBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Versioning.cs" />
