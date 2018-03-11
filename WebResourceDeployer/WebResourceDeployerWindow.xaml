@@ -146,7 +146,7 @@
                                                 CanUserSort="False" CanUserResize="False" HeaderStyle="{StaticResource DataGridColumnHeaderNoMouseOverStyle}">
                                 <DataGridTemplateColumn.HeaderTemplate>
                                     <DataTemplate>
-                                        <CheckBox x:Name="PublishSelectAll" Click="PublishSelectAll_OnClick" IsThreeState="True" Style="{DynamicResource DataGridCheckBoxStyle}" />
+                                        <CheckBox x:Name="PublishSelectAll" Click="PublishSelectAll_OnClick" IsThreeState="False" Style="{DynamicResource DataGridCheckBoxStyle}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
