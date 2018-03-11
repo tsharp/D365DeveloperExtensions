@@ -205,11 +205,47 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Couuld not locate CrmSvcUtil.
+        /// </summary>
+        public static string Error_CouldNotLocateCrmSvcUtil {
+            get {
+                return ResourceManager.GetString("Error_CouldNotLocateCrmSvcUtil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couuld not locate Plug-in Registration Tool.
+        /// </summary>
+        public static string Error_CouldNotLocatePluginRegistrationTool {
+            get {
+                return ResourceManager.GetString("Error_CouldNotLocatePluginRegistrationTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couuld not locate Solution Packager.
+        /// </summary>
+        public static string Error_CouldNotLocateSolutionPackager {
+            get {
+                return ResourceManager.GetString("Error_CouldNotLocateSolutionPackager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error moving PDB file to temporary location for debugging.
         /// </summary>
         public static string Error_ErrorMovingPDB {
             get {
                 return ResourceManager.GetString("Error_ErrorMovingPDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid folder path.
+        /// </summary>
+        public static string Error_InvalidFolderPath {
+            get {
+                return ResourceManager.GetString("Error_InvalidFolderPath", resourceCulture);
             }
         }
         

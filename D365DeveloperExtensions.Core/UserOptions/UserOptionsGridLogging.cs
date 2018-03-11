@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace D365DeveloperExtensions.Core.UserOptions
 {
@@ -38,7 +39,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
             }
         }
 
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Logging", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_ExtensionLoggingPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_ExtensionLoggingPath", typeof(Resource))]
@@ -71,7 +71,6 @@ namespace D365DeveloperExtensions.Core.UserOptions
             }
         }
 
-        //TODO: validate file path format
         [LocalizedCategory("UserOptions_Category_Logging", typeof(Resource))]
         [LocalizedDisplayName("UserOptions_DisplayName_XrmToolingLoggingPath", typeof(Resource))]
         [LocalizedDescription("UserOptions_Description_XrmToolingLoggingPath", typeof(Resource))]
@@ -94,6 +93,13 @@ namespace D365DeveloperExtensions.Core.UserOptions
 
         protected override void OnApply(PageApplyEventArgs e)
         {
+            if (!FileSystem.IsValidFolder(ExtensionLogFilePath) || !FileSystem.IsValidFolder(XrmToolingLogFilePath))
+            {
+                MessageBox.Show(Resource.Error_InvalidFolderPath);
+                e.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                return;
+            }
+
             OnApplied(e);
             base.OnApply(e);
         }

@@ -219,5 +219,21 @@ namespace D365DeveloperExtensions.Core
                           fileName.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 &&
                           !File.Exists(Path.Combine(sourceFolder, fileName));
         }
+
+        public static bool IsValidFolder(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+                return true;
+
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(folder);
+                return di.Exists;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
