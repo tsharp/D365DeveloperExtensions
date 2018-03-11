@@ -261,4 +261,7 @@
   <data name="Message_AssemblyInSolution" xml:space="preserve">
     <value>Assembly in solution</value>
   </data>
+  <data name="Error_ErrorBuildingProject" xml:space="preserve">
+    <value>Error building project</value>
+  </data>
 </root>
