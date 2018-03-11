@@ -35,7 +35,7 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Label x:Name="SolutionsLabel" Grid.Column="0" Grid.Row="0" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_SolutionsLabel_Label_Content}" />
-            <ComboBox x:Name="Solutions" Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" DisplayMemberPath="Name" SelectionChanged="Solutions_OnSelectionChanged"
+            <ComboBox x:Name="Solutions" Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" DisplayMemberPath="NameVersion" SelectionChanged="Solutions_OnSelectionChanged"
                       Template="{DynamicResource ComboBoxControlTemplate}" />
             <Label x:Name="FilesLabel" Grid.Column="0" Grid.Row="1" Margin="0,2,0,2" Content="{x:Static resources:Resource.NewWebResource_FilesLabel_Label_Content}" />
             <ComboBox x:Name="Files" Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" SelectedValuePath="Content" SelectionChanged="Files_OnSelectionChanged" 
