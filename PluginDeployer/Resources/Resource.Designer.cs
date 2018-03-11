@@ -61,6 +61,15 @@ namespace PluginDeployer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error building project.
+        /// </summary>
+        public static string Error_ErrorBuildingProject {
+            get {
+                return ResourceManager.GetString("Error_ErrorBuildingProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error adding assembly to solution.
         /// </summary>
         public static string ErrorMessage_ErrorAddingAssemblySolution {

@@ -22,6 +22,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using D365DeveloperExtensions.Core.Enums;
+using D365DeveloperExtensions.Core.Logging;
 using Assembly = PluginDeployer.Crm.Assembly;
 using Task = System.Threading.Tasks.Task;
 
@@ -319,6 +321,9 @@ namespace PluginDeployer
 #endif
             if (!buildResult)
                 buildResult = ProjectWorker.BuildProject(ConnPane.SelectedProject);
+
+            if (!buildResult)
+                OutputLogger.WriteToOutputWindow(Resource.Error_ErrorBuildingProject, MessageType.Error);
 
             return buildResult;
         }
