@@ -32,14 +32,16 @@ namespace D365DeveloperExtensions.Core.Logging
             config.AddTarget("file", fileTarget);
 
             config.AddRule(LogLevel.Info, LogLevel.Fatal, fileTarget);
-
+            
             LogManager.Configuration = config;
         }
 
         public static void LogToFile(Logger logger, string message, LogLevel logLevel)
         {
-            if (UserOptionsHelper.GetOption<bool>(UserOptionProperties.ExtensionLoggingEnabled))
+            if (UserOptionsHelper.GetOption<bool>(UserOptionProperties.ExtensionLoggingEnabled)) {
+                CreateConfig();
                 logger.Log(logLevel, message);
+            }
         }
 
         private static string GetLogFilePath()
