@@ -36,7 +36,7 @@ namespace PluginTraceViewer.Crm
                                                                 <attribute name='mode' />
                                                                 <attribute name='correlationid' />
                                                                 <filter type='and' >
-                                                                    <condition attribute='createdon' operator='gt' value='{afterDate}' />
+                                                                    <condition attribute='createdon' operator='gt' value='{afterDate:o}' />
                                                                 </filter>
                                                                 <order attribute='createdon' descending='true' />
                                                                 </entity>
