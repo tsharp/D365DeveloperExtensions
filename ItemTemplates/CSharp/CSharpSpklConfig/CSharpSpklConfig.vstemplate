@@ -5,7 +5,7 @@
     <Description>Creates a default spkl.json file.</Description>
     <TemplateID>09907b4c-511a-4030-92ab-c5bb200d5527</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>spkl.json</DefaultName>
     <Hidden>true</Hidden>
