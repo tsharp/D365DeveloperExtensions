@@ -22,7 +22,7 @@ namespace TemplateWizards
                 if (!string.IsNullOrEmpty(version))
                     version = $"@{version}";
 
-                StatusBar.SetStatusBarValue($"{Resources.Resource.NpmPackageInstallingStatusBarMessage}: {package}{version}");
+                StatusBar.SetStatusBarValue($"{Resource.NpmPackageInstallingStatusBarMessage}: {package}{version}");
 
                 var processStartInfo = CreateProcessStartInfo();
                 processStartInfo.WorkingDirectory = path;
@@ -30,7 +30,7 @@ namespace TemplateWizards
                 var process = Process.Start(processStartInfo);
                 if (process == null)
                 {
-                    MessageBox.Show($"{Resources.Resource.NpmPackageInstallFailureMessage}");
+                    MessageBox.Show($"{Resource.NpmPackageInstallFailureMessage}");
                     return;
                 }
 
@@ -40,7 +40,7 @@ namespace TemplateWizards
                 process.WaitForExit();
 
                 if (process.ExitCode != 0)
-                    MessageBox.Show($"{Resources.Resource.NpmPackageInstallFailureMessage}: {process.StandardError.ReadToEnd()}");
+                    MessageBox.Show($"{Resource.NpmPackageInstallFailureMessage}: {process.StandardError.ReadToEnd()}");
             }
             finally
             {

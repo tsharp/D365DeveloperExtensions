@@ -23,6 +23,7 @@ namespace TemplateWizards
             _npmHistory = history;
 
             Title += $"{Resource.Version_Window_Title}: {history.name}";
+            LicenseText.Text = _npmHistory.license;
 
             GetPackage(history);
         }

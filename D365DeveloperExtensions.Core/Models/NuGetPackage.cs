@@ -9,5 +9,6 @@ namespace D365DeveloperExtensions.Core.Models
         public Version Version { get; set; }
         public string VersionText { get; set; }
         public bool XrmToolingClient { get; set; }
+        public string LicenseUrl { get; set; }
     }
 }

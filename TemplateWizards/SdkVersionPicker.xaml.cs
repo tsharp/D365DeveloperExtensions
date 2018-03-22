@@ -4,9 +4,11 @@ using D365DeveloperExtensions.Core.Models;
 using NuGetRetriever;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using TemplateWizards.Resources;
+using Process = System.Diagnostics.Process;
 
 namespace TemplateWizards
 {
@@ -27,10 +29,11 @@ namespace TemplateWizards
         {
             InitializeComponent();
             Owner = Application.Current.MainWindow;
+            LicenseLink.Inlines.Add(Resource.SdkVersionPicker_LicenseInfoText_TextBlock_Text);
 
             GetWorkflow = getWorkflow;
             GetClient = getClient;
-
+            
             GetPackage(Resource.SdkAssemblyCore);
         }
 
@@ -51,23 +54,10 @@ namespace TemplateWizards
 
             foreach (NuGetPackage package in versions)
             {
-                var item = CreateItem(package);
-
-                SdkVersions.Items.Add(item);
+                SdkVersions.Items.Add(package);
             }
 
             SdkVersions.SelectedIndex = 0;
-        }
-
-        private static ListViewItem CreateItem(NuGetPackage package)
-        {
-            ListViewItem item = new ListViewItem
-            {
-                Content = package.VersionText,
-                Tag = package
-            };
-
-            return item;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -119,12 +109,19 @@ namespace TemplateWizards
         private void SdkVersions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView sdkVersions = (ListView)sender;
-            ListBoxItem item = sdkVersions.SelectedItem as ListViewItem;
-            if (item == null)
+            if (!(sdkVersions.SelectedItem is NuGetPackage package))
                 return;
 
-            string selectedVersion = ((ListViewItem)sdkVersions.SelectedItem).Content.ToString();
+            string selectedVersion = package.VersionText;
             SetSelectedVersion(selectedVersion);
+
+            if (!string.IsNullOrEmpty(package.LicenseUrl))
+            {
+                LicensePanel.Visibility = Visibility.Visible;
+                LicenseLink.NavigateUri = new Uri(package.LicenseUrl);
+            }
+            else
+                LicensePanel.Visibility = Visibility.Hidden;
         }
 
         private static List<NuGetPackage> FilterLatestVersions(List<NuGetPackage> versions)
@@ -170,6 +167,12 @@ namespace TemplateWizards
         {
             if (_packageVersions != null)
                 GetPackage(_currentPackage);
+        }
+
+        private void LicenseLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }
