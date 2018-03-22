@@ -160,6 +160,15 @@ namespace PluginTraceViewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plug-in tracing not available prior to v8.
+        /// </summary>
+        public static string PluginTraceViewer_LockMessage_Label_Content {
+            get {
+                return ResourceManager.GetString("PluginTraceViewer_LockMessage_Label_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next poll in.
         /// </summary>
         public static string PluginTraceViewer_PollTime_Label_Content {

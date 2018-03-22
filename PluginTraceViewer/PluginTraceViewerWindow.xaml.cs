@@ -283,7 +283,19 @@ namespace PluginTraceViewer
         private void PrepareWindow(string caption)
         {
             SetWindowCaption(caption);
-            SetButtonState(true);
+            SetButtonState(true);  
+
+            Version version = ConnPane.CrmService.ConnectedOrgVersion;
+            if (version.Major < 8)
+            {
+                DisableOverlay.Visibility = Visibility.Visible;
+                Traces = null;
+                ResetForm();
+                return;
+            }
+
+            DisableOverlay.Visibility = Visibility.Hidden;
+
             LoadData();
         }
 
@@ -310,7 +322,6 @@ namespace PluginTraceViewer
         {
             ResetFilterCollections();
 
-            CrmPluginTraces.ItemsSource = null;
             CrmPluginTraces.IsEnabled = false;
             SetButtonState(false);
         }
