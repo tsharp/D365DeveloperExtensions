@@ -219,4 +219,7 @@
   <data name="PluginTraceViewer_PollTime_Label_Content" xml:space="preserve">
     <value>Next poll in</value>
   </data>
+  <data name="PluginTraceViewer_LockMessage_Label_Content" xml:space="preserve">
+    <value>Plug-in tracing not available prior to v8</value>
+  </data>
 </root>

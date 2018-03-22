@@ -241,6 +241,10 @@
                 <coreControls:DataGridHeaderFilterPopup x:Name="FilterModePopup" BindingPath="FilterModes" />
                 <coreControls:DataGridHeaderFilterPopup x:Name="FilterTypeNamePopup" BindingPath="FilterTypeNames" />
             </Grid>
+            <Grid Grid.Column="1" x:Name="DisableOverlay" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Panel.ZIndex="10" Background="DarkGray" Opacity="0.5" Visibility="Hidden">
+                <Label x:Name="LockMessage" Content="{x:Static resources:Resource.PluginTraceViewer_LockMessage_Label_Content}" VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" FontSize="36"/>
+            </Grid>
         </Grid>
         <coreControls:LockOverlay x:Name="Overlay" Grid.Column="0" />
     </Grid>
