@@ -60,7 +60,6 @@ namespace PluginDeployer.Spkl
         /// <param name="assemblyBytes"></param>
         /// <param name="isWorkflow"></param>
         /// <param name="assemblyFolderPath"></param>
-        /// <param name="reflectionOnly"></param>
         /// <returns></returns>
         public static AssemblyContainer LoadAssembly(byte[] assemblyBytes, bool isWorkflow, string assemblyFolderPath)
         {
