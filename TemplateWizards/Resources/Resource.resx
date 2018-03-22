@@ -285,4 +285,19 @@
   <data name="MessageBox_NPMError" xml:space="preserve">
     <value>NPM is required to download the XRM type definitions. Install Node.js and the npm package manager. https://nodejs.org</value>
   </data>
+  <data name="SdkVersionPicker_LicenseAccept_TextBlock_Content" xml:space="preserve">
+    <value>OK accepts any license agreements for this package</value>
+  </data>
+  <data name="SdkVersionPicker_LicenseInfoText_TextBlock_Text" xml:space="preserve">
+    <value>License Info</value>
+  </data>
+  <data name="NuGetPicker_LicenseAccept_TextBlock_Content" xml:space="preserve">
+    <value />
+  </data>
+  <data name="NuGetPicker_LicenseInfoText_TextBlock_Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="NpmPicker_LicenseAccept_TextBlock_Content" xml:space="preserve">
+    <value />
+  </data>
 </root>

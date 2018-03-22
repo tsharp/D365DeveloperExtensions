@@ -41,7 +41,10 @@ namespace NuGetRetriever
                 Name = package.Title,
                 Version = package.Version.Version,
                 VersionText = package.Version.ToOriginalString(),
-                XrmToolingClient = UsesXrmToolingClient(package)
+                XrmToolingClient = UsesXrmToolingClient(package),
+                LicenseUrl = package.LicenseUrl != null
+                    ? package.LicenseUrl.ToString()
+                    : null
             };
         }
 

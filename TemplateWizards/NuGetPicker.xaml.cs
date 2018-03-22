@@ -2,6 +2,7 @@
 using D365DeveloperExtensions.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using TemplateWizards.Resources;
@@ -18,6 +19,7 @@ namespace TemplateWizards
         {
             InitializeComponent();
             Owner = Application.Current.MainWindow;
+            LicenseLink.Inlines.Add(Resource.NuGetPicker_LicenseInfoText_TextBlock_Text);
 
             _packageName = packageName;
             _packageVersions = packageVersions;
@@ -38,23 +40,10 @@ namespace TemplateWizards
 
             foreach (NuGetPackage package in packageVersions)
             {
-                var item = CreateItem(package);
-
-                Versions.Items.Add(item);
+                Versions.Items.Add(package);
             }
 
             Versions.SelectedIndex = 0;
-        }
-
-        private static ListViewItem CreateItem(NuGetPackage package)
-        {
-            ListViewItem item = new ListViewItem
-            {
-                Content = package.VersionText,
-                Tag = package
-            };
-
-            return item;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -75,12 +64,19 @@ namespace TemplateWizards
 
         private void Versions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView versions = (ListView)sender;
-            ListBoxItem item = versions.SelectedItem as ListViewItem;
-            if (item == null)
+            ListView sdkVersions = (ListView)sender;
+            if (!(sdkVersions.SelectedItem is NuGetPackage package))
                 return;
 
-            SelectedPackage = item.Tag as NuGetPackage;
+            //TODO: set selected version
+
+            if (!string.IsNullOrEmpty(package.LicenseUrl))
+            {
+                LicensePanel.Visibility = Visibility.Visible;
+                LicenseLink.NavigateUri = new Uri(package.LicenseUrl);
+            }
+            else
+                LicensePanel.Visibility = Visibility.Hidden;
         }
 
         private static List<NuGetPackage> FilterLatestVersions(List<NuGetPackage> packageVersions)
@@ -126,6 +122,12 @@ namespace TemplateWizards
         {
             if (_packageVersions != null)
                 GetPackage(_packageName, _packageVersions);
+        }
+
+        private void LicenseLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

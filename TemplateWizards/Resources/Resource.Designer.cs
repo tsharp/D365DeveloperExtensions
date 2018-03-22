@@ -313,6 +313,15 @@ namespace TemplateWizards.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string NpmPicker_LicenseAccept_TextBlock_Content {
+            get {
+                return ResourceManager.GetString("NpmPicker_LicenseAccept_TextBlock_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string NpmPickerCancelButtonText {
@@ -381,6 +390,24 @@ namespace TemplateWizards.Resources {
         public static string NuGetPackageUninstallingStatusBarMessage {
             get {
                 return ResourceManager.GetString("NuGetPackageUninstallingStatusBarMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string NuGetPicker_LicenseAccept_TextBlock_Content {
+            get {
+                return ResourceManager.GetString("NuGetPicker_LicenseAccept_TextBlock_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string NuGetPicker_LicenseInfoText_TextBlock_Text {
+            get {
+                return ResourceManager.GetString("NuGetPicker_LicenseInfoText_TextBlock_Text", resourceCulture);
             }
         }
         
@@ -462,6 +489,24 @@ namespace TemplateWizards.Resources {
         public static string SdkAssemblyXrmTooling {
             get {
                 return ResourceManager.GetString("SdkAssemblyXrmTooling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK accepts any license agreements for this package.
+        /// </summary>
+        public static string SdkVersionPicker_LicenseAccept_TextBlock_Content {
+            get {
+                return ResourceManager.GetString("SdkVersionPicker_LicenseAccept_TextBlock_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Info.
+        /// </summary>
+        public static string SdkVersionPicker_LicenseInfoText_TextBlock_Text {
+            get {
+                return ResourceManager.GetString("SdkVersionPicker_LicenseInfoText_TextBlock_Text", resourceCulture);
             }
         }
         

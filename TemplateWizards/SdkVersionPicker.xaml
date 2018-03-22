@@ -19,18 +19,25 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="240" />
+            <RowDefinition Height="220" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ListView x:Name="SdkVersions" Grid.Row="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionMode="Single"
                   ItemContainerStyle="{DynamicResource PickerListViewItemStyle}" SelectionChanged="SdkVersions_OnSelectionChanged">
             <ListView.View>
                 <GridView x:Name="SdkVersionsGrid" AllowsColumnReorder="False" ColumnHeaderContainerStyle="{DynamicResource ListViewGridHeaderHiddenStyle}">
-                    <GridViewColumn Width="300"/>
+                    <GridViewColumn Width="300" DisplayMemberBinding="{Binding VersionText}" />
                 </GridView>
             </ListView.View>
         </ListView>
-        <Grid Grid.Row="1">
+        <StackPanel x:Name="LicensePanel" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock x:Name="LicenseAccept" Margin="5,5,0,0" Text="{x:Static resx:Resource.SdkVersionPicker_LicenseAccept_TextBlock_Content}"/>
+            <TextBlock Margin="10,5,0,0">
+                <Hyperlink x:Name="LicenseLink" RequestNavigate="LicenseLink_RequestNavigate"/>
+            </TextBlock>
+        </StackPanel>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
