@@ -6,7 +6,7 @@
     <Icon>icon.png</Icon>
     <TemplateID>2cbd34be-f54c-4cfa-bcd7-5de379c5d074</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>CrmPluginRegistrationAttribute.cs</DefaultName>
   </TemplateData>

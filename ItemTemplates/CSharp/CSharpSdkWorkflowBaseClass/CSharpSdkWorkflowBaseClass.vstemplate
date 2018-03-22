@@ -6,7 +6,7 @@
     <Icon>icon.png</Icon>
     <TemplateID>accfb5a0-af40-4416-b896-066f8fb67526</TemplateID>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <DefaultName>WorkFlowActivityBase.cs</DefaultName>
   </TemplateData>
