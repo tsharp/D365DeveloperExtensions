@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PluginDeployer.Spkl
 {
-    public class Reflection 
+    public class Reflection
     {
 
 
@@ -26,14 +26,14 @@ namespace PluginDeployer.Spkl
             {
                 // Assembly already loaded so skip
                 Debug.WriteLine("Assembly load error:" + ex.Message);
-                
+
             }
             return assembly;
         }
 
         public static Assembly ReflectionOnlyLoadAssembly(string path)
         {
-            string[] ignore = new string[] { "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.IdentityModel.dll", "Microsoft.Xrm.Sdk.dll","Microsoft.Xrm.Sdk.Workflow.dll" };
+            string[] ignore = new string[] { "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.IdentityModel.dll", "Microsoft.Xrm.Sdk.dll", "Microsoft.Xrm.Sdk.Workflow.dll" };
             if (ignore.Where(a => path.Contains(a)).FirstOrDefault() != null)
                 return null;
 
@@ -69,7 +69,7 @@ namespace PluginDeployer.Spkl
                     assembly = Assembly.ReflectionOnlyLoad(args.Name);
                     break;
             }
-           
+
             return assembly;
         }
 
@@ -78,13 +78,14 @@ namespace PluginDeployer.Spkl
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
             var types = assembly.DefinedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
+            types = types.Where(t => t.CustomAttributes.Any());
             return types;
         }
 
         public static IEnumerable<Type> GetTypesInheritingFrom(Assembly assembly, Type type)
         {
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-            var types =  assembly.DefinedTypes.Where(p => p.BaseType!=null ? p.BaseType.Name==type.Name: false);
+            var types = assembly.DefinedTypes.Where(p => p.BaseType != null && p.BaseType.Name == type.Name || p.BaseType != null && p.BaseType.BaseType != null && p.BaseType.BaseType.Name == type.Name);
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }
@@ -103,7 +104,7 @@ namespace PluginDeployer.Spkl
                 }
                 attributes.AddRange(data);
             }
-          
+
             return attributes;
         }
 
