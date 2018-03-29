@@ -27,6 +27,7 @@ namespace D365DeveloperExtensions.Core.Vs
         private static readonly List<string> Extensions = new List<string> { "HTM", "HTML", "CSS", "JS", "XML", "PNG", "JPG", "GIF", "XAP", "XSL", "XSLT", "ICO", "SVG", "RESX", "MAP", "TS" };
         private static readonly string[] FolderExtensions = { "BUNDLE", "TT" };
         private static readonly string[] IgnoreFolders = { "/TYPINGS", "/NODE_MODULES" };
+        private static readonly string[] IgnoreFiles = { "GULPFILE.JS", "KARMA.CONF.JS", "PROTRACTOR.CONF.JS", ".D.TS" };
 
         public static void ExcludeFolder(Project project, string folderName)
         {
@@ -232,12 +233,24 @@ namespace D365DeveloperExtensions.Core.Vs
             if (projectFiles.Count > 0)
                 projectFiles.Insert(0, new ComboBoxItem { Content = String.Empty });
 
+            //Remove files that are in ignored folders
             ObservableCollection<ComboBoxItem> copy = new ObservableCollection<ComboBoxItem>(projectFiles);
             foreach (ComboBoxItem comboBoxItem in copy)
             {
                 foreach (string ignoreFolder in IgnoreFolders)
                 {
                     if (comboBoxItem.Content.ToString().StartsWith(ignoreFolder, StringComparison.InvariantCultureIgnoreCase))
+                        projectFiles.Remove(comboBoxItem);
+                }
+            }
+
+            //Remove ignored files
+            copy = new ObservableCollection<ComboBoxItem>(projectFiles);
+            foreach (ComboBoxItem comboBoxItem in copy)
+            {
+                foreach (string ignoreFile in IgnoreFiles)
+                {
+                    if (comboBoxItem.Content.ToString().ToUpper().EndsWith(ignoreFile))
                         projectFiles.Remove(comboBoxItem);
                 }
             }
@@ -364,7 +377,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
             SolutionBuild solutionBuild = dte.Solution.SolutionBuild;
             solutionBuild.BuildProject(dte.Solution.SolutionBuild.ActiveConfiguration.Name, project.UniqueName, true);
-            
+
             //0 = no errors
             return solutionBuild.LastBuildInfo <= 0;
         }
