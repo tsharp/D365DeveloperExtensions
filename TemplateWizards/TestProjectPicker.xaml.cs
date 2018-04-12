@@ -69,12 +69,16 @@ namespace TemplateWizards
             MockingFrameworks = new ObservableCollection<MockingFrameworkListItem>();
             UnitTestFramework.SelectedIndex = -1;
 
-            string version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
-            Version coreVerion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
+            Version coreVerion = new Version(0, 0);
+            if (Projects.Count > 0)
+            {
+                string version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
+                coreVerion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
+            }
 
             foreach (MockingFramework mockingFramework in D365DeveloperExtensions.Core.Models.MockingFrameworks.GetMockingFrameworks())
             {
-                if (mockingFramework.CrmMajorVersion != coreVerion.Major)
+                if (mockingFramework.CrmMajorVersion != coreVerion.Major && Projects.Count > 0)
                     continue;
 
                 var mockingFrameworkListItem = CreateMockingFrameworkItem(mockingFramework);
@@ -108,7 +112,9 @@ namespace TemplateWizards
 
             ProjectToTest.SelectionChanged += ProjectToTest_OnSelectionChanged;
             ProjectToTest.SelectedIndex = 0;
-            SelectedProject = Projects[0].Project;
+
+            if (projects.Count > 0)
+                SelectedProject = Projects[0].Project;
         }
 
         private static ProjectListItem CreateProjectItem(Project project)
