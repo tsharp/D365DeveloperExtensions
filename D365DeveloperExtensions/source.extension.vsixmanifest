@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.1888.0228" Language="en-US" Publisher="Jason Lattimer" />
+        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.18102.0258" Language="en-US" Publisher="Jason Lattimer" />
         <DisplayName>D365 Developer Extensions</DisplayName>
         <Description xml:space="preserve">Dynamics 365 Developer Extensions for Dynamics CRM/365 Customer Engagement versions 2011+</Description>
         <MoreInfo>https://github.com/jlattimer/D365DeveloperExtensions</MoreInfo>
@@ -46,6 +46,7 @@
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="CSharpSdkWorkflowFromBaseClass" d:TargetPath="|CSharpSdkWorkflowFromBaseClass;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%.Core" Path="|D365DeveloperExtensions.Core|" AssemblyName="|D365DeveloperExtensions.Core;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="CrmIntellisense" Path="|CrmIntellisense|" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="WebCSharpSolutionPackagerMap" d:TargetPath="|WebCSharpSolutionPackagerMap;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,16.0)" DisplayName="Visual Studio core editor" />

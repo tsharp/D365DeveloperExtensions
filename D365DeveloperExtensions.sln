@@ -100,6 +100,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenVsixSignTool", "OpenVsi
 		Build\OpenVsixSignTool\System.ValueTuple.dll = Build\OpenVsixSignTool\System.ValueTuple.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{CB1CA83A-47A1-4D65-84F5-ADA62EECA192}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{F710F5E2-878D-411D-A60C-240A37E7B06C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCSharpSolutionPackagerMap", "ItemTemplates\Web\CSharp\WebCSharpSolutionPackagerMap\WebCSharpSolutionPackagerMap.csproj", "{64FF26D5-D08C-4DE9-BC36-7D4452125D46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -220,6 +226,10 @@ Global
 		{C39D35B0-897D-4BDD-B050-29B7C529A3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C39D35B0-897D-4BDD-B050-29B7C529A3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C39D35B0-897D-4BDD-B050-29B7C529A3E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64FF26D5-D08C-4DE9-BC36-7D4452125D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64FF26D5-D08C-4DE9-BC36-7D4452125D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64FF26D5-D08C-4DE9-BC36-7D4452125D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64FF26D5-D08C-4DE9-BC36-7D4452125D46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,6 +259,9 @@ Global
 		{DE98394E-6FB5-49C2-9F3B-FE0AE1C36BF4} = {82F6B320-0999-4183-B6E4-C0097A6E331C}
 		{C39D35B0-897D-4BDD-B050-29B7C529A3E1} = {82F6B320-0999-4183-B6E4-C0097A6E331C}
 		{F96C2B14-9745-462E-A849-BFF4D881E82C} = {F3A33157-46F2-4791-AD95-480224C4E774}
+		{CB1CA83A-47A1-4D65-84F5-ADA62EECA192} = {31DF01E8-DEB0-4516-B42F-C52595CEE170}
+		{F710F5E2-878D-411D-A60C-240A37E7B06C} = {CB1CA83A-47A1-4D65-84F5-ADA62EECA192}
+		{64FF26D5-D08C-4DE9-BC36-7D4452125D46} = {F710F5E2-878D-411D-A60C-240A37E7B06C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C31DE056-8008-4AC7-906A-748294E11C0E}
