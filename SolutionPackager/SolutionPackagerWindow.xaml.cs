@@ -220,6 +220,7 @@ namespace SolutionPackager
             PackageFolder.IsEnabled = enabled;
             PackageType.IsEnabled = enabled;
             EnableSolutionPackagerLog.IsEnabled = enabled;
+            UseMapFile.IsEnabled = enabled;
             SolutionName.IsEnabled = enabled;
             VersionMajor.IsEnabled = enabled;
             VersionMinor.IsEnabled = enabled;
