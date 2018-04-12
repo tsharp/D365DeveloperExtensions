@@ -79,7 +79,7 @@ namespace SolutionPackager
                 unpackSettings.ProjectPackageFolder,
                 unpackSettings.Project.ProjectItems);
 
-            Directory.Delete(unpackSettings.ExtractedFolder.FullName, true);
+            FileSystem.DeleteDirectory(unpackSettings.ExtractedFolder.FullName);
 
             if (!unpackSettings.SaveSolutions)
                 return true;

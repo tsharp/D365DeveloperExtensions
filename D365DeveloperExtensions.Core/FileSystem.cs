@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -233,6 +234,28 @@ namespace D365DeveloperExtensions.Core
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public static void DeleteDirectory(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Thread.Sleep(100);
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
             }
         }
     }

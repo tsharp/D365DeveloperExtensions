@@ -54,7 +54,7 @@ namespace SolutionPackager
             {
                 string tempDirectory = Path.GetDirectoryName(unmanagedPath);
                 if (Directory.Exists($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}"))
-                    Directory.Delete($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}", true);
+                    FileSystem.DeleteDirectory($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}");
                 DirectoryInfo extractedFolder =
                     Directory.CreateDirectory($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}");
 

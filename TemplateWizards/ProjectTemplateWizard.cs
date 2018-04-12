@@ -72,10 +72,10 @@ namespace TemplateWizards
                 try
                 {
                     DirectoryInfo destination = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
-                    Directory.Delete(replacementsDictionary["$destinationdirectory$"]);
+                    FileSystem.DeleteDirectory(replacementsDictionary["$destinationdirectory$"]);
                     //Delete solution directory if empty
                     if (destination.Parent != null && FileSystem.IsDirectoryEmpty(replacementsDictionary["$solutiondirectory$"]))
-                        Directory.Delete(replacementsDictionary["$solutiondirectory$"]);
+                        FileSystem.DeleteDirectory(replacementsDictionary["$solutiondirectory$"]);
                 }
                 catch
                 {
@@ -287,9 +287,8 @@ namespace TemplateWizards
                     solutionContext.ShouldBuild = false;
 
             //Delete bin & obj folders
-            Directory.Delete(Path.GetDirectoryName(project.FullName) + "//bin", true);
-            Directory.Delete(Path.GetDirectoryName(project.FullName) + "//obj", true);
-
+            FileSystem.DeleteDirectory($"{Path.GetDirectoryName(project.FullName)}//bin");
+            FileSystem.DeleteDirectory($"{Path.GetDirectoryName(project.FullName)}//obj");
             project.ProjectItems.AddFolder("package");
         }
 
