@@ -112,7 +112,10 @@ namespace D365DeveloperExtensions.Core.Vs
                 if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
                     list.AddRange(GetSolutionFolderProjects(project));
                 else
-                    list.Add(project);
+                {
+                    if (project.Kind != ExtensionConstants.VsSharedProject && project.Kind != Constants.vsProjectKindMisc)
+                        list.Add(project);
+                }
             }
 
             return excludeUnitTestProjects ? FilterUnitTestProjects(list) : list;
