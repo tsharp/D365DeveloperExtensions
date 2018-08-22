@@ -1,1 +1,0 @@
-Would love to hear ideas for new or different functionality - if you've got something, suggest something under the [Issues](https://github.com/jlattimer/CrmDeveloperExtensions2/issues) area. Can't always promise it will get implemented, but if you can build a good case for it, who knows. At the same time, you can always build it yourself and submit a pull request. 
