@@ -30,12 +30,12 @@ Build Status: ![Build status](https://jlattimer.visualstudio.com/_apis/public/bu
 - Compare local version of mapped files with the D365 copy
 - Add new web resources from a project file
 - TypeScript friendly
-- Compatible with Scott Durrow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework
+- Compatible with Scott Durow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework
 
 **Plug-in deployer & registration**  
 - 1 click deploy plug-ins & custom workflows from Visual Studio without the SDK plug-in registration tool
 - Integrated ILMerge
-- Compatible with Scott Durrow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework which allows defining registration details in code
+- Compatible with Scott Durow's [Spkl](https://github.com/scottdurow/SparkleXrm/wiki/spkl) deployment framework which allows defining registration details in code
 
 **Solution packager UI**
 - 1 click download and extraction of solution to a Visual Studio project
