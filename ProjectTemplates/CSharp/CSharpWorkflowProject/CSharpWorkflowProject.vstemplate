@@ -5,7 +5,7 @@
     <Description>Dynamics CRM/365 Plug-in Project</Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.6.2</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
     <TemplateID>2f9fb6ab-db2b-42a9-acb0-c658e102ddd9</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>
