@@ -8,7 +8,7 @@
     </Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.6.2</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
     <TemplateID>6554c74b-8686-4715-b6a8-416c0fcc7638</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>

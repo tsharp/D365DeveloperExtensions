@@ -319,7 +319,7 @@ namespace TemplateWizards
                     project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
                 //Plug-in & workflows use .NET 4.5.2
                 else if (_crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
-                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5.2";
+                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
                 //Console v9+ use .NET 4.6.2 //TODO: Getting "Project Unavailable" message when finished but project builds fine
                 //else if (_crmProjectType == ProjectType.Console && Versioning.StringToVersion(_coreVersion).Major >= 9)
                 //    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
