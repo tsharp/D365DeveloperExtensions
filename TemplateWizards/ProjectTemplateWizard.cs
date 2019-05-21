@@ -149,6 +149,18 @@ namespace TemplateWizards
                 ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
                     Versioning.StringToVersion(_clientVersion).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
+
+            var coreVersion = Versioning.StringToVersion(_coreVersion);
+            var v462BaseVersion = new Version(9, 0, 2, 9);
+
+            if ((_crmProjectType == ProjectType.Console && _clientPackage != Resource.SdkAssemblyExtensions) || coreVersion >= v462BaseVersion)
+            {
+                var targetFrameworkVersion = Versioning.StringToVersion(replacementsDictionary["$targetframeworkversion$"]);
+                if (targetFrameworkVersion < new Version(4, 6, 2))
+                    ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.6.2", ref replacementsDictionary);
+            }
+            else
+                ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.5.2", ref replacementsDictionary); ;
         }
 
         private void PreHandleUnitTestProjects(Dictionary<string, string> replacementsDictionary)
@@ -201,7 +213,8 @@ namespace TemplateWizards
         {
             NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
 
-            if (history == null) {
+            if (history == null)
+            {
                 MessageBox.Show(Resource.MessageBox_NPMError);
                 throw new WizardBackoutException();
             }
@@ -313,16 +326,6 @@ namespace TemplateWizards
             try
             {
                 project.DTE.SuppressUI = true;
-
-                //Pre-2015 use .NET 4.0
-                if (Versioning.StringToVersion(_coreVersion).Major < 7)
-                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
-                //Plug-in & workflows use .NET 4.5.2
-                else if (_crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
-                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
-                //Console v9+ use .NET 4.6.2 //TODO: Getting "Project Unavailable" message when finished but project builds fine
-                //else if (_crmProjectType == ProjectType.Console && Versioning.StringToVersion(_coreVersion).Major >= 9)
-                //    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
 
                 //Install all the NuGet packages
                 project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
