@@ -307,7 +307,7 @@ namespace TemplateWizards
 
         private void PostHandleTypeScriptProject(Project project)
         {
-            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project));
+            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project), true);
 
             _dte.ExecuteCommand("ProjectandSolutionContextMenus.CrossProjectMultiItem.RefreshFolder");
         }

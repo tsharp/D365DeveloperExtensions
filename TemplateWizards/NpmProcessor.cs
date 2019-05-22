@@ -15,7 +15,7 @@ namespace TemplateWizards
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static void InstallPackage(string package, string version, string path)
+        public static void InstallPackage(string package, string version, string path, bool devDependency)
         {
             try
             {
@@ -34,7 +34,8 @@ namespace TemplateWizards
                     return;
                 }
 
-                process.StandardInput.WriteLine($"npm install --save {package}{version}");
+                var save = devDependency ? "--save-dev" : "--save";
+                process.StandardInput.WriteLine($"npm install {save} {package}{version}");
                 process.StandardInput.Flush();
                 process.StandardInput.Close();
                 process.WaitForExit();
@@ -59,7 +60,7 @@ namespace TemplateWizards
                 return null;
             }
 
-            process.StandardInput.WriteLine($"npm view {package}");
+            process.StandardInput.WriteLine($"npm show {package} --json");
             process.StandardInput.Flush();
             process.StandardInput.Close();
             var output = process.StandardOutput.ReadToEnd();
