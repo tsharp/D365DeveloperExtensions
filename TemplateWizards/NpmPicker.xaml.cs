@@ -1,4 +1,5 @@
-﻿using D365DeveloperExtensions.Core.ExtensionMethods;
+﻿using D365DeveloperExtensions.Core;
+using D365DeveloperExtensions.Core.ExtensionMethods;
 using D365DeveloperExtensions.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,8 @@ namespace TemplateWizards
 
             if (LimitVersions.ReturnValue())
                 history = FilterLatestVersions(history);
-
-            List<string> versions = history.versions.OrderByDescending(s => s).ToList();
+            
+            List<string> versions = history.versions.OrderByDescending(Versioning.StringToVersion).ToList();
 
             VersionsGrid.Columns[0].Header = history.name;
 
