@@ -25,7 +25,7 @@ namespace $rootnamespace$
 
             try
             {
-                Entity entity = (Entity)context.InputParameters["Target"];
+                Entity target = (Entity)context.InputParameters["Target"];
 
                 //TODO: Do stuff
             }
