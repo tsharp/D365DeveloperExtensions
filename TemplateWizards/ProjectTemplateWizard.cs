@@ -287,9 +287,6 @@ namespace TemplateWizards
                     break;
             }
 
-            if (_isUnitTest)
-                PostHandleUnitTestProjects(project, installer);
-
             _dte.ExecuteCommand("File.SaveAll");
         }
 

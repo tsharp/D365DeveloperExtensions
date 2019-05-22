@@ -14,8 +14,10 @@ namespace D365DeveloperExtensions.Core.Models
         public static ObservableCollection<MockingFramework> GetMockingFrameworks()
         {
             return new ObservableCollection<MockingFramework> {
+                    new MockingFramework{CrmMajorVersion = 9, Name = "XrmUnitTest", NugetName = "XrmUnitTest.09"},
                     new MockingFramework{CrmMajorVersion = 8, Name = "XrmUnitTest", NugetName = "XrmUnitTest.2016"},
                     new MockingFramework{CrmMajorVersion = 7, Name = "XrmUnitTest", NugetName = "XrmUnitTest.2015"},
+                    new MockingFramework{CrmMajorVersion = 6, Name = "XrmUnitTest", NugetName = "XrmUnitTest.2013"},
                     new MockingFramework{CrmMajorVersion = 9, Name = "FakeXrmEasy", NugetName = "FakeXrmEasy.9"},
                     new MockingFramework{CrmMajorVersion = 8, Name = "FakeXrmEasy", NugetName = "FakeXrmEasy.365"},
                     new MockingFramework{CrmMajorVersion = 8, Name = "FakeXrmEasy", NugetName = "FakeXrmEasy.2016"},
