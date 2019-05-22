@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Workflow Project</Name>
-    <Description>Dynamics CRM/365 Plug-in Project</Description>
+    <Name>D365 CE/CRM Workflow Project</Name>
+    <Description>Dynamics 365 CE/CRM Plug-in Project</Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
@@ -11,6 +11,10 @@
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>CSharpWorkflowProject</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <LanguageTag>C#</LanguageTag>
+    <PlatformTag>Windows</PlatformTag>
+    <PlatformTag>D365 CE</PlatformTag>
+    <!--<ProjectTypeTag>D365 CE</ProjectTypeTag>-->
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ProjectTemplate.csproj" File="ProjectTemplate.csproj" ReplaceParameters="true">

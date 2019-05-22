@@ -1,7 +1,7 @@
 ﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>CRM/365 Web Resource Project</Name>
-    <Description>Dynamics CRM/365 Web Resource Project</Description>
+    <Name>D365 CE/CRM Web Resource Project</Name>
+    <Description>Dynamics 365 CE/CRM Web Resource Project</Description>
     <Icon>icon.png</Icon>
     <TemplateID>4feef2e3-885b-4be6-aff3-dfe832468b7d</TemplateID>
     <ProjectType>CSharp</ProjectType>
@@ -10,6 +10,10 @@
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>CSharpWebResourceProject</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <LanguageTag>C#</LanguageTag>
+    <PlatformTag>Windows</PlatformTag>
+    <PlatformTag>D365 CE</PlatformTag>
+    <!--<ProjectTypeTag>D365 CE</ProjectTypeTag>-->
   </TemplateData>
   <TemplateContent>
     <Project File="ProjectTemplate.webproj" ReplaceParameters="true">

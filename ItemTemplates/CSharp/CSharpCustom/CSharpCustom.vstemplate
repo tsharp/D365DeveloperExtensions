@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Custom Template</Name>
-    <Description>Dynamics CRM/365 Custom Code Template</Description>
+    <Name>D365 CE/CRM Custom Template</Name>
+    <Description>Dynamics 365 CE/CRM Custom Code Template</Description>
     <Icon>icon.png</Icon>
     <TemplateID>092ae839-3afe-40f5-8724-4bcbdc2f57f4</TemplateID>
     <ProjectType>CSharp</ProjectType>
