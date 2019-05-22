@@ -158,6 +158,10 @@ namespace TemplateWizards
                 var targetFrameworkVersion = Versioning.StringToVersion(replacementsDictionary["$targetframeworkversion$"]);
                 if (targetFrameworkVersion < new Version(4, 6, 2))
                     ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.6.2", ref replacementsDictionary);
+
+                // 4.7.1 is max version for plug-ins & workflows Online
+                if (targetFrameworkVersion >= new Version(4, 7, 2) && _crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
+                    ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.7.1", ref replacementsDictionary);
             }
             else
                 ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.5.2", ref replacementsDictionary); ;
