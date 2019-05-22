@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Workflow Class</Name>
-    <Description>Dynamics CRM/365 Workflow Class</Description>
+    <Name>D365 CE/CRM Workflow Class</Name>
+    <Description>Dynamics 365 CE/CRM Workflow Class</Description>
     <Icon>icon.png</Icon>
     <TemplateID>9c10c2a8-b92b-49ff-9b99-5284259db964</TemplateID>
     <ProjectType>CSharp</ProjectType>
