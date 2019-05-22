@@ -22,7 +22,9 @@ namespace NuGetRetriever
                 results.Add(CreateNuGetPackage(package));
             }
 
-            return new List<NuGetPackage>(results.OrderByDescending(v => v.Version.ToString()));
+           
+
+            return new List<NuGetPackage>(results.OrderByDescending(v => v.Version));
         }
 
         private static List<IPackage> GetPackages(string packageId)
