@@ -80,9 +80,11 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "CustomTemplatesPath":
+                    SharedGlobals.SetGlobal("CustomTemplatesPath", CustomTemplatesPath);
                     Logger.Log(LogLevel.Info, $"CustomTemplatesPath now: {CustomTemplatesPath}");
                     break;
                 case "DefaultKeyFileName":
+                    SharedGlobals.SetGlobal("DefaultKeyFileName", DefaultKeyFileName);
                     Logger.Log(LogLevel.Info, $"DefaultKeyFileName now: {DefaultKeyFileName}");
                     break;
             }

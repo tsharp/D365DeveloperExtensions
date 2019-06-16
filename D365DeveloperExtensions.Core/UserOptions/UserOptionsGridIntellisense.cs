@@ -103,12 +103,15 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "UseIntellisense":
+                    SharedGlobals.SetGlobal("UseIntellisense", UseIntellisense);
                     Logger.Log(LogLevel.Info, $"UseIntellisense now: {UseIntellisense}");
                     break;
                 case "IntellisenseEntityTriggerCharacter":
+                    SharedGlobals.SetGlobal("IntellisenseEntityTriggerCharacter", IntellisenseEntityTriggerCharacter);
                     Logger.Log(LogLevel.Info, $"IntellisenseEntityTriggerCharacter now: {IntellisenseEntityTriggerCharacter}");
                     break;
                 case "IntellisenseFieldTriggerCharacter":
+                    SharedGlobals.SetGlobal("IntellisenseFieldTriggerCharacter", IntellisenseFieldTriggerCharacter);
                     Logger.Log(LogLevel.Info, $"IntellisenseFieldTriggerCharacter now: {IntellisenseFieldTriggerCharacter}");
                     break;
             }

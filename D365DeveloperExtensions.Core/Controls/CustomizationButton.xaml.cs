@@ -53,6 +53,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
@@ -62,14 +63,13 @@ namespace D365DeveloperExtensions.Core.Controls
                 return;
             }
 
-            WebBrowser.OpenCrmPage(dte, client,
-                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
+            WebBrowser.OpenCrmPage(client, $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Customizations_OnLoaded(object sender, RoutedEventArgs e)
         {
-            DTE dte = (DTE)Package.GetGlobalService(typeof(DTE));
-            if (dte == null)
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
             if (SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client)

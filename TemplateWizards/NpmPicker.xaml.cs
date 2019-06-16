@@ -35,7 +35,7 @@ namespace TemplateWizards
 
             if (LimitVersions.ReturnValue())
                 history = FilterLatestVersions(history);
-            
+
             List<string> versions = history.versions.OrderByDescending(Versioning.StringToVersion).ToList();
 
             VersionsGrid.Columns[0].Header = history.name;
@@ -100,7 +100,7 @@ namespace TemplateWizards
                 versions = new List<string>()
             };
 
-            Version firstVersion = D365DeveloperExtensions.Core.Versioning.StringToVersion(history.versions[0]);
+            Version firstVersion = Versioning.StringToVersion(history.versions[0]);
             var currentMajor = firstVersion.Major;
             var currentMinor = firstVersion.Minor;
             var currentBuild = firstVersion.Build;
@@ -111,7 +111,7 @@ namespace TemplateWizards
                 if (i == history.versions.Count - 1)
                     filteredHistory.versions.Add(history.versions[i]);
 
-                Version ver = D365DeveloperExtensions.Core.Versioning.StringToVersion(history.versions[i]);
+                Version ver = Versioning.StringToVersion(history.versions[i]);
 
                 if (ver.Major > currentMajor)
                 {

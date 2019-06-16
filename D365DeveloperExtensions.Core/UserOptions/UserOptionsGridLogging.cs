@@ -114,15 +114,19 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "ExtensionLoggingEnabled":
+                    SharedGlobals.SetGlobal("ExtensionLoggingEnabled", ExtensionLoggingEnabled);
                     Logger.Log(LogLevel.Info, $"ExtensionLoggingEnabled now: {ExtensionLoggingEnabled}");
                     break;
                 case "ExtensionLogFilePath":
+                    SharedGlobals.SetGlobal("ExtensionLogFilePath", ExtensionLogFilePath);
                     Logger.Log(LogLevel.Info, $"ExtensionLogFilePath now: {ExtensionLogFilePath}");
                     break;
                 case "XrmToolingLoggingEnabled":
+                    SharedGlobals.SetGlobal("XrmToolingLoggingEnabled", XrmToolingLoggingEnabled);
                     Logger.Log(LogLevel.Info, $"XrmToolingLoggingEnabled now: {XrmToolingLoggingEnabled}");
                     break;
                 case "XrmToolingLogFilePath":
+                    SharedGlobals.SetGlobal("XrmToolingLogFilePath", XrmToolingLogFilePath);
                     Logger.Log(LogLevel.Info, $"XrmToolingLogFilePath now: {XrmToolingLogFilePath}");
                     break;
             }

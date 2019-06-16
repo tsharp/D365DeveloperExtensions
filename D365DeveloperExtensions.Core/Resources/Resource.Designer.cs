@@ -19,7 +19,7 @@ namespace D365DeveloperExtensions.Core.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -205,7 +205,7 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couuld not locate CrmSvcUtil.
+        ///   Looks up a localized string similar to Could not locate CrmSvcUtil.
         /// </summary>
         public static string Error_CouldNotLocateCrmSvcUtil {
             get {
@@ -214,7 +214,7 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couuld not locate Plug-in Registration Tool.
+        ///   Looks up a localized string similar to Could not locate Plug-in Registration Tool.
         /// </summary>
         public static string Error_CouldNotLocatePluginRegistrationTool {
             get {
@@ -223,7 +223,7 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couuld not locate Solution Packager.
+        ///   Looks up a localized string similar to Could not locate Solution Packager.
         /// </summary>
         public static string Error_CouldNotLocateSolutionPackager {
             get {
@@ -273,6 +273,15 @@ namespace D365DeveloperExtensions.Core.Resources {
         public static string ErrorMessage_DirectoryFromString {
             get {
                 return ResourceManager.GetString("ErrorMessage_DirectoryFromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error accessing DTE.
+        /// </summary>
+        public static string ErrorMessage_ErrorAccessingDTE {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorAccessingDTE", resourceCulture);
             }
         }
         

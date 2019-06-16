@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="D365DeveloperExtensions.cs" />
     <Compile Include="D365DeveloperExtensionsPackage.cs" />
+    <Compile Include="MenuHandler.cs" />
     <Compile Include="Vs\VsSolutionEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs">

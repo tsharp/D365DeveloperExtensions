@@ -1,36 +1,82 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using NLog;
+using System;
 
 namespace D365DeveloperExtensions.Core
 {
     public class StatusBar
     {
-        private static DTE _dte;
-
-        public StatusBar(DTE dte)
-        {
-            _dte = dte;
-        }
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static void SetStatusBarValue(string text)
         {
-            _dte.StatusBar.Text = text;
+            try
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                    throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
+
+                dte.StatusBar.Text = text;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resources.Resource.ErrorMessage_ErrorAccessingDTE, ex);
+                throw;
+            }
         }
 
         public static void SetStatusBarValue(string text, vsStatusAnimation animation)
         {
-            _dte.StatusBar.Text = text;
-            _dte.StatusBar.Animate(true, animation);
+            try
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                    throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
+
+                dte.StatusBar.Text = text;
+                dte.StatusBar.Animate(true, animation);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resources.Resource.ErrorMessage_ErrorAccessingDTE, ex);
+                throw;
+            }
         }
 
         public static void ClearStatusBarValue()
         {
-            _dte.StatusBar.Clear();
+            try
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                    throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
+
+                dte.StatusBar.Clear();
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resources.Resource.ErrorMessage_ErrorAccessingDTE, ex);
+                throw;
+            }
         }
 
         public static void ClearStatusBarValue(vsStatusAnimation animation)
         {
-            _dte.StatusBar.Clear();
-            _dte.StatusBar.Animate(false, animation);
+            try
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                    throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
+
+                dte.StatusBar.Clear();
+                dte.StatusBar.Animate(false, animation);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, Resources.Resource.ErrorMessage_ErrorAccessingDTE, ex);
+                throw;
+            }
         }
     }
 }

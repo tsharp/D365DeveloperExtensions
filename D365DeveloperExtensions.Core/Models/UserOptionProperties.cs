@@ -4,6 +4,7 @@ namespace D365DeveloperExtensions.Core.Models
 {
     public static class UserOptionProperties
     {
+        // TODO: remove Page property and corresponding resource entries
         public static UserOptionProperty UseInternalBrowser => new UserOptionProperty
         {
             Name = "UseInternalBrowser",
