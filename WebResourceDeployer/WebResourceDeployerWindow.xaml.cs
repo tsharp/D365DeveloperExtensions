@@ -172,7 +172,7 @@ namespace WebResourceDeployer
             }
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
-            //so we don't want to contine further unless our window is active
+            //so we don't want to continue further unless our window is active
             if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
@@ -308,7 +308,7 @@ namespace WebResourceDeployer
                 }
 
                 bool success;
-                //Check if < CRM 2011 UR12 (ExecuteMutliple)
+                //Check if < CRM 2011 UR12 (ExecuteMultiple)
                 Version version = ConnPane.CrmService.ConnectedOrgVersion;
                 if (version.Major == 5 && version.Revision < 3200)
                     success = await Task.Run(() => WebResource.UpdateAndPublishSingle(ConnPane.CrmService, webResources));
@@ -771,7 +771,7 @@ namespace WebResourceDeployer
 
             string contentUrl = $"main.aspx?etc=9333&id=%7b{webResourceId}%7d&pagetype=webresourceedit";
 
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, contentUrl);
+            WebBrowser.OpenCrmPage(ConnPane.CrmService, contentUrl);
         }
 
         private async void CompareWebResource_OnClick(object sender, RoutedEventArgs e)
@@ -1000,7 +1000,7 @@ namespace WebResourceDeployer
 
             icv.Filter = GetFilteredView;
 
-            //Only keep publish flags for items still visable
+            //Only keep publish flags for items still visible
             foreach (WebResourceItem item in WebResourceItems.Where(w => w.Publish).Except(icv.OfType<WebResourceItem>()))
             {
                 item.Publish = false;

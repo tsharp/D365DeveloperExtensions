@@ -1,6 +1,8 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.Connection;
+using D365DeveloperExtensions.Core.Enums;
 using D365DeveloperExtensions.Core.ExtensionMethods;
+using D365DeveloperExtensions.Core.Logging;
 using D365DeveloperExtensions.Core.Models;
 using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
@@ -17,13 +19,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using D365DeveloperExtensions.Core.Enums;
-using D365DeveloperExtensions.Core.Logging;
 using Assembly = PluginDeployer.Crm.Assembly;
 using Task = System.Threading.Tasks.Task;
 
@@ -104,7 +103,7 @@ namespace PluginDeployer
             }
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
-            //so we don't want to contine further unless our window is active
+            //so we don't want to continue further unless our window is active
             if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
@@ -344,9 +343,9 @@ namespace PluginDeployer
 
             using (ctx)
             {
-                PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
+                PluginRegistraton pluginRegistration = new PluginRegistraton(service, ctx, new TraceLogger());
 
-                pluginRegistraton.RegisterActivities(crmPluginRegistrationAttributes, pluginAssembly, assemblyFullName);
+                pluginRegistration.RegisterActivities(crmPluginRegistrationAttributes, pluginAssembly, assemblyFullName);
             }
         }
 
@@ -394,12 +393,12 @@ namespace PluginDeployer
 
                 using (ctx)
                 {
-                    PluginRegistraton pluginRegistraton = new PluginRegistraton(service, ctx, new TraceLogger());
+                    PluginRegistraton pluginRegistration = new PluginRegistraton(service, ctx, new TraceLogger());
 
                     if (isWorkflow)
-                        await Task.Run(() => pluginRegistraton.RegisterWorkflowActivities(assemblyFilePath, solutionName));
+                        await Task.Run(() => pluginRegistration.RegisterWorkflowActivities(assemblyFilePath, solutionName));
                     else
-                        await Task.Run(() => pluginRegistraton.RegisterPlugin(assemblyFilePath, solutionName));
+                        await Task.Run(() => pluginRegistration.RegisterPlugin(assemblyFilePath, solutionName));
 
                     GetRegistrationDetailsWithContext(pluginDeployConfig.classRegex, backupFiles, ctx);
                 }
@@ -483,7 +482,7 @@ namespace PluginDeployer
         {
             CrmSolution solution = (CrmSolution)SolutionList.SelectedItem;
 
-            D365DeveloperExtensions.Core.WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
+            D365DeveloperExtensions.Core.WebBrowser.OpenCrmPage(ConnPane.CrmService, $"tools/solution/edit.aspx?id=%7b{solution.SolutionId}%7d");
         }
     }
 }

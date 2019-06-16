@@ -53,7 +53,10 @@ namespace D365DeveloperExtensions.Core.UserOptions
         private void NotifyPropertyChanged([CallerMemberName] string value = null)
         {
             if (value == "UseInternalBrowser")
+            {
+                SharedGlobals.SetGlobal("UseInternalBrowser", UseInternalBrowser);
                 Logger.Log(LogLevel.Info, $"UseInternalBrowser now: {UseInternalBrowser}");
+            }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(value));
         }

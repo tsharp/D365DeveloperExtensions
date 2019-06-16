@@ -1,5 +1,4 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using System.Windows;
 
 namespace D365DeveloperExtensions.Core.Controls
@@ -14,10 +13,8 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void OpenPayPal_Click(object sender, RoutedEventArgs e)
         {
-            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
-                return;
-
-            WebBrowser.OpenUrl(dte, "https://www.paypal.me/JLattimer");
+            ThreadHelper.ThrowIfNotOnUIThread();
+            WebBrowser.OpenUrl("https://www.paypal.me/JLattimer");
         }
     }
 }

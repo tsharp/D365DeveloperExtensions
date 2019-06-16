@@ -112,12 +112,15 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "PluginRegistrationToolPath":
+                    SharedGlobals.SetGlobal("PluginRegistrationToolPath", PluginRegistrationToolPath);
                     Logger.Log(LogLevel.Info, $"PluginRegistrationToolPath now: {PluginRegistrationToolPath}");
                     break;
                 case "SolutionPackagerToolPath":
+                    SharedGlobals.SetGlobal("SolutionPackagerToolPath", SolutionPackagerToolPath);
                     Logger.Log(LogLevel.Info, $"SolutionPackagerToolPath now: {SolutionPackagerToolPath}");
                     break;
                 case "CrmSvcUtilToolPath":
+                    SharedGlobals.SetGlobal("CrmSvcUtilToolPath", CrmSvcUtilToolPath);
                     Logger.Log(LogLevel.Info, $"CrmSvcUtilToolPath now: {CrmSvcUtilToolPath}");
                     break;
             }

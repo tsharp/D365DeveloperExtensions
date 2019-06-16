@@ -1,5 +1,4 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using System.Windows;
 
 namespace D365DeveloperExtensions.Core.Controls
@@ -14,10 +13,8 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void OpenGitHub_Click(object sender, RoutedEventArgs e)
         {
-            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
-                return;
-
-            WebBrowser.OpenUrl(dte, "https://github.com/jlattimer/D365DeveloperExtensions");
+            ThreadHelper.ThrowIfNotOnUIThread();
+            WebBrowser.OpenUrl("https://github.com/jlattimer/D365DeveloperExtensions");
         }
     }
 }
