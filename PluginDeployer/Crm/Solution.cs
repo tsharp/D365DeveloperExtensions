@@ -8,6 +8,8 @@ using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using PluginDeployer.Resources;
 using System;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace PluginDeployer.Crm
 {
@@ -19,7 +21,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                QueryExpression query = new QueryExpression
+                var query = new QueryExpression
                 {
                     EntityName = "solution",
                     ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename", "version"),
@@ -51,8 +53,9 @@ namespace PluginDeployer.Crm
                     }
                 };
 
-                EntityCollection solutions = client.RetrieveMultiple(query);
+                var solutions = client.RetrieveMultiple(query);
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedSolutions, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
                 return solutions;
@@ -69,7 +72,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                AddSolutionComponentRequest scRequest = new AddSolutionComponentRequest
+                var scRequest = new AddSolutionComponentRequest
                 {
                     ComponentType = 61,
                     SolutionUniqueName = uniqueName,
@@ -78,6 +81,7 @@ namespace PluginDeployer.Crm
 
                 client.Execute(scRequest);
 
+                ExLogger.LogToFile(Logger, $"{Resource.Message_NewWebResourceAddedSolution}: {uniqueName} - {webResourceId}", LogLevel.Info);
                 OutputLogger.WriteToOutputWindow($"{Resource.Message_NewWebResourceAddedSolution}: {uniqueName} - {webResourceId}", MessageType.Info);
 
                 return true;
