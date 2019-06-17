@@ -1,7 +1,6 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.ExtensionMethods;
 using D365DeveloperExtensions.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -36,11 +35,11 @@ namespace TemplateWizards
             if (LimitVersions.ReturnValue())
                 history = FilterLatestVersions(history);
 
-            List<string> versions = history.versions.OrderByDescending(Versioning.StringToVersion).ToList();
+            var versions = history.versions.OrderByDescending(Versioning.StringToVersion).ToList();
 
             VersionsGrid.Columns[0].Header = history.name;
 
-            foreach (string version in versions)
+            foreach (var version in versions)
             {
                 var item = CreateItem(history, version);
 
@@ -52,7 +51,7 @@ namespace TemplateWizards
 
         private static ListViewItem CreateItem(NpmHistory history, string version)
         {
-            ListViewItem item = new ListViewItem
+            var item = new ListViewItem
             {
                 Content = version,
                 Tag = new NpmPackage
@@ -83,7 +82,7 @@ namespace TemplateWizards
 
         private void Versions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView versions = (ListView)sender;
+            var versions = (ListView)sender;
             ListBoxItem item = versions.SelectedItem as ListViewItem;
             if (item == null)
                 return;
@@ -93,25 +92,25 @@ namespace TemplateWizards
 
         private static NpmHistory FilterLatestVersions(NpmHistory history)
         {
-            NpmHistory filteredHistory = new NpmHistory
+            var filteredHistory = new NpmHistory
             {
                 name = history.name,
                 description = history.description,
                 versions = new List<string>()
             };
 
-            Version firstVersion = Versioning.StringToVersion(history.versions[0]);
+            var firstVersion = Versioning.StringToVersion(history.versions[0]);
             var currentMajor = firstVersion.Major;
             var currentMinor = firstVersion.Minor;
             var currentBuild = firstVersion.Build;
             var currentVersion = history.versions[0];
 
-            for (int i = 0; i < history.versions.Count; i++)
+            for (var i = 0; i < history.versions.Count; i++)
             {
                 if (i == history.versions.Count - 1)
                     filteredHistory.versions.Add(history.versions[i]);
 
-                Version ver = Versioning.StringToVersion(history.versions[i]);
+                var ver = Versioning.StringToVersion(history.versions[i]);
 
                 if (ver.Major > currentMajor)
                 {

@@ -33,7 +33,7 @@ namespace TemplateWizards
 
             GetWorkflow = getWorkflow;
             GetClient = getClient;
-            
+
             GetPackage(Resource.SdkAssemblyCore);
         }
 
@@ -42,7 +42,7 @@ namespace TemplateWizards
             SdkVersions.Items.Clear();
             Title = $"{Resource.Version_Window_Title}:  {nuGetPackage}";
 
-            List<NuGetPackage> versions = PackageLister.GetPackagesById(nuGetPackage);
+            var versions = PackageLister.GetPackagesById(nuGetPackage);
 
             _packageVersions = versions;
             _currentPackage = nuGetPackage;
@@ -52,7 +52,7 @@ namespace TemplateWizards
 
             SdkVersionsGrid.Columns[0].Header = nuGetPackage;
 
-            foreach (NuGetPackage package in versions)
+            foreach (var package in versions)
             {
                 SdkVersions.Items.Add(package);
             }
@@ -108,11 +108,11 @@ namespace TemplateWizards
 
         private void SdkVersions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView sdkVersions = (ListView)sender;
+            var sdkVersions = (ListView)sender;
             if (!(sdkVersions.SelectedItem is NuGetPackage package))
                 return;
 
-            string selectedVersion = package.VersionText;
+            var selectedVersion = package.VersionText;
             SetSelectedVersion(selectedVersion);
 
             if (!string.IsNullOrEmpty(package.LicenseUrl))
@@ -126,14 +126,14 @@ namespace TemplateWizards
 
         private static List<NuGetPackage> FilterLatestVersions(List<NuGetPackage> versions)
         {
-            List<NuGetPackage> filteredVersions = new List<NuGetPackage>();
+            var filteredVersions = new List<NuGetPackage>();
 
-            Version firstVersion = versions[0].Version;
+            var firstVersion = versions[0].Version;
             var currentMajor = firstVersion.Major;
             var currentMinor = firstVersion.Minor;
             var currentPackage = versions[0];
 
-            for (int i = 0; i < versions.Count; i++)
+            for (var i = 0; i < versions.Count; i++)
             {
                 if (i == versions.Count - 1)
                 {
@@ -141,7 +141,7 @@ namespace TemplateWizards
                     continue;
                 }
 
-                Version ver = versions[i].Version;
+                var ver = versions[i].Version;
 
                 if (ver.Major < currentMajor)
                 {

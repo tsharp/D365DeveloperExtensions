@@ -51,7 +51,7 @@ namespace TemplateWizards
 
                 if (replacementsDictionary.ContainsKey("$wizarddata$"))
                 {
-                    string wizardData = replacementsDictionary["$wizarddata$"];
+                    var wizardData = replacementsDictionary["$wizarddata$"];
                     ReadWizardData(wizardData);
                 }
 
@@ -71,7 +71,7 @@ namespace TemplateWizards
             {
                 try
                 {
-                    DirectoryInfo destination = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
+                    var destination = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
                     FileSystem.DeleteDirectory(replacementsDictionary["$destinationdirectory$"]);
                     //Delete solution directory if empty
                     if (destination.Parent != null && FileSystem.IsDirectoryEmpty(replacementsDictionary["$solutiondirectory$"]))
@@ -93,7 +93,7 @@ namespace TemplateWizards
 
         private Dictionary<string, string> PreHandleCustomItem(Dictionary<string, string> replacementsDictionary)
         {
-            string templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
+            var templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
             _addFile = CustomTemplateHandler.ValidateTemplateFolder(templateFolder);
             if (!_addFile)
                 return replacementsDictionary;
@@ -102,14 +102,14 @@ namespace TemplateWizards
             if (!_addFile)
                 return replacementsDictionary;
 
-            CustomTemplates templates = CustomTemplateHandler.GetTemplateConfig(templateFolder);
+            var templates = CustomTemplateHandler.GetTemplateConfig(templateFolder);
             if (templates == null)
             {
                 _addFile = false;
                 return replacementsDictionary;
             }
 
-            List<CustomTemplate> results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
+            var results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
             if (results.Count == 0)
             {
                 MessageBox.Show(Resource.MessageBox_AddCustomTemplate);
@@ -117,7 +117,7 @@ namespace TemplateWizards
                 return replacementsDictionary;
             }
 
-            CustomTemplatePicker templatePicker = CustomTemplateHandler.GetCustomTemplate(results);
+            var templatePicker = CustomTemplateHandler.GetCustomTemplate(results);
             if (templatePicker.SelectedTemplate == null)
             {
                 _addFile = false;
@@ -126,7 +126,7 @@ namespace TemplateWizards
 
             _customTemplate = templatePicker.SelectedTemplate;
 
-            string content = CustomTemplateHandler.GetTemplateContent(templateFolder, _customTemplate, replacementsDictionary);
+            var content = CustomTemplateHandler.GetTemplateContent(templateFolder, _customTemplate, replacementsDictionary);
 
             replacementsDictionary.Add("$customtemplate$", content);
 
@@ -136,7 +136,7 @@ namespace TemplateWizards
         private void PreHandleCrmAssemblyProjects(Dictionary<string, string> replacementsDictionary)
         {
             var sdkVersionPicker = new SdkVersionPicker(_needsWorkflow, _needsClient);
-            bool? result = sdkVersionPicker.ShowModal();
+            var result = sdkVersionPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
@@ -170,17 +170,17 @@ namespace TemplateWizards
         private void PreHandleUnitTestProjects(Dictionary<string, string> replacementsDictionary)
         {
             var testProjectPicker = new TestProjectPicker();
-            bool? result = testProjectPicker.ShowModal();
+            var result = testProjectPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
             if (testProjectPicker.SelectedProject != null)
             {
-                Solution solution = _dte.Solution;
-                Project project = testProjectPicker.SelectedProject;
-                string path = string.Empty;
-                string projectPath = Path.GetDirectoryName(project.FullName);
-                string solutionPath = Path.GetDirectoryName(solution.FullName);
+                var solution = _dte.Solution;
+                var project = testProjectPicker.SelectedProject;
+                var path = string.Empty;
+                var projectPath = Path.GetDirectoryName(project.FullName);
+                var solutionPath = Path.GetDirectoryName(solution.FullName);
                 if (!string.IsNullOrEmpty(projectPath) && !string.IsNullOrEmpty(solutionPath))
                 {
                     if (projectPath.StartsWith(solutionPath))
@@ -207,7 +207,7 @@ namespace TemplateWizards
                 if (testProjectPicker.SelectedProject == null)
                     return;
 
-                string version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
+                var version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
                 ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
                     Versioning.StringToVersion(version).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
@@ -215,7 +215,7 @@ namespace TemplateWizards
 
         private void PreHandleTypeScriptProjects()
         {
-            NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
+            var history = NpmProcessor.GetPackageHistory("@types/xrm");
 
             if (history == null)
             {
@@ -223,8 +223,8 @@ namespace TemplateWizards
                 throw new WizardBackoutException();
             }
 
-            NpmPicker npmPicker = new NpmPicker(history);
-            bool? result = npmPicker.ShowModal();
+            var npmPicker = new NpmPicker(history);
+            var result = npmPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
@@ -255,11 +255,11 @@ namespace TemplateWizards
             if (_customTemplate == null)
                 return;
 
-            Project project = projectItem.ContainingProject;
+            var project = projectItem.ContainingProject;
 
             CustomTemplateHandler.AddTemplateReferences(_customTemplate, project);
 
-            CustomTemplateHandler.InstallTemplateNuGetPackages(_dte, _customTemplate, project);
+            CustomTemplateHandler.InstallTemplateNuGetPackages(_customTemplate, project);
 
             if (!string.IsNullOrEmpty(_customTemplate.FileName))
                 projectItem.Name = _customTemplate.FileName;
@@ -351,11 +351,11 @@ namespace TemplateWizards
 
         private void ReadWizardData(string wizardData)
         {
-            XmlReaderSettings settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
 
-            string el = "";
+            var el = "";
 
-            using (XmlReader reader = XmlReader.Create(new StringReader(wizardData), settings))
+            using (var reader = XmlReader.Create(new StringReader(wizardData), settings))
                 while (reader.Read())
                 {
                     switch (reader.NodeType)

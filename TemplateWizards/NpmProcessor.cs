@@ -1,5 +1,4 @@
-﻿using System;
-using D365DeveloperExtensions.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using Newtonsoft.Json;
 using NLog;
 using System.Diagnostics;
@@ -66,12 +65,12 @@ namespace TemplateWizards
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            Regex regEx = new Regex(@"\{(.|\s)*\}");
+            var regEx = new Regex(@"\{(.|\s)*\}");
             var m = regEx.Match(output);
 
-            string json = m.Value;
+            var json = m.Value;
 
-            NpmHistory history = JsonConvert.DeserializeObject<NpmHistory>(json);
+            var history = JsonConvert.DeserializeObject<NpmHistory>(json);
 
             return history;
         }

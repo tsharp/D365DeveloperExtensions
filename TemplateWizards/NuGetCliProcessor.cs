@@ -21,23 +21,23 @@ namespace TemplateWizards
         {
             OutputLogger.WriteToOutputWindow($"{Resource.Message_InstallingNuGetPackage}: {selectedPackage.Id} {selectedPackage.VersionText}", MessageType.Info);
 
-            int timeout = 10000;
-            string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            const int timeout = 10000;
+            var workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             workingDirectory = $@"{workingDirectory}\SdkTools";
 
-            using (Process process = new Process())
+            using (var process = new Process())
             {
                 var processStartInfo = CreateProcessStartInfo(installPath, selectedPackage);
                 process.StartInfo = processStartInfo;
                 process.StartInfo.WorkingDirectory = workingDirectory;
 
-                StringBuilder output = new StringBuilder();
-                StringBuilder errorDataReceived = new StringBuilder();
+                var output = new StringBuilder();
+                var errorDataReceived = new StringBuilder();
 
-                using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+                using (var outputWaitHandle = new AutoResetEvent(false))
                 {
-                    using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+                    using (var errorWaitHandle = new AutoResetEvent(false))
                     {
                         process.OutputDataReceived += (sender, e) =>
                         {
