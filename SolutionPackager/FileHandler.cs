@@ -13,7 +13,7 @@ namespace SolutionPackager
 
         public static string FormatSolutionVersionString(string solutionName, Version version, bool managed)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             result.Append($"{solutionName}_");
 
@@ -52,10 +52,10 @@ namespace SolutionPackager
         {
             try
             {
-                string tempDirectory = Path.GetDirectoryName(unmanagedPath);
+                var tempDirectory = Path.GetDirectoryName(unmanagedPath);
                 if (Directory.Exists($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}"))
                     FileSystem.DeleteDirectory($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}");
-                DirectoryInfo extractedFolder =
+                var extractedFolder =
                     Directory.CreateDirectory($"{tempDirectory}\\{Path.GetFileNameWithoutExtension(unmanagedPath)}");
 
                 return extractedFolder;

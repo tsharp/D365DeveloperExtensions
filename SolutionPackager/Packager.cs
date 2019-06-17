@@ -22,9 +22,9 @@ namespace SolutionPackager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static bool CreatePackage(DTE dte, string toolPath, PackSettings packSettings, string commandArgs)
+        public static bool CreatePackage(string toolPath, PackSettings packSettings, string commandArgs)
         {
-            SolutionPackagerCommand command = new SolutionPackagerCommand
+            var command = new SolutionPackagerCommand
             {
                 Action = SolutionPackagerAction.Pack.ToString(),
                 CommandArgs = commandArgs,
@@ -48,21 +48,21 @@ namespace SolutionPackager
                 new[] { packSettings.FullFilePath, packSettings.FullFilePath.Replace(".zip", "_managed.zip") }, true))
                 return null;
 
-            string commandArgs = CreatePackCommandArgs(packSettings);
+            var commandArgs = CreatePackCommandArgs(packSettings);
 
             return commandArgs;
         }
 
         public static string GetExtractCommandArgs(UnpackSettings unpackSettings)
         {
-            string commandArgs = CreateExtractCommandArgs(unpackSettings);
+            var commandArgs = CreateExtractCommandArgs(unpackSettings);
 
             return commandArgs;
         }
 
         public static bool ExtractPackage(DTE dte, string toolPath, UnpackSettings unpackSettings, string commandArgs)
         {
-            SolutionPackagerCommand command = new SolutionPackagerCommand
+            var command = new SolutionPackagerCommand
             {
                 Action = SolutionPackagerAction.Extract.ToString(),
                 CommandArgs = commandArgs,
@@ -72,10 +72,10 @@ namespace SolutionPackager
 
             ExecuteSolutionPackager(command);
 
-            bool solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName,
+            var solutionFileDelete = RemoveDeletedItems(unpackSettings.ExtractedFolder.FullName,
                 unpackSettings.Project.ProjectItems,
                 unpackSettings.SolutionPackageConfig.packagepath);
-            bool solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder,
+            var solutionFileAddChange = ProcessDownloadedSolution(unpackSettings.ExtractedFolder,
                 unpackSettings.ProjectPackageFolder,
                 unpackSettings.Project.ProjectItems);
 
@@ -85,8 +85,8 @@ namespace SolutionPackager
                 return true;
 
             //Solution change or file not present
-            bool solutionChange = solutionFileDelete || solutionFileAddChange;
-            bool solutionStored = StoreSolutionFile(unpackSettings, solutionChange);
+            var solutionChange = solutionFileDelete || solutionFileAddChange;
+            var solutionStored = StoreSolutionFile(unpackSettings, solutionChange);
 
             return solutionStored;
         }
@@ -95,14 +95,14 @@ namespace SolutionPackager
         {
             try
             {
-                string filename = Path.GetFileName(unpackSettings.DownloadedZipPath);
+                var filename = Path.GetFileName(unpackSettings.DownloadedZipPath);
                 if (string.IsNullOrEmpty(filename))
                 {
                     OutputLogger.WriteToOutputWindow($"{Resource.ErrorMessage_ErrorGettingFileNameFromTemp}: {unpackSettings.DownloadedZipPath}", MessageType.Error);
                     return false;
                 }
 
-                string newSolutionFile = Path.Combine(unpackSettings.ProjectSolutionFolder, filename);
+                var newSolutionFile = Path.Combine(unpackSettings.ProjectSolutionFolder, filename);
 
                 if (!solutionChange && File.Exists(newSolutionFile))
                     return true;
@@ -126,10 +126,10 @@ namespace SolutionPackager
 
         private static bool ProcessDownloadedSolution(DirectoryInfo extractedFolder, string baseFolder, ProjectItems projectItems)
         {
-            bool itemChanged = false;
+            var itemChanged = false;
 
             //Handle file adds
-            foreach (FileInfo file in extractedFolder.GetFiles())
+            foreach (var file in extractedFolder.GetFiles())
             {
                 if (File.Exists(Path.Combine(baseFolder, file.Name)))
                 {
@@ -143,13 +143,13 @@ namespace SolutionPackager
             }
 
             //Handle folder adds
-            foreach (DirectoryInfo folder in extractedFolder.GetDirectories())
+            foreach (var folder in extractedFolder.GetDirectories())
             {
                 if (!Directory.Exists(Path.Combine(baseFolder, folder.Name)))
                     Directory.CreateDirectory(Path.Combine(baseFolder, folder.Name));
 
                 var newProjectItems = projectItems;
-                bool subItemChanged = ProcessDownloadedSolution(folder, Path.Combine(baseFolder, folder.Name), newProjectItems);
+                var subItemChanged = ProcessDownloadedSolution(folder, Path.Combine(baseFolder, folder.Name), newProjectItems);
                 if (subItemChanged)
                     itemChanged = true;
             }
@@ -159,12 +159,12 @@ namespace SolutionPackager
 
         private static bool RemoveDeletedItems(string extractedFolder, ProjectItems projectItems, string projectFolder)
         {
-            bool itemChanged = false;
+            var itemChanged = false;
 
             //Handle file & folder deletes
             foreach (ProjectItem projectItem in projectItems)
             {
-                string name = projectItem.FileNames[0];
+                var name = projectItem.FileNames[0];
                 if (string.IsNullOrEmpty(name))
                     continue;
 
@@ -201,7 +201,7 @@ namespace SolutionPackager
                         if (projectItem.ProjectItems.Count <= 0)
                             continue;
 
-                        bool subItemChanged = RemoveDeletedItems(Path.Combine(extractedFolder, name),
+                        var subItemChanged = RemoveDeletedItems(Path.Combine(extractedFolder, name),
                             projectItem.ProjectItems, projectFolder);
                         if (subItemChanged)
                             itemChanged = true;
@@ -217,7 +217,7 @@ namespace SolutionPackager
             if (projectFolder.StartsWith("/", StringComparison.CurrentCultureIgnoreCase))
                 projectFolder = projectFolder.Substring(1);
 
-            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
+            var projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             projectPath = Path.Combine(projectPath, projectFolder);
 
             if (!Directory.Exists(projectPath))
@@ -228,7 +228,7 @@ namespace SolutionPackager
 
         public static string CreateToolPath()
         {
-            string spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
+            var spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
             if (string.IsNullOrEmpty(spPath))
             {
                 OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_SetSolutionPackagerPath, MessageType.Error);
@@ -238,7 +238,7 @@ namespace SolutionPackager
             if (!spPath.EndsWith("\\", StringComparison.CurrentCultureIgnoreCase))
                 spPath += "\\";
 
-            string toolPath = @"""" + spPath + "SolutionPackager.exe" + @"""";
+            var toolPath = @"""" + spPath + "SolutionPackager.exe" + @"""";
 
             if (File.Exists(spPath + "SolutionPackager.exe"))
                 return toolPath;
@@ -249,7 +249,7 @@ namespace SolutionPackager
 
         private static string CreatePackCommandArgs(PackSettings packSettings)
         {
-            StringBuilder command = new StringBuilder();
+            var command = new StringBuilder();
             command.Append(" /action: Pack");
             command.Append($" /zipfile: \"{Path.Combine(packSettings.ProjectSolutionFolder, packSettings.FileName)}\"");
             command.Append($" /folder: \"{packSettings.ProjectPackageFolder}\"");
@@ -274,7 +274,7 @@ namespace SolutionPackager
 
         private static string CreateExtractCommandArgs(UnpackSettings unpackSettings)
         {
-            StringBuilder command = new StringBuilder();
+            var command = new StringBuilder();
             command.Append(" /action: Extract");
             command.Append($" /zipfile: \"{unpackSettings.DownloadedZipPath}\"");
             command.Append($" /folder: \"{unpackSettings.ExtractedFolder.FullName}\"");
@@ -302,26 +302,26 @@ namespace SolutionPackager
         {
             OutputLogger.WriteToOutputWindow($"{Resource.Message_Begin} {command.Action}: {command.SolutionName}", MessageType.Info);
 
-            int timeout = 60000;
-            string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            const int timeout = 60000;
+            var workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (string.IsNullOrEmpty(workingDirectory))
             {
                 OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_CouldNotSetWorkingDirectory, MessageType.Error);
                 return false;
             }
 
-            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            using (var process = new System.Diagnostics.Process())
             {
                 var processStartInfo = CreateProcessStartInfo(command);
                 process.StartInfo = processStartInfo;
                 process.StartInfo.WorkingDirectory = workingDirectory;
 
-                StringBuilder output = new StringBuilder();
-                StringBuilder errorDataReceived = new StringBuilder();
+                var output = new StringBuilder();
+                var errorDataReceived = new StringBuilder();
 
-                using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+                using (var outputWaitHandle = new AutoResetEvent(false))
                 {
-                    using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+                    using (var errorWaitHandle = new AutoResetEvent(false))
                     {
                         process.OutputDataReceived += (sender, e) =>
                         {

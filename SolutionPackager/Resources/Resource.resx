@@ -306,4 +306,7 @@
   <data name="SolutionPackager_UseMapFileLabel_Label_Content" xml:space="preserve">
     <value>Use Map File?</value>
   </data>
+  <data name="Message_ImportedSolution" xml:space="preserve">
+    <value>Imported solution</value>
+  </data>
 </root>
