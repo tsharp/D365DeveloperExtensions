@@ -11,11 +11,11 @@ namespace SolutionPackager
     {
         public static ObservableCollection<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
         {
-            ObservableCollection<CrmSolution> crmSolutions = new ObservableCollection<CrmSolution>();
+            var crmSolutions = new ObservableCollection<CrmSolution>();
 
-            foreach (Entity entity in solutions.Entities)
+            foreach (var entity in solutions.Entities)
             {
-                CrmSolution solution = new CrmSolution
+                var solution = new CrmSolution
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),

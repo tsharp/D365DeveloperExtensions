@@ -10,6 +10,8 @@ using SolutionPackager.Resources;
 using SolutionPackager.ViewModels;
 using System;
 using System.Threading.Tasks;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 using Task = System.Threading.Tasks.Task;
 
 namespace SolutionPackager.Crm
@@ -22,7 +24,7 @@ namespace SolutionPackager.Crm
         {
             try
             {
-                QueryExpression query = new QueryExpression
+                var query = new QueryExpression
                 {
                     EntityName = "solution",
                     ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename", "version"),
@@ -66,8 +68,9 @@ namespace SolutionPackager.Crm
                     }
                 };
 
-                EntityCollection solutions = client.RetrieveMultiple(query);
+                var solutions = client.RetrieveMultiple(query);
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedSolutions, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
                 return solutions;
@@ -91,17 +94,18 @@ namespace SolutionPackager.Crm
                 if (client.OrganizationWebProxyClient != null)
                     client.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(1, 0, 0);
 
-                ExportSolutionRequest request = new ExportSolutionRequest
+                var request = new ExportSolutionRequest
                 {
                     Managed = managed,
                     SolutionName = selectedSolution.UniqueName
                 };
-                ExportSolutionResponse response = await Task.Run(() => (ExportSolutionResponse)client.Execute(request));
+                var response = await Task.Run(() => (ExportSolutionResponse)client.Execute(request));
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedSolution, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolution, MessageType.Info);
 
-                string fileName = FileHandler.FormatSolutionVersionString(selectedSolution.UniqueName, selectedSolution.Version, managed);
-                string tempFile = FileHandler.WriteTempFile(fileName, response.ExportSolutionFile);
+                var fileName = FileHandler.FormatSolutionVersionString(selectedSolution.UniqueName, selectedSolution.Version, managed);
+                var tempFile = FileHandler.WriteTempFile(fileName, response.ExportSolutionFile);
 
                 return tempFile;
             }
@@ -115,13 +119,13 @@ namespace SolutionPackager.Crm
 
         public static bool ImportSolution(CrmServiceClient client, string path)
         {
-            byte[] solutionBytes = FileSystem.GetFileBytes(path);
+            var solutionBytes = FileSystem.GetFileBytes(path);
             if (solutionBytes == null)
                 return false;
 
             try
             {
-                ImportSolutionRequest request = new ImportSolutionRequest
+                var request = new ImportSolutionRequest
                 {
                     CustomizationFile = solutionBytes,
                     OverwriteUnmanagedCustomizations = true,
@@ -130,6 +134,9 @@ namespace SolutionPackager.Crm
                 };
 
                 client.Execute(request);
+
+                ExLogger.LogToFile(Logger, $"{Resource.Message_ImportedSolution}: {path}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_ImportedSolution}: {path}", MessageType.Info);
 
                 return true;
             }

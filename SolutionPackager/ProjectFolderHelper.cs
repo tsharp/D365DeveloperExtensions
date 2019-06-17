@@ -1,6 +1,5 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.Connection;
-using EnvDTE;
 using Microsoft.VisualStudio;
 using System;
 using System.Collections.ObjectModel;
@@ -13,8 +12,8 @@ namespace SolutionPackager
     {
         public static ObservableCollection<string> FolderAdded(ProjectItemAddedEventArgs e, ObservableCollection<string> projectFolders)
         {
-            ProjectItem projectItem = e.ProjectItem;
-            Guid itemType = new Guid(projectItem.Kind);
+            var projectItem = e.ProjectItem;
+            var itemType = new Guid(projectItem.Kind);
 
             if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
                 return projectFolders;
@@ -23,7 +22,7 @@ namespace SolutionPackager
             if (projectPath == null)
                 return projectFolders;
 
-            string newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]).TrimEnd('/');
+            var newItemName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]).TrimEnd('/');
             projectFolders.Add(newItemName);
 
             return new ObservableCollection<string>(projectFolders.OrderBy(s => s));
@@ -31,13 +30,13 @@ namespace SolutionPackager
 
         public static ObservableCollection<string> FolderRemoved(ProjectItemRemovedEventArgs e, ObservableCollection<string> projectFolders)
         {
-            ProjectItem projectItem = e.ProjectItem;
+            var projectItem = e.ProjectItem;
 
             var projectPath = Path.GetDirectoryName(projectItem.ContainingProject.FullName);
             if (projectPath == null)
                 return projectFolders;
 
-            Guid itemType = new Guid(projectItem.Kind);
+            var itemType = new Guid(projectItem.Kind);
 
             if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
                 return projectFolders;
@@ -51,7 +50,7 @@ namespace SolutionPackager
 
         public static ObservableCollection<string> FolderRenamed(ProjectItemRenamedEventArgs e, ObservableCollection<string> projectFolders)
         {
-            ProjectItem projectItem = e.ProjectItem;
+            var projectItem = e.ProjectItem;
             if (projectItem.Name == null)
                 return projectFolders;
 
@@ -59,15 +58,15 @@ namespace SolutionPackager
             if (projectPath == null)
                 return projectFolders;
 
-            string oldName = e.OldName;
-            Guid itemType = new Guid(projectItem.Kind);
+            var oldName = e.OldName;
+            var itemType = new Guid(projectItem.Kind);
 
             if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
                 return projectFolders;
 
             var newItemPath = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]);
 
-            int index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
+            var index = newItemPath.LastIndexOf(projectItem.Name, StringComparison.Ordinal);
             if (index == -1)
                 return projectFolders;
 

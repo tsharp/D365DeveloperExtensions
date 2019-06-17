@@ -45,7 +45,7 @@ namespace SolutionPackager
                         new XAttribute("to", map.to)));
             }
 
-            string mapContent = mappingDoc.ToString();
+            var mapContent = mappingDoc.ToString();
             if (string.IsNullOrEmpty(mapContent))
                 return;
 
