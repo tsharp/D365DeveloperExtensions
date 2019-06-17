@@ -1,7 +1,6 @@
 ﻿using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -69,16 +68,16 @@ namespace TemplateWizards
             MockingFrameworks = new ObservableCollection<MockingFrameworkListItem>();
             UnitTestFramework.SelectedIndex = -1;
 
-            Version coreVerion = new Version(0, 0);
+            var coreVersion = new Version(0, 0);
             if (Projects.Count > 0)
             {
-                string version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
-                coreVerion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
+                var version = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetSdkCoreVersion(SelectedProject);
+                coreVersion = D365DeveloperExtensions.Core.Versioning.StringToVersion(version);
             }
 
-            foreach (MockingFramework mockingFramework in D365DeveloperExtensions.Core.Models.MockingFrameworks.GetMockingFrameworks())
+            foreach (var mockingFramework in D365DeveloperExtensions.Core.Models.MockingFrameworks.GetMockingFrameworks())
             {
-                if (mockingFramework.CrmMajorVersion != coreVerion.Major && Projects.Count > 0)
+                if (mockingFramework.CrmMajorVersion != coreVersion.Major && Projects.Count > 0)
                     continue;
 
                 var mockingFrameworkListItem = CreateMockingFrameworkItem(mockingFramework);
@@ -89,7 +88,7 @@ namespace TemplateWizards
 
         private static MockingFrameworkListItem CreateMockingFrameworkItem(MockingFramework mockingFramework)
         {
-            MockingFrameworkListItem mockingFrameworkListItem = new MockingFrameworkListItem
+            var mockingFrameworkListItem = new MockingFrameworkListItem
             {
                 Name = mockingFramework.NugetName,
                 MockingFramework = mockingFramework
@@ -101,9 +100,9 @@ namespace TemplateWizards
         private void GetProjects()
         {
             Projects = new ObservableCollection<ProjectListItem>();
-            IList<Project> projects = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjects(true);
+            var projects = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjects(true);
 
-            foreach (Project project in projects)
+            foreach (var project in projects)
             {
                 var projectListItem = CreateProjectItem(project);
 
@@ -119,7 +118,7 @@ namespace TemplateWizards
 
         private static ProjectListItem CreateProjectItem(Project project)
         {
-            ProjectListItem projectListItem = new ProjectListItem
+            var projectListItem = new ProjectListItem
             {
                 Name = project.Name,
                 Project = project

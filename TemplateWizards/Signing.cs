@@ -33,9 +33,9 @@ namespace TemplateWizards
 
                 var defaultKeyName = CreateKeyName(destDirectory);
 
-                string keyFilePath = Path.Combine(destDirectory, defaultKeyName);
+                var keyFilePath = Path.Combine(destDirectory, defaultKeyName);
 
-                IntPtr buffer = IntPtr.Zero;
+                var buffer = IntPtr.Zero;
 
                 WriteKeydata(buffer, keyFilePath);
 
@@ -56,7 +56,7 @@ namespace TemplateWizards
 
         private static string CreateKeyName(string destDirectory)
         {
-            string defaultKeyName = UserOptionsHelper.GetOption<string>(UserOptionProperties.DefaultKeyFileName);
+            var defaultKeyName = UserOptionsHelper.GetOption<string>(UserOptionProperties.DefaultKeyFileName);
             if (!FileSystem.IsValidFilename(defaultKeyName, destDirectory))
                 defaultKeyName = D365DeveloperExtensions.Core.Resources.Resource.DefaultKeyName;
 
