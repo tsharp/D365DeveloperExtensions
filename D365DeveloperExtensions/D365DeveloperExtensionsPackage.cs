@@ -39,7 +39,7 @@ namespace D365DeveloperExtensions
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", "2.0.19167.0524", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "2.0.19168.0100", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(PluginDeployerHost))]
     [ProvideToolWindow(typeof(WebResourceDeployerHost))]
@@ -99,7 +99,7 @@ namespace D365DeveloperExtensions
         {
             _vsSolutionEvents = new VsSolutionEvents(this);
             _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out uint solutionEventsCookie);
+            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out _);
         }
 
         private void BindSolutionEvents(Events events)

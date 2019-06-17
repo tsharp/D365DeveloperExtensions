@@ -447,4 +447,7 @@
   <data name="ErrorMessage_ErrorAccessingDTE" xml:space="preserve">
     <value>Error accessing DTE</value>
   </data>
+  <data name="ErrorMessage_ErrorAccessingMCS" xml:space="preserve">
+    <value>Error accessing OleMenuCommandService</value>
+  </data>
 </root>

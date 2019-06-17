@@ -19,6 +19,8 @@ using System.ComponentModel.Design;
 using System.Windows;
 using TemplateWizards;
 using WebResourceDeployer;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace D365DeveloperExtensions
 {
@@ -28,60 +30,68 @@ namespace D365DeveloperExtensions
 
         public static async System.Threading.Tasks.Task InitializeAsync(AsyncPackage package, DTE dte)
         {
-            var mcs = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
+            try
+            {
+                if (!(await package.GetServiceAsync((typeof(IMenuCommandService))) is OleMenuCommandService mcs))
+                    throw new ArgumentNullException(Core.Resources.Resource.ErrorMessage_ErrorAccessingMCS);
 
-            ExtensionLogger.LogToFile(Logger, Resource.TraceInfo_InitializingExtension, LogLevel.Info);
+                ExLogger.LogToFile(Logger, Resource.TraceInfo_InitializingMenu, LogLevel.Info);
 
-            //Plug-in Deployer
-            CommandID pdWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidPluginDeployerWindow);
-            OleMenuCommand pdWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<PluginDeployerHost>(sender, e, package), pdWindowCommandId);
-            mcs.AddCommand(pdWindowItem);
+                //Plug-in Deployer
+                var pdWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidPluginDeployerWindow);
+                var pdWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<PluginDeployerHost>(sender, e, package), pdWindowCommandId);
+                mcs.AddCommand(pdWindowItem);
 
-            //Web Resource Deployer
-            CommandID wrdWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidWebResourceDeployerWindow);
-            OleMenuCommand wrdWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<WebResourceDeployerHost>(sender, e, package), wrdWindowCommandId);
-            mcs.AddCommand(wrdWindowItem);
+                //Web Resource Deployer
+                var wrdWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidWebResourceDeployerWindow);
+                var wrdWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<WebResourceDeployerHost>(sender, e, package), wrdWindowCommandId);
+                mcs.AddCommand(wrdWindowItem);
 
-            //Solution Packager
-            CommandID spWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidSolutionPackagerWindow);
-            OleMenuCommand spWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<SolutionPackagerHost>(sender, e, package), spWindowCommandId);
-            mcs.AddCommand(spWindowItem);
+                //Solution Packager
+                var spWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidSolutionPackagerWindow);
+                var spWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<SolutionPackagerHost>(sender, e, package), spWindowCommandId);
+                mcs.AddCommand(spWindowItem);
 
-            //Plug-in Trace Viewer
-            CommandID ptvWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidPluginTraceViewerWindow);
-            OleMenuCommand ptvWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<PluginTraceViewerHost>(sender, e, package), ptvWindowCommandId);
-            mcs.AddCommand(ptvWindowItem);
+                //Plug-in Trace Viewer
+                var ptvWindowCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidPluginTraceViewerWindow);
+                var ptvWindowItem = new OleMenuCommand((sender, e) => ShowToolWindow<PluginTraceViewerHost>(sender, e, package), ptvWindowCommandId);
+                mcs.AddCommand(ptvWindowItem);
 
-            //CRM Intellisense On
-            CommandID crmIntellisenseOnCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidCrmIntellisenseOn);
-            OleMenuCommand crmIntellisenseOnItem =
-                new OleMenuCommand((sender, e) => ToggleCrmIntellisense(sender, e, dte), crmIntellisenseOnCommandId)
-                {
-                    Visible = false
-                };
-            crmIntellisenseOnItem.BeforeQueryStatus += (sender, e) => DisplayCrmIntellisense(sender, e, dte);
-            mcs.AddCommand(crmIntellisenseOnItem);
+                //CRM Intellisense On
+                var crmIntellisenseOnCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidCrmIntellisenseOn);
+                var crmIntellisenseOnItem =
+                    new OleMenuCommand((sender, e) => ToggleCrmIntellisense(sender, e, dte), crmIntellisenseOnCommandId)
+                    {
+                        Visible = false
+                    };
+                crmIntellisenseOnItem.BeforeQueryStatus += (sender, e) => DisplayCrmIntellisense(sender, e, dte);
+                mcs.AddCommand(crmIntellisenseOnItem);
 
-            //CRM Intellisense Off
-            CommandID crmIntellisenseOffCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidCrmIntellisenseOff);
-            OleMenuCommand crmIntellisenseOffItem =
-                new OleMenuCommand((sender, e) => ToggleCrmIntellisense(sender, e, dte), crmIntellisenseOffCommandId)
-                {
-                    Visible = false
-                };
-            crmIntellisenseOnItem.BeforeQueryStatus += (sender, e) => DisplayCrmIntellisense(sender, e, dte);
-            mcs.AddCommand(crmIntellisenseOffItem);
+                //CRM Intellisense Off
+                var crmIntellisenseOffCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidCrmIntellisenseOff);
+                var crmIntellisenseOffItem =
+                    new OleMenuCommand((sender, e) => ToggleCrmIntellisense(sender, e, dte), crmIntellisenseOffCommandId)
+                    {
+                        Visible = false
+                    };
+                crmIntellisenseOnItem.BeforeQueryStatus += (sender, e) => DisplayCrmIntellisense(sender, e, dte);
+                mcs.AddCommand(crmIntellisenseOffItem);
 
-            //NuGet SDK Tools - Core Tools
-            CommandID nugetSdkToolsCoreCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidNuGetSdkToolsCore);
-            OleMenuCommand nugetSdkToolsCoreItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsCoreCommandId);
-            mcs.AddCommand(nugetSdkToolsCoreItem);
+                //NuGet SDK Tools - Core Tools
+                var nugetSdkToolsCoreCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidNuGetSdkToolsCore);
+                var nugetSdkToolsCoreItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsCoreCommandId);
+                mcs.AddCommand(nugetSdkToolsCoreItem);
 
-            //NuGet SDK Tools - Plug-in Registration Tool
-            CommandID nugetSdkToolsPrtCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidNuGetSdkToolsPrt);
-            OleMenuCommand nugetSdkToolsPrtItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsPrtCommandId);
-            mcs.AddCommand(nugetSdkToolsPrtItem);
-
+                //NuGet SDK Tools - Plug-in Registration Tool
+                var nugetSdkToolsPrtCommandId = new CommandID(PackageGuids.GuidD365DevExCmdSet, PackageIds.CmdidNuGetSdkToolsPrt);
+                var nugetSdkToolsPrtItem = new OleMenuCommand(InstallNuGetCliPackage, nugetSdkToolsPrtCommandId);
+                mcs.AddCommand(nugetSdkToolsPrtItem);
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(Logger, null, e);
+                throw;
+            }
         }
 
         private static void DisplayCrmIntellisense(object sender, EventArgs eventArgs, DTE dte)
@@ -89,7 +99,7 @@ namespace D365DeveloperExtensions
             if (!(sender is OleMenuCommand menuCommand))
                 return;
 
-            bool useIntellisense = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseIntellisense);
+            var useIntellisense = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseIntellisense);
             if (!useIntellisense)
                 return;
 
@@ -100,7 +110,7 @@ namespace D365DeveloperExtensions
                 return;
             }
 
-            bool isEnabled = (bool)value;
+            var isEnabled = (bool)value;
             if (isEnabled)
                 menuCommand.Visible = menuCommand.CommandID.ID != 264;
             else
@@ -122,6 +132,8 @@ namespace D365DeveloperExtensions
                 SharedGlobals.SetGlobal("UseCrmIntellisense", !isEnabled, dte);
             }
 
+            ExLogger.LogToFile(Logger, $"{Resource.Message_CRMIntellisenseEnabled}: {isEnabled}", LogLevel.Info);
+
             if (!isEnabled) //On
             {
                 if (HostWindow.IsCrmDexWindowOpen(dte) && SharedGlobals.GetGlobal("CrmService", dte) != null)
@@ -134,12 +146,14 @@ namespace D365DeveloperExtensions
 
                 CrmMetadata.Metadata = null;
                 SharedGlobals.SetGlobal("CrmMetadata", null, dte);
-                OutputLogger.WriteToOutputWindow("Clearing metadata", MessageType.Info);
+
+                ExLogger.LogToFile(Logger, Resource.Message_ClearingMetadata, LogLevel.Info);
+                OutputLogger.WriteToOutputWindow(Resource.Message_ClearingMetadata, MessageType.Info);
 
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show(Resource.MessageBox_ConnectToCrm, Resource.MessageBox_ConnectToCrm_Title,
+            var result = MessageBox.Show(Resource.MessageBox_ConnectToCrm, Resource.MessageBox_ConnectToCrm_Title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
 
             if (result != MessageBoxResult.Yes)
@@ -150,19 +164,23 @@ namespace D365DeveloperExtensions
 
         private static void ConnectToCrm()
         {
-            CrmLoginForm ctrl = new CrmLoginForm(false);
-            ctrl.ConnectionToCrmCompleted += CtrlOnConnectionToCrmCompleted;
-            ctrl.ShowDialog();
+            ExLogger.LogToFile(Logger, Resource.Message_OpeningCrmLoginForm, LogLevel.Info);
+
+            var control = new CrmLoginForm(false);
+            control.ConnectionToCrmCompleted += ControlOnConnectionToCrmCompleted;
+            control.ShowDialog();
         }
 
-        private static void CtrlOnConnectionToCrmCompleted(object sender, EventArgs eventArgs)
+        private static void ControlOnConnectionToCrmCompleted(object sender, EventArgs eventArgs)
         {
+            ExLogger.LogToFile(Logger, Resource.Message_ClosingCrmLoginForm, LogLevel.Info);
+
             ((CrmLoginForm)sender).Close();
         }
 
         private static void InstallNuGetCliPackage(object sender, EventArgs e)
         {
-            OleMenuCommand oleMenuCommand = (OleMenuCommand)sender;
+            var oleMenuCommand = (OleMenuCommand)sender;
 
             switch (oleMenuCommand.CommandID.ID)
             {
@@ -177,11 +195,13 @@ namespace D365DeveloperExtensions
 
         private static void ShowToolWindow<T>(object sender, EventArgs e, AsyncPackage package)
         {
-            ToolWindowPane window = package.FindToolWindow(typeof(T), 0, true);
+            ExLogger.LogToFile(Logger, $"{Resource.Message_OpeningToolWindow}: {typeof(T)}", LogLevel.Info);
+
+            var window = package.FindToolWindow(typeof(T), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException(Resource.ErrorMessage_CannotCreateToolWindow);
 
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            var windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }

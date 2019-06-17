@@ -14,7 +14,7 @@ namespace NuGetRetriever.Tests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _packages = PackageLister.GetPackagesbyId(PackageId);
+            _packages = PackageLister.GetPackagesById(PackageId);
         }
 
         [TestMethod]

@@ -42,7 +42,7 @@ namespace TemplateWizards
             SdkVersions.Items.Clear();
             Title = $"{Resource.Version_Window_Title}:  {nuGetPackage}";
 
-            List<NuGetPackage> versions = PackageLister.GetPackagesbyId(nuGetPackage);
+            List<NuGetPackage> versions = PackageLister.GetPackagesById(nuGetPackage);
 
             _packageVersions = versions;
             _currentPackage = nuGetPackage;
