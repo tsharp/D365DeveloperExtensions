@@ -13,7 +13,7 @@ namespace TemplateWizards
         public static void InstallNuGetCliPackage(string packageName)
         {
             List<NuGetPackage> packages =
-                NuGetRetriever.PackageLister.GetPackagesbyId(packageName);
+                NuGetRetriever.PackageLister.GetPackagesById(packageName);
 
             NuGetPicker nuGetPicker = new NuGetPicker(packageName, packages);
             bool? result = nuGetPicker.ShowDialog();

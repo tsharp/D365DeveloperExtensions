@@ -286,6 +286,15 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error accessing OleMenuCommandService.
+        /// </summary>
+        public static string ErrorMessage_ErrorAccessingMCS {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ErrorAccessingMCS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to add project reference.
         /// </summary>
         public static string ErrorMessage_ErrorAddProjectReference {

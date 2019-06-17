@@ -117,34 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TraceInfo_InitializingExtension" xml:space="preserve">
-    <value>Initializing extension</value>
+  <data name="ErrorMessage_FailedretrievingNuGetpackage" xml:space="preserve">
+    <value>Failed retrieving NuGet package</value>
   </data>
-  <data name="ErrorMessage_CannotCreateToolWindow" xml:space="preserve">
-    <value>Cannot create tool window</value>
+  <data name="Message_RetrievingNuGetpackage" xml:space="preserve">
+    <value>Retrieving NuGet package</value>
   </data>
-  <data name="MessageBox_ConnectToCrm" xml:space="preserve">
-    <value>Connect to CRM?</value>
-  </data>
-  <data name="MessageBox_ConnectToCrm_Title" xml:space="preserve">
-    <value>Connect</value>
-  </data>
-  <data name="Message_ClearingMetadata" xml:space="preserve">
-    <value>Clearing metadata</value>
-  </data>
-  <data name="Message_ClosingCrmLoginForm" xml:space="preserve">
-    <value>Closing CrmLoginForm</value>
-  </data>
-  <data name="Message_CRMIntellisenseEnabled" xml:space="preserve">
-    <value>CRM Intellisense enabled</value>
-  </data>
-  <data name="Message_OpeningCrmLoginForm" xml:space="preserve">
-    <value>Opening CrmLoginForm</value>
-  </data>
-  <data name="Message_OpeningToolWindow" xml:space="preserve">
-    <value>Opening tool window</value>
-  </data>
-  <data name="TraceInfo_InitializingMenu" xml:space="preserve">
-    <value>Initializing menu</value>
+  <data name="Message_UsingNuGetAPIurl" xml:space="preserve">
+    <value>Using NuGet API url</value>
   </data>
 </root>

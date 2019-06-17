@@ -54,5 +54,7 @@ namespace D365DeveloperExtensions.Core
 
         public static string VsProjectTypeWebSite = "{E24C65DC-7377-472B-9ABA-BC803B73C61A}";
         public static string VsSharedProject = "{D954291E-2A0B-460D-934E-DC6B0785DB48}";
+
+        public static string NuGetApiUrl = "https://packages.nuget.org/api/v2";
     }
 }

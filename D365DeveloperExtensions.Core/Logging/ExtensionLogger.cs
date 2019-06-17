@@ -37,7 +37,6 @@ namespace D365DeveloperExtensions.Core.Logging
             if (!UserOptionsHelper.GetOption<bool>(UserOptionProperties.ExtensionLoggingEnabled))
                 return;
 
-            CreateConfig();
             logger.Log(logLevel, message);
         }
 
