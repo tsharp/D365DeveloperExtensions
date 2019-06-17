@@ -18,9 +18,9 @@ namespace D365DeveloperExtensions.Core.UserOptions
 #pragma warning restore CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private string _solutionPackagerToolPath = String.Empty;
-        private string _pluginRegistrationToolPath = String.Empty;
-        private string _crmSvcUtilToolPath = String.Empty;
+        private string _solutionPackagerToolPath = string.Empty;
+        private string _pluginRegistrationToolPath = string.Empty;
+        private string _crmSvcUtilToolPath = string.Empty;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
         [LocalizedCategory("UserOptions_Category_Tools", typeof(Resource))]

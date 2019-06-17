@@ -43,7 +43,7 @@ namespace PluginTraceViewer
 
         private static string CreateDetails(string messageBlock, string exceptionDetails)
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
             if (!string.IsNullOrEmpty(messageBlock))
                 result += messageBlock;

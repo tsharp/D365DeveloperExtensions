@@ -1,10 +1,8 @@
 ﻿using CrmIntellisense.Crm;
-using CrmIntellisense.Models;
 using D365DeveloperExtensions.Core;
 using EnvDTE;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Operations;
 using System;
 using System.Collections.Generic;
 
@@ -30,16 +28,16 @@ namespace CrmIntellisense
             if (!(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider.GetService(typeof(DTE)) is DTE dte))
                 return;
 
-            List<Completion> metadata = (List<Completion>)SharedGlobals.GetGlobal("CrmMetadata", dte);
+            var metadata = (List<Completion>)SharedGlobals.GetGlobal("CrmMetadata", dte);
 
             if (metadata == null)
             {
                 if (CrmMetadata.Metadata == null)
                     return;
 
-                List<CompletionValue> strList = CrmMetadata.Metadata;
+                var strList = CrmMetadata.Metadata;
                 metadata = new List<Completion>();
-                foreach (CompletionValue completionValue in strList)
+                foreach (var completionValue in strList)
                 {
                     metadata.Add(new Completion(completionValue.Name, completionValue.Replacement,
                         completionValue.Description, MonikerHelper.GetImage(completionValue.MetadataType), null));
@@ -62,9 +60,9 @@ namespace CrmIntellisense
             if (point == null)
                 throw new ArgumentNullException(nameof(point));
 
-            SnapshotPoint currentPoint = session.TextView.Caret.Position.BufferPosition - 1;
-            ITextStructureNavigator navigator = _mSourceProvider.NavigatorService.GetTextStructureNavigator(_mTextBuffer);
-            TextExtent extent = navigator.GetExtentOfWord(currentPoint);
+            var currentPoint = session.TextView.Caret.Position.BufferPosition - 1;
+            var navigator = _mSourceProvider.NavigatorService.GetTextStructureNavigator(_mTextBuffer);
+            var extent = navigator.GetExtentOfWord(currentPoint);
             return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
         }
 

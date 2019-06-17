@@ -19,8 +19,8 @@ namespace D365DeveloperExtensions.Core.UserOptions
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private bool _extensionLoggingEnabled;
         private bool _xrmToolingLoggingEnabled;
-        private string _extensionLogFilePath = String.Empty;
-        private string _xrmToolingLogFilePath = String.Empty;
+        private string _extensionLogFilePath = string.Empty;
+        private string _xrmToolingLogFilePath = string.Empty;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
         [LocalizedCategory("UserOptions_Category_Logging", typeof(Resource))]

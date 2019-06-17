@@ -14,16 +14,16 @@ namespace CrmIntellisense
     {
         public InfoBarModel CreateMetadataInfoBar()
         {
-            InfoBarTextSpan text = new InfoBarTextSpan(Resource.Infobar_RetrievingMetadata);
+            var text = new InfoBarTextSpan(Resource.Infobar_RetrievingMetadata);
             InfoBarTextSpan[] spans = { text };
-            InfoBarModel infoBarModel = new InfoBarModel(spans);
+            var infoBarModel = new InfoBarModel(spans);
 
             return infoBarModel;
         }
 
         public bool IsIntellisenseEnabled(DTE dte)
         {
-            bool useIntellisense = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseIntellisense);
+            var useIntellisense = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseIntellisense);
             if (!useIntellisense)
                 return false;
 
@@ -31,7 +31,7 @@ namespace CrmIntellisense
             if (value == null)
                 return false;
 
-            bool? isEnabled = (bool?)value;
+            var isEnabled = (bool?)value;
             return !(bool)!isEnabled;
         }
 

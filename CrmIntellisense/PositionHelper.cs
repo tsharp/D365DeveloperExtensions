@@ -16,11 +16,11 @@ namespace CrmIntellisense
         {
             try
             {
-                SnapshotPoint caretPosition = session.TextView.Caret.Position.BufferPosition;
+                var caretPosition = session.TextView.Caret.Position.BufferPosition;
 
-                Document document = mTextBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+                var document = mTextBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
 
-                SyntaxToken token = document.GetSyntaxRootAsync().Result.FindToken(caretPosition);
+                var token = document.GetSyntaxRootAsync().Result.FindToken(caretPosition);
 
                 return token.IsKind(SyntaxKind.StringLiteralToken);
             }
@@ -32,22 +32,22 @@ namespace CrmIntellisense
 
         public static bool IsLiteralOrTemplate(ICompletionSession session, ITextBuffer mTextBuffer)
         {
-            bool isInLiteralOrTemplate = false;
+            var isInLiteralOrTemplate = false;
 
             var bufferPosition = session.TextView.Caret.Position.BufferPosition;
             var snapshot = bufferPosition.Snapshot;
             var position = bufferPosition.Position;
             var line = snapshot.GetLineFromPosition(position);
-            int lineNumber = line.LineNumber + 1;
-            int column = position - line.Start.Position + 1;
+            var lineNumber = line.LineNumber + 1;
+            var column = position - line.Start.Position + 1;
 
-            JToken node = ParseJavaScript(mTextBuffer);
+            var node = ParseJavaScript(mTextBuffer);
             if (node == null)
                 return false;
 
             WalkNode(node, n =>
             {
-                JToken token = n["Type"];
+                var token = n["Type"];
                 if (token == null || token.Type != JTokenType.String ||
                     token.Value<string>() != "Literal" && token.Value<string>() != "TemplateLiteral")
                     return;
@@ -56,13 +56,13 @@ namespace CrmIntellisense
                 var start = loc?["Start"];
                 var startLine = start?["Line"];
                 var startColumn = start?["Column"];
-                int startLineNumber = startLine.Value<int>();
-                int startColumnNumber = startColumn.Value<int>();
+                var startLineNumber = startLine.Value<int>();
+                var startColumnNumber = startColumn.Value<int>();
                 var end = loc?["End"];
                 var endLine = end?["Line"];
                 var endColumn = end?["Column"];
-                int endLineNumber = endLine.Value<int>();
-                int endColumnNumber = endColumn.Value<int>();
+                var endLineNumber = endLine.Value<int>();
+                var endColumnNumber = endColumn.Value<int>();
 
                 // Inside single '' or double "" quotes
                 if (token.Value<string>() == "Literal")
@@ -102,7 +102,7 @@ namespace CrmIntellisense
 
                 var jsAst = parser.ParseProgram();
                 var source = JsonConvert.SerializeObject(jsAst);
-                JToken node = JToken.Parse(source);
+                var node = JToken.Parse(source);
 
                 return node;
             }
@@ -118,14 +118,14 @@ namespace CrmIntellisense
             {
                 action((JObject)node);
 
-                foreach (JProperty child in node.Children<JProperty>())
+                foreach (var child in node.Children<JProperty>())
                 {
                     WalkNode(child.Value, action);
                 }
             }
             else if (node.Type == JTokenType.Array)
             {
-                foreach (JToken child in node.Children())
+                foreach (var child in node.Children())
                 {
                     WalkNode(child, action);
                 }

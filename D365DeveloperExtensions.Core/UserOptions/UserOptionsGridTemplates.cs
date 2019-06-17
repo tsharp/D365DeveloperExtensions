@@ -17,7 +17,7 @@ namespace D365DeveloperExtensions.Core.UserOptions
 #pragma warning restore CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private string _customTemplatesPath = String.Empty;
+        private string _customTemplatesPath = string.Empty;
         private string _defaultKeyFileName = Resource.DefaultKeyName;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
