@@ -20,17 +20,17 @@ namespace WebResourceDeployer
             if (string.IsNullOrEmpty(filePath))
                 return null;
 
-            string jsPath = Path.ChangeExtension(filePath, "js");
+            var jsPath = Path.ChangeExtension(filePath, "js");
             if (File.Exists(jsPath))
                 return jsPath;
 
-            string fileName = Path.GetFileName(jsPath);
+            var fileName = Path.GetFileName(jsPath);
 
-            string tsConfigBytes = GetTsConfig(project);
+            var tsConfigBytes = GetTsConfig(project);
             if (string.IsNullOrEmpty(tsConfigBytes))
                 return null;
 
-            string outDir = GetTsConfigOutDir(tsConfigBytes);
+            var outDir = GetTsConfigOutDir(tsConfigBytes);
 
             return Path.Combine(outDir, fileName).Replace("\\", "/");
         }
@@ -39,7 +39,7 @@ namespace WebResourceDeployer
         {
             try
             {
-                TsConfig tsConfig = JsonConvert.DeserializeObject<TsConfig>(tsConfigBytes);
+                var tsConfig = JsonConvert.DeserializeObject<TsConfig>(tsConfigBytes);
                 if (tsConfig.GetType().GetProperty("compilerOptions") == null)
                     return "/";
                 var compilerOptions = tsConfig.compilerOptions;
@@ -59,7 +59,7 @@ namespace WebResourceDeployer
 
         private static string GetTsConfig(Project project)
         {
-            string tsConfigPath = GetTsConfigPath(project);
+            var tsConfigPath = GetTsConfigPath(project);
             return File.Exists(tsConfigPath)
                 ? File.ReadAllText(tsConfigPath)
                 : null;
@@ -67,13 +67,13 @@ namespace WebResourceDeployer
 
         public static bool HasTsConfig(Project project)
         {
-            string tsConfigPath = GetTsConfigPath(project);
+            var tsConfigPath = GetTsConfigPath(project);
             return File.Exists(tsConfigPath);
         }
 
         private static string GetTsConfigPath(Project project)
         {
-            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
+            var projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             return Path.Combine(projectPath, "tsconfig.json");
         }
     }

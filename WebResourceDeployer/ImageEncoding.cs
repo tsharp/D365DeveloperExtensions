@@ -11,12 +11,12 @@ namespace WebResourceDeployer
         {
             string encodedImage;
 
-            System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
+            var icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 icon?.Save(ms);
-                byte[] imageBytes = ms.ToArray();
+                var imageBytes = ms.ToArray();
                 encodedImage = Convert.ToBase64String(imageBytes);
             }
 
@@ -27,7 +27,7 @@ namespace WebResourceDeployer
         {
             string encodedImage;
 
-            System.Drawing.Image image = System.Drawing.Image.FromFile(filePath, true);
+            var image = System.Drawing.Image.FromFile(filePath, true);
 
             ImageFormat format = null;
             switch (extension)
@@ -46,10 +46,10 @@ namespace WebResourceDeployer
             if (format == null)
                 return null;
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 image.Save(ms, format);
-                byte[] imageBytes = ms.ToArray();
+                var imageBytes = ms.ToArray();
                 encodedImage = Convert.ToBase64String(imageBytes);
             }
 
@@ -59,7 +59,7 @@ namespace WebResourceDeployer
         public static string EncodeSvg(string filePath)
         {
             var inFile = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            var binaryData = new Byte[inFile.Length];
+            var binaryData = new byte[inFile.Length];
             inFile.Read(binaryData, 0, (int)inFile.Length);
             inFile.Close();
 

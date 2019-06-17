@@ -12,7 +12,7 @@ namespace WebResourceDeployer
         public static ObservableCollection<WebResourceItem> SetDescriptions(ObservableCollection<WebResourceItem> webResourceItems,
             Guid webResourceId, string description)
         {
-            foreach (WebResourceItem item in webResourceItems.Where(w => w.WebResourceId == webResourceId))
+            foreach (var item in webResourceItems.Where(w => w.WebResourceId == webResourceId))
             {
                 item.Description = description;
                 item.PreviousDescription = description;
@@ -26,7 +26,7 @@ namespace WebResourceDeployer
         {
             webResourceItem.PreviousDescription = webResourceItem.Description;
 
-            foreach (WebResourceItem item in webResourceItems.Where(w => w.WebResourceId == webResourceItem.WebResourceId))
+            foreach (var item in webResourceItems.Where(w => w.WebResourceId == webResourceItem.WebResourceId))
             {
                 item.Description = item.PreviousDescription;
             }
@@ -36,9 +36,9 @@ namespace WebResourceDeployer
 
         public static WebResourceItem WebResourceItemFromCmdParam(object sender, ObservableCollection<WebResourceItem> webResourceItems)
         {
-            Button button = (Button)sender;
-            Guid webResourceId = (Guid)button.CommandParameter;
-            WebResourceItem webResourceItem = webResourceItems.FirstOrDefault(w => w.WebResourceId == webResourceId);
+            var button = (Button)sender;
+            var webResourceId = (Guid)button.CommandParameter;
+            var webResourceItem = webResourceItems.FirstOrDefault(w => w.WebResourceId == webResourceId);
 
             return webResourceItem;
         }
@@ -58,7 +58,7 @@ namespace WebResourceDeployer
             ObservableCollection<WebResourceItem> webResourceItems)
         {
             var toUpdate = webResourceItems.Where(w => toPublish.Any(t => w.WebResourceId == t.WebResourceId));
-            foreach (WebResourceItem item in toUpdate)
+            foreach (var item in toUpdate)
             {
                 item.Publish = true;
             }

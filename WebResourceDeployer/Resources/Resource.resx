@@ -369,4 +369,7 @@
   <data name="WebResourceDeployer_Locked_CheckBox_Tooltip" xml:space="preserve">
     <value>Keep bound to file not in project</value>
   </data>
+  <data name="Message_RetrievedWebResourceDescription" xml:space="preserve">
+    <value>Retrieved web resource description</value>
+  </data>
 </root>

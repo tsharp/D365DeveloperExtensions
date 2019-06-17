@@ -13,11 +13,11 @@ namespace WebResourceDeployer
     {
         public static ObservableCollection<WebResourceItem> CreateWebResourceItemView(EntityCollection webResources, string projectName)
         {
-            ObservableCollection<WebResourceItem> webResourceItems = new ObservableCollection<WebResourceItem>();
+            var webResourceItems = new ObservableCollection<WebResourceItem>();
 
-            foreach (Entity webResource in webResources.Entities)
+            foreach (var webResource in webResources.Entities)
             {
-                WebResourceItem webResourceItem = new WebResourceItem
+                var webResourceItem = new WebResourceItem
                 {
                     WebResourceId = (Guid)webResource.GetAttributeValue<AliasedValue>("webresource.webresourceid").Value,
                     Name = webResource.GetAttributeValue<AliasedValue>("webresource.name").Value.ToString(),
@@ -27,13 +27,14 @@ namespace WebResourceDeployer
                     SolutionId = webResource.GetAttributeValue<EntityReference>("solutionid").Id
                 };
 
-                bool hasDescription = webResource.Attributes.TryGetValue("webresource.description", out var description);
-                if (hasDescription) {
-                    webResourceItem.Description = ((AliasedValue) description).Value.ToString();
+                var hasDescription = webResource.Attributes.TryGetValue("webresource.description", out var description);
+                if (hasDescription)
+                {
+                    webResourceItem.Description = ((AliasedValue)description).Value.ToString();
                     webResourceItem.PreviousDescription = webResourceItem.Description;
                 }
 
-                bool hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out var displayName);
+                var hasDisplayName = webResource.Attributes.TryGetValue("webresource.displayname", out var displayName);
                 if (hasDisplayName)
                     webResourceItem.DisplayName = ((AliasedValue)displayName).Value.ToString();
 
@@ -47,11 +48,11 @@ namespace WebResourceDeployer
 
         public static List<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
         {
-            List<CrmSolution> crmSolutions = new List<CrmSolution>();
+            var crmSolutions = new List<CrmSolution>();
 
-            foreach (Entity entity in solutions.Entities)
+            foreach (var entity in solutions.Entities)
             {
-                CrmSolution solution = new CrmSolution
+                var solution = new CrmSolution
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
@@ -81,7 +82,7 @@ namespace WebResourceDeployer
 
         public static WebResourceItem WebResourceItemFromNew(NewWebResource newWebResource, Guid solutionId)
         {
-            WebResourceItem webResourceItem = new WebResourceItem
+            var webResourceItem = new WebResourceItem
             {
                 WebResourceId = newWebResource.NewId,
                 Name = newWebResource.NewName,

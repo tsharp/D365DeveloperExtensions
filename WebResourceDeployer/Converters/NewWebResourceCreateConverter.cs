@@ -10,8 +10,8 @@ namespace WebResourceDeployer.Converters
         {
             for (var i = 0; i < values.Length; i++)
             {
-                object o = values[i];
-                bool isInt = Int32.TryParse(o.ToString(), out int v);
+                var o = values[i];
+                var isInt = int.TryParse(o.ToString(), out var v);
                 if (isInt)
                 {
                     if ((i == 0 || i == 2) && v == -1)
