@@ -17,6 +17,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WebResourceDeployer.Resources;
 using WebResourceDeployer.ViewModels;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace WebResourceDeployer.Crm
 {
@@ -29,13 +31,13 @@ namespace WebResourceDeployer.Crm
             EntityCollection results = null;
             try
             {
-                int pageNumber = 1;
+                var pageNumber = 1;
                 string pagingCookie = null;
-                bool moreRecords = true;
+                var moreRecords = true;
 
                 while (moreRecords)
                 {
-                    QueryExpression query = new QueryExpression
+                    var query = new QueryExpression
                     {
                         EntityName = "solutioncomponent",
                         ColumnSet = new ColumnSet("solutionid"),
@@ -70,7 +72,7 @@ namespace WebResourceDeployer.Crm
                         }
                     };
 
-                    EntityCollection partialResults = client.RetrieveMultiple(query);
+                    var partialResults = client.RetrieveMultiple(query);
 
                     if (partialResults.MoreRecords)
                     {
@@ -89,6 +91,7 @@ namespace WebResourceDeployer.Crm
                     results.Entities.AddRange(partialResults.Entities);
                 }
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedWebResources, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedWebResources, MessageType.Info);
 
                 return results;
@@ -105,10 +108,11 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                Entity webResource = client.Retrieve("webresource", webResourceId,
+                var webResource = client.Retrieve("webresource", webResourceId,
                     new ColumnSet("content", "name", "webresourcetype"));
 
-                OutputLogger.WriteToOutputWindow($"{Resource.Message_DownloadedWebResource}: " + webResource.Id, MessageType.Info);
+                ExLogger.LogToFile(Logger, $"{Resource.Message_DownloadedWebResource}: {webResource.Id}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_DownloadedWebResource}: {webResource.Id}", MessageType.Info);
 
                 return webResource;
             }
@@ -124,8 +128,9 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                Entity webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("content", "name"));
+                var webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("content", "name"));
 
+                ExLogger.LogToFile(Logger, $"{Resource.Message_RetrievedWebResourceContent}: {webResourceId}", LogLevel.Info);
                 OutputLogger.WriteToOutputWindow($"{Resource.Message_RetrievedWebResourceContent}: {webResourceId}", MessageType.Info);
 
                 return webResource;
@@ -142,7 +147,10 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                Entity webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("description"));
+                var webResource = client.Retrieve("webresource", webResourceId, new ColumnSet("description"));
+
+                ExLogger.LogToFile(Logger, $"{Resource.Message_RetrievedWebResourceDescription}: {webResourceId}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_RetrievedWebResourceDescription}: {webResourceId}", MessageType.Info);
 
                 return webResource.GetAttributeValue<string>("description");
             }
@@ -154,11 +162,14 @@ namespace WebResourceDeployer.Crm
             }
         }
 
-        public static void DeleteWebResourcetFromCrm(CrmServiceClient client, Guid webResourceId)
+        public static void DeleteWebResourceFromCrm(CrmServiceClient client, Guid webResourceId)
         {
             try
             {
                 client.Delete("webresource", webResourceId);
+
+                ExLogger.LogToFile(Logger, $"{Resource.Message_DeletedWebResource}: {webResourceId}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_DeletedWebResource}: {webResourceId}", MessageType.Info);
             }
             catch (Exception ex)
             {
@@ -169,7 +180,7 @@ namespace WebResourceDeployer.Crm
         public static Entity CreateNewWebResourceEntity(int type, string prefix, string name, string displayName, string description,
             string filePath, Project project)
         {
-            Entity webResource = new Entity("webresource")
+            var webResource = new Entity("webresource")
             {
                 ["name"] = prefix + name,
                 ["webresourcetype"] = new OptionSetValue(type),
@@ -189,7 +200,7 @@ namespace WebResourceDeployer.Crm
 
         private static string GetFileContent(string filePath, Project project)
         {
-            FileExtensionType extension = WebResourceTypes.GetExtensionType(filePath);
+            var extension = WebResourceTypes.GetExtensionType(filePath);
 
             //Images
             if (WebResourceTypes.IsImageType(extension))
@@ -201,7 +212,7 @@ namespace WebResourceDeployer.Crm
             //TypeScript
             if (extension == FileExtensionType.Ts)
             {
-                string jsPath = TsHelper.GetJsForTsPath(filePath, project);
+                var jsPath = TsHelper.GetJsForTsPath(filePath, project);
                 jsPath = FileSystem.BoundFileToLocalPath(jsPath,
                     D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project));
                 return GetNonImageFileContext(jsPath);
@@ -213,7 +224,7 @@ namespace WebResourceDeployer.Crm
 
         private static string GetNonImageFileContext(string filePath)
         {
-            string content = FileSystem.GetFileText(filePath);
+            var content = FileSystem.GetFileText(filePath);
             return content == null
                 ? null
                 : EncodeString(content);
@@ -223,9 +234,10 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                Guid id = client.Create(webResource);
+                var id = client.Create(webResource);
 
-                OutputLogger.WriteToOutputWindow($"{Resource.Message_NewWebResourceCreated}: " + id, MessageType.Info);
+                ExLogger.LogToFile(Logger, $"{Resource.Message_NewWebResourceCreated}: {id}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_NewWebResourceCreated}: {id}", MessageType.Info);
 
                 return id;
             }
@@ -239,13 +251,13 @@ namespace WebResourceDeployer.Crm
 
         public static Entity CreateUpdateWebResourceEntity(Guid webResourceId, string boundFile, string description, Project project)
         {
-            Entity webResource = new Entity("webresource")
+            var webResource = new Entity("webresource")
             {
                 Id = webResourceId,
                 ["description"] = description
             };
 
-            string filePath = Path.GetDirectoryName(project.FullName) + boundFile.Replace("/", "\\");
+            var filePath = Path.GetDirectoryName(project.FullName) + boundFile.Replace("/", "\\");
 
             webResource["content"] = GetFileContent(filePath, project);
 
@@ -257,19 +269,20 @@ namespace WebResourceDeployer.Crm
             //CRM 2011 < UR12
             try
             {
-                OrganizationRequestCollection requests = CreateUpdateRequests(webResources);
+                var requests = CreateUpdateRequests(webResources);
 
-                foreach (OrganizationRequest request in requests)
+                foreach (var request in requests)
                 {
                     client.Execute(request);
                     OutputLogger.WriteToOutputWindow(Resource.Message_UploadedWebResource, MessageType.Info);
                 }
 
-                string publishXml = CreatePublishXml(webResources);
-                PublishXmlRequest publishRequest = CreatePublishRequest(publishXml);
+                var publishXml = CreatePublishXml(webResources);
+                var publishRequest = CreatePublishRequest(publishXml);
 
                 client.Execute(publishRequest);
 
+                ExLogger.LogToFile(Logger, Resource.Message_PublishedWebResources, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_PublishedWebResources, MessageType.Info);
 
                 return true;
@@ -287,7 +300,7 @@ namespace WebResourceDeployer.Crm
             //CRM 2011 UR12+
             try
             {
-                ExecuteMultipleRequest emRequest = new ExecuteMultipleRequest
+                var emRequest = new ExecuteMultipleRequest
                 {
                     Requests = new OrganizationRequestCollection(),
                     Settings = new ExecuteMultipleSettings
@@ -299,17 +312,18 @@ namespace WebResourceDeployer.Crm
 
                 emRequest.Requests = CreateUpdateRequests(webResources);
 
-                string publishXml = CreatePublishXml(webResources);
+                var publishXml = CreatePublishXml(webResources);
 
                 emRequest.Requests.Add(CreatePublishRequest(publishXml));
 
-                bool wasError = false;
-                ExecuteMultipleResponse emResponse = (ExecuteMultipleResponse)client.Execute(emRequest);
+                var wasError = false;
+                var emResponse = (ExecuteMultipleResponse)client.Execute(emRequest);
 
                 foreach (var responseItem in emResponse.Responses)
                 {
                     if (responseItem.Fault == null) continue;
 
+                    ExLogger.LogToFile(Logger, Resource.ErrorMessage_ErrorUpdatingPublishingWebResources, LogLevel.Info);
                     OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_ErrorUpdatingPublishingWebResources, MessageType.Error);
                     wasError = true;
                 }
@@ -317,6 +331,7 @@ namespace WebResourceDeployer.Crm
                 if (wasError)
                     return false;
 
+                ExLogger.LogToFile(Logger, Resource.Message_UpdatedPublishedWebResources, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_UpdatedPublishedWebResources, MessageType.Info);
 
                 return true;
@@ -331,17 +346,17 @@ namespace WebResourceDeployer.Crm
 
         private static PublishXmlRequest CreatePublishRequest(string publishXml)
         {
-            PublishXmlRequest pubRequest = new PublishXmlRequest { ParameterXml = publishXml };
+            var pubRequest = new PublishXmlRequest { ParameterXml = publishXml };
             return pubRequest;
         }
 
         private static OrganizationRequestCollection CreateUpdateRequests(List<Entity> webResources)
         {
-            OrganizationRequestCollection requests = new OrganizationRequestCollection();
+            var requests = new OrganizationRequestCollection();
 
-            foreach (Entity webResource in webResources)
+            foreach (var webResource in webResources)
             {
-                UpdateRequest request = new UpdateRequest { Target = webResource };
+                var request = new UpdateRequest { Target = webResource };
                 requests.Add(request);
             }
 
@@ -350,10 +365,10 @@ namespace WebResourceDeployer.Crm
 
         private static string CreatePublishXml(List<Entity> webResources)
         {
-            StringBuilder publishXml = new StringBuilder();
+            var publishXml = new StringBuilder();
             publishXml.Append("<importexportxml><webresources>");
 
-            foreach (Entity webResource in webResources)
+            foreach (var webResource in webResources)
             {
                 publishXml.Append($"<webresource>{webResource.Id}</webresource>");
             }
@@ -365,8 +380,8 @@ namespace WebResourceDeployer.Crm
 
         public static List<Entity> CreateDescriptionUpdateWebResource(WebResourceItem webResourceItem, string newDescription)
         {
-            List<Entity> webResources = new List<Entity>();
-            Entity webResource = new Entity("webresource")
+            var webResources = new List<Entity>();
+            var webResource = new Entity("webresource")
             {
                 Id = webResourceItem.WebResourceId,
                 ["description"] = newDescription
@@ -379,16 +394,16 @@ namespace WebResourceDeployer.Crm
 
         public static string GetWebResourceContent(Entity webResource)
         {
-            bool hasContent = webResource.Attributes.TryGetValue("content", out var contentObj);
-            var content = hasContent ? contentObj.ToString() : String.Empty;
+            var hasContent = webResource.Attributes.TryGetValue("content", out var contentObj);
+            var content = hasContent ? contentObj.ToString() : string.Empty;
 
             return content;
         }
 
         public static byte[] GetDecodedContent(Entity webResource)
         {
-            string content = GetWebResourceContent(webResource);
-            byte[] decodedContent = DecodeWebResource(content);
+            var content = GetWebResourceContent(webResource);
+            var decodedContent = DecodeWebResource(content);
 
             return decodedContent;
         }
@@ -431,10 +446,10 @@ namespace WebResourceDeployer.Crm
 
         public static string ConvertWebResourceNameToPath(string webResourceName, string folder, string projectFullName)
         {
-            string[] name = webResourceName.Split('/');
+            var name = webResourceName.Split('/');
             folder = folder.Replace("/", "\\");
             var path = Path.GetDirectoryName(projectFullName) +
-                       (folder != "\\" ? folder : String.Empty) +
+                       (folder != "\\" ? folder : string.Empty) +
                        "\\" + name[name.Length - 1];
 
             return path;
@@ -443,16 +458,16 @@ namespace WebResourceDeployer.Crm
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public static string ConvertWebResourceNameFullToPath(string webResourceName, string rootFolder, Project project)
         {
-            string[] folders = webResourceName.Split('/');
+            var folders = webResourceName.Split('/');
 
-            string currentFullPath = Path.GetDirectoryName(project.FullName);
-            string currentPartialPath = String.Empty;
-            for (int i = 0; i < folders.Length - 1; i++)
+            var currentFullPath = Path.GetDirectoryName(project.FullName);
+            var currentPartialPath = string.Empty;
+            for (var i = 0; i < folders.Length - 1; i++)
             {
-                string currentFolder = D365DeveloperExtensions.Core.Vs.ProjectItemWorker.CreateValidFolderName(folders[i]);
+                var currentFolder = D365DeveloperExtensions.Core.Vs.ProjectItemWorker.CreateValidFolderName(folders[i]);
                 currentFullPath = Path.Combine(currentFullPath, currentFolder);
                 currentPartialPath = Path.Combine(currentPartialPath, currentFolder);
-                bool exists = Directory.Exists(currentFullPath);
+                var exists = Directory.Exists(currentFullPath);
                 if (!exists)
                     Directory.CreateDirectory(currentFullPath);
 
@@ -467,7 +482,7 @@ namespace WebResourceDeployer.Crm
             if (!string.IsNullOrEmpty(Path.GetExtension(name)))
                 return name;
 
-            string ext = WebResourceTypes.GetWebResourceTypeNameByNumber(webResourceType.ToString()).ToLower();
+            var ext = WebResourceTypes.GetWebResourceTypeNameByNumber(webResourceType.ToString()).ToLower();
             name += "." + ext;
 
             return name;
@@ -479,7 +494,7 @@ namespace WebResourceDeployer.Crm
             if (directoryName != null)
                 folder = directoryName.Replace("\\", "/");
             if (folder == "/")
-                folder = String.Empty;
+                folder = string.Empty;
             return folder;
         }
 
@@ -487,7 +502,7 @@ namespace WebResourceDeployer.Crm
         {
             name = name.Trim();
 
-            Regex r = new Regex("^[a-zA-Z0-9_.\\/]*$");
+            var r = new Regex("^[a-zA-Z0-9_.\\/]*$");
             if (!r.IsMatch(name))
                 return false;
 

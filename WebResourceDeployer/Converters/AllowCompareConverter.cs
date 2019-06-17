@@ -8,16 +8,17 @@ namespace WebResourceDeployer.Converters
 {
     public class AllowCompareConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
             //No bound file - nothing to compare to
             if (string.IsNullOrEmpty(values[0]?.ToString()))
                 return false;
 
-            bool hasType = Int32.TryParse(values[1].ToString(), out int type);
+            var hasType = int.TryParse(values[1].ToString(), out var type);
             if (!hasType)
                 return false;
 
-            WebResourceType webResourceType = WebResourceTypes.Types.FirstOrDefault(t => t.Type == type);
+            var webResourceType = WebResourceTypes.Types.FirstOrDefault(t => t.Type == type);
 
             return webResourceType != null && webResourceType.AllowCompare;
         }
