@@ -53,10 +53,10 @@ namespace D365DeveloperExtensions.Core.Vs
         public static uint GetProjectItemId(IVsSolution solutionService, string projectUniqueName, ProjectItem projectItem)
         {
             if (solutionService.GetProjectOfUniqueName(projectUniqueName, out var projectHierarchy) != VSConstants.S_OK)
-                return UInt32.MinValue;
+                return uint.MinValue;
 
             if (projectHierarchy == null)
-                return UInt32.MinValue;
+                return uint.MinValue;
 
             string fileFullName;
 
@@ -66,15 +66,15 @@ namespace D365DeveloperExtensions.Core.Vs
             }
             catch
             {
-                return UInt32.MinValue;
+                return uint.MinValue;
             }
 
             if (string.IsNullOrEmpty(fileFullName))
-                return UInt32.MinValue;
+                return uint.MinValue;
 
             return projectHierarchy.ParseCanonicalName(fileFullName, out var itemId) == VSConstants.S_OK
                 ? itemId
-                : UInt32.MinValue;
+                : uint.MinValue;
         }
 
         public static ProjectItem GetProjectItemFromItemId(IVsSolution solutionService, string projectUniqueName, uint projectItemId)
@@ -95,7 +95,7 @@ namespace D365DeveloperExtensions.Core.Vs
         public static string CreateValidFolderName(string name)
         {
             string[] illegal = { "/", "?", ":", "&", "\\", "*", "\"", "<", ">", "|", "#", "_" };
-            string rxString = string.Join("|", illegal.Select(Regex.Escape));
+            var rxString = string.Join("|", illegal.Select(Regex.Escape));
             name = Regex.Replace(name, rxString, string.Empty);
 
             return name;
@@ -103,10 +103,10 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static ProjectItem GetProjectItem(Project project, string path)
         {
-            string folderPath = Path.GetDirectoryName(path);
-            string itemName = Path.GetFileName(path);
+            var folderPath = Path.GetDirectoryName(path);
+            var itemName = Path.GetFileName(path);
 
-            ProjectItems container = GetProjectItems(project, folderPath);
+            var container = GetProjectItems(project, folderPath);
 
             if (container == null || !container.TryGetFile(itemName, out var projectItem) && !container.TryGetFolder(itemName, out projectItem))
                 return null;
@@ -118,7 +118,7 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             try
             {
-                ProjectItem projectItem = projectItems.Item(name);
+                var projectItem = projectItems.Item(name);
                 if (projectItem != null && allowedItemKinds.Contains(projectItem.Kind, StringComparer.OrdinalIgnoreCase))
                     return projectItem;
             }
@@ -132,17 +132,17 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static ProjectItems GetProjectItems(Project project, string folderPath, bool createIfNotExists = false)
         {
-            if (String.IsNullOrEmpty(folderPath))
+            if (string.IsNullOrEmpty(folderPath))
                 return project.ProjectItems;
 
-            string[] pathParts = folderPath.Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries);
+            var pathParts = folderPath.Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries);
 
             object cursor = project;
 
-            string fullPath = project.GetFullPath();
-            string folderRelativePath = String.Empty;
+            var fullPath = project.GetFullPath();
+            var folderRelativePath = string.Empty;
 
-            foreach (string part in pathParts)
+            foreach (var part in pathParts)
             {
                 fullPath = Path.Combine(fullPath, part);
                 folderRelativePath = Path.Combine(folderRelativePath, part);
@@ -188,7 +188,7 @@ namespace D365DeveloperExtensions.Core.Vs
             if (!KnownNestedFiles.TryGetValue(name, out var parentFileName))
                 parentFileName = Path.GetFileNameWithoutExtension(name);
 
-            ProjectItem parentProjectItem = GetProjectItem(projectItems, parentFileName, FileKinds);
+            var parentProjectItem = GetProjectItem(projectItems, parentFileName, FileKinds);
 
             projectItem = parentProjectItem != null ?
                 GetProjectItem(parentProjectItem.ProjectItems, name, FileKinds) :
@@ -199,8 +199,8 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetFullPath(this Project project)
         {
-            string fullPath = project.GetPropertyValue<string>("FullPath");
-            if (String.IsNullOrEmpty(fullPath))
+            var fullPath = project.GetPropertyValue<string>("FullPath");
+            if (string.IsNullOrEmpty(fullPath))
                 return fullPath;
 
             if (File.Exists(fullPath))
@@ -216,7 +216,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
             try
             {
-                Property property = project.Properties.Item(propertyName);
+                var property = project.Properties.Item(propertyName);
                 if (property != null)
                     return (T)property.Value;
             }
@@ -234,7 +234,7 @@ namespace D365DeveloperExtensions.Core.Vs
             if (parentItem == null)
                 return null;
 
-            ProjectItems projectItems = GetProjectItems(parentItem);
+            var projectItems = GetProjectItems(parentItem);
             if (projectItems.TryGetFolder(folderName, out var subFolder))
                 return subFolder;
 
@@ -254,7 +254,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetRelativePath(ProjectItem projectItem)
         {
-            Project project = projectItem.ContainingProject;
+            var project = projectItem.ContainingProject;
             var fullName = projectItem.Properties.Item("FullPath").Value.ToString();
             var relativePath = fullName.Replace(ProjectWorker.GetProjectPath(project), string.Empty);
             if (relativePath.StartsWith("\\"))

@@ -26,14 +26,12 @@ namespace D365DeveloperExtensions.Core
 
         public void HideInfoBar()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (_host != null)
                 RemoveInfoBar();
         }
 
         public void ShowInfoBar(InfoBarModel infoBarModel)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             TryGetInfoBarData(out var host);
             _host = host;
 
@@ -43,20 +41,18 @@ namespace D365DeveloperExtensions.Core
 
         private void RemoveInfoBar()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             _host.RemoveInfoBar(_element);
         }
 
         private void CreateInfoBar(InfoBarModel infoBarModel)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(ServiceProvider.GlobalProvider.GetService(typeof(SVsInfoBarUIFactory)) is IVsInfoBarUIFactory factory))
             {
                 OutputLogger.WriteToOutputWindow(Resource.ErrorMessage_UnknownInfobarError, MessageType.Error);
                 return;
             }
 
-            IVsInfoBarUIElement element = factory.CreateInfoBar(infoBarModel);
+            var element = factory.CreateInfoBar(infoBarModel);
             _element = element;
             _element.Advise(this, out _cookie);
             _host.AddInfoBar(_element);
@@ -64,7 +60,6 @@ namespace D365DeveloperExtensions.Core
 
         private bool TryGetInfoBarData(out IVsInfoBarHost infoBarHost)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             infoBarHost = null;
 
             if (_useActiveView)
@@ -99,7 +94,6 @@ namespace D365DeveloperExtensions.Core
 
         public void OnClosed(IVsInfoBarUIElement infoBarUiElement)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             infoBarUiElement.Unadvise(_cookie);
             OnInfoBarClosed(infoBarUiElement);
         }

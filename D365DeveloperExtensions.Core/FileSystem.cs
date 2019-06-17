@@ -18,18 +18,18 @@ namespace D365DeveloperExtensions.Core
 
         public static bool IsDirectoryEmpty(string path)
         {
-            IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
-            using (IEnumerator<string> en = items.GetEnumerator())
+            var items = Directory.EnumerateFileSystemEntries(path);
+            using (var en = items.GetEnumerator())
                 return !en.MoveNext();
         }
 
         public static DirectoryInfo GetDirectory(string input)
         {
-            string path = Path.GetDirectoryName(input);
+            var path = Path.GetDirectoryName(input);
             if (path == null)
                 throw new Exception(Resource.ErrorMessage_DirectoryFromString);
 
-            DirectoryInfo directory = new DirectoryInfo(path);
+            var directory = new DirectoryInfo(path);
             if (!directory.Exists)
                 throw new Exception(Resource.ErrorMessage_DirectoryFromString);
 
@@ -41,8 +41,8 @@ namespace D365DeveloperExtensions.Core
             try
             {
                 var tempFolder = Path.GetTempPath();
-                string fileName = Path.GetFileName(name);
-                if (String.IsNullOrEmpty(fileName))
+                var fileName = Path.GetFileName(name);
+                if (string.IsNullOrEmpty(fileName))
                     fileName = Guid.NewGuid().ToString();
 
                 var tempFile = Path.Combine(tempFolder, fileName);
@@ -93,7 +93,7 @@ namespace D365DeveloperExtensions.Core
 
         public static string LocalPathToCrmPath(string projectPath, string filename)
         {
-            string newName = filename.Replace(projectPath, String.Empty).Replace("\\", "/");
+            var newName = filename.Replace(projectPath, string.Empty).Replace("\\", "/");
             if (!newName.StartsWith("/"))
                 newName = "/" + newName;
             return newName;
@@ -101,9 +101,9 @@ namespace D365DeveloperExtensions.Core
 
         public static bool DoesFileExist(string[] files, bool checkAll)
         {
-            foreach (string file in files)
+            foreach (var file in files)
             {
-                bool exists = File.Exists(file);
+                var exists = File.Exists(file);
                 if (exists && !checkAll)
                     return true;
 
@@ -130,11 +130,11 @@ namespace D365DeveloperExtensions.Core
 
         public static bool ConfirmOverwrite(string[] files, bool checkAll)
         {
-            List<string> existingFiles = new List<string>();
+            var existingFiles = new List<string>();
 
-            foreach (string file in files)
+            foreach (var file in files)
             {
-                bool exists = DoesFileExist(new[] { file }, true);
+                var exists = DoesFileExist(new[] { file }, true);
                 if (exists)
                     existingFiles.Add(file);
             }
@@ -142,16 +142,16 @@ namespace D365DeveloperExtensions.Core
             if (existingFiles.Count == 0)
                 return true;
 
-            StringBuilder messsage = new StringBuilder();
-            messsage.Append(Resource.ConfirmMessage_OverwriteFiles);
+            var message = new StringBuilder();
+            message.Append(Resource.ConfirmMessage_OverwriteFiles);
 
-            foreach (string existingFile in existingFiles)
+            foreach (var existingFile in existingFiles)
             {
-                messsage.Append("\n");
-                messsage.Append(existingFile);
+                message.Append("\n");
+                message.Append(existingFile);
             }
 
-            MessageBoxResult result = MessageBox.Show(messsage.ToString(), Resource.ConfirmMessage_OverwriteFiles_Title,
+            var result = MessageBox.Show(message.ToString(), Resource.ConfirmMessage_OverwriteFiles_Title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             return result == MessageBoxResult.Yes;
@@ -187,21 +187,21 @@ namespace D365DeveloperExtensions.Core
 
         public static bool FileEquals(string path1, string path2)
         {
-            FileInfo first = new FileInfo(path1);
-            FileInfo second = new FileInfo(path2);
+            var first = new FileInfo(path1);
+            var second = new FileInfo(path2);
 
             if (first.Length != second.Length)
                 return false;
 
-            int iterations = (int)Math.Ceiling((double)first.Length / sizeof(Int64));
+            var iterations = (int)Math.Ceiling((double)first.Length / sizeof(Int64));
 
-            using (FileStream fs1 = first.OpenRead())
-            using (FileStream fs2 = second.OpenRead())
+            using (var fs1 = first.OpenRead())
+            using (var fs2 = second.OpenRead())
             {
-                byte[] one = new byte[sizeof(Int64)];
-                byte[] two = new byte[sizeof(Int64)];
+                var one = new byte[sizeof(Int64)];
+                var two = new byte[sizeof(Int64)];
 
-                for (int i = 0; i < iterations; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     fs1.Read(one, 0, sizeof(Int64));
                     fs2.Read(two, 0, sizeof(Int64));
@@ -228,7 +228,7 @@ namespace D365DeveloperExtensions.Core
 
             try
             {
-                DirectoryInfo di = new DirectoryInfo(folder);
+                var di = new DirectoryInfo(folder);
                 return di.Exists;
             }
             catch (Exception)
@@ -239,7 +239,7 @@ namespace D365DeveloperExtensions.Core
 
         public static void DeleteDirectory(string path)
         {
-            foreach (string directory in Directory.GetDirectories(path))
+            foreach (var directory in Directory.GetDirectories(path))
             {
                 DeleteDirectory(directory);
             }

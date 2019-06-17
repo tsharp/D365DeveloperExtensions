@@ -511,11 +511,47 @@ namespace D365DeveloperExtensions.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creating file.
+        /// </summary>
+        public static string Message_CreatingFile {
+            get {
+                return ResourceManager.GetString("Message_CreatingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing all customizations.
+        /// </summary>
+        public static string Message_PublishingAllCustomizations {
+            get {
+                return ResourceManager.GetString("Message_PublishingAllCustomizations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading file.
+        /// </summary>
+        public static string Message_ReadingFile {
+            get {
+                return ResourceManager.GetString("Message_ReadingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected to CRM/365.
         /// </summary>
         public static string Message_SuccessConnecting {
             get {
                 return ResourceManager.GetString("Message_SuccessConnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating file.
+        /// </summary>
+        public static string Message_UpdatingFile {
+            get {
+                return ResourceManager.GetString("Message_UpdatingFile", resourceCulture);
             }
         }
         

@@ -42,7 +42,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private static void OnIsConnectedChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            CustomizationButton customizationButton = d as CustomizationButton;
+            var customizationButton = d as CustomizationButton;
             customizationButton?.OnIsConnectedChange(e);
         }
 
@@ -53,7 +53,6 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void Customizations_OnClick(object sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
@@ -68,7 +67,6 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void Customizations_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 

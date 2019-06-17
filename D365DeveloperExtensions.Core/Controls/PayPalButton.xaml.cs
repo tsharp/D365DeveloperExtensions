@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
-using System.Windows;
+﻿using System.Windows;
 
 namespace D365DeveloperExtensions.Core.Controls
 {
@@ -13,7 +12,6 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void OpenPayPal_Click(object sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             WebBrowser.OpenUrl("https://www.paypal.me/JLattimer");
         }
     }

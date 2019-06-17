@@ -17,7 +17,7 @@ namespace D365DeveloperExtensions.Core.Controls
         {
             TypeNameList.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(BindingPath));
 
-            DataGridHeaderFilterButton button = (DataGridHeaderFilterButton)sender;
+            var button = (DataGridHeaderFilterButton)sender;
             FilterPopup.PlacementTarget = button;
             FilterPopup.Placement = PlacementMode.Relative;
             FilterPopup.IsOpen = true;

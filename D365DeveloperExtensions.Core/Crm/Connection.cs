@@ -7,7 +7,7 @@ namespace D365DeveloperExtensions.Core.Crm
     {
         public static string RetrieveOrganizationId(CrmServiceClient service)
         {
-            WhoAmIResponse response = (WhoAmIResponse)service.Execute(new WhoAmIRequest());
+            var response = (WhoAmIResponse)service.Execute(new WhoAmIRequest());
 
             return response.OrganizationId.ToString();
         }

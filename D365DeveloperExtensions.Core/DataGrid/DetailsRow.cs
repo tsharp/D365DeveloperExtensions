@@ -32,7 +32,7 @@ namespace D365DeveloperExtensions.Core.DataGrid
 
                 var row = (DataGridRow)vis;
 
-                Control control = DataGridHelpers.FindVisualChildren<Control>(row).FirstOrDefault(t => t.Name == controlName);
+                var control = DataGridHelpers.FindVisualChildren<Control>(row).FirstOrDefault(t => t.Name == controlName);
                 return (T)Convert.ChangeType(control, typeof(T));
             }
 

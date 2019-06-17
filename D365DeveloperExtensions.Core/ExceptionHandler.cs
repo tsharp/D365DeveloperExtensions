@@ -11,7 +11,7 @@ namespace D365DeveloperExtensions.Core
     {
         public static void LogException(Logger logger, string message, Exception ex)
         {
-            string output = FormatExceptionOutput(message, ex);
+            var output = FormatExceptionOutput(message, ex);
 
             ExtensionLogger.LogToFile(logger, output, LogLevel.Error);
 
@@ -20,7 +20,7 @@ namespace D365DeveloperExtensions.Core
 
         public static void LogCrmConnectionError(Logger logger, string message, CrmConnectionManager crmConnectionManager)
         {
-            string output = FormatCrmConnectionErrorOutput(crmConnectionManager);
+            var output = FormatCrmConnectionErrorOutput(crmConnectionManager);
 
             ExtensionLogger.LogToFile(logger, output, LogLevel.Error);
 
@@ -29,7 +29,7 @@ namespace D365DeveloperExtensions.Core
 
         public static void LogProcessError(Logger logger, string message, string errorDataReceived)
         {
-            string output = FormatProcessErrorOutput(message, errorDataReceived);
+            var output = FormatProcessErrorOutput(message, errorDataReceived);
 
             ExtensionLogger.LogToFile(logger, output, LogLevel.Error);
 
@@ -38,7 +38,7 @@ namespace D365DeveloperExtensions.Core
 
         private static string FormatExceptionOutput(string message, Exception ex)
         {
-            string result = $"{message}: {ex.Message}";
+            var result = $"{message}: {ex.Message}";
 
             if (ex.StackTrace != null)
                 result += Environment.NewLine + ex.StackTrace;
