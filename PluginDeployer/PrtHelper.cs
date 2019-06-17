@@ -15,7 +15,7 @@ namespace PluginDeployer
 
         public static void OpenPrt()
         {
-            string path = UserOptionsHelper.GetOption<string>(UserOptionProperties.PluginRegistrationToolPath);
+            var path = UserOptionsHelper.GetOption<string>(UserOptionProperties.PluginRegistrationToolPath);
 
             if (string.IsNullOrEmpty(path))
             {

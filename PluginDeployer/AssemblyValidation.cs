@@ -47,10 +47,10 @@ namespace PluginDeployer
             return true;
         }
 
-        public static bool ValidateRegistraionDetails(string assemblyPath, bool isWorkflow)
+        public static bool ValidateRegistrationDetails(string assemblyPath, bool isWorkflow)
         {
-            bool hasRegistrion = RegistrationDetailsPresent(assemblyPath, isWorkflow);
-            if (hasRegistrion)
+            var hasRegistration = RegistrationDetailsPresent(assemblyPath, isWorkflow);
+            if (hasRegistration)
                 return true;
 
             MessageBox.Show(Resource.Message_NoRegistrationDetails);
@@ -60,8 +60,8 @@ namespace PluginDeployer
 
         public static bool ValidateAssemblyVersion(CrmServiceClient client, Entity foundAssembly, string projectAssemblyName, Version projectAssemblyVersion)
         {
-            Version serverVersion = Versioning.StringToVersion(foundAssembly.GetAttributeValue<string>("version"));
-            bool versionMatch = Versioning.DoAssemblyVersionsMatch(projectAssemblyVersion, serverVersion);
+            var serverVersion = Versioning.StringToVersion(foundAssembly.GetAttributeValue<string>("version"));
+            var versionMatch = Versioning.DoAssemblyVersionsMatch(projectAssemblyVersion, serverVersion);
 
             if (!versionMatch)
             {
@@ -85,7 +85,7 @@ namespace PluginDeployer
             {
                 var assemblyBytes = File.ReadAllBytes(assemblyPath);
 
-                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+                var assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
                 container = AssemblyContainer.LoadAssembly(assemblyBytes, isWorkflow, assemblyFolderPath);
 

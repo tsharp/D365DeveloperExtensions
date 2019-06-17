@@ -1,12 +1,9 @@
 ﻿using D365DeveloperExtensions.Core;
 using EnvDTE;
-using PluginDeployer.Models;
 using PluginDeployer.Spkl;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace PluginDeployer
 {
@@ -17,13 +14,13 @@ namespace PluginDeployer
             AssemblyContainer assemblyContainer = null;
             try
             {
-                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+                var assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
                 assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath);
 
-                List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
+                var pluginDatas = assemblyContainer.PluginDatas;
 
-                AssemblyName assemblyName = pluginDatas.First().AssemblyName;
+                var assemblyName = pluginDatas.First().AssemblyName;
 
                 var assemblyProperties = assemblyName.FullName.Split(",= ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -40,11 +37,11 @@ namespace PluginDeployer
             AssemblyContainer assemblyContainer = null;
             try
             {
-                string assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
+                var assemblyFolderPath = Path.GetDirectoryName(assemblyPath);
 
                 assemblyContainer = AssemblyContainer.LoadAssembly(File.ReadAllBytes(assemblyPath), isWorkflow, assemblyFolderPath);
 
-                List<PluginData> pluginDatas = assemblyContainer.PluginDatas;
+                var pluginDatas = assemblyContainer.PluginDatas;
 
                 return pluginDatas.First().AssemblyFullName;
             }
@@ -54,7 +51,7 @@ namespace PluginDeployer
             }
         }
 
-        public static bool RegAttributeDefinitionExists(DTE dte, Project project)
+        public static bool RegAttributeDefinitionExists(Project project)
         {
             foreach (CodeElement codeElement in project.CodeModel.CodeElements)
             {
@@ -62,7 +59,7 @@ namespace PluginDeployer
                     continue;
 
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                CodeNamespace codeNamespace = codeElement as CodeNamespace;
+                var codeNamespace = codeElement as CodeNamespace;
                 if (codeNamespace?.Members == null)
                     continue;
 
@@ -72,8 +69,8 @@ namespace PluginDeployer
                         continue;
 
                     // ReSharper disable once SuspiciousTypeConversion.Global
-                    CodeClass codeClass = codeNamespaceMember as CodeClass;
-                    if (codeClass != null && codeClass.FullName.Contains(ExtensionConstants.SpklRegAttrClassName))
+                    if (codeNamespaceMember is CodeClass codeClass &&
+                        codeClass.FullName.Contains(ExtensionConstants.SpklRegAttrClassName))
                         return true;
                 }
             }

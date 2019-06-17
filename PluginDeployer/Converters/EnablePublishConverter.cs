@@ -9,14 +9,14 @@ namespace PluginDeployer.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             //Not connected
-            bool hasConnected = Boolean.TryParse(values[0]?.ToString(), out bool isConnected);
+            var hasConnected = bool.TryParse(values[0]?.ToString(), out var isConnected);
             if (!hasConnected)
                 return false;
             if (!isConnected)
                 return false;
 
             //DeploymentType
-            bool hasDeploymentType = Int32.TryParse(values[1]?.ToString(), out int deploymentType);
+            var hasDeploymentType = int.TryParse(values[1]?.ToString(), out var deploymentType);
             if (!hasDeploymentType)
                 return false;
 

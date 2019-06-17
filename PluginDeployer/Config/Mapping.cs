@@ -1,7 +1,6 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace PluginDeployer.Config
@@ -10,9 +9,9 @@ namespace PluginDeployer.Config
     {
         public static PluginDeployConfig GetSpklPluginConfig(Project project, string profile)
         {
-            SpklConfig spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
+            var spklConfig = D365DeveloperExtensions.Core.Config.Mapping.GetSpklConfigFile(project);
 
-            List<PluginDeployConfig> spklPluginDeployConfigs = spklConfig.plugins;
+            var spklPluginDeployConfigs = spklConfig.plugins;
             if (spklPluginDeployConfigs == null)
                 return null;
 

@@ -12,11 +12,11 @@ namespace PluginDeployer
     {
         public static ObservableCollection<CrmSolution> CreateCrmSolutionView(EntityCollection solutions)
         {
-            ObservableCollection<CrmSolution> crmSolutions = new ObservableCollection<CrmSolution>();
+            var crmSolutions = new ObservableCollection<CrmSolution>();
 
-            foreach (Entity entity in solutions.Entities)
+            foreach (var entity in solutions.Entities)
             {
-                CrmSolution solution = new CrmSolution
+                var solution = new CrmSolution
                 {
                     SolutionId = entity.Id,
                     Name = entity.GetAttributeValue<string>("friendlyname"),
@@ -46,11 +46,11 @@ namespace PluginDeployer
 
         public static ObservableCollection<CrmAssembly> CreateCrmAssemblyView(EntityCollection assemblies)
         {
-            ObservableCollection<CrmAssembly> crmAssemblies = new ObservableCollection<CrmAssembly>();
+            var crmAssemblies = new ObservableCollection<CrmAssembly>();
 
-            foreach (Entity assembly in assemblies.Entities)
+            foreach (var assembly in assemblies.Entities)
             {
-                CrmAssembly crmAssembly = new CrmAssembly
+                var crmAssembly = new CrmAssembly
                 {
                     AssemblyId = assembly.Id,
                     Name = assembly.GetAttributeValue<string>("name"),
@@ -70,7 +70,7 @@ namespace PluginDeployer
                 AssemblyId = Guid.Empty,
                 Name = string.Empty,
                 Version = string.Empty,
-                DisplayName = String.Empty
+                DisplayName = string.Empty
             });
 
             return crmAssemblies;
@@ -79,7 +79,7 @@ namespace PluginDeployer
         public static CrmAssembly CreateCrmAssembly(string projectAssemblyName, string assemblyFilePath,
             string[] assemblyProperties)
         {
-            CrmAssembly assembly = new CrmAssembly
+            var assembly = new CrmAssembly
             {
                 Name = projectAssemblyName,
                 AssemblyPath = assemblyFilePath,

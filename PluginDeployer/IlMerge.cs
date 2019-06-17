@@ -19,16 +19,16 @@ namespace PluginDeployer
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static bool TogleIlMerge(DTE dte, Project selecteProject, bool isIlMergeInstalled)
+        public static bool ToggleIlMerge(Project selectedProject, bool isIlMergeInstalled)
         {
             if (!isIlMergeInstalled)
             {
-                bool installed = Install(dte, selecteProject);
+                var installed = Install(selectedProject);
 
                 // Set CRM Assemblies to "Copy Local = false" to prevent merging
                 if (installed)
                 {
-                    SetReferenceCopyLocal(selecteProject, false);
+                    SetReferenceCopyLocal(selectedProject, false);
                     return true;
                 }
 
@@ -37,12 +37,12 @@ namespace PluginDeployer
             }
             else
             {
-                bool uninstalled = Uninstall(dte, selecteProject);
+                var uninstalled = Uninstall(selectedProject);
 
                 // Reset CRM Assemblies to "Copy Local = true"
                 if (uninstalled)
                 {
-                    SetReferenceCopyLocal(selecteProject, true);
+                    SetReferenceCopyLocal(selectedProject, true);
                     return false;
                 }
 
@@ -53,7 +53,7 @@ namespace PluginDeployer
             return isIlMergeInstalled;
         }
 
-        public static bool Install(DTE dte, Project project)
+        public static bool Install(Project project)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace PluginDeployer
             }
         }
 
-        public static bool Uninstall(DTE dte, Project project)
+        public static bool Uninstall(Project project)
         {
             try
             {
