@@ -1,6 +1,4 @@
 ﻿using D365DeveloperExtensions.Core.Enums;
-using D365DeveloperExtensions.Core.Models;
-using D365DeveloperExtensions.Core.Vs;
 using EnvDTE;
 using System.Collections.Generic;
 
@@ -8,35 +6,38 @@ namespace D365DeveloperExtensions.Core.Config
 {
     public static class Profiles
     {
+        /// <summary>Gets profiles from the configuration file.</summary>
+        /// <param name="project">The project.</param>
+        /// <param name="toolWindowType">Type of the tool window.</param>
+        /// <returns>List of profiles.</returns>
         public static List<string> GetProfiles(Project project, ToolWindowType toolWindowType)
         {
             if (toolWindowType == ToolWindowType.PluginTraceViewer)
                 return null;
 
-            SpklConfig spklConfig = ConfigFile.GetSpklConfigFile(project);
-            string projectPath = ProjectWorker.GetProjectPath(project);
+            var spklConfig = ConfigFile.GetSpklConfigFile(project);
 
             switch (toolWindowType)
             {
                 case ToolWindowType.PluginDeployer:
-                    return GetConfigProfiles(projectPath, spklConfig.plugins);
+                    return GetConfigProfiles(spklConfig.plugins);
                 case ToolWindowType.SolutionPackager:
-                    return GetConfigProfiles(projectPath, spklConfig.solutions);
+                    return GetConfigProfiles(spklConfig.solutions);
                 case ToolWindowType.WebResourceDeployer:
-                    return GetConfigProfiles(projectPath, spklConfig.webresources);
+                    return GetConfigProfiles(spklConfig.webresources);
                 default:
                     return null;
             }
         }
 
-        public static List<string> GetConfigProfiles<T>(string projectPath, List<T> configs)
+        private static List<string> GetConfigProfiles<T>(List<T> configs)
         {
             if (configs == null)
                 return new List<string>();
 
-            List<string> profiles = new List<string>();
+            var profiles = new List<string>();
 
-            int i = 1;
+            var i = 1;
             foreach (dynamic config in configs)
             {
                 profiles.Add(string.IsNullOrEmpty(config.profile)

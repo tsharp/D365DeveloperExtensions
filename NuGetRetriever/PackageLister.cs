@@ -16,7 +16,7 @@ namespace NuGetRetriever
 
         /// <summary>  Retrieves NuGet package info.</summary>
         /// <param name="packageId">The NuGet package identifier.</param>
-        /// <returns><![CDATA[ List<NuGetPackage> ]]>.</returns>
+        /// <returns>List of NuGet packages.</returns>
         public static List<NuGetPackage> GetPackagesById(string packageId)
         {
             try

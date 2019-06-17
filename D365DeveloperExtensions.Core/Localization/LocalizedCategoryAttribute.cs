@@ -17,7 +17,7 @@ namespace D365DeveloperExtensions.Core.Localization
 
         protected override string GetLocalizedString(string value)
         {
-            string category = _resourceManager.GetString(_resourceKey);
+            var category = _resourceManager.GetString(_resourceKey);
             return string.IsNullOrWhiteSpace(category) ? $"[[{_resourceKey}]]" : category;
         }
     }

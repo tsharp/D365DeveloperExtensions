@@ -35,7 +35,7 @@ namespace D365DeveloperExtensions.Core.Vs
             if (!(itemExtObject is ProjectItem projectItem))
                 return VSConstants.S_OK;
 
-            Guid type = new Guid(projectItem.Kind);
+            var type = new Guid(projectItem.Kind);
             if (type == VSConstants.GUID_ItemType_PhysicalFile || type == VSConstants.GUID_ItemType_PhysicalFolder)
                 _xrmToolingConnection.ProjectItemMoveAdded(projectItem);
 
@@ -50,7 +50,7 @@ namespace D365DeveloperExtensions.Core.Vs
             if (!(itemExtObject is ProjectItem projectItem))
                 return VSConstants.S_OK;
 
-            Guid type = new Guid(projectItem.Kind);
+            var type = new Guid(projectItem.Kind);
             if (type == VSConstants.GUID_ItemType_PhysicalFile || type == VSConstants.GUID_ItemType_PhysicalFolder)
                 _xrmToolingConnection.ProjectItemMoveDeleted(projectItem);
 

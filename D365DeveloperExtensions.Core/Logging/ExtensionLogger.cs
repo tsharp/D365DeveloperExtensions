@@ -42,7 +42,7 @@ namespace D365DeveloperExtensions.Core.Logging
 
         private static string GetLogFilePath()
         {
-            string logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.ExtensionLogFilePath);
+            var logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.ExtensionLogFilePath);
             if (!string.IsNullOrEmpty(logFilePath))
                 return Path.Combine(logFilePath, CreateLogFileName());
 

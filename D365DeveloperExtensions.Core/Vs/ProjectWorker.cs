@@ -31,26 +31,26 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static void ExcludeFolder(Project project, string folderName)
         {
-            for (int i = 1; i <= project.ProjectItems.Count; i++)
+            for (var i = 1; i <= project.ProjectItems.Count; i++)
             {
-                Guid itemType = new Guid(project.ProjectItems.Item(i).Kind);
+                var itemType = new Guid(project.ProjectItems.Item(i).Kind);
                 if (itemType != VSConstants.GUID_ItemType_PhysicalFolder)
                     continue;
 
-                if (String.Equals(project.ProjectItems.Item(i).Name, folderName, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(project.ProjectItems.Item(i).Name, folderName, StringComparison.CurrentCultureIgnoreCase))
                     project.ProjectItems.Item(i).Remove();
             }
         }
 
         public static string GetFolderProjectFileName(string projectFullName)
         {
-            string path = Path.GetDirectoryName(projectFullName);
+            var path = Path.GetDirectoryName(projectFullName);
             if (path == null)
                 return null;
 
             var dirName = new DirectoryInfo(path).Name;
             var fileName = new FileInfo(projectFullName).Name;
-            string folderProjectFileName = $"{dirName}\\{fileName}";
+            var folderProjectFileName = $"{dirName}\\{fileName}";
 
             return folderProjectFileName;
         }
@@ -63,16 +63,16 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static bool LoadProject(Project project)
         {
-            object service = Package.GetGlobalService(typeof(IVsSolution));
-            IVsSolution sln = (IVsSolution)service;
-            IVsSolution4 sln4 = (IVsSolution4)service;
+            var service = Package.GetGlobalService(typeof(IVsSolution));
+            var sln = (IVsSolution)service;
+            var sln4 = (IVsSolution4)service;
 
-            int err = sln.GetProjectOfUniqueName(project.UniqueName, out IVsHierarchy hierarchy);
+            var err = sln.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
             if (VSConstants.S_OK != err)
                 return false;
 
             const uint itemId = (uint)VSConstants.VSITEMID.Root;
-            err = hierarchy.GetGuidProperty(itemId, (int)__VSHPROPID.VSHPROPID_ProjectIDGuid, out Guid projectGuid);
+            err = hierarchy.GetGuidProperty(itemId, (int)__VSHPROPID.VSHPROPID_ProjectIDGuid, out var projectGuid);
             if (VSConstants.S_OK != err)
                 return false;
 
@@ -82,8 +82,8 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static Project GetProjectByName(string projectName)
         {
-            IList<Project> projects = GetProjects(false);
-            foreach (Project project in projects)
+            var projects = GetProjects(false);
+            foreach (var project in projects)
             {
                 if (project.Name != projectName) continue;
 
@@ -95,18 +95,17 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static IList<Project> GetProjects(bool excludeUnitTestProjects)
         {
-            List<Project> list = new List<Project>();
+            var list = new List<Project>();
 
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return list;
 
-            Projects projects = dte.Solution.Projects;
+            var projects = dte.Solution.Projects;
 
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
-                var project = item.Current as Project;
-                if (project == null)
+                if (!(item.Current is Project project))
                     continue;
 
                 if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
@@ -123,8 +122,8 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static IList<Project> FilterUnitTestProjects(List<Project> list)
         {
-            List<Project> filteredList = new List<Project>();
-            foreach (Project project in list)
+            var filteredList = new List<Project>();
+            foreach (var project in list)
             {
                 if (IsUnitTestProject(project))
                     continue;
@@ -137,7 +136,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static IEnumerable<Project> GetSolutionFolderProjects(Project solutionFolder)
         {
-            List<Project> list = new List<Project>();
+            var list = new List<Project>();
             for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
             {
                 var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
@@ -154,13 +153,13 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static ObservableCollection<string> GetProjectFolders(Project project, ProjectType projectType)
         {
-            ObservableCollection<string> folders = new ObservableCollection<string>();
+            var folders = new ObservableCollection<string>();
             if (project == null)
                 return folders;
 
-            List<string> projectFolders = GetRootLevelProjectFolders(project);
+            var projectFolders = GetRootLevelProjectFolders(project);
 
-            foreach (string projectFolder in projectFolders)
+            foreach (var projectFolder in projectFolders)
             {
                 folders.Add(projectFolder);
             }
@@ -168,13 +167,13 @@ namespace D365DeveloperExtensions.Core.Vs
             if (projectType != ProjectType.WebResource)
                 return folders;
 
-            List<string> removeFolders = new List<string>();
-            foreach (string ignoreFolder in IgnoreFolders)
+            var removeFolders = new List<string>();
+            foreach (var ignoreFolder in IgnoreFolders)
             {
                 removeFolders.AddRange(folders.Where(f => f.StartsWith(ignoreFolder, StringComparison.InvariantCultureIgnoreCase)).ToList());
             }
 
-            foreach (string removeFolder in removeFolders)
+            foreach (var removeFolder in removeFolders)
             {
                 folders.Remove(removeFolder);
             }
@@ -184,12 +183,12 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static List<string> GetRootLevelProjectFolders(Project project)
         {
-            List<string> projectFolders = new List<string>();
+            var projectFolders = new List<string>();
             var projectItems = project.ProjectItems;
-            for (int i = 1; i <= projectItems.Count; i++)
+            for (var i = 1; i <= projectItems.Count; i++)
             {
-                var folders = GetFolders(projectItems.Item(i), String.Empty);
-                foreach (string folder in folders)
+                var folders = GetFolders(projectItems.Item(i), string.Empty);
+                foreach (var folder in folders)
                 {
                     if (folder.ToUpper() == $"/{Resource.Constant_PropertiesFolder.ToUpper()}") continue; //Don't add the project Properties folder
                     if (folder.ToUpper().StartsWith($"/{Resource.Constant_MyProjectFolder.ToUpper()}")) continue; //Don't add the VB project My Project folders
@@ -203,15 +202,15 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static ObservableCollection<string> GetFolders(ProjectItem projectItem, string path)
         {
-            ObservableCollection<string> projectFolders = new ObservableCollection<string>();
+            var projectFolders = new ObservableCollection<string>();
             if (new Guid(projectItem.Kind) != VSConstants.GUID_ItemType_PhysicalFolder)
                 return projectFolders;
 
             projectFolders.Add($"{path}/{projectItem.Name}");
-            for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
+            for (var i = 1; i <= projectItem.ProjectItems.Count; i++)
             {
                 var folders = GetFolders(projectItem.ProjectItems.Item(i), $"{path}/{projectItem.Name}");
-                foreach (string folder in folders)
+                foreach (var folder in folders)
                     projectFolders.Add(folder);
             }
             return projectFolders;
@@ -221,26 +220,26 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             SetProjectExtensions(hasTsConfig);
 
-            ObservableCollection<ComboBoxItem> projectFiles = new ObservableCollection<ComboBoxItem>();
+            var projectFiles = new ObservableCollection<ComboBoxItem>();
             if (project == null)
                 return projectFiles;
 
             var projectItems = project.ProjectItems;
-            for (int i = 1; i <= projectItems.Count; i++)
+            for (var i = 1; i <= projectItems.Count; i++)
             {
-                var files = GetFiles(projectItems.Item(i), String.Empty);
+                var files = GetFiles(projectItems.Item(i), string.Empty);
                 foreach (var comboBoxItem in files)
                     projectFiles.Add(comboBoxItem);
             }
 
             if (projectFiles.Count > 0)
-                projectFiles.Insert(0, new ComboBoxItem { Content = String.Empty });
+                projectFiles.Insert(0, new ComboBoxItem { Content = string.Empty });
 
             //Remove files that are in ignored folders
-            ObservableCollection<ComboBoxItem> copy = new ObservableCollection<ComboBoxItem>(projectFiles);
-            foreach (ComboBoxItem comboBoxItem in copy)
+            var copy = new ObservableCollection<ComboBoxItem>(projectFiles);
+            foreach (var comboBoxItem in copy)
             {
-                foreach (string ignoreFolder in IgnoreFolders)
+                foreach (var ignoreFolder in IgnoreFolders)
                 {
                     if (comboBoxItem.Content.ToString().StartsWith(ignoreFolder, StringComparison.InvariantCultureIgnoreCase))
                         projectFiles.Remove(comboBoxItem);
@@ -249,9 +248,9 @@ namespace D365DeveloperExtensions.Core.Vs
 
             //Remove ignored files
             copy = new ObservableCollection<ComboBoxItem>(projectFiles);
-            foreach (ComboBoxItem comboBoxItem in copy)
+            foreach (var comboBoxItem in copy)
             {
-                foreach (string ignoreFile in IgnoreFiles)
+                foreach (var ignoreFile in IgnoreFiles)
                 {
                     if (comboBoxItem.Content.ToString().ToUpper().EndsWith(ignoreFile))
                         projectFiles.Remove(comboBoxItem);
@@ -279,32 +278,32 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static ObservableCollection<ComboBoxItem> GetFiles(ProjectItem projectItem, string path)
         {
-            ObservableCollection<ComboBoxItem> projectFiles = new ObservableCollection<ComboBoxItem>();
+            var projectFiles = new ObservableCollection<ComboBoxItem>();
             if (new Guid(projectItem.Kind) != VSConstants.GUID_ItemType_PhysicalFolder)
             {
-                string ex = Path.GetExtension(projectItem.Name);
-                if (ex == null || !Extensions.Contains(ex.Replace(".", String.Empty).ToUpper()) &&
-                    !string.IsNullOrEmpty(ex) && !FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
+                var ex = Path.GetExtension(projectItem.Name);
+                if (ex == null || !Extensions.Contains(ex.Replace(".", string.Empty).ToUpper()) &&
+                    !string.IsNullOrEmpty(ex) && !FolderExtensions.Contains(ex.Replace(".", string.Empty).ToUpper()))
                     return projectFiles;
 
                 //Don't add file extensions that act as folders
-                if (!FolderExtensions.Contains(ex.Replace(".", String.Empty).ToUpper()))
+                if (!FolderExtensions.Contains(ex.Replace(".", string.Empty).ToUpper()))
                     projectFiles.Add(new ComboBoxItem { Content = $"{path}/{projectItem.Name}", Tag = projectItem });
 
                 if (projectItem.ProjectItems == null || projectItem.ProjectItems.Count <= 0)
                     return projectFiles;
 
                 //Handle minified/bundled files that appear under other files in the project
-                for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
+                for (var i = 1; i <= projectItem.ProjectItems.Count; i++)
                 {
-                    ObservableCollection<ComboBoxItem> subFiles = GetFiles(projectItem.ProjectItems.Item(i), path);
-                    foreach (ComboBoxItem comboBoxItem in subFiles)
+                    var subFiles = GetFiles(projectItem.ProjectItems.Item(i), path);
+                    foreach (var comboBoxItem in subFiles)
                         projectFiles.Add(comboBoxItem);
                 }
             }
             else
             {
-                for (int i = 1; i <= projectItem.ProjectItems.Count; i++)
+                for (var i = 1; i <= projectItem.ProjectItems.Count; i++)
                 {
                     var files = GetFiles(projectItem.ProjectItems.Item(i), path + "/" + projectItem.Name);
                     foreach (var comboBoxItem in files)
@@ -334,7 +333,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetProjectTypeGuids(Project project)
         {
-            string projectTypeGuids = String.Empty;
+            var projectTypeGuids = string.Empty;
 
             object service = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
             var solution = (IVsSolution)service;
@@ -352,23 +351,23 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static bool IsUnitTestProject(Project project)
         {
-            string projectTypeGuids = GetProjectTypeGuids(project);
+            var projectTypeGuids = GetProjectTypeGuids(project);
             if (string.IsNullOrEmpty(projectTypeGuids))
                 return false;
 
             projectTypeGuids = StringFormatting.RemoveBracesToUpper(projectTypeGuids);
-            string[] guids = projectTypeGuids.Split(';');
+            var guids = projectTypeGuids.Split(';');
 
             return guids.Contains(ExtensionConstants.UnitTestProjectType.ToString(), StringComparer.InvariantCultureIgnoreCase);
         }
 
         public static string GetAssemblyPath(Project project)
         {
-            string fullPath = project.Properties.Item(Resource.Constant_ProjectProperties_FullPath).Value.ToString();
-            string outputPath = project.ConfigurationManager.ActiveConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
-            string outputDir = Path.Combine(fullPath, outputPath);
-            string outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
-            string assemblyPath = Path.Combine(outputDir, outputFileName);
+            var fullPath = project.Properties.Item(Resource.Constant_ProjectProperties_FullPath).Value.ToString();
+            var outputPath = project.ConfigurationManager.ActiveConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
+            var outputDir = Path.Combine(fullPath, outputPath);
+            var outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
+            var assemblyPath = Path.Combine(outputDir, outputFileName);
 
             return assemblyPath;
         }
@@ -378,7 +377,7 @@ namespace D365DeveloperExtensions.Core.Vs
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return false;
 
-            SolutionBuild solutionBuild = dte.Solution.SolutionBuild;
+            var solutionBuild = dte.Solution.SolutionBuild;
             solutionBuild.BuildProject(dte.Solution.SolutionBuild.ActiveConfiguration.Name, project.UniqueName, true);
 
             //0 = no errors
@@ -387,7 +386,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetProjectPath(Project project)
         {
-            string path = project.FullName;
+            var path = project.FullName;
 
             if (File.Exists(path))
                 path = Path.GetDirectoryName(path);
@@ -401,8 +400,8 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetOutputFile(Project project)
         {
-            string outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
-            string path = GetOutputPath(project);
+            var outputFileName = project.Properties.Item(Resource.Constant_ProjectProperties_OutputFileName).Value.ToString();
+            var path = GetOutputPath(project);
             return path == null ?
                 null :
                 Path.Combine(path, outputFileName);
@@ -410,12 +409,12 @@ namespace D365DeveloperExtensions.Core.Vs
 
         public static string GetOutputPath(Project project)
         {
-            ConfigurationManager configurationManager = project.ConfigurationManager;
+            var configurationManager = project.ConfigurationManager;
             if (configurationManager == null) return null;
 
-            Configuration activeConfiguration = configurationManager.ActiveConfiguration;
-            string outputPath = activeConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
-            string absoluteOutputPath = String.Empty;
+            var activeConfiguration = configurationManager.ActiveConfiguration;
+            var outputPath = activeConfiguration.Properties.Item(Resource.Constant_ProjectProperties_OutputPath).Value.ToString();
+            var absoluteOutputPath = string.Empty;
             string projectFolder;
 
             if (outputPath.StartsWith(Path.DirectorySeparatorChar.ToString() + Path.DirectorySeparatorChar))
@@ -469,7 +468,7 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             try
             {
-                Reference existingReference = vsproject.References.Find(referenceName);
+                var existingReference = vsproject.References.Find(referenceName);
                 if (existingReference != null)
                     return;
 
@@ -485,9 +484,9 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             try
             {
-                Microsoft.Build.Evaluation.Project p = new Microsoft.Build.Evaluation.Project(projectFilePath, null, null, new ProjectCollection());
+                var p = new Microsoft.Build.Evaluation.Project(projectFilePath, null, null, new ProjectCollection());
 
-                foreach (Microsoft.Build.Evaluation.ProjectItem projectItem in p.Items)
+                foreach (var projectItem in p.Items)
                 {
                     if (projectItem.EvaluatedInclude == fileRelativePath)
                         return true;
@@ -505,11 +504,11 @@ namespace D365DeveloperExtensions.Core.Vs
         {
             try
             {
-                string pdbPath = Path.ChangeExtension(assemblyFilePath, "pdb");
+                var pdbPath = Path.ChangeExtension(assemblyFilePath, "pdb");
                 if (pdbPath == null)
                     return;
 
-                FileInfo pdbFile = new FileInfo(pdbPath);
+                var pdbFile = new FileInfo(pdbPath);
                 if (pdbFile.Exists)
                     pdbFile.MoveTo(Path.Combine(Path.GetTempPath(), Guid.NewGuid() + Path.GetFileName(pdbPath)));
 

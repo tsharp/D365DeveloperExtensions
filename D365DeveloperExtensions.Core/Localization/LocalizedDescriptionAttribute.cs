@@ -6,8 +6,8 @@ namespace D365DeveloperExtensions.Core.Localization
 {
     public class LocalizedDescriptionAttribute : DescriptionAttribute
     {
-        readonly ResourceManager _resourceManager;
-        readonly string _resourceKey;
+        private readonly ResourceManager _resourceManager;
+        private readonly string _resourceKey;
 
         public LocalizedDescriptionAttribute(string resourceKey, Type resourceType)
         {
@@ -19,7 +19,7 @@ namespace D365DeveloperExtensions.Core.Localization
         {
             get
             {
-                string description = _resourceManager.GetString(_resourceKey);
+                var description = _resourceManager.GetString(_resourceKey);
                 return string.IsNullOrWhiteSpace(description) ? $"[[{_resourceKey}]]" : description;
             }
         }

@@ -6,8 +6,8 @@ namespace D365DeveloperExtensions.Core.Localization
 {
     public class LocalizedDisplayNameAttribute : DisplayNameAttribute
     {
-        readonly ResourceManager _resourceManager;
-        readonly string _resourceKey;
+        private readonly ResourceManager _resourceManager;
+        private readonly string _resourceKey;
 
         public LocalizedDisplayNameAttribute(string resourceKey, Type resourceType)
         {
@@ -19,7 +19,7 @@ namespace D365DeveloperExtensions.Core.Localization
         {
             get
             {
-                string displayName = _resourceManager.GetString(_resourceKey);
+                var displayName = _resourceManager.GetString(_resourceKey);
                 return string.IsNullOrWhiteSpace(displayName) ? $@"[[{_resourceKey}]]" : displayName;
             }
         }

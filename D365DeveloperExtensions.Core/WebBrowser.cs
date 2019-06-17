@@ -6,7 +6,6 @@ using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace D365DeveloperExtensions.Core
@@ -17,38 +16,33 @@ namespace D365DeveloperExtensions.Core
 
         public static void OpenCrmPage(CrmServiceClient client, string contentUrl)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            var crmUri = GetBaseCrmUrlFomClient(client);
 
-            Uri crmUri = GetBaseCrmUrlFomClient(client);
-
-            Uri url = new Uri(crmUri, contentUrl);
+            var url = new Uri(crmUri, contentUrl);
 
             OpenPage(url.ToString());
         }
 
         public static Uri GetBaseCrmUrlFomClient(CrmServiceClient client)
         {
-            IEnumerable<KeyValuePair<EndpointType, string>> endpoint =
+            var endpoint =
                 client.ConnectedOrgPublishedEndpoints.Where(k => k.Key == EndpointType.WebApplication);
 
-            Uri crmUri = new Uri(endpoint.First().Value);
+            var crmUri = new Uri(endpoint.First().Value);
 
             return crmUri;
         }
 
         public static void OpenUrl(string contentUrl)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
             OpenPage(contentUrl);
         }
 
         private static void OpenPage(string contentUrl)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
-                bool useInternalBrowser = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseInternalBrowser);
+                var useInternalBrowser = UserOptionsHelper.GetOption<bool>(UserOptionProperties.UseInternalBrowser);
 
                 if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                     throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);

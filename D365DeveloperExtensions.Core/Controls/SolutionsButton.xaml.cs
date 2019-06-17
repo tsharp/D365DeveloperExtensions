@@ -42,7 +42,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private static void OnIsConnectedChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            SolutionsButton solutionsButton = d as SolutionsButton;
+            var solutionsButton = d as SolutionsButton;
             solutionsButton?.OnIsConnectedChange(e);
         }
 
@@ -53,7 +53,6 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void Solutions_OnClick(object sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
@@ -68,7 +67,6 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void Solutions_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 

@@ -15,7 +15,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (dte == null)
                 {
                     if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte2))
@@ -23,7 +22,7 @@ namespace D365DeveloperExtensions.Core
                     dte = dte2;
                 }
 
-                Globals globals = dte.Globals;
+                var globals = dte.Globals;
                 return globals.VariableExists[globalName] ? globals[globalName] : null;
             }
             catch (Exception ex)
@@ -37,7 +36,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (dte == null)
                 {
                     if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte2))
@@ -45,7 +43,7 @@ namespace D365DeveloperExtensions.Core
                     dte = dte2;
                 };
 
-                Globals globals = dte.Globals;
+                var globals = dte.Globals;
                 globals[globalName] = value;
             }
             catch (Exception ex)

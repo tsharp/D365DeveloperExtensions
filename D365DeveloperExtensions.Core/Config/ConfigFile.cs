@@ -7,6 +7,8 @@ using NLog;
 using System;
 using System.IO;
 using System.Windows;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace D365DeveloperExtensions.Core.Config
 {
@@ -14,24 +16,33 @@ namespace D365DeveloperExtensions.Core.Config
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>  Checks if the configuration file exists.</summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <returns><c>true</c> if the configuration file exists, <c>false</c> otherwise.</returns>
         public static bool SpklConfigFileExists(string projectPath)
         {
-            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+            var path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
 
             return File.Exists(path);
         }
 
+        /// <summary>Gets the existing or creates a new configuration file.</summary>
+        /// <param name="project">The project.</param>
+        /// <param name="isRetry">if set to <c>true</c> [is retry].</param>
+        /// <returns>Configuration file.</returns>
         public static SpklConfig GetSpklConfigFile(Project project, bool isRetry = false)
         {
-            string projectPath = ProjectWorker.GetProjectPath(project);
-            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+            var projectPath = ProjectWorker.GetProjectPath(project);
+            var path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+
+            ExLogger.LogToFile(Logger, $"{Resource.Message_ReadingFile}: {path}", LogLevel.Info);
 
             try
             {
                 SpklConfig spklConfig;
-                using (StreamReader file = File.OpenText(path))
+                using (var file = File.OpenText(path))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
+                    var serializer = new JsonSerializer();
                     spklConfig = (SpklConfig)serializer.Deserialize(file, typeof(SpklConfig));
                 }
 
@@ -49,14 +60,21 @@ namespace D365DeveloperExtensions.Core.Config
             }
         }
 
+        /// <summary>Creates a new configuration file.</summary>
+        /// <param name="project">The project.</param>
         public static void CreateSpklConfigFile(Project project)
         {
+            ExLogger.LogToFile(Logger, $"{Resource.Message_CreatingFile}: {ExtensionConstants.SpklConfigFile}", LogLevel.Info);
+
             TemplateHandler.AddFileFromTemplate(project, "CSharpSpklConfig\\CSharpSpklConfig", ExtensionConstants.SpklConfigFile);
         }
 
+        /// <summary>Updates an configuration file.</summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <param name="spklConfig">The configuration file.</param>
         public static void UpdateSpklConfigFile(string projectPath, SpklConfig spklConfig)
         {
-            string text = JsonConvert.SerializeObject(spklConfig, Formatting.Indented);
+            var text = JsonConvert.SerializeObject(spklConfig, Formatting.Indented);
 
             WriteSpklConfigFile(projectPath, text);
         }
@@ -65,13 +83,13 @@ namespace D365DeveloperExtensions.Core.Config
         {
             try
             {
-                bool fileExists = FileSystem.DoesFileExist(new[] { configPath }, true);
+                var fileExists = FileSystem.DoesFileExist(new[] { configPath }, true);
                 if (fileExists)
                     FileSystem.RenameFile(configPath);
 
                 CreateSpklConfigFile(project);
 
-                SpklConfig recreateConfig = GetSpklConfigFile(project, true);
+                var recreateConfig = GetSpklConfigFile(project, true);
 
                 MessageBox.Show(Resource.MessageBox_RecreatedConfig);
 
@@ -86,7 +104,9 @@ namespace D365DeveloperExtensions.Core.Config
 
         private static void WriteSpklConfigFile(string projectPath, string text)
         {
-            string path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+            var path = Path.Combine(projectPath, ExtensionConstants.SpklConfigFile);
+
+            ExLogger.LogToFile(Logger, $"{Resource.Message_UpdatingFile}: {path}", LogLevel.Info);
 
             try
             {

@@ -13,7 +13,7 @@ namespace D365DeveloperExtensions.Core.Logging
 
         public static void DeleteOutputWindow()
         {
-            IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+            var outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
 
             outWindow?.DeletePane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid);
         }

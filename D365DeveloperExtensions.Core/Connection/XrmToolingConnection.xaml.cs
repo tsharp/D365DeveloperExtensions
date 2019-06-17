@@ -128,26 +128,34 @@ namespace D365DeveloperExtensions.Core.Connection
             InitializeComponent();
             DataContext = this;
 
-            _dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (_dte == null)
-                return;
+            try
+            {
+                if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
+                    throw new ArgumentNullException(Resource.ErrorMessage_ErrorAccessingDTE);
+                _dte = dte;
 
-            _solution = _dte.Solution;
-            if (_solution == null)
-                return;
+                _solution = _dte.Solution;
+                if (_solution == null)
+                    return;
 
-            AdviseSolutionEvents();
+                AdviseSolutionEvents();
 
-            var events = _dte.Events;
-            BindWindowEvents(events);
+                var events = _dte.Events;
+                BindWindowEvents(events);
 
-            BindProjectItemEvents();
+                BindProjectItemEvents();
 
-            BindSolutionEvents(events);
+                BindSolutionEvents(events);
 
-            _movedProjectItems = new List<MovedProjectItem>();
-            Projects = new ObservableCollection<ProjectListItem>();
-            Profiles = new List<string>();
+                _movedProjectItems = new List<MovedProjectItem>();
+                Projects = new ObservableCollection<ProjectListItem>();
+                Profiles = new List<string>();
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(Logger, null, ex);
+                throw;
+            }
         }
 
         private void WindowEventsOnWindowActivated(Window gotFocus, Window lostFocus)
@@ -160,7 +168,7 @@ namespace D365DeveloperExtensions.Core.Connection
             }
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
-            //so we don't want to contine further unless our window is active
+            //so we don't want to continue further unless our window is active
             if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
@@ -189,7 +197,7 @@ namespace D365DeveloperExtensions.Core.Connection
             if (CrmService != null)
                 return;
 
-            CrmServiceClient client = SharedGlobals.GetGlobal("CrmService", _dte) as CrmServiceClient;
+            var client = SharedGlobals.GetGlobal("CrmService", _dte) as CrmServiceClient;
             if (client?.ConnectedOrgUniqueName == null)
                 return;
 
@@ -202,7 +210,7 @@ namespace D365DeveloperExtensions.Core.Connection
         {
             _vsSolutionEvents = new VsSolutionEvents(_dte, this);
             _vsSolution = (IVsSolution)ServiceProvider.GlobalProvider.GetService(typeof(SVsSolution));
-            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out uint solutionEventsCookie);
+            _vsSolution.AdviseSolutionEvents(_vsSolutionEvents, out _);
         }
 
         private void BindSolutionEvents(Events events)
@@ -234,9 +242,9 @@ namespace D365DeveloperExtensions.Core.Connection
         {
             //Manually register the OnAfterOpenProject event on the existing projects 
             //as they are already opened by the time the event would normally be registered
-            foreach (ProjectListItem project in Projects)
+            foreach (var project in Projects)
             {
-                if (_vsSolution.GetProjectOfUniqueName(project.Project.UniqueName, out IVsHierarchy projectHierarchy) != VSConstants.S_OK)
+                if (_vsSolution.GetProjectOfUniqueName(project.Project.UniqueName, out var projectHierarchy) != VSConstants.S_OK)
                     continue;
 
                 _vsSolutionEvents.OnAfterOpenProject(projectHierarchy, 1);
@@ -251,12 +259,12 @@ namespace D365DeveloperExtensions.Core.Connection
             /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
             existing events here fixes the issue. Moves first do a delete then an add*/
-            Project project = projectItem.ContainingProject;
+            var project = projectItem.ContainingProject;
             if (project.IsDirty)
                 project.Save();
 
-            string relativePath = ProjectItemWorker.GetRelativePath(projectItem);
-            bool isMove = ProjectWorker.IsFileInProjectFile(project.FullName, relativePath);
+            var relativePath = ProjectItemWorker.GetRelativePath(projectItem);
+            var isMove = ProjectWorker.IsFileInProjectFile(project.FullName, relativePath);
 
             if (project.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite && !isMove)
                 return;
@@ -267,7 +275,7 @@ namespace D365DeveloperExtensions.Core.Connection
             if (projectPath == null)
                 return;
 
-            MovedProjectItem movedProjectItem = new MovedProjectItem
+            var movedProjectItem = new MovedProjectItem
             {
                 ProjectItem = projectItem,
                 OldName = FileSystem.LocalPathToCrmPath(projectPath, projectItem.FileNames[1]),
@@ -281,12 +289,12 @@ namespace D365DeveloperExtensions.Core.Connection
             /*Web site projects are not triggering the same project item added/removed events
             but rather are triggering the hierarchy added/removed events instead - calling the
             existing events here fixes the issue. Moves first do a delete then an add*/
-            Project project = projectItem.ContainingProject;
+            var project = projectItem.ContainingProject;
             if (project.IsDirty)
                 project.Save();
 
-            uint addedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, projectItem);
-            MovedProjectItem movedProjectItem = _movedProjectItems.FirstOrDefault(m => m.ProjectItemId == addedProjectId);
+            var addedProjectId = ProjectItemWorker.GetProjectItemId(_vsSolution, SelectedProject.UniqueName, projectItem);
+            var movedProjectItem = _movedProjectItems.FirstOrDefault(m => m.ProjectItemId == addedProjectId);
 
             if (project.Kind.ToUpper() != ExtensionConstants.VsProjectTypeWebSite && movedProjectItem == null)
                 return;
@@ -324,7 +332,7 @@ namespace D365DeveloperExtensions.Core.Connection
         }
         private void SolutionEventsOnProjectAdded(Project project)
         {
-            foreach (ProjectListItem listProject in Projects)
+            foreach (var listProject in Projects)
                 if (listProject.Name == project.Name)
                     return;
 
@@ -342,7 +350,7 @@ namespace D365DeveloperExtensions.Core.Connection
         }
         private void SolutionEventsOnProjectRenamed(Project project, string oldName)
         {
-            ProjectListItem projectListItem = Projects.FirstOrDefault(p => p.Project == project);
+            var projectListItem = Projects.FirstOrDefault(p => p.Project == project);
             if (projectListItem != null)
                 projectListItem.Name = project.Name;
 
@@ -445,8 +453,8 @@ namespace D365DeveloperExtensions.Core.Connection
 
             Projects = new ObservableCollection<ProjectListItem>();
 
-            IList<Project> projects = SolutionWorker.GetProjects();
-            foreach (Project project in projects)
+            var projects = SolutionWorker.GetProjects();
+            foreach (var project in projects)
             {
                 Projects.Add(new ProjectListItem
                 {
@@ -468,9 +476,9 @@ namespace D365DeveloperExtensions.Core.Connection
             {
                 StatusBar.SetStatusBarValue(Resource.StatusBarMessageConnecting, vsStatusAnimation.vsStatusAnimationGeneral);
 
-                CrmLoginForm ctrl = new CrmLoginForm(_autoLogin);
+                var ctrl = new CrmLoginForm(_autoLogin);
                 ctrl.ConnectionToCrmCompleted += ConnectionToCrmCompleted;
-                bool? result = ctrl.ShowDialog();
+                var result = ctrl.ShowDialog();
 
                 if (result != true)
                     return;
@@ -498,7 +506,7 @@ namespace D365DeveloperExtensions.Core.Connection
             if (!(sender is CrmLoginForm))
                 return;
 
-            CrmLoginForm loginForm = (CrmLoginForm)sender;
+            var loginForm = (CrmLoginForm)sender;
             CrmService = loginForm.CrmConnectionMgr.CrmSvc;
             OrganizationId = loginForm.CrmConnectionMgr.ConnectedOrgId;
 
@@ -523,7 +531,7 @@ namespace D365DeveloperExtensions.Core.Connection
 
         private void SolutionProjectsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox solutionProjectsList = (ComboBox)sender;
+            var solutionProjectsList = (ComboBox)sender;
             if (solutionProjectsList.SelectedItem == null)
             {
                 if (Projects.Count > 0)

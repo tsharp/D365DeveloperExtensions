@@ -450,4 +450,16 @@
   <data name="ErrorMessage_ErrorAccessingMCS" xml:space="preserve">
     <value>Error accessing OleMenuCommandService</value>
   </data>
+  <data name="Message_CreatingFile" xml:space="preserve">
+    <value>Creating file</value>
+  </data>
+  <data name="Message_ReadingFile" xml:space="preserve">
+    <value>Reading file</value>
+  </data>
+  <data name="Message_UpdatingFile" xml:space="preserve">
+    <value>Updating file</value>
+  </data>
+  <data name="Message_PublishingAllCustomizations" xml:space="preserve">
+    <value>Publishing all customizations</value>
+  </data>
 </root>

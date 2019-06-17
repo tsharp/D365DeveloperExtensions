@@ -13,7 +13,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                     throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
 
@@ -30,7 +29,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                     throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
 
@@ -48,7 +46,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                     throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
 
@@ -65,7 +62,6 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
                 if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                     throw new ArgumentNullException(Resources.Resource.ErrorMessage_ErrorAccessingDTE);
 

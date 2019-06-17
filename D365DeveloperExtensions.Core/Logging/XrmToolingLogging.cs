@@ -11,7 +11,7 @@ namespace D365DeveloperExtensions.Core.Logging
     {
         public static string GetLogFilePath()
         {
-            string logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.XrmToolingLogFilePath);
+            var logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.XrmToolingLogFilePath);
 
             if (!string.IsNullOrEmpty(logFilePath))
                 return Path.Combine(logFilePath, "D365DevExXrmToolingLog_" + DateTime.Now.ToString("MMddyyyy") + ".log");
