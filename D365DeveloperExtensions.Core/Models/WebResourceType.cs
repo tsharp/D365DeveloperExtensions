@@ -40,7 +40,7 @@ namespace D365DeveloperExtensions.Core.Models
                 t.CrmMinimumMajorVersion <= majorVersion && t.CrmMaximumMajorVersion >= majorVersion).ToList());
 
             if (addEmpty)
-                types.Insert(0, new WebResourceType { CrmMinimumMajorVersion = 0, CrmMaximumMajorVersion = 99, Name = String.Empty, DisplayName = String.Empty, Type = -1 });
+                types.Insert(0, new WebResourceType { CrmMinimumMajorVersion = 0, CrmMaximumMajorVersion = 99, Name = string.Empty, DisplayName = string.Empty, Type = -1 });
 
             return types;
         }
@@ -74,7 +74,7 @@ namespace D365DeveloperExtensions.Core.Models
                 case "12":
                     return "RESX";
                 default:
-                    return String.Empty;
+                    return string.Empty;
             }
         }
 
@@ -84,7 +84,7 @@ namespace D365DeveloperExtensions.Core.Models
             if (string.IsNullOrEmpty(extension))
                 return FileExtensionType.None;
 
-            extension = extension.Replace(".", String.Empty).ToUpper();
+            extension = extension.Replace(".", string.Empty).ToUpper();
 
             switch (extension)
             {

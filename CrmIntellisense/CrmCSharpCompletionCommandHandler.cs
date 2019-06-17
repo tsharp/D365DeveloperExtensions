@@ -41,8 +41,8 @@ namespace CrmIntellisense
             if (VsShellUtilities.IsInAutomationFunction(_mProvider.ServiceProvider))
                 return _mNextCommandHandler.Exec(ref pguidCmdGroup, nCmdId, nCmdexecopt, pvaIn, pvaOut);
 
-            uint commandId = nCmdId;
-            char typedChar = char.MinValue;
+            var commandId = nCmdId;
+            var typedChar = char.MinValue;
 
             //Make sure the input is a char before getting it
             if (pguidCmdGroup == VSConstants.VSStd2K && nCmdId == (uint)VSConstants.VSStd2KCmdID.TYPECHAR)
@@ -68,8 +68,8 @@ namespace CrmIntellisense
             }
 
             // Pass along the command so the char is added to the buffer
-            int retVal = _mNextCommandHandler.Exec(ref pguidCmdGroup, nCmdId, nCmdexecopt, pvaIn, pvaOut);
-            bool handled = false;
+            var retVal = _mNextCommandHandler.Exec(ref pguidCmdGroup, nCmdId, nCmdexecopt, pvaIn, pvaOut);
+            var handled = false;
 
             if (!typedChar.Equals(char.MinValue) && char.IsLetterOrDigit(typedChar) ||
                 !typedChar.Equals(char.MinValue) && (typedChar == _entityFieldCharacter || typedChar == _entityTriggerCharacter))
@@ -100,7 +100,7 @@ namespace CrmIntellisense
         private void TriggerCompletion()
         {
             // Caret must be in a non-projection location 
-            SnapshotPoint? caretPoint = _mTextView.Caret.Position.Point.GetPoint(
+            var caretPoint = _mTextView.Caret.Position.Point.GetPoint(
                 textBuffer => !textBuffer.ContentType.IsOfType("projection"), PositionAffinity.Predecessor);
             if (!caretPoint.HasValue)
                 return;
