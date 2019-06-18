@@ -132,7 +132,7 @@ namespace D365DeveloperExtensions
                 SharedGlobals.SetGlobal("UseCrmIntellisense", !isEnabled, dte);
             }
 
-            ExLogger.LogToFile(Logger, $"{Resource.Message_CRMIntellisenseEnabled}: {isEnabled}", LogLevel.Info);
+            ExLogger.LogToFile(Logger, $"{Resource.Message_CRMIntellisenseEnabled}: {!isEnabled}", LogLevel.Info);
 
             if (!isEnabled) //On
             {
