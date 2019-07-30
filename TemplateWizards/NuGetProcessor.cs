@@ -17,9 +17,8 @@ namespace TemplateWizards
         {
             try
             {
-                string nuGetSource = "https://www.nuget.org/api/v2/";
                 StatusBar.SetStatusBarValue(Resources.Resource.NuGetPackageInstallingStatusBarMessage + ": " + package + " " + version);
-                installer.InstallPackage(nuGetSource, project, package, version, false);
+                installer.InstallPackage(ExtensionConstants.NuGetSourceUrl, project, package, version, false);
             }
             catch (Exception ex)
             {
@@ -53,8 +52,8 @@ namespace TemplateWizards
 
         public static string DetermineClientType(string coreVersion)
         {
-            Version version = Versioning.StringToVersion(coreVersion);
-            int result = version.CompareTo(new Version(6, 1, 0));
+            var version = Versioning.StringToVersion(coreVersion);
+            var result = version.CompareTo(new Version(6, 1, 0));
             return result >= 0 ? Resources.Resource.SdkAssemblyXrmTooling
                                : Resources.Resource.SdkAssemblyExtensions;
         }

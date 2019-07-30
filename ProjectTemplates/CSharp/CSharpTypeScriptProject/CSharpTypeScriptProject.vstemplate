@@ -1,7 +1,7 @@
 ﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>CRM/365 TypeScript Project</Name>
-    <Description>Dynamics CRM/365 TypeScript Project</Description>
+    <Name>D365 CE/CRM TypeScript Project</Name>
+    <Description>Dynamics 365 CE/CRM TypeScript Project</Description>
     <Icon>icon.png</Icon>
     <TemplateID>35a8a90f-79a8-4fee-9970-59a8627a9656</TemplateID>
     <ProjectType>CSharp</ProjectType>
@@ -10,6 +10,10 @@
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>CSharpTypeScriptProject</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <LanguageTag>Typescript</LanguageTag>
+    <PlatformTag>Windows</PlatformTag>
+    <PlatformTag>D365 CE</PlatformTag>
+    <!--<ProjectTypeTag>D365 CE</ProjectTypeTag>-->
   </TemplateData>
   <TemplateContent>
     <Project File="ProjectTemplate.webproj" ReplaceParameters="true">

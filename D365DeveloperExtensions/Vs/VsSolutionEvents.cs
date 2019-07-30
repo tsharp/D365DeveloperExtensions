@@ -1,18 +1,15 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace D365DeveloperExtensions.Vs
 {
     public sealed class VsSolutionEvents : IVsSolutionEvents
     {
-        private readonly DTE _dte;
-        private D365DeveloperExtensionsPackage _D365DeveloperExtensionsPackage;
+        private readonly D365DeveloperExtensionsPackage _d365DeveloperExtensionsPackage;
 
-        public VsSolutionEvents(DTE dte, D365DeveloperExtensionsPackage D365DeveloperExtensionsPackage)
+        public VsSolutionEvents(D365DeveloperExtensionsPackage d365DeveloperExtensionsPackage)
         {
-            _dte = dte;
-            _D365DeveloperExtensionsPackage = D365DeveloperExtensionsPackage;
+            _d365DeveloperExtensionsPackage = d365DeveloperExtensionsPackage;
         }
 
         public VsSolutionEvents()
@@ -46,7 +43,7 @@ namespace D365DeveloperExtensions.Vs
 
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
-            _D365DeveloperExtensionsPackage.SolutionEventsOnBeforeClosing();
+            _d365DeveloperExtensionsPackage.SolutionEventsOnBeforeClosing();
             return VSConstants.S_OK;
         }
 

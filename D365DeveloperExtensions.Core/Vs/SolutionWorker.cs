@@ -17,7 +17,7 @@ namespace D365DeveloperExtensions.Core.Vs
                     !string.Equals(buildConfiguration.Name, Resource.Constant_ProjectBuildConfig_Release, StringComparison.CurrentCultureIgnoreCase))
                     continue;
 
-                SolutionContexts contexts = buildConfiguration.SolutionContexts;
+                var contexts = buildConfiguration.SolutionContexts;
                 foreach (SolutionContext solutionContext in contexts)
                 {
                     if (solutionContext.ProjectName == projectName)
@@ -31,12 +31,12 @@ namespace D365DeveloperExtensions.Core.Vs
             if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return null;
 
-            Projects projects = dte.Solution.Projects;
-            List<Project> list = new List<Project>();
+            var projects = dte.Solution.Projects;
+            var list = new List<Project>();
             var item = projects.GetEnumerator();
             while (item.MoveNext())
             {
-                Project project = (Project)item.Current;
+                var project = (Project)item.Current;
                 if (project == null)
                     continue;
 
@@ -58,7 +58,7 @@ namespace D365DeveloperExtensions.Core.Vs
 
         private static IEnumerable<Project> GetSolutionFolderProjects(Project solutionFolder)
         {
-            List<Project> list = new List<Project>();
+            var list = new List<Project>();
             for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
             {
                 var subProject = solutionFolder.ProjectItems.Item(i).SubProject;

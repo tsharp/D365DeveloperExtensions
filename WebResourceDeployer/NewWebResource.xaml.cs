@@ -3,11 +3,9 @@ using D365DeveloperExtensions.Core.Enums;
 using D365DeveloperExtensions.Core.Logging;
 using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
-using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -75,7 +73,7 @@ namespace WebResourceDeployer
             _dte = dte;
             _selectedProject = selectedProject;
 
-            bool result = GetSolutions(selectedSolutionId);
+            var result = GetSolutions(selectedSolutionId);
             if (!result)
             {
                 MessageBox.Show(Resource.ErrorMessage_ErrorRetrievingSolutions);
@@ -93,23 +91,23 @@ namespace WebResourceDeployer
             if (!ValidateForm())
                 return;
 
-            string filePath = GetFilePath();
+            var filePath = GetFilePath();
             if (string.IsNullOrEmpty(filePath))
                 return;
 
-            string relativePath = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
-            string name = UniqueName.Text.Trim();
-            string prefix = Prefix.Text;
-            int type = ((WebResourceType)Type.SelectedItem).Type;
-            string displayName = DisplayName.Text.Trim();
-            string description = Description.Text.Trim();
+            var relativePath = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
+            var name = UniqueName.Text.Trim();
+            var prefix = Prefix.Text;
+            var type = ((WebResourceType)Type.SelectedItem).Type;
+            var displayName = DisplayName.Text.Trim();
+            var description = Description.Text.Trim();
 
             Overlay.ShowMessage(_dte, $"{Resource.Message_Creating}...");
 
-            Entity webResource =
+            var webResource =
                 Crm.WebResource.CreateNewWebResourceEntity(type, prefix, name, displayName, description, filePath, _selectedProject);
 
-            Guid webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
+            var webResourceId = await Task.Run(() => Crm.WebResource.CreateWebResourceInCrm(_client, webResource));
             if (webResourceId == Guid.Empty)
             {
                 Overlay.HideMessage(_dte);
@@ -117,10 +115,10 @@ namespace WebResourceDeployer
                 Close();
             }
 
-            CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
+            var solution = (CrmSolution)Solutions.SelectedItem;
             if (solution.SolutionId != ExtensionConstants.DefaultSolutionId)
             {
-                bool addedToSolution = await Task.Run(() => Crm.Solution.AddWebResourceToSolution(_client, solution.UniqueName, webResourceId));
+                var addedToSolution = await Task.Run(() => Crm.Solution.AddWebResourceToSolution(_client, solution.UniqueName, webResourceId));
                 if (!addedToSolution)
                 {
                     Overlay.HideMessage(_dte);
@@ -146,8 +144,8 @@ namespace WebResourceDeployer
 
         private string GetFilePath()
         {
-            ProjectItem projectItem = (ProjectItem)((ComboBoxItem)Files.SelectedItem).Tag;
-            string filePath = projectItem.Properties.Item("FullPath").Value.ToString();
+            var projectItem = (ProjectItem)((ComboBoxItem)Files.SelectedItem).Tag;
+            var filePath = projectItem.Properties.Item("FullPath").Value.ToString();
             if (File.Exists(filePath))
                 return filePath;
 
@@ -170,18 +168,18 @@ namespace WebResourceDeployer
         {
             if (Files.SelectedItem == null)
             {
-                UniqueName.Text = String.Empty;
-                DisplayName.Text = String.Empty;
+                UniqueName.Text = string.Empty;
+                DisplayName.Text = string.Empty;
                 return;
             }
 
-            string fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
-            FileExtensionType extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
+            var fileName = ((ComboBoxItem)Files.SelectedItem).Content.ToString();
+            var extensionType = D365DeveloperExtensions.Core.Models.WebResourceTypes.GetExtensionType(fileName);
             if (extensionType == FileExtensionType.Ts)
                 fileName = fileName.Replace(".ts", ".js");
 
             DisplayName.Text = FileNameToDisplayName(fileName);
-            string extension = Path.GetExtension(fileName);
+            var extension = Path.GetExtension(fileName);
             UniqueName.Text = fileName;
 
             if (string.IsNullOrEmpty(extension))
@@ -210,7 +208,7 @@ namespace WebResourceDeployer
             if (fileName.Count(s => s == '/') != 1) //nested in folder
                 return fileName;
 
-            fileName = fileName.Replace("/", String.Empty);
+            fileName = fileName.Replace("/", string.Empty);
 
             if (fileName.StartsWith(Prefix.Text, StringComparison.InvariantCultureIgnoreCase))
                 fileName = fileName.Substring(Prefix.Text.Length, fileName.Length - Prefix.Text.Length);
@@ -222,7 +220,7 @@ namespace WebResourceDeployer
         {
             if (Solutions.SelectedItem != null)
             {
-                CrmSolution solution = (CrmSolution)Solutions.SelectedItem;
+                var solution = (CrmSolution)Solutions.SelectedItem;
                 Prefix.Text = solution.Prefix + "_";
             }
             else
@@ -233,9 +231,9 @@ namespace WebResourceDeployer
         {
             Overlay.ShowMessage(_dte, $"{Resource.Message_RetrievingSolutions}...");
 
-            EntityCollection results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
+            var results = Crm.Solution.RetrieveSolutionsFromCrm(_client, false);
 
-            List<CrmSolution> solutions = ModelBuilder.CreateCrmSolutionView(results);
+            var solutions = ModelBuilder.CreateCrmSolutionView(results);
 
             if (selectedSolutionId != Guid.Empty)
             {

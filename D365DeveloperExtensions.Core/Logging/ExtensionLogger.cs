@@ -2,7 +2,6 @@
 using D365DeveloperExtensions.Core.Models;
 using D365DeveloperExtensions.Core.Resources;
 using D365DeveloperExtensions.Core.UserOptions;
-using EnvDTE;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -13,11 +12,8 @@ namespace D365DeveloperExtensions.Core.Logging
 {
     public class ExtensionLogger
     {
-        private static DTE _dte;
-
-        public ExtensionLogger(DTE dte)
+        public ExtensionLogger()
         {
-            _dte = dte;
             CreateConfig();
         }
 
@@ -32,21 +28,21 @@ namespace D365DeveloperExtensions.Core.Logging
             config.AddTarget("file", fileTarget);
 
             config.AddRule(LogLevel.Info, LogLevel.Fatal, fileTarget);
-            
+
             LogManager.Configuration = config;
         }
 
         public static void LogToFile(Logger logger, string message, LogLevel logLevel)
         {
-            if (UserOptionsHelper.GetOption<bool>(UserOptionProperties.ExtensionLoggingEnabled)) {
-                CreateConfig();
-                logger.Log(logLevel, message);
-            }
+            if (!UserOptionsHelper.GetOption<bool>(UserOptionProperties.ExtensionLoggingEnabled))
+                return;
+
+            logger.Log(logLevel, message);
         }
 
         private static string GetLogFilePath()
         {
-            string logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.ExtensionLogFilePath);
+            var logFilePath = UserOptionsHelper.GetOption<string>(UserOptionProperties.ExtensionLogFilePath);
             if (!string.IsNullOrEmpty(logFilePath))
                 return Path.Combine(logFilePath, CreateLogFileName());
 

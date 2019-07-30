@@ -43,7 +43,7 @@ namespace WebResourceDeployer.Models
             filterStates.Insert(0, new FilterState
             {
                 Name = "Select All",
-                Value = String.Empty
+                Value = string.Empty
             });
 
             return filterStates;

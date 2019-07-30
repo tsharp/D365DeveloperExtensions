@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Solution Packager Project</Name>
-    <Description>Dynamics CRM/365 Solution Packager Project</Description>
+    <Name>D365 CE/CRM Solution Packager Project</Name>
+    <Description>Dynamics 365 CE/CRM Solution Packager Project</Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.6.2</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
     <TemplateID>084f19e1-039c-453c-aa8b-cd6ca6e9f2d1</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>CSharpSolutionPackage</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <LanguageTag>C#</LanguageTag>
+    <PlatformTag>Windows</PlatformTag>
+    <PlatformTag>D365 CE</PlatformTag>
+    <!--<ProjectTypeTag>D365 CE</ProjectTypeTag>-->
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ProjectTemplate.csproj" File="ProjectTemplate.csproj" ReplaceParameters="true">

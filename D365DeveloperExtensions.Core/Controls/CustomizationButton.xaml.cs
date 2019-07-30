@@ -42,7 +42,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private static void OnIsConnectedChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            CustomizationButton customizationButton = d as CustomizationButton;
+            var customizationButton = d as CustomizationButton;
             customizationButton?.OnIsConnectedChange(e);
         }
 
@@ -62,14 +62,12 @@ namespace D365DeveloperExtensions.Core.Controls
                 return;
             }
 
-            WebBrowser.OpenCrmPage(dte, client,
-                $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
+            WebBrowser.OpenCrmPage(client, $"tools/solution/edit.aspx?id=%7b{ExtensionConstants.DefaultSolutionId}%7d");
         }
 
         private void Customizations_OnLoaded(object sender, RoutedEventArgs e)
         {
-            DTE dte = (DTE)Package.GetGlobalService(typeof(DTE));
-            if (dte == null)
+            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
                 return;
 
             if (SharedGlobals.GetGlobal("CrmService", dte) is CrmServiceClient client)

@@ -1,34 +1,56 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.Models;
+using NLog;
 using NuGet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace NuGetRetriever
 {
-
     public static class PackageLister
     {
-        public static List<NuGetPackage> GetPackagesbyId(string packageId)
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>  Retrieves NuGet package info.</summary>
+        /// <param name="packageId">The NuGet package identifier.</param>
+        /// <returns>List of NuGet packages.</returns>
+        public static List<NuGetPackage> GetPackagesById(string packageId)
         {
-            var packages = GetPackages(packageId);
-
-            List<NuGetPackage> results = new List<NuGetPackage>();
-            foreach (IPackage package in packages)
+            try
             {
-                if (package.Published != null && package.Published.Value.Year == 1900)
-                    continue;
+                ExLogger.LogToFile(Logger, $"{Resources.Resource.Message_RetrievingNuGetpackage}: {packageId}", LogLevel.Info);
 
-                results.Add(CreateNuGetPackage(package));
+                var packages = GetPackages(packageId);
+
+                var results = new List<NuGetPackage>();
+                foreach (var package in packages)
+                {
+                    if (package.Published != null && package.Published.Value.Year == 1900)
+                        continue;
+
+                    results.Add(CreateNuGetPackage(package));
+                }
+
+                ExLogger.LogToFile(Logger, $"Found {results.Count} packages", LogLevel.Info);
+
+                return new List<NuGetPackage>(results.OrderByDescending(v => v.Version));
             }
-
-            return new List<NuGetPackage>(results.OrderByDescending(v => v.Version.ToString()));
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(Logger, $"{Resources.Resource.ErrorMessage_FailedretrievingNuGetpackage}: {packageId}", e);
+                throw;
+            }
         }
 
         private static List<IPackage> GetPackages(string packageId)
         {
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-            List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
+            ExLogger.LogToFile(Logger, $"{Resources.Resource.Message_UsingNuGetAPIurl}: {ExtensionConstants.NuGetApiUrl}", LogLevel.Info);
+            
+            var repo = PackageRepositoryFactory.Default.CreateRepository(ExtensionConstants.NuGetApiUrl);
+            var packages = repo.FindPackagesById(packageId).ToList();
 
             return packages;
         }
@@ -53,7 +75,7 @@ namespace NuGetRetriever
             if (package.DependencySets?.Count() != 1)
                 return false;
 
-            foreach (PackageDependency dependency in package.DependencySets.First().Dependencies)
+            foreach (var dependency in package.DependencySets.First().Dependencies)
                 if (dependency.Id == ExtensionConstants.MicrosoftCrmSdkXrmToolingCoreAssembly)
                     return true;
 

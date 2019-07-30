@@ -2,9 +2,6 @@
 using D365DeveloperExtensions.Core.Config;
 using D365DeveloperExtensions.Core.Models;
 using EnvDTE;
-using SolutionPackager.ViewModels;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using CoreMapping = D365DeveloperExtensions.Core.Config.Mapping;
 
@@ -12,15 +9,15 @@ namespace SolutionPackager.Config
 {
     public static class Mapping
     {
-        public static SolutionPackageConfig GetSolutionPackageConfig(Project project, string profile, ObservableCollection<CrmSolution> crmSolutions)
+        public static SolutionPackageConfig GetSolutionPackageConfig(Project project, string profile)
         {
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
+            var spklConfig = CoreMapping.GetSpklConfigFile(project);
 
-            List<SolutionPackageConfig> spklSolutionPackageConfigs = spklConfig.solutions;
+            var spklSolutionPackageConfigs = spklConfig.solutions;
             if (spklSolutionPackageConfigs == null)
                 return null;
 
-            SolutionPackageConfig solutionPackageConfig = profile.StartsWith(ExtensionConstants.NoProfilesText)
+            var solutionPackageConfig = profile.StartsWith(ExtensionConstants.NoProfilesText)
                 ? spklSolutionPackageConfigs[0]
                 : spklSolutionPackageConfigs.FirstOrDefault(p => p.profile == profile);
 
@@ -29,13 +26,13 @@ namespace SolutionPackager.Config
 
         public static void AddOrUpdateSpklMapping(Project project, string profile, SolutionPackageConfig solutionPackageConfig)
         {
-            SpklConfig spklConfig = CoreMapping.GetSpklConfigFile(project);
+            var spklConfig = CoreMapping.GetSpklConfigFile(project);
 
             if (profile.StartsWith(ExtensionConstants.NoProfilesText))
                 spklConfig.solutions[0] = solutionPackageConfig;
             else
             {
-                SolutionPackageConfig existingSolutionPackageConfig = spklConfig.solutions.FirstOrDefault(s => s.profile == profile);
+                var existingSolutionPackageConfig = spklConfig.solutions.FirstOrDefault(s => s.profile == profile);
                 if (existingSolutionPackageConfig != null && solutionPackageConfig != null)
                 {
                     existingSolutionPackageConfig.increment_on_import = solutionPackageConfig.increment_on_import;
@@ -47,7 +44,7 @@ namespace SolutionPackager.Config
                 }
             }
 
-            string projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
+            var projectPath = D365DeveloperExtensions.Core.Vs.ProjectWorker.GetProjectPath(project);
             ConfigFile.UpdateSpklConfigFile(projectPath, spklConfig);
         }
 

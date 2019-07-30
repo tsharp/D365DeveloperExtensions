@@ -1,19 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 Console Application Project</Name>
+    <Name>D365 CE/CRM Console Application Project</Name>
     <Description>
-      Dynamics CRM/365 Console Application Project
-      If connecting to D365 Online - use .NET Framework v4.6.2+
+      Dynamics 365 CE/CRM Console Application Project
     </Description>
     <Icon>icon.png</Icon>
     <ProjectType>CSharp</ProjectType>
-    <RequiredFrameworkVersion>4.5.2</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <SortOrder>1000</SortOrder>
     <TemplateID>6554c74b-8686-4715-b6a8-416c0fcc7638</TemplateID>
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>CSharpConsole</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <LanguageTag>C#</LanguageTag>
+    <PlatformTag>Windows</PlatformTag>
+    <PlatformTag>D365 CE</PlatformTag>
+    <!--<ProjectTypeTag>D365 CE</ProjectTypeTag>-->
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ProjectTemplate.csproj" File="ProjectTemplate.csproj" ReplaceParameters="true">

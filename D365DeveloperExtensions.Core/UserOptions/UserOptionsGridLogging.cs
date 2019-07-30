@@ -19,8 +19,8 @@ namespace D365DeveloperExtensions.Core.UserOptions
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private bool _extensionLoggingEnabled;
         private bool _xrmToolingLoggingEnabled;
-        private string _extensionLogFilePath = String.Empty;
-        private string _xrmToolingLogFilePath = String.Empty;
+        private string _extensionLogFilePath = string.Empty;
+        private string _xrmToolingLogFilePath = string.Empty;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
         [LocalizedCategory("UserOptions_Category_Logging", typeof(Resource))]
@@ -114,15 +114,19 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "ExtensionLoggingEnabled":
+                    SharedGlobals.SetGlobal("ExtensionLoggingEnabled", ExtensionLoggingEnabled);
                     Logger.Log(LogLevel.Info, $"ExtensionLoggingEnabled now: {ExtensionLoggingEnabled}");
                     break;
                 case "ExtensionLogFilePath":
+                    SharedGlobals.SetGlobal("ExtensionLogFilePath", ExtensionLogFilePath);
                     Logger.Log(LogLevel.Info, $"ExtensionLogFilePath now: {ExtensionLogFilePath}");
                     break;
                 case "XrmToolingLoggingEnabled":
+                    SharedGlobals.SetGlobal("XrmToolingLoggingEnabled", XrmToolingLoggingEnabled);
                     Logger.Log(LogLevel.Info, $"XrmToolingLoggingEnabled now: {XrmToolingLoggingEnabled}");
                     break;
                 case "XrmToolingLogFilePath":
+                    SharedGlobals.SetGlobal("XrmToolingLogFilePath", XrmToolingLogFilePath);
                     Logger.Log(LogLevel.Info, $"XrmToolingLogFilePath now: {XrmToolingLogFilePath}");
                     break;
             }

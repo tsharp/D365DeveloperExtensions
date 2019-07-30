@@ -23,7 +23,7 @@ namespace PluginTraceViewer.Models
             filterModes.Insert(0, new FilterMode
             {
                 Name = Resource.FilterEntity_Select_All,
-                Value = String.Empty,
+                Value = string.Empty,
                 IsSelected = true
             });
 

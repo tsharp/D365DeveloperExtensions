@@ -13,6 +13,8 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace CrmIntellisense.Crm
 {
@@ -27,15 +29,17 @@ namespace CrmIntellisense.Crm
         {
             try
             {
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievingMetadata, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievingMetadata, MessageType.Info);
 
-                RetrieveAllEntitiesRequest metaDataRequest = new RetrieveAllEntitiesRequest
+                var metaDataRequest = new RetrieveAllEntitiesRequest
                 {
                     EntityFilters = EntityFilters.Entity | EntityFilters.Attributes
                 };
 
-                RetrieveAllEntitiesResponse metaDataResponse = (RetrieveAllEntitiesResponse)client.Execute(metaDataRequest);
+                var metaDataResponse = (RetrieveAllEntitiesResponse)client.Execute(metaDataRequest);
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedMetadata, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedMetadata, MessageType.Info);
 
                 ProcessMetadata(metaDataResponse);
@@ -48,16 +52,17 @@ namespace CrmIntellisense.Crm
 
         private static void ProcessMetadata(RetrieveAllEntitiesResponse metaDataResponse)
         {
+            ExLogger.LogToFile(Logger, Resource.Message_ProcessingMetadata, LogLevel.Info);
             OutputLogger.WriteToOutputWindow(Resource.Message_ProcessingMetadata, MessageType.Info);
 
             var entities = metaDataResponse.EntityMetadata;
 
             Metadata = new List<CompletionValue>();
 
-            string entityTriggerCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseEntityTriggerCharacter);
-            string entityFieldCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseFieldTriggerCharacter);
+            var entityTriggerCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseEntityTriggerCharacter);
+            var entityFieldCharacter = UserOptionsHelper.GetOption<string>(UserOptionProperties.IntellisenseFieldTriggerCharacter);
 
-            foreach (EntityMetadata entityMetadata in entities)
+            foreach (var entityMetadata in entities)
             {
                 Metadata.Add(new CompletionValue($"{entityTriggerCharacter}{entityMetadata.LogicalName}", entityMetadata.LogicalName,
                     GetDisplayName(entityMetadata.DisplayName), MetadataType.Entity));
@@ -77,6 +82,7 @@ namespace CrmIntellisense.Crm
 
         private static string GetDisplayName(Label label)
         {
+            // TODO: Adjust for localization
             return label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == 1033)?.Label;
         }
     }

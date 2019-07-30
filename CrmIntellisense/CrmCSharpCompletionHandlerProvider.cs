@@ -47,8 +47,8 @@ namespace CrmIntellisense
             if (metadata != null)
                 return;
 
-            InfoBar infoBar = new InfoBar(false);
-            InfoBarModel infoBarModel = CreateMetadataInfoBar();
+            var infoBar = new InfoBar(false);
+            var infoBarModel = CreateMetadataInfoBar();
             infoBar.ShowInfoBar(infoBarModel);
 
             GetData(client, infoBar);

@@ -49,8 +49,8 @@ namespace D365DeveloperExtensions.Core
             };
 
             var service = (IVsImageService2)Package.GetGlobalService(typeof(SVsImageService));
-            IVsUIObject result = service.GetImage(moniker, imageAttributes);
-            result.get_Data(out object data);
+            var result = service.GetImage(moniker, imageAttributes);
+            result.get_Data(out var data);
 
             return data as BitmapSource;
         }

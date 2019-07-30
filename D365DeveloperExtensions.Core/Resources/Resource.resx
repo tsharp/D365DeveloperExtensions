@@ -436,12 +436,30 @@
     <value>Invalid folder path</value>
   </data>
   <data name="Error_CouldNotLocatePluginRegistrationTool" xml:space="preserve">
-    <value>Couuld not locate Plug-in Registration Tool</value>
+    <value>Could not locate Plug-in Registration Tool</value>
   </data>
   <data name="Error_CouldNotLocateSolutionPackager" xml:space="preserve">
-    <value>Couuld not locate Solution Packager</value>
+    <value>Could not locate Solution Packager</value>
   </data>
   <data name="Error_CouldNotLocateCrmSvcUtil" xml:space="preserve">
-    <value>Couuld not locate CrmSvcUtil</value>
+    <value>Could not locate CrmSvcUtil</value>
+  </data>
+  <data name="ErrorMessage_ErrorAccessingDTE" xml:space="preserve">
+    <value>Error accessing DTE</value>
+  </data>
+  <data name="ErrorMessage_ErrorAccessingMCS" xml:space="preserve">
+    <value>Error accessing OleMenuCommandService</value>
+  </data>
+  <data name="Message_CreatingFile" xml:space="preserve">
+    <value>Creating file</value>
+  </data>
+  <data name="Message_ReadingFile" xml:space="preserve">
+    <value>Reading file</value>
+  </data>
+  <data name="Message_UpdatingFile" xml:space="preserve">
+    <value>Updating file</value>
+  </data>
+  <data name="Message_PublishingAllCustomizations" xml:space="preserve">
+    <value>Publishing all customizations</value>
   </data>
 </root>

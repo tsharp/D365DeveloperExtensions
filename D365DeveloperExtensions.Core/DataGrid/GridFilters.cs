@@ -6,18 +6,18 @@ namespace D365DeveloperExtensions.Core.DataGrid
     {
         public static void SetSelectAll<T1, T2>(T1 sender, ObservableCollection<T2> list)
         {
-            IFilterProperty changedFilter = (IFilterProperty)sender;
-            bool selectedValue = changedFilter.IsSelected;
+            var changedFilter = (IFilterProperty)sender;
+            var selectedValue = changedFilter.IsSelected;
 
             //Set select/unselect all
             if (string.IsNullOrEmpty(changedFilter.Value))
             {
-                bool allValue = changedFilter.IsSelected;
+                var allValue = changedFilter.IsSelected;
                 if (allValue)
                 {
-                    for (int i = 1; i < list.Count; i++)
+                    for (var i = 1; i < list.Count; i++)
                     {
-                        IFilterProperty filter = (IFilterProperty)list[i];
+                        var filter = (IFilterProperty)list[i];
                         if (filter.IsSelected != true)
                             filter.IsSelected = true;
                     }
@@ -25,11 +25,11 @@ namespace D365DeveloperExtensions.Core.DataGrid
             }
             else
             {
-                IFilterProperty allFilter = (IFilterProperty)list[0];
-                int matchCount = 0;
-                for (int i = 1; i < list.Count; i++)
+                var allFilter = (IFilterProperty)list[0];
+                var matchCount = 0;
+                for (var i = 1; i < list.Count; i++)
                 {
-                    IFilterProperty filter = (IFilterProperty)list[i];
+                    var filter = (IFilterProperty)list[i];
                     if (filter.IsSelected == selectedValue)
                         matchCount++;
                 }

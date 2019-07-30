@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Resources;
 using TemplateWizards.Models;
 using TemplateWizards.Resources;
 using VSLangProj;
@@ -26,16 +25,16 @@ namespace TemplateWizards
 
         public static CustomTemplates GetTemplateConfig(string templateFolder)
         {
-            string path = Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile);
+            var path = Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile);
             if (!File.Exists(path))
                 return null;
 
             try
             {
                 CustomTemplates templates;
-                using (StreamReader file = File.OpenText(path))
+                using (var file = File.OpenText(path))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
+                    var serializer = new JsonSerializer();
                     templates = (CustomTemplates)serializer.Deserialize(file, typeof(CustomTemplates));
                 }
 
@@ -58,22 +57,22 @@ namespace TemplateWizards
 
         public static string GetTemplateContent(string templateFolder, CustomTemplate template, Dictionary<string, string> replacementsDictionary)
         {
-            string path = Path.Combine(templateFolder, template.RelativePath);
+            var path = Path.Combine(templateFolder, template.RelativePath);
             if (!File.Exists(path))
                 return null;
 
-            string content = File.ReadAllText(path);
+            var content = File.ReadAllText(path);
 
             if (!template.CoreReplacements)
                 return content;
 
-            foreach (KeyValuePair<string, string> keyValuePair in replacementsDictionary)
+            foreach (var keyValuePair in replacementsDictionary)
                 content = content.Replace(keyValuePair.Key, keyValuePair.Value);
 
             return content;
         }
 
-        public static void InstallTemplateNuGetPackages(DTE dte, CustomTemplate customTemplate, Project project)
+        public static void InstallTemplateNuGetPackages(CustomTemplate customTemplate, Project project)
         {
             if (customTemplate.CustomTemplateNuGetPackages.Count <= 0)
                 return;
@@ -84,13 +83,13 @@ namespace TemplateWizards
 
             var installer = componentModel.GetService<IVsPackageInstaller>();
 
-            foreach (CustomTemplateNuGetPackage package in customTemplate.CustomTemplateNuGetPackages)
+            foreach (var package in customTemplate.CustomTemplateNuGetPackages)
                 AddPackage(installer, package, project);
         }
 
         private static void AddPackage(IVsPackageInstaller installer, CustomTemplateNuGetPackage package, Project project)
         {
-            string packageVersion = string.IsNullOrEmpty(package.Version) ?
+            var packageVersion = string.IsNullOrEmpty(package.Version) ?
                 null :
                 package.Version;
 
@@ -112,28 +111,28 @@ namespace TemplateWizards
             if (!(project?.Object is VSProject vsproject))
                 return;
 
-            foreach (CustomTemplateReference reference in customTemplate.CustomTemplateReferences)
+            foreach (var reference in customTemplate.CustomTemplateReferences)
                 D365DeveloperExtensions.Core.Vs.ProjectWorker.AddProjectReference(vsproject, reference.Name);
         }
 
         public static string GetTemplateFileTemplate()
         {
-            StreamResourceInfo streamResourceInfo = Application.GetResourceStream(new Uri("TemplateWizards;component/Template/templates.json",
+            var streamResourceInfo = Application.GetResourceStream(new Uri("TemplateWizards;component/Template/templates.json",
                 UriKind.Relative));
 
             if (streamResourceInfo == null)
                 return null;
 
-            StreamReader sr = new StreamReader(streamResourceInfo.Stream);
+            var sr = new StreamReader(streamResourceInfo.Stream);
             return sr.ReadToEnd();
         }
 
         public static void CreateTemplateFileTemplate(string templateFolder)
         {
-            string content = GetTemplateFileTemplate();
-            string path = Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile);
+            var content = GetTemplateFileTemplate();
+            var path = Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile);
 
-            FileStream file = File.Create(path);
+            var file = File.Create(path);
             file.Close();
 
             File.WriteAllText(path, content);
@@ -161,7 +160,7 @@ namespace TemplateWizards
             if (File.Exists(Path.Combine(templateFolder, ExtensionConstants.TemplateConfigFile)))
                 return true;
 
-            MessageBoxResult createResult = MessageBox.Show($"{Resource.MessageBox_CreateConfigFile}: {templateFolder}",
+            var createResult = MessageBox.Show($"{Resource.MessageBox_CreateConfigFile}: {templateFolder}",
                 Resource.MessageBox_Title_ConfirmCreateConfigFile, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             if (createResult != MessageBoxResult.Yes)
@@ -175,8 +174,8 @@ namespace TemplateWizards
 
         public static CustomTemplatePicker GetCustomTemplate(List<CustomTemplate> results)
         {
-            CustomTemplatePicker templatePicker = new CustomTemplatePicker(results);
-            bool? result = templatePicker.ShowModal();
+            var templatePicker = new CustomTemplatePicker(results);
+            var result = templatePicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 

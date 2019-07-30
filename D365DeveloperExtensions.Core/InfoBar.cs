@@ -9,7 +9,7 @@ using System;
 
 namespace D365DeveloperExtensions.Core
 {
-    public class InfoBar : Package, IVsInfoBarUIEvents
+    public class InfoBar : AsyncPackage, IVsInfoBarUIEvents
     {
         private uint _cookie;
         private readonly bool _useActiveView;
@@ -52,7 +52,7 @@ namespace D365DeveloperExtensions.Core
                 return;
             }
 
-            IVsInfoBarUIElement element = factory.CreateInfoBar(infoBarModel);
+            var element = factory.CreateInfoBar(infoBarModel);
             _element = element;
             _element.Advise(this, out _cookie);
             _host.AddInfoBar(_element);

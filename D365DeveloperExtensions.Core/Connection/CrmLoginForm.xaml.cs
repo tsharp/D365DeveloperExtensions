@@ -2,7 +2,6 @@
 using D365DeveloperExtensions.Core.Logging;
 using D365DeveloperExtensions.Core.Models;
 using D365DeveloperExtensions.Core.UserOptions;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Tooling.CrmConnectControl;
@@ -234,22 +233,19 @@ namespace D365DeveloperExtensions.Core.Connection
             _resetUiFlag = false;
         }
 
-        private void EnableXrmToolingLogging()
+        private static void EnableXrmToolingLogging()
         {
             if (!UserOptionsHelper.GetOption<bool>(UserOptionProperties.XrmToolingLoggingEnabled))
                 return;
 
             TraceControlSettings.TraceLevel = SourceLevels.All;
-            string logPath = XrmToolingLogging.GetLogFilePath();
+            var logPath = XrmToolingLogging.GetLogFilePath();
             TraceControlSettings.AddTraceListener(new TextWriterTraceListener(logPath));
         }
 
-        private void SetGlobalConnection(CrmServiceClient client)
+        private static void SetGlobalConnection(CrmServiceClient client)
         {
-            if (!(Package.GetGlobalService(typeof(DTE)) is DTE dte))
-                return;
-
-            SharedGlobals.SetGlobal("CrmService", client, dte);
+            SharedGlobals.SetGlobal("CrmService", client);
         }
     }
 

@@ -38,7 +38,7 @@ namespace TemplateWizards
 
             VersionsGrid.Columns[0].Header = packageName;
 
-            foreach (NuGetPackage package in packageVersions)
+            foreach (var package in packageVersions)
             {
                 Versions.Items.Add(package);
             }
@@ -64,7 +64,7 @@ namespace TemplateWizards
 
         private void Versions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView sdkVersions = (ListView)sender;
+            var sdkVersions = (ListView)sender;
             if (!(sdkVersions.SelectedItem is NuGetPackage package))
                 return;
 
@@ -81,14 +81,14 @@ namespace TemplateWizards
 
         private static List<NuGetPackage> FilterLatestVersions(List<NuGetPackage> packageVersions)
         {
-            List<NuGetPackage> filteredNuGetPackages = new List<NuGetPackage>();
+            var filteredNuGetPackages = new List<NuGetPackage>();
 
-            Version firstVersion = packageVersions[0].Version;
+            var firstVersion = packageVersions[0].Version;
             var currentMajor = firstVersion.Major;
             var currentMinor = firstVersion.Minor;
             var currentPackage = packageVersions[0];
 
-            for (int i = 0; i < packageVersions.Count; i++)
+            for (var i = 0; i < packageVersions.Count; i++)
             {
                 if (i == packageVersions.Count - 1)
                 {
@@ -96,7 +96,7 @@ namespace TemplateWizards
                     continue;
                 }
 
-                Version ver = packageVersions[i].Version;
+                var ver = packageVersions[i].Version;
 
                 if (ver.Major < currentMajor)
                 {

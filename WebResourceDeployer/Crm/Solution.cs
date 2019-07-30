@@ -8,6 +8,8 @@ using Microsoft.Xrm.Tooling.Connector;
 using NLog;
 using System;
 using WebResourceDeployer.Resources;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace WebResourceDeployer.Crm
 {
@@ -19,7 +21,7 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                QueryExpression query = new QueryExpression
+                var query = new QueryExpression
                 {
                     EntityName = "solution",
                     ColumnSet = new ColumnSet("friendlyname", "solutionid", "uniquename", "version"),
@@ -60,7 +62,7 @@ namespace WebResourceDeployer.Crm
 
                 if (!getManaged)
                 {
-                    ConditionExpression noManaged = new ConditionExpression
+                    var noManaged = new ConditionExpression
                     {
                         AttributeName = "ismanaged",
                         Operator = ConditionOperator.Equal,
@@ -70,8 +72,9 @@ namespace WebResourceDeployer.Crm
                     query.Criteria.Conditions.Add(noManaged);
                 }
 
-                EntityCollection solutions = client.RetrieveMultiple(query);
+                var solutions = client.RetrieveMultiple(query);
 
+                ExLogger.LogToFile(Logger, Resource.Message_RetrievedSolutions, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_RetrievedSolutions, MessageType.Info);
 
                 return solutions;
@@ -88,7 +91,7 @@ namespace WebResourceDeployer.Crm
         {
             try
             {
-                AddSolutionComponentRequest scRequest = new AddSolutionComponentRequest
+                var scRequest = new AddSolutionComponentRequest
                 {
                     ComponentType = 61,
                     SolutionUniqueName = uniqueName,
@@ -97,6 +100,7 @@ namespace WebResourceDeployer.Crm
 
                 client.Execute(scRequest);
 
+                ExLogger.LogToFile(Logger, Resource.Message_NewWebResourceAddedSolution, LogLevel.Info);
                 OutputLogger.WriteToOutputWindow(Resource.Message_NewWebResourceAddedSolution, MessageType.Info);
 
                 return true;

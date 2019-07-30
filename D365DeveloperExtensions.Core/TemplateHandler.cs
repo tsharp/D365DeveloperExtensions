@@ -18,9 +18,9 @@ namespace D365DeveloperExtensions.Core
         {
             try
             {
-                string codebase = Assembly.GetExecutingAssembly().CodeBase;
+                var codebase = Assembly.GetExecutingAssembly().CodeBase;
                 var uri = new Uri(codebase, UriKind.Absolute);
-                string path = Path.GetDirectoryName(uri.LocalPath);
+                var path = Path.GetDirectoryName(uri.LocalPath);
 
                 if (string.IsNullOrEmpty(path))
                 {

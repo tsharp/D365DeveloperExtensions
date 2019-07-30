@@ -10,6 +10,8 @@ using PluginDeployer.Resources;
 using PluginDeployer.Spkl;
 using PluginDeployer.ViewModels;
 using System;
+using ExLogger = D365DeveloperExtensions.Core.Logging.ExtensionLogger;
+using Logger = NLog.Logger;
 
 namespace PluginDeployer.Crm
 {
@@ -21,7 +23,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                QueryExpression query = new QueryExpression
+                var query = new QueryExpression
                 {
                     EntityName = "pluginassembly",
                     ColumnSet = new ColumnSet("pluginassemblyid", "name", "version"),
@@ -39,11 +41,12 @@ namespace PluginDeployer.Crm
                     }
                 };
 
-                EntityCollection assemblies = client.RetrieveMultiple(query);
+                var assemblies = client.RetrieveMultiple(query);
 
                 if (assemblies.Entities.Count <= 0)
                     return null;
 
+                ExLogger.LogToFile(Logger, $"{Resource.Message_RetrievedAssembly}: {assemblies.Entities[0].Id}", LogLevel.Info);
                 OutputLogger.WriteToOutputWindow($"{Resource.Message_RetrievedAssembly}: {assemblies.Entities[0].Id}", MessageType.Info);
                 return assemblies.Entities[0];
 
@@ -60,7 +63,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                Entity assembly = new Entity("pluginassembly")
+                var assembly = new Entity("pluginassembly")
                 {
                     ["content"] = Convert.ToBase64String(FileSystem.GetFileBytes(crmAssembly.AssemblyPath)),
                     ["name"] = crmAssembly.Name,
@@ -75,15 +78,17 @@ namespace PluginDeployer.Crm
 
                 if (crmAssembly.AssemblyId == Guid.Empty)
                 {
-                    Guid newId = client.Create(assembly);
-                    OutputLogger.WriteToOutputWindow($"{Resource.Message_CreatedAssembly}: {newId}", MessageType.Info);
+                    var newId = client.Create(assembly);
+                    ExLogger.LogToFile(Logger, $"{Resource.Message_CreatedAssembly}: {crmAssembly.Name}|{newId}", LogLevel.Info);
+                    OutputLogger.WriteToOutputWindow($"{Resource.Message_CreatedAssembly}: {crmAssembly.Name}|{newId}", MessageType.Info);
                     return newId;
                 }
 
                 assembly.Id = crmAssembly.AssemblyId;
                 client.Update(assembly);
 
-                OutputLogger.WriteToOutputWindow($"{Resource.Message_UpdatedAssembly}: {crmAssembly.AssemblyId}", MessageType.Info);
+                ExLogger.LogToFile(Logger, $"{Resource.Message_UpdatedAssembly}: {crmAssembly.Name}|{crmAssembly.AssemblyId}", LogLevel.Info);
+                OutputLogger.WriteToOutputWindow($"{Resource.Message_UpdatedAssembly}: {crmAssembly.Name}|{crmAssembly.AssemblyId}", MessageType.Info);
 
                 return crmAssembly.AssemblyId;
             }
@@ -99,7 +104,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                AddSolutionComponentRequest scRequest = new AddSolutionComponentRequest
+                var scRequest = new AddSolutionComponentRequest
                 {
                     ComponentType = 91,
                     SolutionUniqueName = uniqueName,
@@ -108,6 +113,7 @@ namespace PluginDeployer.Crm
 
                 client.Execute(scRequest);
 
+                ExLogger.LogToFile(Logger, $"{Resource.Message_AssemblyAddedSolution}: {uniqueName} - {assemblyId}", LogLevel.Info);
                 OutputLogger.WriteToOutputWindow($"{Resource.Message_AssemblyAddedSolution}: {uniqueName} - {assemblyId}", MessageType.Info);
 
                 return true;
@@ -124,7 +130,7 @@ namespace PluginDeployer.Crm
         {
             try
             {
-                FetchExpression query = new FetchExpression($@"<fetch>
+                var query = new FetchExpression($@"<fetch>
                                                           <entity name='solutioncomponent'>
                                                             <attribute name='solutioncomponentid'/>
                                                             <link-entity name='pluginassembly' from='pluginassemblyid' to='objectid'>
@@ -142,10 +148,11 @@ namespace PluginDeployer.Crm
                                                           </entity>
                                                         </fetch>");
 
-                EntityCollection results = client.RetrieveMultiple(query);
+                var results = client.RetrieveMultiple(query);
 
-                bool inSolution = results.Entities.Count > 0;
+                var inSolution = results.Entities.Count > 0;
 
+                ExLogger.LogToFile(Logger, $"{Resource.Message_AssemblyInSolution}: {uniqueName} - {assemblyName} - {inSolution}", LogLevel.Info);
                 OutputLogger.WriteToOutputWindow($"{Resource.Message_AssemblyInSolution}: {uniqueName} - {assemblyName} - {inSolution}", MessageType.Info);
 
                 return inSolution;

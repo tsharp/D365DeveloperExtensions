@@ -18,9 +18,9 @@ namespace D365DeveloperExtensions.Core.UserOptions
 #pragma warning restore CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private string _solutionPackagerToolPath = String.Empty;
-        private string _pluginRegistrationToolPath = String.Empty;
-        private string _crmSvcUtilToolPath = String.Empty;
+        private string _solutionPackagerToolPath = string.Empty;
+        private string _pluginRegistrationToolPath = string.Empty;
+        private string _crmSvcUtilToolPath = string.Empty;
 
         //Need to add entry to D365DeveloperExtensions - D365DeveloperExtensionsPackage.cs [ProvideOptionPage]
         [LocalizedCategory("UserOptions_Category_Tools", typeof(Resource))]
@@ -112,12 +112,15 @@ namespace D365DeveloperExtensions.Core.UserOptions
             switch (value)
             {
                 case "PluginRegistrationToolPath":
+                    SharedGlobals.SetGlobal("PluginRegistrationToolPath", PluginRegistrationToolPath);
                     Logger.Log(LogLevel.Info, $"PluginRegistrationToolPath now: {PluginRegistrationToolPath}");
                     break;
                 case "SolutionPackagerToolPath":
+                    SharedGlobals.SetGlobal("SolutionPackagerToolPath", SolutionPackagerToolPath);
                     Logger.Log(LogLevel.Info, $"SolutionPackagerToolPath now: {SolutionPackagerToolPath}");
                     break;
                 case "CrmSvcUtilToolPath":
+                    SharedGlobals.SetGlobal("CrmSvcUtilToolPath", CrmSvcUtilToolPath);
                     Logger.Log(LogLevel.Info, $"CrmSvcUtilToolPath now: {CrmSvcUtilToolPath}");
                     break;
             }

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>CRM/365 SDK Plug-in Base Class</Name>
-    <Description>Dynamics CRM/365 SDK Plug-in Base Class</Description>
+    <Name>D365 CE/CRM SDK Plug-in Base Class</Name>
+    <Description>Dynamics 365 CE/CRM SDK Plug-in Base Class</Description>
     <Icon>icon.png</Icon>
     <TemplateID>7f0cc81b-c95b-4c9b-b723-f145af1e559c</TemplateID>
     <ProjectType>CSharp</ProjectType>

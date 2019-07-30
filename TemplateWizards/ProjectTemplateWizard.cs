@@ -51,7 +51,7 @@ namespace TemplateWizards
 
                 if (replacementsDictionary.ContainsKey("$wizarddata$"))
                 {
-                    string wizardData = replacementsDictionary["$wizarddata$"];
+                    var wizardData = replacementsDictionary["$wizarddata$"];
                     ReadWizardData(wizardData);
                 }
 
@@ -71,7 +71,7 @@ namespace TemplateWizards
             {
                 try
                 {
-                    DirectoryInfo destination = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
+                    var destination = new DirectoryInfo(replacementsDictionary["$destinationdirectory$"]);
                     FileSystem.DeleteDirectory(replacementsDictionary["$destinationdirectory$"]);
                     //Delete solution directory if empty
                     if (destination.Parent != null && FileSystem.IsDirectoryEmpty(replacementsDictionary["$solutiondirectory$"]))
@@ -93,7 +93,7 @@ namespace TemplateWizards
 
         private Dictionary<string, string> PreHandleCustomItem(Dictionary<string, string> replacementsDictionary)
         {
-            string templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
+            var templateFolder = UserOptionsHelper.GetOption<string>(UserOptionProperties.CustomTemplatesPath);
             _addFile = CustomTemplateHandler.ValidateTemplateFolder(templateFolder);
             if (!_addFile)
                 return replacementsDictionary;
@@ -102,14 +102,14 @@ namespace TemplateWizards
             if (!_addFile)
                 return replacementsDictionary;
 
-            CustomTemplates templates = CustomTemplateHandler.GetTemplateConfig(templateFolder);
+            var templates = CustomTemplateHandler.GetTemplateConfig(templateFolder);
             if (templates == null)
             {
                 _addFile = false;
                 return replacementsDictionary;
             }
 
-            List<CustomTemplate> results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
+            var results = CustomTemplateHandler.GetTemplatesByLanguage(templates, "CSharp");
             if (results.Count == 0)
             {
                 MessageBox.Show(Resource.MessageBox_AddCustomTemplate);
@@ -117,7 +117,7 @@ namespace TemplateWizards
                 return replacementsDictionary;
             }
 
-            CustomTemplatePicker templatePicker = CustomTemplateHandler.GetCustomTemplate(results);
+            var templatePicker = CustomTemplateHandler.GetCustomTemplate(results);
             if (templatePicker.SelectedTemplate == null)
             {
                 _addFile = false;
@@ -126,7 +126,7 @@ namespace TemplateWizards
 
             _customTemplate = templatePicker.SelectedTemplate;
 
-            string content = CustomTemplateHandler.GetTemplateContent(templateFolder, _customTemplate, replacementsDictionary);
+            var content = CustomTemplateHandler.GetTemplateContent(templateFolder, _customTemplate, replacementsDictionary);
 
             replacementsDictionary.Add("$customtemplate$", content);
 
@@ -136,7 +136,7 @@ namespace TemplateWizards
         private void PreHandleCrmAssemblyProjects(Dictionary<string, string> replacementsDictionary)
         {
             var sdkVersionPicker = new SdkVersionPicker(_needsWorkflow, _needsClient);
-            bool? result = sdkVersionPicker.ShowModal();
+            var result = sdkVersionPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
@@ -149,22 +149,38 @@ namespace TemplateWizards
                 ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
                     Versioning.StringToVersion(_clientVersion).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
+
+            var coreVersion = Versioning.StringToVersion(_coreVersion);
+            var v462BaseVersion = new Version(9, 0, 2, 9);
+
+            if ((_crmProjectType == ProjectType.Console && _clientPackage != Resource.SdkAssemblyExtensions) || coreVersion >= v462BaseVersion)
+            {
+                var targetFrameworkVersion = Versioning.StringToVersion(replacementsDictionary["$targetframeworkversion$"]);
+                if (targetFrameworkVersion < new Version(4, 6, 2))
+                    ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.6.2", ref replacementsDictionary);
+
+                // 4.7.1 is max version for plug-ins & workflows Online
+                if (targetFrameworkVersion >= new Version(4, 7, 2) && _crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
+                    ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.7.1", ref replacementsDictionary);
+            }
+            else
+                ProjectDataHandler.AddOrUpdateReplacements("$targetframeworkversion$", "4.5.2", ref replacementsDictionary); ;
         }
 
         private void PreHandleUnitTestProjects(Dictionary<string, string> replacementsDictionary)
         {
             var testProjectPicker = new TestProjectPicker();
-            bool? result = testProjectPicker.ShowModal();
+            var result = testProjectPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
             if (testProjectPicker.SelectedProject != null)
             {
-                Solution solution = _dte.Solution;
-                Project project = testProjectPicker.SelectedProject;
-                string path = string.Empty;
-                string projectPath = Path.GetDirectoryName(project.FullName);
-                string solutionPath = Path.GetDirectoryName(solution.FullName);
+                var solution = _dte.Solution;
+                var project = testProjectPicker.SelectedProject;
+                var path = string.Empty;
+                var projectPath = Path.GetDirectoryName(project.FullName);
+                var solutionPath = Path.GetDirectoryName(solution.FullName);
                 if (!string.IsNullOrEmpty(projectPath) && !string.IsNullOrEmpty(solutionPath))
                 {
                     if (projectPath.StartsWith(solutionPath))
@@ -191,7 +207,7 @@ namespace TemplateWizards
                 if (testProjectPicker.SelectedProject == null)
                     return;
 
-                string version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
+                var version = ProjectWorker.GetSdkCoreVersion(testProjectPicker.SelectedProject);
                 ProjectDataHandler.AddOrUpdateReplacements("$useXrmToolingClientUsing$",
                     Versioning.StringToVersion(version).Major >= 8 ? "1" : "0", ref replacementsDictionary);
             }
@@ -199,15 +215,16 @@ namespace TemplateWizards
 
         private void PreHandleTypeScriptProjects()
         {
-            NpmHistory history = NpmProcessor.GetPackageHistory("@types/xrm");
+            var history = NpmProcessor.GetPackageHistory("@types/xrm");
 
-            if (history == null) {
+            if (history == null)
+            {
                 MessageBox.Show(Resource.MessageBox_NPMError);
                 throw new WizardBackoutException();
             }
 
-            NpmPicker npmPicker = new NpmPicker(history);
-            bool? result = npmPicker.ShowModal();
+            var npmPicker = new NpmPicker(history);
+            var result = npmPicker.ShowModal();
             if (!result.HasValue || result.Value == false)
                 throw new WizardBackoutException();
 
@@ -238,11 +255,11 @@ namespace TemplateWizards
             if (_customTemplate == null)
                 return;
 
-            Project project = projectItem.ContainingProject;
+            var project = projectItem.ContainingProject;
 
             CustomTemplateHandler.AddTemplateReferences(_customTemplate, project);
 
-            CustomTemplateHandler.InstallTemplateNuGetPackages(_dte, _customTemplate, project);
+            CustomTemplateHandler.InstallTemplateNuGetPackages(_customTemplate, project);
 
             if (!string.IsNullOrEmpty(_customTemplate.FileName))
                 projectItem.Name = _customTemplate.FileName;
@@ -274,9 +291,6 @@ namespace TemplateWizards
                     break;
             }
 
-            if (_isUnitTest)
-                PostHandleUnitTestProjects(project, installer);
-
             _dte.ExecuteCommand("File.SaveAll");
         }
 
@@ -294,7 +308,7 @@ namespace TemplateWizards
 
         private void PostHandleTypeScriptProject(Project project)
         {
-            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project));
+            NpmProcessor.InstallPackage("@types/xrm", _typesXrmVersion, ProjectWorker.GetProjectPath(project), true);
 
             _dte.ExecuteCommand("ProjectandSolutionContextMenus.CrossProjectMultiItem.RefreshFolder");
         }
@@ -313,16 +327,6 @@ namespace TemplateWizards
             try
             {
                 project.DTE.SuppressUI = true;
-
-                //Pre-2015 use .NET 4.0
-                if (Versioning.StringToVersion(_coreVersion).Major < 7)
-                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.0";
-                //Plug-in & workflows use .NET 4.5.2
-                else if (_crmProjectType == ProjectType.Plugin || _crmProjectType == ProjectType.Workflow)
-                    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5.2";
-                //Console v9+ use .NET 4.6.2 //TODO: Getting "Project Unavailable" message when finished but project builds fine
-                //else if (_crmProjectType == ProjectType.Console && Versioning.StringToVersion(_coreVersion).Major >= 9)
-                //    project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.6.2";
 
                 //Install all the NuGet packages
                 project = (Project)((Array)_dte.ActiveSolutionProjects).GetValue(0);
@@ -347,11 +351,11 @@ namespace TemplateWizards
 
         private void ReadWizardData(string wizardData)
         {
-            XmlReaderSettings settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
 
-            string el = "";
+            var el = "";
 
-            using (XmlReader reader = XmlReader.Create(new StringReader(wizardData), settings))
+            using (var reader = XmlReader.Create(new StringReader(wizardData), settings))
                 while (reader.Read())
                 {
                     switch (reader.NodeType)

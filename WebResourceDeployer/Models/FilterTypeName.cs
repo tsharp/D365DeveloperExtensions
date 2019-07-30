@@ -51,7 +51,7 @@ namespace WebResourceDeployer.Models
             filterTypeNames.Insert(0, new FilterTypeName
             {
                 Name = "Select All",
-                Value = String.Empty,
+                Value = string.Empty,
                 IsSelected = true
             });
 

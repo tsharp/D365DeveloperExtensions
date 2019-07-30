@@ -139,7 +139,7 @@ namespace PluginTraceViewer
                 return;
 
             //WindowEventsOnWindowActivated in this project can be called when activating another window
-            //so we don't want to contine further unless our window is active
+            //so we don't want to continue further unless our window is active
             if (!HostWindow.IsD365DevExWindow(gotFocus))
                 return;
 
@@ -283,7 +283,7 @@ namespace PluginTraceViewer
         private void PrepareWindow(string caption)
         {
             SetWindowCaption(caption);
-            SetButtonState(true);  
+            SetButtonState(true);
 
             Version version = ConnPane.CrmService.ConnectedOrgVersion;
             if (version.Major < 8)
@@ -526,8 +526,7 @@ namespace PluginTraceViewer
         {
             Guid pluginTraceLogId = new Guid(((Button)sender).CommandParameter.ToString());
 
-            WebBrowser.OpenCrmPage(_dte, ConnPane.CrmService,
-                $"userdefined/edit.aspx?etc=4619&id=%7b{pluginTraceLogId}%7d");
+            WebBrowser.OpenCrmPage(ConnPane.CrmService, $"userdefined/edit.aspx?etc=4619&id=%7b{pluginTraceLogId}%7d");
         }
 
         private void Delete_OnClick(object sender, RoutedEventArgs e)

@@ -1,7 +1,6 @@
 ﻿using D365DeveloperExtensions.Core;
 using D365DeveloperExtensions.Core.Models;
 using D365DeveloperExtensions.Core.UserOptions;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using Resource = TemplateWizards.Resources.Resource;
@@ -12,21 +11,20 @@ namespace TemplateWizards
     {
         public static void InstallNuGetCliPackage(string packageName)
         {
-            List<NuGetPackage> packages =
-                NuGetRetriever.PackageLister.GetPackagesbyId(packageName);
+            var packages = NuGetRetriever.PackageLister.GetPackagesById(packageName);
 
-            NuGetPicker nuGetPicker = new NuGetPicker(packageName, packages);
-            bool? result = nuGetPicker.ShowDialog();
+            var nuGetPicker = new NuGetPicker(packageName, packages);
+            var result = nuGetPicker.ShowDialog();
             if (!result.HasValue || result.Value == false)
                 return;
 
-            NuGetPackage selectedPackage = nuGetPicker.SelectedPackage;
+            var selectedPackage = nuGetPicker.SelectedPackage;
 
-            string installPath = GetInstallPath();
+            var installPath = GetInstallPath();
             if (string.IsNullOrEmpty(installPath))
                 return;
 
-            bool installed = NuGetCliProcessor.Install(installPath, selectedPackage);
+            var installed = NuGetCliProcessor.Install(installPath, selectedPackage);
             if (!installed)
                 return;
 
@@ -39,17 +37,17 @@ namespace TemplateWizards
 
         private static void UpdatePrtPath(string installPath, NuGetPackage selectedPackage)
         {
-            string prtPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.PluginRegistrationToolPath);
+            var prtPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.PluginRegistrationToolPath);
             if (!string.IsNullOrEmpty(prtPath))
                 return;
 
-            MessageBoxResult updatePrt = System.Windows.MessageBox.Show(Resource.ConfirmMessage_UpdatePrtPath, Resource.ConfirmMessage_UpdateUserSetting_Title,
+            var updatePrt = System.Windows.MessageBox.Show(Resource.ConfirmMessage_UpdatePrtPath, Resource.ConfirmMessage_UpdateUserSetting_Title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             if (updatePrt != MessageBoxResult.Yes)
                 return;
 
-            string newPrtPath =
+            var newPrtPath =
                 $@"{installPath}\{ExtensionConstants.MicrosoftCrmSdkXrmToolingPrt.ToLower()}.{selectedPackage.VersionText}\tools";
 
             UserOptionsHelper.SetOption(UserOptionProperties.PluginRegistrationToolPath, newPrtPath);
@@ -57,19 +55,19 @@ namespace TemplateWizards
 
         private static void UpdateCorePath(string installPath, NuGetPackage selectedPackage)
         {
-            string spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
-            string crmSvcPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.CrmSvcUtilToolPath);
+            var spPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.SolutionPackagerToolPath);
+            var crmSvcPath = UserOptionsHelper.GetOption<string>(UserOptionProperties.CrmSvcUtilToolPath);
 
             if (!string.IsNullOrEmpty(spPath) && !string.IsNullOrEmpty(crmSvcPath))
                 return;
 
-            MessageBoxResult updateCore = System.Windows.MessageBox.Show(Resource.ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath, Resource.ConfirmMessage_UpdateUserSetting_Title,
+            var updateCore = System.Windows.MessageBox.Show(Resource.ConfirmMessage_UpdateCrmSvcUtilSolutionPackagerPath, Resource.ConfirmMessage_UpdateUserSetting_Title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
             if (updateCore != MessageBoxResult.Yes)
                 return;
 
-            string newCorePath =
+            var newCorePath =
                 $@"{installPath}\{ExtensionConstants.MicrosoftCrmSdkCoreTools.ToLower()}.{selectedPackage.VersionText}\content\bin\coretools";
 
             UserOptionsHelper.SetOption(UserOptionProperties.CrmSvcUtilToolPath, newCorePath);
@@ -78,8 +76,8 @@ namespace TemplateWizards
 
         private static string GetInstallPath()
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            DialogResult result = folderBrowserDialog.ShowDialog();
+            var folderBrowserDialog = new FolderBrowserDialog();
+            var result = folderBrowserDialog.ShowDialog();
 
             return result != DialogResult.OK
                 ? null

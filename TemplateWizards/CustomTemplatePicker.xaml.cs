@@ -86,7 +86,7 @@ namespace TemplateWizards
                 return;
             }
 
-            CustomTemplateListItem listItem = (CustomTemplateListItem)e.AddedItems[0];
+            var listItem = (CustomTemplateListItem)e.AddedItems[0];
             SelectedTemplate = listItem.Template;
             Ok.IsEnabled = true;
         }

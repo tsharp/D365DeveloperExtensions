@@ -1,5 +1,4 @@
-﻿using System;
-using D365DeveloperExtensions.Core.Models;
+﻿using D365DeveloperExtensions.Core.Models;
 using Newtonsoft.Json;
 using NLog;
 using System.Diagnostics;
@@ -15,7 +14,7 @@ namespace TemplateWizards
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static void InstallPackage(string package, string version, string path)
+        public static void InstallPackage(string package, string version, string path, bool devDependency)
         {
             try
             {
@@ -34,7 +33,8 @@ namespace TemplateWizards
                     return;
                 }
 
-                process.StandardInput.WriteLine($"npm install --save {package}{version}");
+                var save = devDependency ? "--save-dev" : "--save";
+                process.StandardInput.WriteLine($"npm install {save} {package}{version}");
                 process.StandardInput.Flush();
                 process.StandardInput.Close();
                 process.WaitForExit();
@@ -59,18 +59,18 @@ namespace TemplateWizards
                 return null;
             }
 
-            process.StandardInput.WriteLine($"npm view {package}");
+            process.StandardInput.WriteLine($"npm show {package} --json");
             process.StandardInput.Flush();
             process.StandardInput.Close();
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            Regex regEx = new Regex(@"\{(.|\s)*\}");
+            var regEx = new Regex(@"\{(.|\s)*\}");
             var m = regEx.Match(output);
 
-            string json = m.Value;
+            var json = m.Value;
 
-            NpmHistory history = JsonConvert.DeserializeObject<NpmHistory>(json);
+            var history = JsonConvert.DeserializeObject<NpmHistory>(json);
 
             return history;
         }

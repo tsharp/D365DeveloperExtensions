@@ -19,7 +19,7 @@ namespace D365DeveloperExtensions.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -70,6 +70,51 @@ namespace D365DeveloperExtensions.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clearing metadata.
+        /// </summary>
+        public static string Message_ClearingMetadata {
+            get {
+                return ResourceManager.GetString("Message_ClearingMetadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Closing CrmLoginForm.
+        /// </summary>
+        public static string Message_ClosingCrmLoginForm {
+            get {
+                return ResourceManager.GetString("Message_ClosingCrmLoginForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRM Intellisense enabled.
+        /// </summary>
+        public static string Message_CRMIntellisenseEnabled {
+            get {
+                return ResourceManager.GetString("Message_CRMIntellisenseEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening CrmLoginForm.
+        /// </summary>
+        public static string Message_OpeningCrmLoginForm {
+            get {
+                return ResourceManager.GetString("Message_OpeningCrmLoginForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening tool window.
+        /// </summary>
+        public static string Message_OpeningToolWindow {
+            get {
+                return ResourceManager.GetString("Message_OpeningToolWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connect to CRM?.
         /// </summary>
         public static string MessageBox_ConnectToCrm {
@@ -93,6 +138,15 @@ namespace D365DeveloperExtensions.Resources {
         public static string TraceInfo_InitializingExtension {
             get {
                 return ResourceManager.GetString("TraceInfo_InitializingExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing menu.
+        /// </summary>
+        public static string TraceInfo_InitializingMenu {
+            get {
+                return ResourceManager.GetString("TraceInfo_InitializingMenu", resourceCulture);
             }
         }
     }
