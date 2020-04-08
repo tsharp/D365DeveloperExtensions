@@ -1,3 +1,6 @@
+# News Update
+It has come to my attention that Jason Lattimer has either made the original D365DeveloperExtensions project private or deleted the repository completely. I fully intend to retain this repository indefiniately and will accept pull requests from the community and attempt to maintain this code base. If you have any questions please reach out to me.
+
 # D365 Developer Extensions
 A Visual Studio extension to assist with day to day development for Dynamics CRM/365 Customer Engagement versions 2011+.  
 Visual Studio 2015 & 2017
@@ -11,7 +14,6 @@ I recommend that if using with VS 2015, uninstall the older release of CRM Devel
 Build Status: ![Build status](https://jlattimer.visualstudio.com/_apis/public/build/definitions/7c610cb1-deef-4a5b-8db0-71afc297f7f7/15/badge)
 
 **What's it's got currently**  
-
 
 **Numerous project & item templates**
 - Plug-ins
