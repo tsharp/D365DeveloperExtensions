@@ -5,13 +5,15 @@ It has come to my attention that Jason Lattimer has either made the original D36
 A Visual Studio extension to assist with day to day development for Dynamics CRM/365 Customer Engagement versions 2011+.  
 Visual Studio 2015 & 2017
 
+!!! Broken Link
 This is the new version of [CRM Developer Extensions](https://marketplace.visualstudio.com/items?itemName=JLattimer.DynamicsCRMDeveloperExtensions)
+!!!
 
-Wondering what changed? Check out the [Change Log](https://github.com/jlattimer/D365DeveloperExtensions/wiki/0.-Change-Log).
+Wondering what changed? Check out the [Change Log](https://github.com/tsharp/D365DeveloperExtensions/wiki/0.-Change-Log).
 
 I recommend that if using with VS 2015, uninstall the older release of CRM Developer Extensions just in case.  
 
-Build Status: ![Build status](https://jlattimer.visualstudio.com/_apis/public/build/definitions/7c610cb1-deef-4a5b-8db0-71afc297f7f7/15/badge)
+Build Status: ![D365DeveloperExtensions.CI](https://github.com/tsharp/D365DeveloperExtensions/workflows/D365DeveloperExtensions.CI/badge.svg)
 
 **What's it's got currently**  
 
