@@ -16,6 +16,8 @@ jobs:
     # Configure MSBuild ...
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
+      with:
+        vs-version: '[15.8,15.8)'
 
     # Setup DotNet Core
     - uses: actions/setup-dotnet@v1
