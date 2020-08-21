@@ -1,0 +1,33 @@
+name: D365DeveloperExtensions.CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # Requires Windows due to .Net Framework Dependency
+    runs-on: windows-latest   
+    
+    steps:
+    # Setup MSBuild ...
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+      
+    # Setup NuGet
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+  
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    
+    # Restore ...
+    - name: Restore packages
+      run: nuget restore ./D365DeveloperExtensions.sln
+
+    # Build
+    - name: Build with MSBuild
+      run: msbuild ./D365DeveloperExtensions.sln -p:Configuration=Release
