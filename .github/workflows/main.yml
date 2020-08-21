@@ -13,21 +13,22 @@ jobs:
     runs-on: windows-latest   
     
     steps:
-    # Setup MSBuild ...
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
-      
-    # Setup NuGet
-    - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
+    # Configure MSBuild ...
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.1
+
+    # Setup DotNet Core
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
   
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
     # Restore ...
     - name: Restore packages
-      run: nuget restore ./D365DeveloperExtensions.sln
+      run: dotnet restore D365DeveloperExtensions.sln
 
     # Build
     - name: Build with MSBuild
-      run: msbuild ./D365DeveloperExtensions.sln -p:Configuration=Release
+      run: dotnet build D365DeveloperExtensions.sln
