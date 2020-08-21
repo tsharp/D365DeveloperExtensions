@@ -17,7 +17,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
       with:
-        vs-version: '[15.8,15.8)'
+        vs-version: '[15.0,15.8)'
 
     # Setup DotNet Core
     - uses: actions/setup-dotnet@v1
@@ -29,8 +29,8 @@ jobs:
     
     # Restore ...
     - name: Restore packages
-      run: dotnet restore D365DeveloperExtensions.sln
+      run: nuget restore ./D365DeveloperExtensions.sln
 
     # Build
     - name: Build with MSBuild
-      run: dotnet build D365DeveloperExtensions.sln
+      run: msbuild ./D365DeveloperExtensions.sln -p:Configuration=Release
