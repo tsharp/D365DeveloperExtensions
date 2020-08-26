@@ -15,7 +15,6 @@ I recommend that if using with VS 2015, uninstall the older release of CRM Devel
 
 Build Status: 
 ![D365DeveloperExtensions.CI](https://github.com/tsharp/D365DeveloperExtensions/workflows/D365DeveloperExtensions.CI/badge.svg)
-![Azure Pipelines](https://orbitalforge.visualstudio.com/D365DeveloperExtensions/_apis/build/status/tsharp.D365DeveloperExtensions?branchName=master)
 
 **What's it's got currently**  
 
