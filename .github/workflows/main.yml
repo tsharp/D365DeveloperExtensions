@@ -13,14 +13,14 @@ jobs:
     runs-on: windows-latest   
     
     steps:
-    - name Add vs2017 Build Tools
+    - name: Add vs2017 Build Tools
       run: choco install visualstudio2017buildtools
       
-    - name Add vs2017 Extension Tools
+    - name: Add vs2017 Extension Tools
       run: choco install visualstudio2017-workload-visualstudioextensionbuildtools
       
-    - name: Add vs2019 Extensions Tools
-      run: choco install visualstudio2019-workload-visualstudioextension
+    #- name: Add vs2019 Extensions Tools
+    #  run: choco install visualstudio2019-workload-visualstudioextension
       
     # Configure MSBuild ...
     - name: Add msbuild to PATH
