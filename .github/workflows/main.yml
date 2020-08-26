@@ -13,9 +13,12 @@ jobs:
     runs-on: windows-latest   
     
     steps:
-    #- name: Install 2017 Build Tools
-    #  run: choco install visualstudio2017buildtools --version 15.9.25.0 -y
-     
+    - name Add vs2017 Build Tools
+      run: choco install visualstudio2017buildtools
+      
+    - name Add vs2017 Extension Tools
+      run: choco install visualstudio2017-workload-visualstudioextensionbuildtools
+      
     # Configure MSBuild ...
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
