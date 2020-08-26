@@ -123,7 +123,9 @@
                                 <StackPanel Margin="5,5,0,0">
                                     <Button x:Name="UpdateVersion" Style="{DynamicResource ImageButtonStyle}" 
                                         IsEnabled="false" Click="UpdateVersion_OnClick">
-                                        <imaging:CrispImage x:Name="UpdateVersionImage" Moniker="{x:Static catalog:KnownMonikers.Version}"                                           
+                                        <!-- TODO: Update Moniker -->
+                                        <!-- Moniker="{x:Static catalog:KnownMonikers.Version}" -->
+                                        <imaging:CrispImage x:Name="UpdateVersionImage" 
                                                         ToolTip="{x:Static resources:Resource.SolutionPackager_UpdateVersionImage_Button_ToolTip}" />
                                     </Button>
                                 </StackPanel>

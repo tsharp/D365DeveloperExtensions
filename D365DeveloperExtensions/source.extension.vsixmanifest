@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.19168.0247" Language="en-US" Publisher="Jason Lattimer" />
+        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.20239.1702" Language="en-US" Publisher="Travis Sharp" />
         <DisplayName>D365 Developer Extensions</DisplayName>
         <Description xml:space="preserve">Dynamics 365 Developer Extensions for Dynamics CRM/365 Customer Engagement versions 2011+</Description>
-        <MoreInfo>https://github.com/jlattimer/D365DeveloperExtensions</MoreInfo>
+        <MoreInfo>https://github.com/tsharp/D365DeveloperExtensions</MoreInfo>
         <License>License.txt</License>
-        <GettingStartedGuide>https://github.com/jlattimer/D365DeveloperExtensions</GettingStartedGuide>
-        <ReleaseNotes>https://github.com/jlattimer/D365DeveloperExtensions/wiki/0.-Change-Log</ReleaseNotes>
+        <GettingStartedGuide>https://github.com/tsharp/D365DeveloperExtensions</GettingStartedGuide>
+        <ReleaseNotes>https://github.com/tsharp/D365DeveloperExtensions/wiki/0.-Change-Log</ReleaseNotes>
         <Icon>Resources\icon.ico</Icon>
         <PreviewImage>Resources\preview.png</PreviewImage>
-        <Tags>Dynamics 365, D365, Dynamics 365 Customer Engagement, Dynamics CRM, Jason Lattimer</Tags>
+        <Tags>Dynamics 365, D365, Dynamics 365 Customer Engagement, Dynamics CRM, Travis Sharp, Jason Lattimer</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,17.0]" />
