@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="D365DeveloperExtensions.Jason Lattimer.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.20239.1702" Language="en-US" Publisher="Travis Sharp" />
+        <Identity Id="D365DeveloperExtensions.Travis Sharp.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.20239.1842" Language="en-US" Publisher="Travis Sharp" />
         <DisplayName>D365 Developer Extensions</DisplayName>
         <Description xml:space="preserve">Dynamics 365 Developer Extensions for Dynamics CRM/365 Customer Engagement versions 2011+</Description>
         <MoreInfo>https://github.com/tsharp/D365DeveloperExtensions</MoreInfo>

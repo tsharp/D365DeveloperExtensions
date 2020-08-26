@@ -311,7 +311,7 @@ namespace PluginDeployer
         private bool BuildProject(string assemblyFilePath)
         {
             // ReSharper disable once JoinDeclarationAndInitializer
-            bool buildResult;
+            bool buildResult = false;
 #if DEBUG
             ProjectWorker.MovePdbFile(ConnPane.SelectedProject, assemblyFilePath);
             //Initial build fails when debugging because of locked PDB file (which was already moved)
