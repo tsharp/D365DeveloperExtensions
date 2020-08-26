@@ -14,7 +14,9 @@ Wondering what changed? Check out the [Change Log](https://github.com/tsharp/D36
 I recommend that if using with VS 2015, uninstall the older release of CRM Developer Extensions just in case.  
 
 Build Status: 
-![D365DeveloperExtensions.CI](https://github.com/tsharp/D365DeveloperExtensions/workflows/D365DeveloperExtensions.CI/badge.svg)
+
+- ![D365DeveloperExtensions.CI](https://github.com/tsharp/D365DeveloperExtensions/workflows/D365DeveloperExtensions.CI/badge.svg)
+- [![Build Status](https://orbitalforge.visualstudio.com/D365DeveloperExtensions/_apis/build/status/tsharp.D365DeveloperExtensions?branchName=master)](https://orbitalforge.visualstudio.com/D365DeveloperExtensions/_build/latest?definitionId=1&branchName=master)
 
 **What's it's got currently**  
 
