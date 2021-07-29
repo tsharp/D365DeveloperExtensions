@@ -468,7 +468,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="D365DeveloperExtensions.Core.ruleset" />
     <None Include="D365DevExKey.snk" />
     <None Include="packages.config" />

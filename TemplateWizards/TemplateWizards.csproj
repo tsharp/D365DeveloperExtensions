@@ -200,7 +200,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="D365DevExKey.snk" />
     <None Include="packages.config" />
     <Resource Include="Template\templates.json" />
