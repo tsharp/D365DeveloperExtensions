@@ -15,6 +15,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: ChocolateyToolInstaller@0
+
+- task: CmdLine@2
+  inputs:
+    script: 'choco install visualstudio2017buildtools -y --accept-license'
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
