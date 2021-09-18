@@ -17,11 +17,13 @@ variables:
 steps:
 - task: ChocolateyToolInstaller@0
 
+# choco install visualstudio2017buildtools -y --accept-license
+# choco install visualstudio2017-workload-visualstudioextensionbuildtools -y --accept-licenseIVsImageService
+
 - task: CmdLine@2
   inputs:
     script: |
-      choco install visualstudio2017buildtools -y --accept-license
-      choco install visualstudio2017-workload-visualstudioextensionbuildtools -y --accept-license
+      choco install visualstudio2015community -y --accept-license
 
 - task: NuGetToolInstaller@1
 
