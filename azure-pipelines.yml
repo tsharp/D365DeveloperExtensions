@@ -19,7 +19,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'choco install visualstudio2017buildtools -y --accept-license'
+    script: 'choco install visualstudio2015buildtools -y --accept-license'
 
 - task: NuGetToolInstaller@1
 
@@ -29,7 +29,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    vsVersion: '15.0'
+    vsVersion: '14.0'
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
