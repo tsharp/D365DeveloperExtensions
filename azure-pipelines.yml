@@ -19,7 +19,9 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'choco install visualstudio2015buildtools -y --accept-license'
+    script: |
+      choco install visualstudio2017buildtools -y --accept-license
+      choco install visualstudio2017-workload-visualstudioextensionbuildtools -y --accept-license
 
 - task: NuGetToolInstaller@1
 
