@@ -4,7 +4,17 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
+    - main
+
+pr:
+  branches:
+    include:
+    - master
+    - main
 
 pool:
   vmImage: 'windows-latest'
@@ -18,12 +28,12 @@ steps:
 - task: ChocolateyToolInstaller@0
 
 # choco install visualstudio2017buildtools -y --accept-license
-# choco install visualstudio2017-workload-visualstudioextensionbuildtools -y --accept-licenseIVsImageService
+# choco install visualstudio2017-workload-visualstudioextensionbuildtools -y --accept-license
 
 - task: CmdLine@2
   inputs:
     script: |
-      choco install visualstudio2015community -y --accept-license
+      choco install visualstudio2019-workload-visualstudioextensionbuildtools -y --accept-license
 
 - task: NuGetToolInstaller@1
 
@@ -33,7 +43,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    vsVersion: '14.0'
+    vsVersion: '16.0'
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
