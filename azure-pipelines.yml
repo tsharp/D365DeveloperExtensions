@@ -52,3 +52,11 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# Copy visx files
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Agent.BuildDirectory)'
+    Contents: '**/*.vsix'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
