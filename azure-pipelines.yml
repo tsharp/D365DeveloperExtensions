@@ -60,7 +60,14 @@ steps:
     Contents: '**/*.vsix'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
-
+    
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Agent.BuildDirectory)'
+    Contents: '**/*.vsixmanifest'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+    
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
