@@ -60,3 +60,9 @@ steps:
     Contents: '**/*.vsix'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'Build Artifacts'
+    publishLocation: 'pipeline'
