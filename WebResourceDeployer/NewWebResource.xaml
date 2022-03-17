@@ -4,7 +4,7 @@
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:coreControls="clr-namespace:D365DeveloperExtensions.Core.Controls;assembly=D365DeveloperExtensions.Core"
-                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
                          xmlns:converters="clr-namespace:WebResourceDeployer.Converters"
                          xmlns:resources="clr-namespace:WebResourceDeployer.Resources"
                          mc:Ignorable="d" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen"
