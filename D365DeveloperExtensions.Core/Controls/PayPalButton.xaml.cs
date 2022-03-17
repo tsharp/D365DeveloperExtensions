@@ -12,7 +12,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void OpenPayPal_Click(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenUrl("https://www.paypal.me/JLattimer");
+            WebBrowser.OpenUrl("https://www.paypal.me/furiousscissors");
         }
     }
 }

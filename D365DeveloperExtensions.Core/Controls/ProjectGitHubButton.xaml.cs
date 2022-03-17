@@ -12,7 +12,7 @@ namespace D365DeveloperExtensions.Core.Controls
 
         private void OpenGitHub_Click(object sender, RoutedEventArgs e)
         {
-            WebBrowser.OpenUrl("https://github.com/jlattimer/D365DeveloperExtensions");
+            WebBrowser.OpenUrl("https://github.com/tsharp/D365DeveloperExtensions");
         }
     }
 }
