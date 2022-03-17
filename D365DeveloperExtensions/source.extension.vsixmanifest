@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="D365DeveloperExtensions.Travis Sharp.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.2276.0712" Language="en-US" Publisher="Travis Sharp" />
+        <Identity Id="D365DeveloperExtensions.Travis Sharp.ae772bae-97ff-47fa-8741-778a3c776740" Version="2.0.2276.0730" Language="en-US" Publisher="Travis Sharp" />
         <DisplayName>D365 Developer Extensions</DisplayName>
         <Description xml:space="preserve">Dynamics 365 Developer Extensions for Dynamics CRM/365 Customer Engagement versions 2011+</Description>
         <MoreInfo>https://github.com/tsharp/D365DeveloperExtensions</MoreInfo>
@@ -11,6 +11,7 @@
         <Icon>Resources\icon.ico</Icon>
         <PreviewImage>Resources\preview.png</PreviewImage>
         <Tags>Dynamics 365, D365, Dynamics 365 Customer Engagement, Dynamics CRM, Travis Sharp, Jason Lattimer</Tags>
+        <Preview>true</Preview>
     </Metadata>
     <Installation>
         <!-- https://docs.microsoft.com/en-us/visualstudio/extensibility/migration/update-visual-studio-extension?view=vs-2022 -->

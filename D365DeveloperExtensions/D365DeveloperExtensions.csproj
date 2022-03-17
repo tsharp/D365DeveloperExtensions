@@ -1,349 +1,349 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <UseCodebase>true</UseCodebase>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>D365DevExKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{EE23D830-8EB4-4313-9971-53A44900C169}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D365DeveloperExtensions</RootNamespace>
-    <AssemblyName>D365DeveloperExtensions</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <GeneratePkgDefFile>true</GeneratePkgDefFile>
-    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
-    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
-    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
-    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
-    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="D365DeveloperExtensions.cs" />
-    <Compile Include="D365DeveloperExtensionsPackage.cs" />
-    <Compile Include="MenuHandler.cs" />
-    <Compile Include="Vs\VsSolutionEvents.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
-    <Compile Include="StartupTasks.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="D365DevExKey.snk" />
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="D365DexEv.pkgdef">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Microsoft.Xrm.Tooling.Ui.Styles.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Newtonsoft.Json.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\preview.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <VSCTCompile Include="D365DeveloperExtensions.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-      <SubType>Designer</SubType>
-    </VSCTCompile>
-    <Content Include="License.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Resource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VSPackage.resx">
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CrmIntellisense\CrmIntellisense.csproj">
-      <Project>{E616F209-2233-4DB6-9493-94184472B01C}</Project>
-      <Name>CrmIntellisense</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\D365DeveloperExtensions.Core\D365DeveloperExtensions.Core.csproj">
-      <Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
-      <Name>D365DeveloperExtensions.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpCustom\CSharpCustom.csproj">
-      <Project>{99EAC9D1-C05D-4CAC-867E-E4862017F488}</Project>
-      <Name>CSharpCustom</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpPluginClass\CSharpPluginClass.csproj">
-      <Project>{0B7F7208-B7C4-4C79-BCBD-F5C0A46A5600}</Project>
-      <Name>CSharpPluginClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginBaseClass\CSharpSdkPluginBaseClass.csproj">
-      <Project>{9F7A8E0E-7091-4BB6-8225-9811A5C1985A}</Project>
-      <Name>CSharpSdkPluginBaseClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginFromBaseClass\CSharpSdkPluginFromBaseClass.csproj">
-      <Project>{0680411B-7F53-4595-847A-5406BA93FA4E}</Project>
-      <Name>CSharpSdkPluginFromBaseClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowBaseClass\CSharpSdkWorkflowBaseClass.csproj">
-      <Project>{DE98394E-6FB5-49C2-9F3B-FE0AE1C36BF4}</Project>
-      <Name>CSharpSdkWorkflowBaseClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowFromBaseClass\CSharpSdkWorkflowFromBaseClass.csproj">
-      <Project>{C39D35B0-897D-4BDD-B050-29B7C529A3E1}</Project>
-      <Name>CSharpSdkWorkflowFromBaseClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSolutionPackagerMap\CSharpSolutionPackagerMap.csproj">
-      <Project>{E8D7659C-BB6B-4FDF-B0D8-6E6007F4696F}</Project>
-      <Name>CSharpSolutionPackagerMap</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSpklConfig\CSharpSpklConfig.csproj">
-      <Project>{7aa29dbf-a2e3-4565-a84a-b7694617e15e}</Project>
-      <Name>CSharpSpklConfig</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpSpklRegAttributes\CSharpSpklRegAttributes.csproj">
-      <Project>{A441E65D-EB41-4A68-90A4-E511BBA05A1A}</Project>
-      <Name>CSharpSpklRegAttributes</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\CSharp\CSharpWorkflowClass\CSharpWorkflowClass.csproj">
-      <Project>{CD9BBF13-B6A5-4DC0-A698-D1C323A63CC9}</Project>
-      <Name>CSharpWorkflowClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ItemTemplates\Web\CSharp\WebCSharpSolutionPackagerMap\WebCSharpSolutionPackagerMap.csproj">
-      <Project>{64FF26D5-D08C-4DE9-BC36-7D4452125D46}</Project>
-      <Name>WebCSharpSolutionPackagerMap</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\NuGetRetriever\NuGetRetriever.csproj">
-      <Project>{bd5abc7e-6459-4cfb-82bd-39643599a285}</Project>
-      <Name>NuGetRetriever</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PluginDeployer\PluginDeployer.csproj">
-      <Project>{64CA2809-ABE4-47A5-AB20-086578C1B847}</Project>
-      <Name>PluginDeployer</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\PluginTraceViewer\PluginTraceViewer.csproj">
-      <Project>{97AA7ED6-5020-44E4-88E9-7D63F49FA766}</Project>
-      <Name>PluginTraceViewer</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpSolutionPackage\CSharpSolutionPackage.csproj">
-      <Project>{C9AD3DE3-3F37-4949-8586-E59672F78922}</Project>
-      <Name>CSharpSolutionPackage</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpConsole\CSharpConsole.csproj">
-      <Project>{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}</Project>
-      <Name>CSharpConsole</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginProject\CSharpPluginProject.csproj">
-      <Project>{E982F569-FFA3-49A8-A47D-09CE6C546FAB}</Project>
-      <Name>CSharpPluginProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginTestProject\CSharpPluginTestProject.csproj">
-      <Project>{55CB04B5-E053-4504-8773-2E03C594E68A}</Project>
-      <Name>CSharpPluginTestProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpTypeScriptProject\CSharpTypeScriptProject.csproj">
-      <Project>{968A8896-7E98-4BD9-9D27-2B28FCF6CC67}</Project>
-      <Name>CSharpTypeScriptProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWebResourceProject\CSharpWebResourceProject.csproj">
-      <Project>{1010F340-28A3-44BA-93E7-77CC68A18E23}</Project>
-      <Name>CSharpWebResourceProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowProject\CSharpWorkflowProject.csproj">
-      <Project>{657F7CD2-9A6D-440D-AA39-A629E5190021}</Project>
-      <Name>CSharpWorkflowProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowTestProject\CSharpWorkflowTestProject.csproj">
-      <Project>{86938D85-3B55-47FF-97FC-225764B987A8}</Project>
-      <Name>CSharpWorkflowTestProject</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\SolutionPackager\SolutionPackager.csproj">
-      <Project>{61219409-56AD-43DE-83FB-98301E3D785A}</Project>
-      <Name>SolutionPackager</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\TemplateWizards\TemplateWizards.csproj">
-      <Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>
-      <Name>TemplateWizards</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebResourceDeployer\WebResourceDeployer.csproj">
-      <Project>{38094843-6EF7-49AE-B9BE-369949D9F673}</Project>
-      <Name>WebResourceDeployer</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Activities" />
-    <Reference Include="System.Activities.Presentation" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Workflow.Activities" />
-    <Reference Include="System.Workflow.ComponentModel" />
-    <Reference Include="System.Workflow.Runtime" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly">
-      <Version>9.1.0.108</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.IdentityModel">
-      <Version>6.1.7600.16394</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ImageCatalog">
-      <Version>17.1.32210.191</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK">
-      <Version>17.1.32210.191</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>17.1.4054</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="NLog">
-      <Version>4.4.12</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Unrestricted -file "$(SolutionDir)Build\SetVersions.ps1"</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	<PropertyGroup>
+		<MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+		<UseCodebase>true</UseCodebase>
+		<TargetFrameworkProfile />
+		<NuGetPackageImportStamp>
+		</NuGetPackageImportStamp>
+	</PropertyGroup>
+	<PropertyGroup>
+		<SignAssembly>true</SignAssembly>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile>D365DevExKey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<SchemaVersion>2.0</SchemaVersion>
+		<ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		<ProjectGuid>{EE23D830-8EB4-4313-9971-53A44900C169}</ProjectGuid>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>D365DeveloperExtensions</RootNamespace>
+		<AssemblyName>D365DeveloperExtensions</AssemblyName>
+		<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+		<GeneratePkgDefFile>true</GeneratePkgDefFile>
+		<IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+		<IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+		<IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+		<CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+		<CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="D365DeveloperExtensions.cs" />
+		<Compile Include="D365DeveloperExtensionsPackage.cs" />
+		<Compile Include="MenuHandler.cs" />
+		<Compile Include="Vs\VsSolutionEvents.cs" />
+		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="Resources\Resource.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DesignTime>True</DesignTime>
+			<DependentUpon>Resource.resx</DependentUpon>
+		</Compile>
+		<Compile Include="StartupTasks.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="D365DevExKey.snk" />
+		<None Include="source.extension.vsixmanifest">
+			<SubType>Designer</SubType>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="D365DexEv.pkgdef">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+		<Content Include="Microsoft.Xrm.Tooling.Ui.Styles.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+		<Content Include="Newtonsoft.Json.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+		<Content Include="Resources\icon.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+		<Content Include="Resources\preview.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+		<VSCTCompile Include="D365DeveloperExtensions.vsct">
+			<ResourceName>Menus.ctmenu</ResourceName>
+			<SubType>Designer</SubType>
+		</VSCTCompile>
+		<Content Include="License.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<IncludeInVSIX>true</IncludeInVSIX>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Resource.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+		<EmbeddedResource Include="VSPackage.resx">
+			<MergeWithCTO>true</MergeWithCTO>
+			<ManifestResourceName>VSPackage</ManifestResourceName>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CrmIntellisense\CrmIntellisense.csproj">
+			<Project>{E616F209-2233-4DB6-9493-94184472B01C}</Project>
+			<Name>CrmIntellisense</Name>
+			<IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+			<IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+		</ProjectReference>
+		<ProjectReference Include="..\D365DeveloperExtensions.Core\D365DeveloperExtensions.Core.csproj">
+			<Project>{1fcfded4-cc12-4275-addf-7e62b70743cb}</Project>
+			<Name>D365DeveloperExtensions.Core</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpCustom\CSharpCustom.csproj">
+			<Project>{99EAC9D1-C05D-4CAC-867E-E4862017F488}</Project>
+			<Name>CSharpCustom</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpPluginClass\CSharpPluginClass.csproj">
+			<Project>{0B7F7208-B7C4-4C79-BCBD-F5C0A46A5600}</Project>
+			<Name>CSharpPluginClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginBaseClass\CSharpSdkPluginBaseClass.csproj">
+			<Project>{9F7A8E0E-7091-4BB6-8225-9811A5C1985A}</Project>
+			<Name>CSharpSdkPluginBaseClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkPluginFromBaseClass\CSharpSdkPluginFromBaseClass.csproj">
+			<Project>{0680411B-7F53-4595-847A-5406BA93FA4E}</Project>
+			<Name>CSharpSdkPluginFromBaseClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowBaseClass\CSharpSdkWorkflowBaseClass.csproj">
+			<Project>{DE98394E-6FB5-49C2-9F3B-FE0AE1C36BF4}</Project>
+			<Name>CSharpSdkWorkflowBaseClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSdkWorkflowFromBaseClass\CSharpSdkWorkflowFromBaseClass.csproj">
+			<Project>{C39D35B0-897D-4BDD-B050-29B7C529A3E1}</Project>
+			<Name>CSharpSdkWorkflowFromBaseClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSolutionPackagerMap\CSharpSolutionPackagerMap.csproj">
+			<Project>{E8D7659C-BB6B-4FDF-B0D8-6E6007F4696F}</Project>
+			<Name>CSharpSolutionPackagerMap</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSpklConfig\CSharpSpklConfig.csproj">
+			<Project>{7aa29dbf-a2e3-4565-a84a-b7694617e15e}</Project>
+			<Name>CSharpSpklConfig</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpSpklRegAttributes\CSharpSpklRegAttributes.csproj">
+			<Project>{A441E65D-EB41-4A68-90A4-E511BBA05A1A}</Project>
+			<Name>CSharpSpklRegAttributes</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\CSharp\CSharpWorkflowClass\CSharpWorkflowClass.csproj">
+			<Project>{CD9BBF13-B6A5-4DC0-A698-D1C323A63CC9}</Project>
+			<Name>CSharpWorkflowClass</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ItemTemplates\Web\CSharp\WebCSharpSolutionPackagerMap\WebCSharpSolutionPackagerMap.csproj">
+			<Project>{64FF26D5-D08C-4DE9-BC36-7D4452125D46}</Project>
+			<Name>WebCSharpSolutionPackagerMap</Name>
+			<VSIXSubPath>ItemTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\NuGetRetriever\NuGetRetriever.csproj">
+			<Project>{bd5abc7e-6459-4cfb-82bd-39643599a285}</Project>
+			<Name>NuGetRetriever</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\PluginDeployer\PluginDeployer.csproj">
+			<Project>{64CA2809-ABE4-47A5-AB20-086578C1B847}</Project>
+			<Name>PluginDeployer</Name>
+			<IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+			<IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+		</ProjectReference>
+		<ProjectReference Include="..\PluginTraceViewer\PluginTraceViewer.csproj">
+			<Project>{97AA7ED6-5020-44E4-88E9-7D63F49FA766}</Project>
+			<Name>PluginTraceViewer</Name>
+			<IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+			<IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpSolutionPackage\CSharpSolutionPackage.csproj">
+			<Project>{C9AD3DE3-3F37-4949-8586-E59672F78922}</Project>
+			<Name>CSharpSolutionPackage</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpConsole\CSharpConsole.csproj">
+			<Project>{B34A5217-0F6D-493F-B6DD-BB5CF091AB99}</Project>
+			<Name>CSharpConsole</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginProject\CSharpPluginProject.csproj">
+			<Project>{E982F569-FFA3-49A8-A47D-09CE6C546FAB}</Project>
+			<Name>CSharpPluginProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpPluginTestProject\CSharpPluginTestProject.csproj">
+			<Project>{55CB04B5-E053-4504-8773-2E03C594E68A}</Project>
+			<Name>CSharpPluginTestProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpTypeScriptProject\CSharpTypeScriptProject.csproj">
+			<Project>{968A8896-7E98-4BD9-9D27-2B28FCF6CC67}</Project>
+			<Name>CSharpTypeScriptProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWebResourceProject\CSharpWebResourceProject.csproj">
+			<Project>{1010F340-28A3-44BA-93E7-77CC68A18E23}</Project>
+			<Name>CSharpWebResourceProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowProject\CSharpWorkflowProject.csproj">
+			<Project>{657F7CD2-9A6D-440D-AA39-A629E5190021}</Project>
+			<Name>CSharpWorkflowProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\ProjectTemplates\CSharp\CSharpWorkflowTestProject\CSharpWorkflowTestProject.csproj">
+			<Project>{86938D85-3B55-47FF-97FC-225764B987A8}</Project>
+			<Name>CSharpWorkflowTestProject</Name>
+			<VSIXSubPath>ProjectTemplates</VSIXSubPath>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+		</ProjectReference>
+		<ProjectReference Include="..\SolutionPackager\SolutionPackager.csproj">
+			<Project>{61219409-56AD-43DE-83FB-98301E3D785A}</Project>
+			<Name>SolutionPackager</Name>
+			<IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+			<IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+		</ProjectReference>
+		<ProjectReference Include="..\TemplateWizards\TemplateWizards.csproj">
+			<Project>{7cc35efb-7335-4ae1-8a54-317d071f9f12}</Project>
+			<Name>TemplateWizards</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\WebResourceDeployer\WebResourceDeployer.csproj">
+			<Project>{38094843-6EF7-49AE-B9BE-369949D9F673}</Project>
+			<Name>WebResourceDeployer</Name>
+			<IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+			<IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System" />
+		<Reference Include="System.Activities" />
+		<Reference Include="System.Activities.Presentation" />
+		<Reference Include="System.Design" />
+		<Reference Include="System.DirectoryServices" />
+		<Reference Include="System.DirectoryServices.AccountManagement" />
+		<Reference Include="System.IdentityModel" />
+		<Reference Include="System.Net" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Net.Http.WebRequest" />
+		<Reference Include="System.Runtime" />
+		<Reference Include="System.Runtime.Serialization" />
+		<Reference Include="System.Security" />
+		<Reference Include="System.ServiceModel" />
+		<Reference Include="System.ServiceModel.Web" />
+		<Reference Include="System.Web" />
+		<Reference Include="System.Web.Services" />
+		<Reference Include="System.Workflow.Activities" />
+		<Reference Include="System.Workflow.ComponentModel" />
+		<Reference Include="System.Workflow.Runtime" />
+		<Reference Include="System.Xml" />
+		<Reference Include="System.Xml.Linq" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly">
+			<Version>9.1.0.108</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.IdentityModel">
+			<Version>6.1.7600.16394</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.ImageCatalog">
+			<Version>17.0.32112.339</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.SDK">
+			<Version>17.0.32112.339</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VSSDK.BuildTools">
+			<Version>17.1.4054</Version>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="NLog">
+			<Version>4.4.12</Version>
+		</PackageReference>
+	</ItemGroup>
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+	<PropertyGroup>
+		<PreBuildEvent>powershell -ExecutionPolicy Unrestricted -file "$(SolutionDir)Build\SetVersions.ps1"</PreBuildEvent>
+	</PropertyGroup>
+	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

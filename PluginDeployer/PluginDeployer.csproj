@@ -23,7 +23,7 @@
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
-		<PlatformTarget>x86</PlatformTarget>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<DebugType>pdbonly</DebugType>
@@ -166,10 +166,10 @@
 			<Version>6.1.7600.16394</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.ImageCatalog">
-			<Version>17.1.32210.191</Version>
+			<Version>17.0.32112.339</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.SDK">
-			<Version>17.1.32210.191</Version>
+			<Version>17.0.32112.339</Version>
 		</PackageReference>
 		<PackageReference Include="NLog">
 			<Version>4.4.12</Version>
