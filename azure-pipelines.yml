@@ -9,8 +9,8 @@ trigger:
     include:
       - main
       - release/*
-    exclude:s
-        - release/old*
+    exclude:
+      - release/old*
 
 pr:
   branches:
